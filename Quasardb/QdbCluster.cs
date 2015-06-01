@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Quasardb.Exceptions;
 using Quasardb.Interop;
 
@@ -23,6 +19,11 @@ namespace Quasardb
         public void Dispose()
         {
             _handle.Dispose();
+        }
+
+        public QdbBlob Blob(string alias)
+        {
+            return new QdbBlob(_handle, alias);
         }
     }
 }

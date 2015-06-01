@@ -3,4 +3,5 @@ obj/
 *.user
 *.suo
 
+/TestResults/
 /qdb/

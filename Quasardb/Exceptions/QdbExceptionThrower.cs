@@ -11,19 +11,18 @@ namespace Quasardb.Exceptions
     {
         static readonly Dictionary<qdb_error, Type> _types = new Dictionary<qdb_error, Type>
         {
-            {qdb_error.qdb_e_ok, null},
-            {qdb_error.qdb_e_invalid_argument, typeof(ArgumentException)}
+            {qdb_error.qdb_e_invalid_argument, typeof(ArgumentException)},
+            {qdb_error.qdb_e_alias_already_exists, typeof(QdbAliasAlreadyExistsException)}
         };
 
         public static void ThrowIfNeeded(qdb_error error)
         {
+            if (error == qdb_error.qdb_e_ok) return;
+
             Type exceptionType;
             if (_types.TryGetValue(error, out exceptionType))
             {
-                if (exceptionType != null)
-                {
-                    throw (Exception)Activator.CreateInstance(exceptionType);
-                }
+                throw (Exception)Activator.CreateInstance(exceptionType);
             }
             else
             {

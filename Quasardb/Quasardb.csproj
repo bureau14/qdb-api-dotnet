@@ -58,10 +58,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\QdbAliasAlreadyExists.cs" />
+    <Compile Include="Exceptions\QdbExceptionBase.cs" />
     <Compile Include="Exceptions\QdbExceptionThrower.cs" />
     <Compile Include="Interop\qdb_error.cs" />
     <Compile Include="Interop\qdb_api.cs" />
     <Compile Include="Interop\qdb_handle.cs" />
+    <Compile Include="QdbBlob.cs" />
     <Compile Include="QdbCluster.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

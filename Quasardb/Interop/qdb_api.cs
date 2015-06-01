@@ -16,5 +16,13 @@ namespace Quasardb.Interop
         public static extern qdb_error qdb_connect(
             qdb_handle handle, 
             [MarshalAs(UnmanagedType.LPStr)] string uri);
+
+        [DllImport("qdb_api.dll")]
+        public static extern qdb_error qdb_put(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(UnmanagedType.LPStr)] string alias,
+            [In] byte[] content,
+            [In] Int64 content_length,
+            [In] Int64 expiry_time);
     }
 }
