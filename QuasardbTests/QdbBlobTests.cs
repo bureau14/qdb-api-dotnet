@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb;
 using Quasardb.Exceptions;
 
@@ -38,6 +39,17 @@ namespace QuasardbTests
             var result = _blob.Get();
 
             CollectionAssert.AreEqual(_content1, result);
+        }
+
+        [TestMethod]
+        public void Put_GetExpiryTime()
+        {
+            var expiry1 = new DateTime(3000, 12, 25, 0, 0, 0);
+
+            _blob.Put(_content1, expiry1);
+            var expiry2 = _blob.GetExpiryTime();
+
+            Assert.AreEqual(expiry1, expiry2);
         }
 
         [TestMethod]

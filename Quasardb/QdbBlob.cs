@@ -1,22 +1,13 @@
-﻿using Quasardb.Exceptions;
+﻿using System;
+using Quasardb.Exceptions;
 using Quasardb.Interop;
 
 namespace Quasardb
 {
-    public class QdbBlob
+    public class QdbBlob : QdbExpirableEntry
     {
-        readonly qdb_handle _handle;
-        readonly string _alias;
-
-        public QdbBlob(qdb_handle handle, string alias)
+        public QdbBlob(qdb_handle handle, string alias) : base(handle, alias)
         {
-            _handle = handle;
-            _alias = alias;
-        }
-
-        public string Alias
-        {
-            get { return _alias; }
         }
 
         public byte[] CompareAndSwap(byte[] content, byte[] comparand)
@@ -57,15 +48,10 @@ namespace Quasardb
             return oldContent.Copy(oldContentLength);
         }
 
-        public void Put(byte[] content)
+        public void Put(byte[] content, DateTime expiryTime=default(DateTime))
         {
-            var error = qdb_api.qdb_put(_handle, _alias, content, content.LongLength, 0);
-            QdbExceptionThrower.ThrowIfNeeded(error);
-        }
 
-        public void Remove()
-        {
-            var error = qdb_api.qdb_remove(_handle, _alias);
+            var error = qdb_api.qdb_put(_handle, _alias, content, content.LongLength, TranslateExpiryTime(expiryTime));
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
 

@@ -24,6 +24,12 @@ namespace Quasardb.Interop
         #region Functions common to all entries
 
         [DllImport(DLL_NAME)]
+        public static extern qdb_error qdb_get_expiry_time(
+            [In] qdb_handle handle, 
+            [In, MarshalAs(ALIAS_TYPE)] string alias, 
+            [Out] out long expiryTime);
+
+        [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_remove(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias);

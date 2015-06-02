@@ -72,6 +72,8 @@
     <Compile Include="QdbBlob.cs" />
     <Compile Include="QdbCluster.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QdbEntry.cs" />
+    <Compile Include="QdbExpirableEntry.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\qdb\win64\bin\qdb_api.dll">
