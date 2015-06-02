@@ -35,5 +35,14 @@ namespace Quasardb
             QdbExceptionThrower.ThrowIfNeeded(error);
             return content.Copy(contentLength);
         }
+
+        public byte[] GetAndRemove()
+        {
+            qdb_buffer content;
+            long contentLength;
+            var error = qdb_api.qdb_get_and_remove(_handle, _alias, out content, out contentLength);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+            return content.Copy(contentLength);
+        }
     }
 }

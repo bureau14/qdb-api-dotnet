@@ -24,12 +24,6 @@ namespace QuasardbTests
         }
 
         [TestMethod]
-        public void BlobIsNotNull()
-        {
-            Assert.IsNotNull(_blob);
-        }
-
-        [TestMethod]
         public void PutOnce()
         {
             _blob.Put(Utils.CreateRandomContent());
@@ -58,6 +52,18 @@ namespace QuasardbTests
         public void GetNonExisting()
         {
             _blob.Get();
+        }
+
+        [TestMethod]
+        public void GetAndRemove()
+        {
+            var content1 = Utils.CreateRandomContent();
+            _blob.Put(content1);
+
+            var content2 = _blob.GetAndRemove();
+            CollectionAssert.AreEqual(content1, content2);
+
+            _blob.Put(content1);
         }
     }
 }
