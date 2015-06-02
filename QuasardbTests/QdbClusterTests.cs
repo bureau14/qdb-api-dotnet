@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb;
+using Quasardb.Exceptions;
 
 namespace QuasardbTests
 {
@@ -15,7 +16,7 @@ namespace QuasardbTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
+        [ExpectedException(typeof(QdbInvalidArgumentException))]
         public void ConnectToAnInvalidAddress()
         {
             var cluster = new QdbCluster("clearly this is not a uri");

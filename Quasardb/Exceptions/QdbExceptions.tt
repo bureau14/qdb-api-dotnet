@@ -1,0 +1,107 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Globalization" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using System;
+using System.Collections.Generic;
+using Quasardb.Interop;
+
+namespace Quasardb.Exceptions
+{
+    public abstract class QdbExceptionBase : Exception
+    {
+    }
+
+<#
+var errorNames = new []
+{
+    "qdb_e_uninitialized",
+    "qdb_e_system",
+    "qdb_e_internal",
+    "qdb_e_no_memory",
+    "qdb_e_invalid_protocol",
+    "qdb_e_host_not_found",
+    "qdb_e_invalid_option",
+    "qdb_e_alias_too_long",
+    "qdb_e_alias_not_found",
+    "qdb_e_alias_already_exists",
+    "qdb_e_timeout",
+    "qdb_e_buffer_too_small",
+    "qdb_e_invalid_command",
+    "qdb_e_invalid_input",
+    "qdb_e_connection_refused",
+    "qdb_e_connection_reset",
+    "qdb_e_unexpected_reply",
+    "qdb_e_not_implemented",
+    "qdb_e_unstable_hive",
+    "qdb_e_protocol_error",
+    "qdb_e_outdated_topology",
+    "qdb_e_wrong_peer",
+    "qdb_e_invalid_version",
+    "qdb_e_try_again",
+    "qdb_e_invalid_argument",
+    "qdb_e_out_of_bounds",
+    "qdb_e_conflict",
+    "qdb_e_not_connected",
+    "qdb_e_invalid_handle",
+    "qdb_e_reserved_alias",
+    "qdb_e_unmatched_content",
+    "qdb_e_invalid_iterator",
+    "qdb_e_prefix_too_short",
+    "qdb_e_skipped",
+    "qdb_e_incompatible_type",
+    "qdb_e_empty_container",
+    "qdb_e_container_full",
+    "qdb_e_element_not_found",
+    "qdb_e_element_already_exists",
+    "qdb_e_overflow",
+    "qdb_e_underflow",
+    "qdb_e_tag_already_set",
+    "qdb_e_tag_not_set",
+};
+
+foreach(var errorName in errorNames)
+{ 
+#>
+	[QdbError(qdb_error.<#= errorName #>)]
+	public sealed class <#= GetClassName(errorName) #> : QdbExceptionBase 
+	{
+	}
+
+<# 
+}
+#>
+	public static class QdbExecptionFactory 
+	{
+		static readonly Dictionary<qdb_error,Type> _types = new Dictionary<qdb_error,Type>
+		{
+<#
+foreach(var errorName in errorNames)
+{ 
+#>
+			{ qdb_error.<#=errorName#>, typeof(<#=GetClassName(errorName)#>) },
+<#
+}
+#>
+		};
+
+		public static QdbExceptionBase Create(qdb_error error)
+		{
+			Type exceptionType;
+            if (!_types.TryGetValue(error, out exceptionType))
+				throw new NotSupportedException("Unexpected qdb_error: " + error);
+            
+			return (QdbExceptionBase)Activator.CreateInstance(exceptionType);
+		}
+	}
+}
+<#+
+public string GetClassName(string errorName)
+{
+	var textInfo = new CultureInfo("en-US", false).TextInfo;
+	return "Qdb"+textInfo.ToTitleCase(errorName.Substring(6).Replace("_"," ")).Replace(" ", "") + "Exception";
+}
+#>

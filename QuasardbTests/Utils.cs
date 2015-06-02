@@ -14,7 +14,10 @@ namespace QuasardbTests
 
         public static byte[] CreateRandomContent()
         {
-            return new byte[10];
+            var rand = new Random();
+            var buffer = new byte[rand.Next(10, 20)];
+            rand.NextBytes(buffer);
+            return buffer;
         }
     }
 }

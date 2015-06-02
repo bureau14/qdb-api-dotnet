@@ -58,9 +58,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Exceptions\QdbAliasAlreadyExists.cs" />
-    <Compile Include="Exceptions\QdbExceptionBase.cs" />
+    <Compile Include="Exceptions\QdbErrorAttribute.cs" />
+    <Compile Include="Exceptions\QdbExceptions.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>QdbExceptions.tt</DependentUpon>
+    </Compile>
     <Compile Include="Exceptions\QdbExceptionThrower.cs" />
+    <Compile Include="Interop\qdb_buffer.cs" />
     <Compile Include="Interop\qdb_error.cs" />
     <Compile Include="Interop\qdb_api.cs" />
     <Compile Include="Interop\qdb_handle.cs" />
@@ -74,7 +79,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Exceptions\QdbExceptions.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>QdbExceptions.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

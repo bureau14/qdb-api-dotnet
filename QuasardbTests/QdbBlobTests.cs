@@ -42,5 +42,22 @@ namespace QuasardbTests
             _blob.Put(Utils.CreateRandomContent());
             _blob.Put(Utils.CreateRandomContent());
         }
+
+        [TestMethod]
+        public void PutThenGet()
+        {
+            var content1 = Utils.CreateRandomContent();
+            _blob.Put(content1);
+
+            var content2 = _blob.Get();
+            CollectionAssert.AreEqual(content1, content2);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(QdbAliasNotFoundException))]
+        public void GetNonExisting()
+        {
+            _blob.Get();
+        }
     }
 }
