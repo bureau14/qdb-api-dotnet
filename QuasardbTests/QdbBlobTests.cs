@@ -24,12 +24,6 @@ namespace QuasardbTests
         }
 
         [TestMethod]
-        public void PutOnce()
-        {
-            _blob.Put(Utils.CreateRandomContent());
-        }
-
-        [TestMethod]
         [ExpectedException(typeof (QdbAliasAlreadyExistsException))]
         public void PutTwice()
         {
@@ -40,11 +34,11 @@ namespace QuasardbTests
         [TestMethod]
         public void PutThenGet()
         {
-            var content1 = Utils.CreateRandomContent();
-            _blob.Put(content1);
+            var originalContent = Utils.CreateRandomContent();
+            _blob.Put(originalContent);
 
-            var content2 = _blob.Get();
-            CollectionAssert.AreEqual(content1, content2);
+            var retreivedContent = _blob.Get();
+            CollectionAssert.AreEqual(originalContent, retreivedContent);
         }
 
         [TestMethod]
@@ -57,13 +51,30 @@ namespace QuasardbTests
         [TestMethod]
         public void GetAndRemove()
         {
-            var content1 = Utils.CreateRandomContent();
-            _blob.Put(content1);
+            var originalContent = Utils.CreateRandomContent();
+            _blob.Put(originalContent);
 
-            var content2 = _blob.GetAndRemove();
-            CollectionAssert.AreEqual(content1, content2);
+            var retreivedContent = _blob.GetAndRemove();
+            CollectionAssert.AreEqual(originalContent, retreivedContent);
 
-            _blob.Put(content1);
+            _blob.Put(originalContent);
+        }
+
+        [TestMethod]
+        public void UpdateThenGet()
+        {
+            var originalContent = Utils.CreateRandomContent();
+            _blob.Update(originalContent);
+
+            var retreivedContent = _blob.Get();
+            CollectionAssert.AreEqual(originalContent, retreivedContent);
+        }
+
+        [TestMethod]
+        public void UpdateTwice()
+        {
+            _blob.Update(Utils.CreateRandomContent());
+            _blob.Update(Utils.CreateRandomContent());
         }
     }
 }

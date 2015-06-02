@@ -33,7 +33,7 @@ namespace Quasardb.Interop
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [Out] out qdb_buffer content,
-            [Out] out Int64 content_length);
+            [Out] out long content_length);
 
         [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_get_and_remove(
@@ -47,8 +47,16 @@ namespace Quasardb.Interop
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] byte[] content,
-            [In] Int64 content_length,
-            [In] Int64 expiry_time);
+            [In] long content_length,
+            [In] long expiry_time);
+
+        [DllImport(DLL_NAME)]
+        public static extern qdb_error qdb_update(
+            [In] qdb_handle handle, 
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In] byte[] content,
+            [In] long content_length, 
+            [In] long expiry_time);
 
         #endregion
     }

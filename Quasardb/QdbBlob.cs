@@ -44,5 +44,11 @@ namespace Quasardb
             QdbExceptionThrower.ThrowIfNeeded(error);
             return content.Copy(contentLength);
         }
+
+        public void Update(byte[] content)
+        {
+            var error = qdb_api.qdb_update(_handle, _alias, content, content.Length, 0);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+        }
     }
 }
