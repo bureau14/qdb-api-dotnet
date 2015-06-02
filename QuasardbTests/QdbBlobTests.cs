@@ -13,6 +13,7 @@ namespace QuasardbTests
     {
         QdbBlob _blob;
         byte[] _content1, _content2;
+        DateTime _expiry1;
 
         [TestInitialize]
         public void Initialize()
@@ -22,6 +23,7 @@ namespace QuasardbTests
             _blob = cluster.Blob(alias);
             _content1 = Utils.CreateRandomContent();
             _content2 = Utils.CreateRandomContent();
+            _expiry1 = new DateTime(3000, 12, 25);
         }
 
         [TestMethod]
@@ -44,12 +46,10 @@ namespace QuasardbTests
         [TestMethod]
         public void Put_GetExpiryTime()
         {
-            var expiry1 = new DateTime(3000, 12, 25, 0, 0, 0);
+            _blob.Put(_content1, _expiry1);
+            var result = _blob.GetExpiryTime();
 
-            _blob.Put(_content1, expiry1);
-            var expiry2 = _blob.GetExpiryTime();
-
-            Assert.AreEqual(expiry1, expiry2);
+            Assert.AreEqual(_expiry1, result);
         }
 
         [TestMethod]
@@ -153,6 +153,16 @@ namespace QuasardbTests
             _blob.Put(_content2);
 
             Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void Put_ExpiresFromNow_GetExpiryTime()
+        {
+            _blob.Put(_content1);
+            _blob.ExpiresAt(_expiry1);
+            var result = _blob.GetExpiryTime();
+
+            Assert.AreEqual(_expiry1, result);
         }
     }
 }

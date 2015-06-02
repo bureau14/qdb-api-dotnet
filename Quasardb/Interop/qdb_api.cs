@@ -7,6 +7,7 @@ namespace Quasardb.Interop
     static class qdb_api
     {
         const string DLL_NAME = "qdb_api.dll";
+
         const UnmanagedType ALIAS_TYPE = UnmanagedType.LPStr;
 
         [DllImport(DLL_NAME)]
@@ -24,9 +25,15 @@ namespace Quasardb.Interop
         #region Functions common to all entries
 
         [DllImport(DLL_NAME)]
+        public static extern qdb_error qdb_expires_at(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In] long expiry_time);
+
+        [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_get_expiry_time(
             [In] qdb_handle handle, 
-            [In, MarshalAs(ALIAS_TYPE)] string alias, 
+            [In] [MarshalAs(ALIAS_TYPE)] string alias, 
             [Out] out long expiryTime);
 
         [DllImport(DLL_NAME)]
@@ -34,9 +41,9 @@ namespace Quasardb.Interop
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias);
 
-        #endregion
-
         #region Functions specific to blob entries
+
+        #endregion
 
         [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_compare_and_swap(

@@ -12,6 +12,12 @@ namespace Quasardb
         {
         }
 
+        public void ExpiresAt(DateTime expiryTime)
+        {
+            var error = qdb_api.qdb_expires_at(_handle, _alias, TranslateExpiryTime(expiryTime));
+            QdbExceptionThrower.ThrowIfNeeded(error);
+        }
+
         public DateTime GetExpiryTime()
         {
             long expiryTime;
