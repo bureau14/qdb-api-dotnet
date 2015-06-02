@@ -1,7 +1,4 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb;
 using Quasardb.Exceptions;
 
@@ -14,6 +11,7 @@ namespace QuasardbTests
     public class QdbBlobTests
     {
         QdbBlob _blob;
+        byte[] _content1, _content2;
 
         [TestInitialize]
         public void Initialize()
@@ -21,91 +19,128 @@ namespace QuasardbTests
             var cluster = new QdbCluster("qdb://127.0.0.1:2836");
             var alias = Utils.CreateUniqueAlias();
             _blob = cluster.Blob(alias);
+            _content1 = Utils.CreateRandomContent();
+            _content2 = Utils.CreateRandomContent();
         }
 
         [TestMethod]
-        [ExpectedException(typeof (QdbAliasAlreadyExistsException))]
-        public void PutTwice()
+        [ExpectedException(typeof(QdbAliasAlreadyExistsException))]
+        public void Put_Put()
         {
-            _blob.Put(Utils.CreateRandomContent());
-            _blob.Put(Utils.CreateRandomContent());
+            _blob.Put(_content1);
+            _blob.Put(_content2);
         }
 
         [TestMethod]
-        public void PutThenGet()
+        public void Put_Get()
         {
-            var originalContent = Utils.CreateRandomContent();
-            _blob.Put(originalContent);
+            _blob.Put(_content1);
+            var result = _blob.Get();
 
-            var retreivedContent = _blob.Get();
-            CollectionAssert.AreEqual(originalContent, retreivedContent);
+            CollectionAssert.AreEqual(_content1, result);
         }
 
         [TestMethod]
         [ExpectedException(typeof(QdbAliasNotFoundException))]
-        public void GetNonExisting()
+        public void Get()
         {
             _blob.Get();
         }
 
         [TestMethod]
-        public void GetAndRemoveThenPut()
+        public void Put_GetAndRemove_Put()
         {
-            var originalContent = Utils.CreateRandomContent();
-            _blob.Put(originalContent);
+            _blob.Put(_content1);
+            var result = _blob.GetAndRemove();
+            _blob.Put(_content2);
 
-            var retreivedContent = _blob.GetAndRemove();
-            CollectionAssert.AreEqual(originalContent, retreivedContent);
-
-            _blob.Put(originalContent);
+            CollectionAssert.AreEqual(_content1, result);
         }
 
         [TestMethod]
-        public void GetAndUpdateThenGet()
+        public void Put_GetAndUpdate_Get()
         {
-            var originalContent = Utils.CreateRandomContent();
-            _blob.Put(originalContent);
-
-            var replacingContent = Utils.CreateRandomContent();
-            var retreivedContent = _blob.GetAndUpdate(replacingContent);
-            CollectionAssert.AreEqual(retreivedContent, originalContent);
-
+            _blob.Put(_content1);
+            var result = _blob.GetAndUpdate(_content2);
             var finalContent = _blob.Get();
-            CollectionAssert.AreEqual(replacingContent, finalContent);
+
+            CollectionAssert.AreEqual(result, _content1);
+            CollectionAssert.AreEqual(_content2, finalContent);
         }
 
         [TestMethod]
-        public void UpdateThenGet()
+        public void Update_Get()
         {
-            var originalContent = Utils.CreateRandomContent();
-            _blob.Update(originalContent);
+            _blob.Update(_content1);
+            var finalContent = _blob.Get();
 
-            var retreivedContent = _blob.Get();
-            CollectionAssert.AreEqual(originalContent, retreivedContent);
+            CollectionAssert.AreEqual(_content1, finalContent);
         }
 
         [TestMethod]
-        public void UpdateTwice()
+        public void Update_Update()
         {
+            _blob.Update(_content1);
             _blob.Update(Utils.CreateRandomContent());
-            _blob.Update(Utils.CreateRandomContent());
         }
 
         [TestMethod]
-        public void CompareAndSwapShortVersion()
+        public void Put_CompareAndSwap_Get__NonMatching()
         {
-            var originalContent = Utils.CreateRandomContent();
-            _blob.Put(originalContent);
+            _blob.Put(_content1);
+            var result = _blob.CompareAndSwap(_content2, _content2);
+            var finalContent = _blob.Get();
 
-            var replacingContent = Utils.CreateRandomContent();
+            CollectionAssert.AreEqual(_content1, result);
+            CollectionAssert.AreEqual(_content1, finalContent);
+        }
 
-            var resultWithWrongComparand = _blob.CompareAndSwap(replacingContent, Utils.CreateRandomContent());
-            CollectionAssert.AreEqual(originalContent, resultWithWrongComparand);
-            CollectionAssert.AreEqual(originalContent, _blob.Get());
+        [TestMethod]
+        public void Put_CompareAndSwap_Get__Matching()
+        {
+            _blob.Put(_content1);
+            var result = _blob.CompareAndSwap(_content2, _content1);
+            var finalContent = _blob.Get();
 
-            var resultWithRightComparand = _blob.CompareAndSwap(replacingContent, originalContent);
-            CollectionAssert.AreEqual(originalContent, resultWithRightComparand);
-            CollectionAssert.AreEqual(replacingContent, _blob.Get());
+            CollectionAssert.AreEqual(_content1, result);
+            CollectionAssert.AreEqual(_content2, finalContent);
+        }
+
+        [TestMethod]
+        public void Put_Remove_Put()
+        {
+            _blob.Put(_content1);
+            _blob.Remove();
+            _blob.Put(_content2);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(QdbAliasNotFoundException))]
+        public void Put_Remove_Remove()
+        {
+            _blob.Put(_content1);
+            _blob.Remove();
+            _blob.Remove();
+        }
+
+        [TestMethod]
+        public void Put_RemoveIf_Get()
+        {
+            _blob.Put(_content1);
+            var result = _blob.RemoveIf(_content2);
+            _blob.Get();
+
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        public void Put_RemoveIf_Put()
+        {
+            _blob.Put(_content1);
+            var result = _blob.RemoveIf(_content1);
+            _blob.Put(_content2);
+
+            Assert.IsTrue(result);
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Dynamic;
 using System.Runtime.InteropServices;
 // ReSharper disable InconsistentNaming
 
@@ -11,9 +10,6 @@ namespace Quasardb.Interop
         const UnmanagedType ALIAS_TYPE = UnmanagedType.LPStr;
 
         [DllImport(DLL_NAME)]
-        public static extern qdb_handle qdb_open_tcp();
-
-        [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_close(
             [In] IntPtr handle);
 
@@ -23,10 +19,18 @@ namespace Quasardb.Interop
             [In] [MarshalAs(UnmanagedType.LPStr)] string uri);
 
         [DllImport(DLL_NAME)]
-        public static extern void qdb_free_buffer(
-            [In] IntPtr handle);
+        public static extern qdb_handle qdb_open_tcp();
 
-        #region Blob specific functions
+        #region Functions common to all entries
+
+        [DllImport(DLL_NAME)]
+        public static extern qdb_error qdb_remove(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias);
+
+        #endregion
+
+        #region Functions specific to blob entries
 
         [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_compare_and_swap(
@@ -65,6 +69,10 @@ namespace Quasardb.Interop
             [Out] out long old_content_length);
 
         [DllImport(DLL_NAME)]
+        public static extern void qdb_free_buffer(
+            [In] IntPtr handle);
+
+        [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_put(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
@@ -79,6 +87,13 @@ namespace Quasardb.Interop
             [In] byte[] content,
             [In] long content_length, 
             [In] long expiry_time);
+
+        [DllImport(DLL_NAME)]
+        public static extern qdb_error qdb_remove_if(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In] byte[] comparand,
+            [In] long comparand_length);
 
         #endregion
     }

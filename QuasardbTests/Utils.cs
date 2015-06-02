@@ -6,6 +6,7 @@ namespace QuasardbTests
     class Utils
     {
         static long _uniqueId = DateTime.Now.Ticks;
+        static Random _rand = new Random();
 
         public static string CreateUniqueAlias()
         {
@@ -14,9 +15,8 @@ namespace QuasardbTests
 
         public static byte[] CreateRandomContent()
         {
-            var rand = new Random();
-            var buffer = new byte[rand.Next(10, 20)];
-            rand.NextBytes(buffer);
+            var buffer = new byte[_rand.Next(10, 20)];
+            _rand.NextBytes(buffer);
             return buffer;
         }
     }
