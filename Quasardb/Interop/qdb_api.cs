@@ -31,6 +31,12 @@ namespace Quasardb.Interop
             [In] long expiry_time);
 
         [DllImport(DLL_NAME)]
+        public static extern qdb_error qdb_expires_from_now(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In] long delay);
+
+        [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_get_expiry_time(
             [In] qdb_handle handle, 
             [In] [MarshalAs(ALIAS_TYPE)] string alias, 

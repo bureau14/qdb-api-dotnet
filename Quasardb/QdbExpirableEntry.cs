@@ -18,6 +18,12 @@ namespace Quasardb
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
 
+        public void ExpiresFromNow(TimeSpan ttl)
+        {
+            var error = qdb_api.qdb_expires_from_now(_handle, _alias, TranslateExpiryTime(ttl));
+            QdbExceptionThrower.ThrowIfNeeded(error);
+        }
+
         public DateTime GetExpiryTime()
         {
             long expiryTime;
@@ -30,6 +36,11 @@ namespace Quasardb
         {
             if (expiryTime == default(DateTime)) return 0;
             return (long)expiryTime.Subtract(Epoch).TotalSeconds;
+        }
+
+        protected long TranslateExpiryTime(TimeSpan delay)
+        {
+            return (long)delay.TotalSeconds;
         }
 
         protected DateTime TranslateExpiryTime(long expiryTime)

@@ -156,13 +156,24 @@ namespace QuasardbTests
         }
 
         [TestMethod]
-        public void Put_ExpiresFromNow_GetExpiryTime()
+        public void Put_ExpiresAt_GetExpiryTime()
         {
             _blob.Put(_content1);
             _blob.ExpiresAt(_expiry1);
             var result = _blob.GetExpiryTime();
 
             Assert.AreEqual(_expiry1, result);
+        }
+
+        [TestMethod]
+        public void Put_ExpiresFromNow_GetExpiryTime()
+        {
+            _blob.Put(_content1);
+            _blob.ExpiresFromNow(TimeSpan.FromMinutes(10));
+            var result = _blob.GetExpiryTime();
+
+            Assert.IsTrue(result > DateTime.UtcNow.AddMinutes(5));
+            Assert.IsTrue(result < DateTime.UtcNow.AddMinutes(15));
         }
     }
 }
