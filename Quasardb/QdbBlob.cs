@@ -19,12 +19,6 @@ namespace Quasardb
             get { return _alias; }
         }
 
-        public void Put(byte[] content)
-        {
-            var error = qdb_api.qdb_put(_handle, _alias, content, content.LongLength, 0);
-            QdbExceptionThrower.ThrowIfNeeded(error);
-        }
-
         public byte[] Get()
         {
             qdb_buffer content;
@@ -43,18 +37,35 @@ namespace Quasardb
             return content.Copy(contentLength);
         }
 
-        public void Update(byte[] content)
-        {
-            var error = qdb_api.qdb_update(_handle, _alias, content, content.Length, 0);
-            QdbExceptionThrower.ThrowIfNeeded(error);
-        }
-
         public byte[] GetAndUpdate(byte[] content)
         {
             qdb_buffer oldContent;
             long oldContentLength;
             var error = qdb_api.qdb_get_and_update(_handle, _alias, content, content.LongLength, 0, out oldContent, out oldContentLength);
             QdbExceptionThrower.ThrowIfNeeded(error);
+            return oldContent.Copy(oldContentLength);
+        }
+
+        public void Put(byte[] content)
+        {
+            var error = qdb_api.qdb_put(_handle, _alias, content, content.LongLength, 0);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+        }
+
+        public void Update(byte[] content)
+        {
+            var error = qdb_api.qdb_update(_handle, _alias, content, content.Length, 0);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+        }
+
+        public byte[] CompareAndSwap(byte[] content, byte[] comparand)
+        {
+            qdb_buffer oldContent;
+            long oldContentLength;
+            
+            var error = qdb_api.qdb_compare_and_swap(_handle, _alias, content, content.LongLength, comparand, comparand.LongLength, 0, out oldContent, out oldContentLength);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+
             return oldContent.Copy(oldContentLength);
         }
     }

@@ -29,6 +29,18 @@ namespace Quasardb.Interop
         #region Blob specific functions
 
         [DllImport(DLL_NAME)]
+        public static extern qdb_error qdb_compare_and_swap(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In] byte[] new_content,
+            [In] long new_content_length,
+            [In] byte[] comparand,
+            [In] long comparand_length,
+            [In] long expiry_time,
+            [Out] out qdb_buffer original_content, 
+            [Out] out long original_content_length);
+
+        [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_get(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,

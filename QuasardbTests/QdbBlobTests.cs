@@ -90,5 +90,22 @@ namespace QuasardbTests
             _blob.Update(Utils.CreateRandomContent());
             _blob.Update(Utils.CreateRandomContent());
         }
+
+        [TestMethod]
+        public void CompareAndSwapShortVersion()
+        {
+            var originalContent = Utils.CreateRandomContent();
+            _blob.Put(originalContent);
+
+            var replacingContent = Utils.CreateRandomContent();
+
+            var resultWithWrongComparand = _blob.CompareAndSwap(replacingContent, Utils.CreateRandomContent());
+            CollectionAssert.AreEqual(originalContent, resultWithWrongComparand);
+            CollectionAssert.AreEqual(originalContent, _blob.Get());
+
+            var resultWithRightComparand = _blob.CompareAndSwap(replacingContent, originalContent);
+            CollectionAssert.AreEqual(originalContent, resultWithRightComparand);
+            CollectionAssert.AreEqual(replacingContent, _blob.Get());
+        }
     }
 }
