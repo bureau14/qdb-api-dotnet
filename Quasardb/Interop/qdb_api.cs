@@ -43,6 +43,16 @@ namespace Quasardb.Interop
             [Out] out long content_length);
 
         [DllImport(DLL_NAME)]
+        public static extern qdb_error qdb_get_and_update(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In] byte[] new_content,
+            [In] long new_content_length,
+            [In] long expiry_time,
+            [Out] out qdb_buffer old_content,
+            [Out] out long old_content_length);
+
+        [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_put(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,

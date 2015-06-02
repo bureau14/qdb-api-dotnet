@@ -21,7 +21,7 @@ namespace QuasardbTests
                 UseShellExecute = false,
                 RedirectStandardOutput = true
             });
-            Thread.Sleep(5000);
+            Thread.Sleep(2000);
             if (_daemon.HasExited)
             {
                 Console.Write(_daemon.StandardOutput.ReadToEnd());

@@ -49,7 +49,7 @@ namespace QuasardbTests
         }
 
         [TestMethod]
-        public void GetAndRemove()
+        public void GetAndRemoveThenPut()
         {
             var originalContent = Utils.CreateRandomContent();
             _blob.Put(originalContent);
@@ -58,6 +58,20 @@ namespace QuasardbTests
             CollectionAssert.AreEqual(originalContent, retreivedContent);
 
             _blob.Put(originalContent);
+        }
+
+        [TestMethod]
+        public void GetAndUpdateThenGet()
+        {
+            var originalContent = Utils.CreateRandomContent();
+            _blob.Put(originalContent);
+
+            var replacingContent = Utils.CreateRandomContent();
+            var retreivedContent = _blob.GetAndUpdate(replacingContent);
+            CollectionAssert.AreEqual(retreivedContent, originalContent);
+
+            var finalContent = _blob.Get();
+            CollectionAssert.AreEqual(replacingContent, finalContent);
         }
 
         [TestMethod]

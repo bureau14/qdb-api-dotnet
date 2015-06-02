@@ -1,4 +1,5 @@
-﻿using Quasardb.Interop;
+﻿using System.Diagnostics;
+using Quasardb.Interop;
 
 namespace Quasardb.Exceptions
 {
