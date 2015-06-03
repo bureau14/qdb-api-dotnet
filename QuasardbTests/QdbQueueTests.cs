@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb;
+using Quasardb.Exceptions;
 
 namespace QuasardbTests
 {
@@ -28,10 +29,22 @@ namespace QuasardbTests
         }
 
         [TestMethod]
+        [ExpectedException(typeof(QdbAliasNotFoundException))]
+        public void PopBack()
+        {
+            _queue.PopBack();
+        }
+
+        [TestMethod]
         public void PushFront_PopBack()
         {
             _queue.PushFront(_content1);
             _queue.PushFront(_content2);
+            var result1 = _queue.PopBack();
+            var result2 = _queue.PopBack();
+
+            CollectionAssert.AreEqual(_content1, result1);
+            CollectionAssert.AreEqual(_content2, result2);
         }
     }
 }
