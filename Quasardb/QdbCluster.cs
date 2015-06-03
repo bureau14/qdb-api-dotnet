@@ -10,6 +10,8 @@ namespace Quasardb
 
         public QdbCluster(string uri)
         {
+            if (uri == null) throw new ArgumentNullException("uri");
+
             _handle = qdb_api.qdb_open_tcp();
 
             var error = qdb_api.qdb_connect(_handle, uri);
@@ -23,11 +25,13 @@ namespace Quasardb
 
         public QdbBlob Blob(string alias)
         {
+            if (alias == null) throw new ArgumentNullException("alias");
             return new QdbBlob(_handle, alias);
         }
 
         public QdbInteger Integer(string alias)
         {
+            if (alias == null) throw new ArgumentNullException("alias");
             return new QdbInteger(_handle, alias);
         }
     }

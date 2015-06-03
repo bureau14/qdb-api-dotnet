@@ -4,14 +4,17 @@ using Quasardb.Interop;
 
 namespace Quasardb
 {
-    public class QdbBlob : QdbExpirableEntry
+    public sealed class QdbBlob : QdbExpirableEntry
     {
-        public QdbBlob(qdb_handle handle, string alias) : base(handle, alias)
+        internal QdbBlob(qdb_handle handle, string alias) : base(handle, alias)
         {
         }
 
         public byte[] CompareAndSwap(byte[] content, byte[] comparand, DateTime expiryTime = default(DateTime))
         {
+            if (content == null) throw new ArgumentNullException("content");
+            if (comparand == null) throw new ArgumentNullException("comparand");
+
             qdb_buffer oldContent;
             long oldContentLength;
             
@@ -41,6 +44,8 @@ namespace Quasardb
 
         public byte[] GetAndUpdate(byte[] content, DateTime expiryTime=default(DateTime))
         {
+            if (content == null) throw new ArgumentNullException("content");
+
             qdb_buffer oldContent;
             long oldContentLength;
             var error = qdb_api.qdb_get_and_update(_handle, _alias, content, content.LongLength,
@@ -51,6 +56,7 @@ namespace Quasardb
 
         public void Put(byte[] content, DateTime expiryTime=default(DateTime))
         {
+            if (content == null) throw new ArgumentNullException("content");
 
             var error = qdb_api.qdb_put(_handle, _alias, content, content.LongLength, TranslateExpiryTime(expiryTime));
             QdbExceptionThrower.ThrowIfNeeded(error);
@@ -58,6 +64,8 @@ namespace Quasardb
 
         public bool RemoveIf(byte[] comparand)
         {
+            if (comparand == null) throw new ArgumentNullException("comparand");
+
             var error = qdb_api.qdb_remove_if(_handle, _alias, comparand, comparand.Length);
             if (error == qdb_error.qdb_e_unmatched_content) return false;
             QdbExceptionThrower.ThrowIfNeeded(error);

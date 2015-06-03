@@ -25,6 +25,13 @@ namespace QuasardbTests
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Put_Null()
+        {
+            _blob.Put(null);
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(QdbAliasAlreadyExistsException))]
         public void Put_Put()
         {
@@ -68,6 +75,13 @@ namespace QuasardbTests
         }
 
         [TestMethod]
+        [ExpectedException(typeof (ArgumentNullException))]
+        public void GetAndUpdate_Null()
+        {
+            _blob.GetAndUpdate(null);
+        }
+
+        [TestMethod]
         public void Put_GetAndUpdate_Get()
         {
             _blob.Put(_content1);
@@ -107,6 +121,20 @@ namespace QuasardbTests
             var expiryTime = _blob.GetExpiryTime();
             
             Assert.AreEqual(_expiry2, expiryTime);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void CompareAndSwap_NullContent()
+        {
+            _blob.CompareAndSwap(null, _content1);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void CompareAndSwap_NullComparand()
+        {
+            _blob.CompareAndSwap(_content1, null);
         }
 
         [TestMethod]
@@ -156,6 +184,13 @@ namespace QuasardbTests
             _blob.Put(_content1);
             _blob.Remove();
             _blob.Remove();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void RemoveIf_Null()
+        {
+            _blob.RemoveIf(null);
         }
 
         [TestMethod]

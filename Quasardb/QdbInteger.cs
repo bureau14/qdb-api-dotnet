@@ -3,9 +3,9 @@ using Quasardb.Interop;
 
 namespace Quasardb
 {
-    public class QdbInteger : QdbExpirableEntry
+    public sealed class QdbInteger : QdbExpirableEntry
     {
-        public QdbInteger(qdb_handle handle, string alias) : base(handle, alias)
+        internal QdbInteger(qdb_handle handle, string alias) : base(handle, alias)
         {
         }
 
