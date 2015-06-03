@@ -29,5 +29,15 @@ namespace Quasardb
             QdbExceptionThrower.ThrowIfNeeded(error);
             return true;
         }
+
+        public bool Contains(byte[] content)
+        {
+            if (content == null) throw new ArgumentNullException("content");
+
+            var error = qdb_api.qdb_hset_contains(_handle, _alias, content, content.LongLength);
+            if (error == qdb_error.qdb_e_element_not_found) return false;
+            QdbExceptionThrower.ThrowIfNeeded(error);
+            return true;
+        }
     }
 }

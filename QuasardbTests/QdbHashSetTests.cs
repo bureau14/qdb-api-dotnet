@@ -9,7 +9,7 @@ namespace QuasardbTests
     public class QdbHashSetTests
     {
         QdbHashSet _hashSet;
-        byte[] _content1;
+        byte[] _content1, _content2;
 
         [TestInitialize]
         public void Initialize()
@@ -18,6 +18,7 @@ namespace QuasardbTests
             var alias = Utils.CreateUniqueAlias();
             _hashSet = cluster.HashSet(alias);
             _content1 = Utils.CreateRandomContent();
+            _content2 = Utils.CreateRandomContent();
         }
 
         [TestMethod]
@@ -26,6 +27,21 @@ namespace QuasardbTests
         {
             _hashSet.Insert(null);
         }
+        
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Erase_Null()
+        {
+            _hashSet.Contains(null);
+        }
+        
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Contains_Null()
+        {
+            _hashSet.Erase(null);
+        }
+
 
         [TestMethod]
         public void Insert_Insert()
@@ -38,13 +54,6 @@ namespace QuasardbTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void Erase_Null()
-        {
-            _hashSet.Erase(null);
-        }
-
-        [TestMethod]
         public void Insert_Erase_Erase()
         {
             _hashSet.Insert(_content1);
@@ -53,6 +62,27 @@ namespace QuasardbTests
 
             Assert.IsTrue(result1);
             Assert.IsFalse(result2);
+        }
+
+        [TestMethod]
+        public void Insert_Contains()
+        {
+            _hashSet.Insert(_content1);
+            var result1 = _hashSet.Contains(_content1);
+            var result2 = _hashSet.Contains(_content2);
+
+            Assert.IsTrue(result1);
+            Assert.IsFalse(result2);
+        }
+
+        [TestMethod]
+        public void Insert_Erase_Contains()
+        {
+            _hashSet.Insert(_content1);
+            _hashSet.Erase(_content1);
+            var result = _hashSet.Contains(_content1);
+
+            Assert.IsFalse(result);
         }
     }
 }
