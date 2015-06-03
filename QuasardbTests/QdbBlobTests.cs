@@ -93,19 +93,23 @@ namespace QuasardbTests
         }
 
         [TestMethod]
-        public void Update_Get()
+        public void Update_Update_Get()
         {
             _blob.Update(_content1);
+            _blob.Update(_content2);
             var finalContent = _blob.Get();
 
-            CollectionAssert.AreEqual(_content1, finalContent);
+            CollectionAssert.AreEqual(_content2, finalContent);
         }
 
         [TestMethod]
-        public void Update_Update()
+        public void Put_Update_GetExpiryTime()
         {
-            _blob.Update(_content1);
-            _blob.Update(Utils.CreateRandomContent());
+            _blob.Put(_content1, _expiry1);
+            _blob.Update(_content2, _expiry2);
+            var expiryTime = _blob.GetExpiryTime();
+            
+            Assert.AreEqual(_expiry2, expiryTime);
         }
 
         [TestMethod]

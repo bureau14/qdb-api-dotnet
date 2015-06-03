@@ -64,9 +64,9 @@ namespace Quasardb
             return true;
         }
 
-        public void Update(byte[] content)
+        public void Update(byte[] content, DateTime expiryTime = default(DateTime))
         {
-            var error = qdb_api.qdb_update(_handle, _alias, content, content.Length, 0);
+            var error = qdb_api.qdb_update(_handle, _alias, content, content.Length, TranslateExpiryTime(expiryTime));
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
     }
