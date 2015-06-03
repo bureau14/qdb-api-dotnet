@@ -150,42 +150,55 @@ namespace Quasardb.Interop
         [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_queue_back(
             [In] qdb_handle handle,
-            [In] string alias,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [Out] out qdb_buffer buffer,
             [Out] out long contentLength);
 
         [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_queue_front(
             [In] qdb_handle handle,
-            [In] string alias,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [Out] out qdb_buffer buffer,
             [Out] out long contentLength);
 
         [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_queue_pop_back(
             [In] qdb_handle handle,
-            [In] string alias,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [Out] out qdb_buffer buffer,
             [Out] out long contentLength);
 
         [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_queue_pop_front(
             [In] qdb_handle handle,
-            [In] string alias,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [Out] out qdb_buffer buffer,
             [Out] out long contentLength);
 
         [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_queue_push_front(
-            [In] qdb_handle handle, string alias,
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] byte[] content,
             [Out] long content_length);
 
         [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_queue_push_back(
-            [In] qdb_handle handle, string alias,
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] byte[] content,
             [Out] long content_length);
+
+        #endregion
+
+        #region Function specific to sets
+
+        [DllImport(DLL_NAME)]
+        public static extern qdb_error qdb_hset_insert(
+            [In] qdb_handle handle,
+            [In] string @alias,
+            [In] byte[] content,
+            [In] long content_length);
 
         #endregion
 

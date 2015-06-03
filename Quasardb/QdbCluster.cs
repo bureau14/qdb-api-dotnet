@@ -40,5 +40,11 @@ namespace Quasardb
             if (alias == null) throw new ArgumentNullException("alias");
             return new QdbQueue(_handle, alias);
         }
+
+        public QdbHashSet HashSet(string alias)
+        {
+            if (alias == null) throw new ArgumentNullException("alias");
+            return new QdbHashSet(_handle, alias);
+        }
     }
 }

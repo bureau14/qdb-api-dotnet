@@ -74,6 +74,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QdbEntry.cs" />
     <Compile Include="QdbExpirableEntry.cs" />
+    <Compile Include="QdbHashSet.cs" />
     <Compile Include="QdbInteger.cs" />
     <Compile Include="QdbQueue.cs" />
   </ItemGroup>

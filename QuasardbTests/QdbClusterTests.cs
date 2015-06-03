@@ -54,5 +54,13 @@ namespace QuasardbTests
             var cluster = new QdbCluster(DaemonRunner.ClusterUrl);
             cluster.Queue(null);
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void HashSetNull()
+        {
+            var cluster = new QdbCluster(DaemonRunner.ClusterUrl);
+            cluster.HashSet(null);
+        }
     }
 }
