@@ -155,6 +155,13 @@ namespace Quasardb.Interop
             [Out] out long contentLength);
 
         [DllImport(DLL_NAME)]
+        public static extern qdb_error qdb_queue_pop_front(
+            [In] qdb_handle handle,
+            [In] string alias,
+            [Out] out qdb_buffer buffer,
+            [Out] out long contentLength);
+
+        [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_queue_push_front(
             [In] qdb_handle handle, string alias,
             [In] byte[] content,
