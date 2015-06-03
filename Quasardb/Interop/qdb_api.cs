@@ -124,6 +124,12 @@ namespace Quasardb.Interop
             [In] [MarshalAs(UnmanagedType.LPStr)] string alias, 
             [Out] out long value);
 
+        [DllImport(DLL_NAME)]
+        public static extern qdb_error qdb_int_put(
+            [In] qdb_handle handle, 
+            [In] [MarshalAs(UnmanagedType.LPStr)] string alias,
+            [Out] long value);
+
         #endregion
     }
 }

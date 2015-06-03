@@ -23,5 +23,22 @@ namespace QuasardbTests
         {
             _integer.Get();
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(QdbAliasAlreadyExistsException))]
+        public void Put_Put()
+        {
+            _integer.Put(1934);
+            _integer.Put(1956);
+        }
+
+        [TestMethod]
+        public void Put_Get()
+        {
+            _integer.Put(42);
+            var value = _integer.Get();
+
+            Assert.AreEqual(42, value);
+        }
     }
 }

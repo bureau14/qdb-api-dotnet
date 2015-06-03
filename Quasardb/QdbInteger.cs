@@ -16,5 +16,11 @@ namespace Quasardb
             QdbExceptionThrower.ThrowIfNeeded(error);
             return value;
         }
+
+        public void Put(long value)
+        {
+            var error = qdb_api.qdb_int_put(_handle, _alias, value);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+        }
     }
 }
