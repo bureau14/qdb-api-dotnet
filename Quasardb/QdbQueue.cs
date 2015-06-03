@@ -20,6 +20,15 @@ namespace Quasardb
             return content.Copy(contentLength);
         }
 
+        public byte[] Front()
+        {
+            qdb_buffer content;
+            long contentLength;
+            var error = qdb_api.qdb_queue_front(_handle, _alias, out content, out contentLength);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+            return content.Copy(contentLength);
+        }
+
         public byte[] PopBack()
         {
             qdb_buffer content;
