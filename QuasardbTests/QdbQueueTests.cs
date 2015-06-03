@@ -50,6 +50,13 @@ namespace QuasardbTests
         }
 
         [TestMethod]
+        [ExpectedException(typeof(QdbAliasNotFoundException))]
+        public void Back()
+        {
+            _queue.Back();
+        }
+
+        [TestMethod]
         public void PushFront_PopBack()
         {
             _queue.PushFront(_content1);
@@ -60,6 +67,17 @@ namespace QuasardbTests
             CollectionAssert.AreEqual(_content1, result1);
             CollectionAssert.AreEqual(_content2, result2);
         }
+
+        [TestMethod]
+        public void PushFront_Back()
+        {
+            _queue.PushFront(_content1);
+            _queue.PushFront(_content2);
+            var result = _queue.Back();
+
+            CollectionAssert.AreEqual(_content1, result);
+        }
+
 
         [TestMethod]
         public void PushBack_PopBack()

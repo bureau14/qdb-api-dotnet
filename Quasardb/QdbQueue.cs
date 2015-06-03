@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using Quasardb.Exceptions;
 using Quasardb.Interop;
 
@@ -8,6 +9,15 @@ namespace Quasardb
     {
         internal QdbQueue(qdb_handle handle, string alias) : base(handle, alias)
         {
+        }
+
+        public byte[] Back()
+        {
+            qdb_buffer content;
+            long contentLength;
+            var error = qdb_api.qdb_queue_back(_handle, _alias, out content, out contentLength);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+            return content.Copy(contentLength);
         }
 
         public byte[] PopBack()
