@@ -75,6 +75,7 @@
     <Compile Include="QdbEntry.cs" />
     <Compile Include="QdbExpirableEntry.cs" />
     <Compile Include="QdbInteger.cs" />
+    <Compile Include="QdbQueue.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\qdb\win64\bin\qdb_api.dll">

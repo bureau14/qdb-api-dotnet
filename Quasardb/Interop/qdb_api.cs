@@ -47,9 +47,9 @@ namespace Quasardb.Interop
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias);
 
-        #region Functions specific to blob entries
-
         #endregion
+
+        #region Functions specific to blob entries
 
         [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_compare_and_swap(
@@ -121,8 +121,8 @@ namespace Quasardb.Interop
         [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_int_add(
             [In] qdb_handle handle, 
-            [In, MarshalAs(UnmanagedType.LPStr)] string alias, 
-            [Out] long value,
+            [In, MarshalAs(UnmanagedType.LPStr)] string alias,
+            [In] long value,
             [Out] out long result);
 
         [DllImport(DLL_NAME)]
@@ -135,14 +135,20 @@ namespace Quasardb.Interop
         public static extern qdb_error qdb_int_put(
             [In] qdb_handle handle, 
             [In] [MarshalAs(UnmanagedType.LPStr)] string alias,
-            [Out] long value);
+            [In] long value);
 
         [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_int_update(
             [In] qdb_handle handle,
             [In] [MarshalAs(UnmanagedType.LPStr)] string alias,
-            [Out] long value);
+            [In] long value);
 
         #endregion
+
+        [DllImport(DLL_NAME)]
+        public static extern qdb_error qdb_queue_push_front(
+            [In] qdb_handle handle, string alias,
+            [In] byte[] content,
+            [Out] long content_length);
     }
 }
