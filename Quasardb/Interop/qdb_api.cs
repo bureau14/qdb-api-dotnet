@@ -119,6 +119,13 @@ namespace Quasardb.Interop
         #region Functions specific to integers
 
         [DllImport(DLL_NAME)]
+        public static extern qdb_error qdb_int_add(
+            [In] qdb_handle handle, 
+            [In, MarshalAs(UnmanagedType.LPStr)] string alias, 
+            [Out] long value,
+            [Out] out long result);
+
+        [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_int_get(
             [In] qdb_handle handle,
             [In] [MarshalAs(UnmanagedType.LPStr)] string alias, 

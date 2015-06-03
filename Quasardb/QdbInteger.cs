@@ -9,6 +9,14 @@ namespace Quasardb
         {
         }
 
+        public long Add(long addend)
+        {
+            long result;
+            var error = qdb_api.qdb_int_add(_handle, _alias, addend, out result);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+            return result;
+        }
+
         public long Get()
         {
             long value;

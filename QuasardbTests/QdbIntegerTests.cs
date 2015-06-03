@@ -19,6 +19,24 @@ namespace QuasardbTests
 
         [TestMethod]
         [ExpectedException(typeof(QdbAliasNotFoundException))]
+        public void Add()
+        {
+            _integer.Add(22);
+        }
+
+        [TestMethod]
+        public void Put_Add_Get()
+        {
+            _integer.Put(1934);
+            var resultOfAdd = _integer.Add(22);
+            var resultOfGet = _integer.Get();
+
+            Assert.AreEqual(1956, resultOfAdd);
+            Assert.AreEqual(1956, resultOfGet);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void Get()
         {
             _integer.Get();
