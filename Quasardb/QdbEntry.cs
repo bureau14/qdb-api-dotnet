@@ -5,23 +5,23 @@ namespace Quasardb
 {
     public class QdbEntry
     {
-        protected qdb_handle _handle;
-        protected string _alias;
+        protected qdb_handle m_handle;
+        protected string m_alias;
 
         public QdbEntry(qdb_handle handle, string alias)
         {
-            _handle = handle;
-            _alias = alias;
+            m_handle = handle;
+            m_alias = alias;
         }
 
         public string Alias
         {
-            get { return _alias; }
+            get { return m_alias; }
         }
 
         public void Remove()
         {
-            var error = qdb_api.qdb_remove(_handle, _alias);
+            var error = qdb_api.qdb_remove(m_handle, m_alias);
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
     }

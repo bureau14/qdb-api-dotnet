@@ -18,7 +18,7 @@ namespace Quasardb
             qdb_buffer oldContent;
             long oldContentLength;
             
-            var error = qdb_api.qdb_compare_and_swap(_handle, _alias, content, content.LongLength, comparand, comparand.LongLength, TranslateExpiryTime(expiryTime), out oldContent, out oldContentLength);
+            var error = qdb_api.qdb_compare_and_swap(m_handle, m_alias, content, content.LongLength, comparand, comparand.LongLength, TranslateExpiryTime(expiryTime), out oldContent, out oldContentLength);
             QdbExceptionThrower.ThrowIfNeeded(error);
 
             return oldContent.Copy(oldContentLength);
@@ -28,7 +28,7 @@ namespace Quasardb
         {
             qdb_buffer content;
             long contentLength;
-            var error = qdb_api.qdb_get(_handle, _alias, out content, out contentLength);
+            var error = qdb_api.qdb_get(m_handle, m_alias, out content, out contentLength);
             QdbExceptionThrower.ThrowIfNeeded(error);
             return content.Copy(contentLength);
         }
@@ -37,7 +37,7 @@ namespace Quasardb
         {
             qdb_buffer content;
             long contentLength;
-            var error = qdb_api.qdb_get_and_remove(_handle, _alias, out content, out contentLength);
+            var error = qdb_api.qdb_get_and_remove(m_handle, m_alias, out content, out contentLength);
             QdbExceptionThrower.ThrowIfNeeded(error);
             return content.Copy(contentLength);
         }
@@ -48,7 +48,7 @@ namespace Quasardb
 
             qdb_buffer oldContent;
             long oldContentLength;
-            var error = qdb_api.qdb_get_and_update(_handle, _alias, content, content.LongLength,
+            var error = qdb_api.qdb_get_and_update(m_handle, m_alias, content, content.LongLength,
                 TranslateExpiryTime(expiryTime), out oldContent, out oldContentLength);
             QdbExceptionThrower.ThrowIfNeeded(error);
             return oldContent.Copy(oldContentLength);
@@ -58,7 +58,7 @@ namespace Quasardb
         {
             if (content == null) throw new ArgumentNullException("content");
 
-            var error = qdb_api.qdb_put(_handle, _alias, content, content.LongLength, TranslateExpiryTime(expiryTime));
+            var error = qdb_api.qdb_put(m_handle, m_alias, content, content.LongLength, TranslateExpiryTime(expiryTime));
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
 
@@ -66,7 +66,7 @@ namespace Quasardb
         {
             if (comparand == null) throw new ArgumentNullException("comparand");
 
-            var error = qdb_api.qdb_remove_if(_handle, _alias, comparand, comparand.Length);
+            var error = qdb_api.qdb_remove_if(m_handle, m_alias, comparand, comparand.Length);
             if (error == qdb_error.qdb_e_unmatched_content) return false;
             QdbExceptionThrower.ThrowIfNeeded(error);
             return true;
@@ -74,7 +74,7 @@ namespace Quasardb
 
         public void Update(byte[] content, DateTime expiryTime = default(DateTime))
         {
-            var error = qdb_api.qdb_update(_handle, _alias, content, content.Length, TranslateExpiryTime(expiryTime));
+            var error = qdb_api.qdb_update(m_handle, m_alias, content, content.Length, TranslateExpiryTime(expiryTime));
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
     }

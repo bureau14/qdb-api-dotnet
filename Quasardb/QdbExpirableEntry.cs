@@ -14,20 +14,20 @@ namespace Quasardb
 
         public void ExpiresAt(DateTime expiryTime)
         {
-            var error = qdb_api.qdb_expires_at(_handle, _alias, TranslateExpiryTime(expiryTime));
+            var error = qdb_api.qdb_expires_at(m_handle, m_alias, TranslateExpiryTime(expiryTime));
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
 
         public void ExpiresFromNow(TimeSpan ttl)
         {
-            var error = qdb_api.qdb_expires_from_now(_handle, _alias, TranslateExpiryTime(ttl));
+            var error = qdb_api.qdb_expires_from_now(m_handle, m_alias, TranslateExpiryTime(ttl));
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
 
         public DateTime GetExpiryTime()
         {
             long expiryTime;
-            var error = qdb_api.qdb_get_expiry_time(_handle, _alias, out expiryTime);
+            var error = qdb_api.qdb_get_expiry_time(m_handle, m_alias, out expiryTime);
             QdbExceptionThrower.ThrowIfNeeded(error);
             return TranslateExpiryTime(expiryTime);
         }

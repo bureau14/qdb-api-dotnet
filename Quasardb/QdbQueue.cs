@@ -14,7 +14,7 @@ namespace Quasardb
         {
             qdb_buffer content;
             long contentLength;
-            var error = qdb_api.qdb_queue_back(_handle, _alias, out content, out contentLength);
+            var error = qdb_api.qdb_queue_back(m_handle, m_alias, out content, out contentLength);
             QdbExceptionThrower.ThrowIfNeeded(error);
             return content.Copy(contentLength);
         }
@@ -23,7 +23,7 @@ namespace Quasardb
         {
             qdb_buffer content;
             long contentLength;
-            var error = qdb_api.qdb_queue_front(_handle, _alias, out content, out contentLength);
+            var error = qdb_api.qdb_queue_front(m_handle, m_alias, out content, out contentLength);
             QdbExceptionThrower.ThrowIfNeeded(error);
             return content.Copy(contentLength);
         }
@@ -32,7 +32,7 @@ namespace Quasardb
         {
             qdb_buffer content;
             long contentLength;
-            var error = qdb_api.qdb_queue_pop_back(_handle, _alias, out content, out contentLength);
+            var error = qdb_api.qdb_queue_pop_back(m_handle, m_alias, out content, out contentLength);
             QdbExceptionThrower.ThrowIfNeeded(error);
             return content.Copy(contentLength);
         }
@@ -41,7 +41,7 @@ namespace Quasardb
         {
             qdb_buffer content;
             long contentLength;
-            var error = qdb_api.qdb_queue_pop_front(_handle, _alias, out content, out contentLength);
+            var error = qdb_api.qdb_queue_pop_front(m_handle, m_alias, out content, out contentLength);
             QdbExceptionThrower.ThrowIfNeeded(error);
             return content.Copy(contentLength);
         }
@@ -50,7 +50,7 @@ namespace Quasardb
         {
             if (content == null) throw new ArgumentNullException("content");
 
-            var error = qdb_api.qdb_queue_push_back(_handle, _alias, content, content.LongLength);
+            var error = qdb_api.qdb_queue_push_back(m_handle, m_alias, content, content.LongLength);
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
 
@@ -58,7 +58,7 @@ namespace Quasardb
         {
             if (content == null) throw new ArgumentNullException("content");
 
-            var error = qdb_api.qdb_queue_push_front(_handle, _alias, content, content.LongLength);
+            var error = qdb_api.qdb_queue_push_front(m_handle, m_alias, content, content.LongLength);
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
     }

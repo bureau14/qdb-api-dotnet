@@ -12,7 +12,7 @@ namespace Quasardb
         public long Add(long addend)
         {
             long result;
-            var error = qdb_api.qdb_int_add(_handle, _alias, addend, out result);
+            var error = qdb_api.qdb_int_add(m_handle, m_alias, addend, out result);
             QdbExceptionThrower.ThrowIfNeeded(error);
             return result;
         }
@@ -20,20 +20,20 @@ namespace Quasardb
         public long Get()
         {
             long value;
-            var error = qdb_api.qdb_int_get(_handle, _alias, out value);
+            var error = qdb_api.qdb_int_get(m_handle, m_alias, out value);
             QdbExceptionThrower.ThrowIfNeeded(error);
             return value;
         }
 
         public void Put(long value)
         {
-            var error = qdb_api.qdb_int_put(_handle, _alias, value);
+            var error = qdb_api.qdb_int_put(m_handle, m_alias, value);
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
 
         public void Update(long value)
         {
-            var error = qdb_api.qdb_int_update(_handle, _alias, value);
+            var error = qdb_api.qdb_int_update(m_handle, m_alias, value);
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
     }
