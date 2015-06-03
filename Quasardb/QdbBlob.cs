@@ -39,11 +39,12 @@ namespace Quasardb
             return content.Copy(contentLength);
         }
 
-        public byte[] GetAndUpdate(byte[] content)
+        public byte[] GetAndUpdate(byte[] content, DateTime expiryTime=default(DateTime))
         {
             qdb_buffer oldContent;
             long oldContentLength;
-            var error = qdb_api.qdb_get_and_update(_handle, _alias, content, content.LongLength, 0, out oldContent, out oldContentLength);
+            var error = qdb_api.qdb_get_and_update(_handle, _alias, content, content.LongLength,
+                TranslateExpiryTime(expiryTime), out oldContent, out oldContentLength);
             QdbExceptionThrower.ThrowIfNeeded(error);
             return oldContent.Copy(oldContentLength);
         }
