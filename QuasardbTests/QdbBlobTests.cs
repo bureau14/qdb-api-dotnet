@@ -135,6 +135,16 @@ namespace QuasardbTests
         }
 
         [TestMethod]
+        public void Put_CompareAndSwap_GetExpiryTime()
+        {
+            _blob.Put(_content1, _expiry1);
+            _blob.CompareAndSwap(_content2, _content1, _expiry2);
+            var expiryTime = _blob.GetExpiryTime();
+
+            Assert.AreEqual(_expiry2, expiryTime);
+        }
+
+        [TestMethod]
         public void Put_Remove_Put()
         {
             _blob.Put(_content1);

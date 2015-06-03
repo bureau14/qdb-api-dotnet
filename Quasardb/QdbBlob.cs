@@ -10,12 +10,12 @@ namespace Quasardb
         {
         }
 
-        public byte[] CompareAndSwap(byte[] content, byte[] comparand)
+        public byte[] CompareAndSwap(byte[] content, byte[] comparand, DateTime expiryTime = default(DateTime))
         {
             qdb_buffer oldContent;
             long oldContentLength;
             
-            var error = qdb_api.qdb_compare_and_swap(_handle, _alias, content, content.LongLength, comparand, comparand.LongLength, 0, out oldContent, out oldContentLength);
+            var error = qdb_api.qdb_compare_and_swap(_handle, _alias, content, content.LongLength, comparand, comparand.LongLength, TranslateExpiryTime(expiryTime), out oldContent, out oldContentLength);
             QdbExceptionThrower.ThrowIfNeeded(error);
 
             return oldContent.Copy(oldContentLength);
