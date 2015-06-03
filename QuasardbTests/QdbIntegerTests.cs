@@ -40,5 +40,15 @@ namespace QuasardbTests
 
             Assert.AreEqual(42, value);
         }
+
+        [TestMethod]
+        public void Put_Update_Get()
+        {
+            _integer.Put(1934);
+            _integer.Update(1956);
+            var value = _integer.Get();
+
+            Assert.AreEqual(1956, value);
+        }
     }
 }

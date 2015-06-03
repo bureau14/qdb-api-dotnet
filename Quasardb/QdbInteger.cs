@@ -22,5 +22,11 @@ namespace Quasardb
             var error = qdb_api.qdb_int_put(_handle, _alias, value);
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
+
+        public void Update(long value)
+        {
+            var error = qdb_api.qdb_int_update(_handle, _alias, value);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+        }
     }
 }
