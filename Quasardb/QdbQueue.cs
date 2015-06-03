@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using Quasardb.Exceptions;
 using Quasardb.Interop;
 

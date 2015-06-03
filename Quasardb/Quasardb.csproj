@@ -58,7 +58,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Exceptions\QdbErrorAttribute.cs" />
     <Compile Include="Exceptions\QdbExceptions.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

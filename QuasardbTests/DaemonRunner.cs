@@ -23,6 +23,7 @@ namespace QuasardbTests
                 UseShellExecute = false,
                 RedirectStandardOutput = true
             });
+            Debug.Assert(_daemon != null, "_daemon != null");
             Thread.Sleep(2000);
             if (_daemon.HasExited)
             {

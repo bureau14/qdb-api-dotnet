@@ -6,7 +6,7 @@ namespace Quasardb
 {
     public class QdbExpirableEntry : QdbEntry
     {
-        static readonly DateTime Epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        static readonly DateTime _epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         public QdbExpirableEntry(qdb_handle handle, string alias) : base(handle, alias)
         {
@@ -35,7 +35,7 @@ namespace Quasardb
         protected long TranslateExpiryTime(DateTime expiryTime)
         {
             if (expiryTime == default(DateTime)) return 0;
-            return (long)expiryTime.Subtract(Epoch).TotalSeconds;
+            return (long)expiryTime.Subtract(_epoch).TotalSeconds;
         }
 
         protected long TranslateExpiryTime(TimeSpan delay)
@@ -46,7 +46,7 @@ namespace Quasardb
         protected DateTime TranslateExpiryTime(long expiryTime)
         {
             if (expiryTime == 0) return default(DateTime);
-            return Epoch.AddSeconds(expiryTime);
+            return _epoch.AddSeconds(expiryTime);
         }
     }
 }

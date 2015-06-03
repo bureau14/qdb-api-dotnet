@@ -8,217 +8,174 @@ namespace Quasardb.Exceptions
     {
     }
 
-	[QdbError(qdb_error.qdb_e_uninitialized)]
 	public sealed class QdbUninitializedException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_system)]
 	public sealed class QdbSystemException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_internal)]
 	public sealed class QdbInternalException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_no_memory)]
 	public sealed class QdbNoMemoryException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_invalid_protocol)]
 	public sealed class QdbInvalidProtocolException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_host_not_found)]
 	public sealed class QdbHostNotFoundException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_invalid_option)]
 	public sealed class QdbInvalidOptionException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_alias_too_long)]
 	public sealed class QdbAliasTooLongException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_alias_not_found)]
 	public sealed class QdbAliasNotFoundException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_alias_already_exists)]
 	public sealed class QdbAliasAlreadyExistsException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_timeout)]
 	public sealed class QdbTimeoutException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_buffer_too_small)]
 	public sealed class QdbBufferTooSmallException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_invalid_command)]
 	public sealed class QdbInvalidCommandException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_invalid_input)]
 	public sealed class QdbInvalidInputException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_connection_refused)]
 	public sealed class QdbConnectionRefusedException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_connection_reset)]
 	public sealed class QdbConnectionResetException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_unexpected_reply)]
 	public sealed class QdbUnexpectedReplyException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_not_implemented)]
 	public sealed class QdbNotImplementedException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_unstable_hive)]
 	public sealed class QdbUnstableHiveException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_protocol_error)]
 	public sealed class QdbProtocolErrorException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_outdated_topology)]
 	public sealed class QdbOutdatedTopologyException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_wrong_peer)]
 	public sealed class QdbWrongPeerException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_invalid_version)]
 	public sealed class QdbInvalidVersionException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_try_again)]
 	public sealed class QdbTryAgainException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_invalid_argument)]
 	public sealed class QdbInvalidArgumentException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_out_of_bounds)]
 	public sealed class QdbOutOfBoundsException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_conflict)]
 	public sealed class QdbConflictException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_not_connected)]
 	public sealed class QdbNotConnectedException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_invalid_handle)]
 	public sealed class QdbInvalidHandleException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_reserved_alias)]
 	public sealed class QdbReservedAliasException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_unmatched_content)]
 	public sealed class QdbUnmatchedContentException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_invalid_iterator)]
 	public sealed class QdbInvalidIteratorException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_prefix_too_short)]
 	public sealed class QdbPrefixTooShortException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_skipped)]
 	public sealed class QdbSkippedException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_incompatible_type)]
 	public sealed class QdbIncompatibleTypeException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_empty_container)]
 	public sealed class QdbEmptyContainerException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_container_full)]
 	public sealed class QdbContainerFullException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_element_not_found)]
 	public sealed class QdbElementNotFoundException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_element_already_exists)]
 	public sealed class QdbElementAlreadyExistsException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_overflow)]
 	public sealed class QdbOverflowException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_underflow)]
 	public sealed class QdbUnderflowException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_tag_already_set)]
 	public sealed class QdbTagAlreadySetException : QdbExceptionBase 
 	{
 	}
 
-	[QdbError(qdb_error.qdb_e_tag_not_set)]
 	public sealed class QdbTagNotSetException : QdbExceptionBase 
 	{
 	}

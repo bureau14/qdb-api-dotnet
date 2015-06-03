@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb;
-using Quasardb.Exceptions;
 
 namespace QuasardbTests
 {
