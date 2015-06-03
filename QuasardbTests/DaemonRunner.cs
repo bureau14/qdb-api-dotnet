@@ -8,6 +8,8 @@ namespace QuasardbTests
     [TestClass]
     public class DaemonRunner
     {
+        public const string ClusterUrl = "qdb://127.0.0.1:2836";
+
         static Process _daemon;
 
         [AssemblyInitialize]

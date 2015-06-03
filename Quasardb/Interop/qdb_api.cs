@@ -115,5 +115,15 @@ namespace Quasardb.Interop
             [In] long comparand_length);
 
         #endregion
+
+        #region Functions specific to integers
+
+        [DllImport(DLL_NAME)]
+        public static extern qdb_error qdb_int_get(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(UnmanagedType.LPStr)] string alias, 
+            [Out] out long value);
+
+        #endregion
     }
 }

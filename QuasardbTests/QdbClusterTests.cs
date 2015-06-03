@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb;
 using Quasardb.Exceptions;
 
@@ -11,7 +10,7 @@ namespace QuasardbTests
         [TestMethod]
         public void CreateAndDispose()
         {
-            var cluster = new QdbCluster("qdb://127.0.0.1:2836");
+            var cluster = new QdbCluster(DaemonRunner.ClusterUrl);
             cluster.Dispose();
         }
 

@@ -25,5 +25,10 @@ namespace Quasardb
         {
             return new QdbBlob(_handle, alias);
         }
+
+        public QdbInteger Integer(string alias)
+        {
+            return new QdbInteger(_handle, alias);
+        }
     }
 }

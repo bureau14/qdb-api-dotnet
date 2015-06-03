@@ -5,9 +5,6 @@ using Quasardb.Exceptions;
 
 namespace QuasardbTests
 {
-    /// <summary>
-    /// Summary description for QdbBlobTests
-    /// </summary>
     [TestClass]
     public class QdbBlobTests
     {
@@ -18,7 +15,7 @@ namespace QuasardbTests
         [TestInitialize]
         public void Initialize()
         {
-            var cluster = new QdbCluster("qdb://127.0.0.1:2836");
+            var cluster = new QdbCluster(DaemonRunner.ClusterUrl);
             var alias = Utils.CreateUniqueAlias();
             _blob = cluster.Blob(alias);
             _content1 = Utils.CreateRandomContent();
