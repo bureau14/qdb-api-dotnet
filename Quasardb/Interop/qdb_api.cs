@@ -194,9 +194,16 @@ namespace Quasardb.Interop
         #region Function specific to sets
 
         [DllImport(DLL_NAME)]
+        public static extern qdb_error qdb_hset_erase(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In] byte[] content,
+            [In] long content_length);
+
+        [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_hset_insert(
             [In] qdb_handle handle,
-            [In] string @alias,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] byte[] content,
             [In] long content_length);
 
