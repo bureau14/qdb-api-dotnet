@@ -21,10 +21,10 @@ namespace Quasardb.Interop
             get { return handle != IntPtr.Zero; }
         }
 
-        public byte[] Copy(long length)
+        public byte[] Copy(IntPtr length)
         {
-            var buffer = new byte[length];
-            Marshal.Copy(handle, buffer, 0, (int)length); // TODO: find how to avoid the cast to int
+            var buffer = new byte[length.ToInt64()];
+            Marshal.Copy(handle, buffer, 0, length.ToInt32()); // TODO: find how to avoid the cast to int32
             return buffer;
         }
     }

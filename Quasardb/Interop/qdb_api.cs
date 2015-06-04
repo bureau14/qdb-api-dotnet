@@ -2,13 +2,27 @@
 using System.Runtime.InteropServices;
 // ReSharper disable InconsistentNaming
 
+using size_t = System.IntPtr;
+using qdb_time_t = System.Int64;
+using qdb_int = System.Int64;
+
 namespace Quasardb.Interop
 {
     static class qdb_api
     {
         const string DLL_NAME = "qdb_api.dll";
-
         const UnmanagedType ALIAS_TYPE = UnmanagedType.LPStr;
+        
+
+        static qdb_api()
+        {
+            var is64 = IntPtr.Size == 8;
+            var dllFolder = is64 ? "win64/" : "win32/";
+            LoadLibrary(dllFolder + DLL_NAME);
+        }
+
+        [DllImport("kernel32.dll")]
+        private static extern IntPtr LoadLibrary(string dllToLoad);
 
         [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_close(
@@ -56,36 +70,36 @@ namespace Quasardb.Interop
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] byte[] new_content,
-            [In] long new_content_length,
+            [In] size_t new_content_length,
             [In] byte[] comparand,
-            [In] long comparand_length,
-            [In] long expiry_time,
-            [Out] out qdb_buffer original_content, 
-            [Out] out long original_content_length);
+            [In] size_t comparand_length,
+            [In] qdb_time_t expiry_time,
+            [Out] out qdb_buffer original_content,
+            [Out] out size_t original_content_length);
 
         [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_get(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [Out] out qdb_buffer content,
-            [Out] out long content_length);
+            [Out] out size_t content_length);
 
         [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_get_and_remove(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [Out] out qdb_buffer content,
-            [Out] out long content_length);
+            [Out] out size_t content_length);
 
         [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_get_and_update(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] byte[] new_content,
-            [In] long new_content_length,
-            [In] long expiry_time,
+            [In] size_t new_content_length,
+            [In] qdb_time_t expiry_time,
             [Out] out qdb_buffer old_content,
-            [Out] out long old_content_length);
+            [Out] out size_t old_content_length);
 
         [DllImport(DLL_NAME)]
         public static extern void qdb_free_buffer(
@@ -96,23 +110,23 @@ namespace Quasardb.Interop
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] byte[] content,
-            [In] long content_length,
-            [In] long expiry_time);
+            [In] size_t content_length,
+            [In] qdb_time_t expiry_time);
 
         [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_update(
             [In] qdb_handle handle, 
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] byte[] content,
-            [In] long content_length, 
-            [In] long expiry_time);
+            [In] size_t content_length,
+            [In] qdb_time_t expiry_time);
 
         [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_remove_if(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] byte[] comparand,
-            [In] long comparand_length);
+            [In] size_t comparand_length);
 
         #endregion
 
@@ -120,28 +134,28 @@ namespace Quasardb.Interop
 
         [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_int_add(
-            [In] qdb_handle handle, 
-            [In, MarshalAs(UnmanagedType.LPStr)] string alias,
-            [In] long value,
-            [Out] out long result);
+            [In] qdb_handle handle,
+            [In, MarshalAs(ALIAS_TYPE)] string alias,
+            [In] qdb_int value,
+            [Out] out qdb_int result);
 
         [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_int_get(
             [In] qdb_handle handle,
-            [In] [MarshalAs(UnmanagedType.LPStr)] string alias, 
-            [Out] out long value);
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [Out] out qdb_int value);
 
         [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_int_put(
             [In] qdb_handle handle, 
-            [In] [MarshalAs(UnmanagedType.LPStr)] string alias,
-            [In] long value);
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In] qdb_int value);
 
         [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_int_update(
             [In] qdb_handle handle,
-            [In] [MarshalAs(UnmanagedType.LPStr)] string alias,
-            [In] long value);
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In] qdb_int value);
 
         #endregion
 
@@ -152,42 +166,42 @@ namespace Quasardb.Interop
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [Out] out qdb_buffer buffer,
-            [Out] out long contentLength);
+            [Out] out size_t contentLength);
 
         [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_queue_front(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [Out] out qdb_buffer buffer,
-            [Out] out long contentLength);
+            [Out] out size_t contentLength);
 
         [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_queue_pop_back(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [Out] out qdb_buffer buffer,
-            [Out] out long contentLength);
+            [Out] out size_t contentLength);
 
         [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_queue_pop_front(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [Out] out qdb_buffer buffer,
-            [Out] out long contentLength);
+            [Out] out size_t contentLength);
 
         [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_queue_push_front(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] byte[] content,
-            [Out] long content_length);
+            [Out] size_t content_length);
 
         [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_queue_push_back(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] byte[] content,
-            [Out] long content_length);
+            [Out] size_t content_length);
 
         #endregion
 
@@ -198,21 +212,21 @@ namespace Quasardb.Interop
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] byte[] content,
-            [In] long content_length);
+            [In] size_t content_length);
 
         [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_hset_erase(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] byte[] content,
-            [In] long content_length);
+            [In] size_t content_length);
 
         [DllImport(DLL_NAME)]
         public static extern qdb_error qdb_hset_insert(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] byte[] content,
-            [In] long content_length);
+            [In] size_t content_length);
 
         #endregion
 

@@ -14,7 +14,7 @@ namespace Quasardb
         {
             if (content == null) throw new ArgumentNullException("content");
 
-            var error = qdb_api.qdb_hset_insert(m_handle, m_alias, content, content.LongLength);
+            var error = qdb_api.qdb_hset_insert(m_handle, m_alias, content, (IntPtr) content.LongLength);
             if (error == qdb_error.qdb_e_element_already_exists) return false;
             QdbExceptionThrower.ThrowIfNeeded(error);
             return true;
@@ -24,7 +24,7 @@ namespace Quasardb
         {
             if (content == null) throw new ArgumentNullException("content");
 
-            var error = qdb_api.qdb_hset_erase(m_handle, m_alias, content, content.LongLength);
+            var error = qdb_api.qdb_hset_erase(m_handle, m_alias, content, (IntPtr) content.LongLength);
             if (error == qdb_error.qdb_e_element_not_found) return false;
             QdbExceptionThrower.ThrowIfNeeded(error);
             return true;
@@ -34,7 +34,7 @@ namespace Quasardb
         {
             if (content == null) throw new ArgumentNullException("content");
 
-            var error = qdb_api.qdb_hset_contains(m_handle, m_alias, content, content.LongLength);
+            var error = qdb_api.qdb_hset_contains(m_handle, m_alias, content, (IntPtr) content.LongLength);
             if (error == qdb_error.qdb_e_element_not_found) return false;
             QdbExceptionThrower.ThrowIfNeeded(error);
             return true;

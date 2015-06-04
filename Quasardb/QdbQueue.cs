@@ -13,7 +13,7 @@ namespace Quasardb
         public byte[] Back()
         {
             qdb_buffer content;
-            long contentLength;
+            IntPtr contentLength;
             var error = qdb_api.qdb_queue_back(m_handle, m_alias, out content, out contentLength);
             QdbExceptionThrower.ThrowIfNeeded(error);
             return content.Copy(contentLength);
@@ -22,7 +22,7 @@ namespace Quasardb
         public byte[] Front()
         {
             qdb_buffer content;
-            long contentLength;
+            IntPtr contentLength;
             var error = qdb_api.qdb_queue_front(m_handle, m_alias, out content, out contentLength);
             QdbExceptionThrower.ThrowIfNeeded(error);
             return content.Copy(contentLength);
@@ -31,7 +31,7 @@ namespace Quasardb
         public byte[] PopBack()
         {
             qdb_buffer content;
-            long contentLength;
+            IntPtr contentLength;
             var error = qdb_api.qdb_queue_pop_back(m_handle, m_alias, out content, out contentLength);
             QdbExceptionThrower.ThrowIfNeeded(error);
             return content.Copy(contentLength);
@@ -40,7 +40,7 @@ namespace Quasardb
         public byte[] PopFront()
         {
             qdb_buffer content;
-            long contentLength;
+            IntPtr contentLength;
             var error = qdb_api.qdb_queue_pop_front(m_handle, m_alias, out content, out contentLength);
             QdbExceptionThrower.ThrowIfNeeded(error);
             return content.Copy(contentLength);
@@ -50,7 +50,7 @@ namespace Quasardb
         {
             if (content == null) throw new ArgumentNullException("content");
 
-            var error = qdb_api.qdb_queue_push_back(m_handle, m_alias, content, content.LongLength);
+            var error = qdb_api.qdb_queue_push_back(m_handle, m_alias, content, (IntPtr) content.LongLength);
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
 
@@ -58,7 +58,7 @@ namespace Quasardb
         {
             if (content == null) throw new ArgumentNullException("content");
 
-            var error = qdb_api.qdb_queue_push_front(m_handle, m_alias, content, content.LongLength);
+            var error = qdb_api.qdb_queue_push_front(m_handle, m_alias, content, (IntPtr) content.LongLength);
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
     }
