@@ -8,7 +8,7 @@ namespace Quasardb.Exceptions
         {
             if (error == qdb_error.qdb_e_ok) return;
 
-            throw QdbExecptionFactory.Create(error);
+            throw QdbExceptionFactory.Create(error);
         }
     }
 }

@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>quasardb</id>
+        <version>$version$</version>
+        <authors>quasardb</authors>
+        <projectUrl>http://www.quasardb.net</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Client API for the quasardb database</description>
+        <iconUrl>https://github.com/bureau14/qdb-api-dotnet/blob/master/icon32.png</iconUrl>
+        <licenseUrl>https://github.com/bureau14/qdb-api-dotnet/blob/master/LICENSE.md</licenseUrl>
+        <copyright />
+        <tags>NoSQL database</tags>
+    </metadata>
+    <files>
+        <file src="quasardb.targets" target="build\quasardb.targets" />
+        <file src="bin\.NET Framework 2.0\Quasardb.dll" target="lib\net20\Quasardb.dll" />
+        <file src="bin\.NET Framework 3.5\Quasardb.dll" target="lib\net35\Quasardb.dll" />
+        <file src="bin\.NET Framework 4\Quasardb.dll" target="lib\net40\Quasardb.dll" />
+        <file src="bin\.NET Framework 4.5\Quasardb.dll" target="lib\net45\Quasardb.dll" />
+        <file src="win32\qdb_api.dll" target="win32\qdb_api.dll" />
+        <file src="win64\qdb_api.dll" target="win64\qdb_api.dll" />
+    </files>
+</package>

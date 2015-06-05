@@ -180,7 +180,7 @@ namespace Quasardb.Exceptions
 	{
 	}
 
-	public static class QdbExecptionFactory 
+	public static class QdbExceptionFactory 
 	{
 		static readonly Dictionary<qdb_error,Type> _types = new Dictionary<qdb_error,Type>
 		{
