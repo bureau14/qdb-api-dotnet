@@ -7,8 +7,8 @@
         <projectUrl>http://www.quasardb.net</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Client API for the quasardb database</description>
-        <iconUrl>https://github.com/bureau14/qdb-api-dotnet/blob/master/icon32.png</iconUrl>
-        <licenseUrl>https://github.com/bureau14/qdb-api-dotnet/blob/master/LICENSE.md</licenseUrl>
+        <iconUrl>https://raw.githubusercontent.com/bureau14/qdb-api-dotnet/master/icon32.png</iconUrl>
+        <licenseUrl>https://raw.githubusercontent.com/bureau14/qdb-api-dotnet/master/LICENSE.md</licenseUrl>
         <copyright />
         <tags>NoSQL database</tags>
     </metadata>
