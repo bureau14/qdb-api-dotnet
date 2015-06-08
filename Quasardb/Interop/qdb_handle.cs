@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace Quasardb.Interop
 {
-    public sealed class qdb_handle : SafeHandle
+    sealed class qdb_handle : SafeHandle
     {
         public qdb_handle() : base(IntPtr.Zero, true)
         {

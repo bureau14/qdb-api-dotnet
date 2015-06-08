@@ -2,9 +2,9 @@
 using System.Runtime.InteropServices;
 // ReSharper disable InconsistentNaming
 
-using size_t = System.IntPtr;
-using qdb_time_t = System.Int64;
 using qdb_int = System.Int64;
+using qdb_time_t = System.Int64;
+using size_t = System.IntPtr;
 
 namespace Quasardb.Interop
 {

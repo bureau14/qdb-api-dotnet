@@ -3,25 +3,34 @@ using Quasardb.Interop;
 
 namespace Quasardb
 {
-    public class QdbEntry
+    /// <summary>
+    /// An entry in a quasardb database.
+    /// </summary>
+    public abstract class QdbEntry
     {
-        protected qdb_handle m_handle;
-        protected string m_alias;
-
-        public QdbEntry(qdb_handle handle, string alias)
+        internal QdbEntry(qdb_handle handle, string alias)
         {
-            m_handle = handle;
-            m_alias = alias;
+            Alias = alias;
+            Handle = handle;
         }
+        
+        /// <summary>
+        /// The alias of the entry in the database.
+        /// </summary>
+        public string Alias { get; private set; }
 
-        public string Alias
-        {
-            get { return m_alias; }
-        }
+        /// <summary>
+        /// The C API handle.
+        /// </summary>
+        internal qdb_handle Handle { get; private set; }
 
+        /// <summary>
+        /// Deletes the entry.
+        /// </summary>
+        /// <exception cref="QdbAliasNotFoundException">The entry doesn't exists in the database.</exception>
         public void Remove()
         {
-            var error = qdb_api.qdb_remove(m_handle, m_alias);
+            var error = qdb_api.qdb_remove(Handle, Alias);
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
     }

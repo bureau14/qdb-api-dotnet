@@ -20,21 +20,25 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '.NET Framework 2.0|AnyCPU'">
     <OutputPath>bin\.NET Framework 2.0\</OutputPath>
+    <DocumentationFile>bin\.NET Framework 2.0\Quasardb.xml</DocumentationFile>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '.NET Framework 3.5|AnyCPU'">
     <OutputPath>bin\.NET Framework 3.5\</OutputPath>
+    <DocumentationFile>bin\.NET Framework 3.5\Quasardb.xml</DocumentationFile>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '.NET Framework 4|AnyCPU'">
     <OutputPath>bin\.NET Framework 4\</OutputPath>
+    <DocumentationFile>bin\.NET Framework 4\Quasardb.xml</DocumentationFile>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '.NET Framework 4.5|AnyCPU'">
     <OutputPath>bin\.NET Framework 4.5\</OutputPath>
+    <DocumentationFile>bin\.NET Framework 4.5\Quasardb.xml</DocumentationFile>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
@@ -49,6 +53,7 @@
     <Compile Include="Interop\qdb_error.cs" />
     <Compile Include="Interop\qdb_api.cs" />
     <Compile Include="Interop\qdb_handle.cs" />
+    <Compile Include="Interop\qdb_time.cs" />
     <Compile Include="QdbBlob.cs" />
     <Compile Include="QdbCluster.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -76,6 +81,9 @@
     <None Include="win32\qdb_api.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

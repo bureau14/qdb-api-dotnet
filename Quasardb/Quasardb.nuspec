@@ -15,9 +15,13 @@
     <files>
         <file src="quasardb.targets" target="build\quasardb.targets" />
         <file src="bin\.NET Framework 2.0\Quasardb.dll" target="lib\net20\Quasardb.dll" />
+        <file src="bin\.NET Framework 2.0\Quasardb.xml" target="lib\net20\Quasardb.xml" />
         <file src="bin\.NET Framework 3.5\Quasardb.dll" target="lib\net35\Quasardb.dll" />
+        <file src="bin\.NET Framework 3.5\Quasardb.xml" target="lib\net35\Quasardb.xml" />
         <file src="bin\.NET Framework 4\Quasardb.dll" target="lib\net40\Quasardb.dll" />
+        <file src="bin\.NET Framework 4\Quasardb.xml" target="lib\net40\Quasardb.xml" />
         <file src="bin\.NET Framework 4.5\Quasardb.dll" target="lib\net45\Quasardb.dll" />
+        <file src="bin\.NET Framework 4.5\Quasardb.xml" target="lib\net45\Quasardb.xml" />
         <file src="win32\qdb_api.dll" target="win32\qdb_api.dll" />
         <file src="win64\qdb_api.dll" target="win64\qdb_api.dll" />
     </files>

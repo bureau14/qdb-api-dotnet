@@ -2,7 +2,7 @@
 
 namespace Quasardb.Interop
 {
-    public enum qdb_error
+    enum qdb_error
     {
         qdb_e_uninitialized = -1,
         qdb_e_ok = 0,

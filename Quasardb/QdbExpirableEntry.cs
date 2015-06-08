@@ -4,49 +4,46 @@ using Quasardb.Interop;
 
 namespace Quasardb
 {
+    /// <summary>
+    /// An entry which can have an expiry time..
+    /// </summary>
     public class QdbExpirableEntry : QdbEntry
     {
-        static readonly DateTime _epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
-        public QdbExpirableEntry(qdb_handle handle, string alias) : base(handle, alias)
+        internal QdbExpirableEntry(qdb_handle handle, string alias) : base(handle, alias)
         {
         }
 
+        /// <summary>
+        /// Sets an absolute expiry time.
+        /// </summary>
+        /// <param name="expiryTime">The absolute expiry time.</param>
         public void ExpiresAt(DateTime expiryTime)
         {
-            var error = qdb_api.qdb_expires_at(m_handle, m_alias, TranslateExpiryTime(expiryTime));
+            var error = qdb_api.qdb_expires_at(Handle, Alias, qdb_time.FromDateTime(expiryTime));
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
 
+        /// <summary>
+        /// Sets an relative expiry time.
+        /// </summary>
+        /// <param name="ttl">The relative expiry time.</param>
         public void ExpiresFromNow(TimeSpan ttl)
         {
-            var error = qdb_api.qdb_expires_from_now(m_handle, m_alias, TranslateExpiryTime(ttl));
+            var error = qdb_api.qdb_expires_from_now(Handle, Alias, qdb_time.FromTimeSpan(ttl));
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
 
-        public DateTime GetExpiryTime()
+
+        /// <summary>
+        /// Gets the expiry time.
+        /// </summary>
+        /// <returns>The expiry time, or null if no expiry is set.</returns>
+        public DateTime? GetExpiryTime()
         {
             long expiryTime;
-            var error = qdb_api.qdb_get_expiry_time(m_handle, m_alias, out expiryTime);
+            var error = qdb_api.qdb_get_expiry_time(Handle, Alias, out expiryTime);
             QdbExceptionThrower.ThrowIfNeeded(error);
-            return TranslateExpiryTime(expiryTime);
-        }
-
-        protected long TranslateExpiryTime(DateTime expiryTime)
-        {
-            if (expiryTime == default(DateTime)) return 0;
-            return (long)expiryTime.Subtract(_epoch).TotalSeconds;
-        }
-
-        protected long TranslateExpiryTime(TimeSpan delay)
-        {
-            return (long)delay.TotalSeconds;
-        }
-
-        protected DateTime TranslateExpiryTime(long expiryTime)
-        {
-            if (expiryTime == 0) return default(DateTime);
-            return _epoch.AddSeconds(expiryTime);
+            return qdb_time.ToOptionalDateTime(expiryTime);
         }
     }
 }
