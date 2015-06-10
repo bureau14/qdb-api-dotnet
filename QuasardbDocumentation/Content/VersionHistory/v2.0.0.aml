@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="6326527e-f96c-411e-971b-6cd3d59651bf" revisionNumber="1">
+	<developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
+		<introduction>
+			<para>Version 2.0.0 was not released yet.
+			</para>
+		</introduction>
+
+		<section>
+			<title>Changes in This Release</title>
+			<content>
+        <para>
+          First revision. No changes.
+        </para>
+			</content>
+		</section>
+
+		<relatedTopics>
+			<link xlink:href="8f113c81-a753-4915-803d-dc6e7927d7d3" />
+		</relatedTopics>
+
+	</developerConceptualDocument>
+</topic>

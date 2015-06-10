@@ -42,7 +42,7 @@ namespace Quasardb
         /// <summary>
         /// Sets the value of the integer, fails if it already exists.
         /// </summary>
-        /// <returns>The value of the integer in the database.</returns>
+        /// <param name="value">The initial value of the new integer.</param>
         /// <exception cref="QdbAliasAlreadyExistsException">The entry already exists in the database./</exception>
         public void Put(long value)
         {
@@ -53,7 +53,7 @@ namespace Quasardb
         /// <summary>
         /// Sets the value of the integer, fails if it already exists.
         /// </summary>
-        /// <returns>The value of the integer in the database.</returns>
+        /// <param name="value">The new value of the integer.</param>
         /// <exception cref="QdbIncompatibleTypeException">The entry in the database is not an integer.</exception>
         public void Update(long value)
         {

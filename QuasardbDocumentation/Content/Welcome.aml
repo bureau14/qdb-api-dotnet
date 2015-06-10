@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<topic id="51f62749-4536-456d-abf2-27998cae62bb" revisionNumber="1">
+	<developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
+		<introduction>
+			<para>Welcome the Quasardb API for .NET.</para>
+		</introduction>
+
+    <section>
+      <title>Connecting to the database</title>
+      <content>
+        <para>
+          Interfacing with a <application>quasardb</application> database from a .NET program is extremely straightforward, just create a <codeEntityReference>T:Quasardb.QdbCluster</codeEntityReference> and perform the operations.
+        </para>
+        <code language="c#">
+          var cluster = new QdbCluster("qdb://127.0.0.1:2836");
+        </code>
+        <code language="vb">
+          Dim cluster = New QdbCluster("qdb://127.0.0.1:2836")
+        </code>
+      </content>
+    </section>
+
+    <section>
+      <title>Blobs</title>
+      <content>
+        <para>
+          OK, now that we have a connection to the database, let's store some binary data:
+        </para>
+        <code language="c#">
+          byte[] a, b, c;
+
+          QdbBlob myBlob = cluster.Blob("Bob the blob");
+
+          myBlob.Put(a);
+          myBlob.Update(b);
+          c = myBlob.Get();
+        </code>
+        <code language="vb">
+          Dim a, b, c As Byte()
+
+          Dim myBlob = cluster.Blob("Bob the blob")
+
+          myBlob.Put(a)
+          myBlob.Update(b)
+          c = myBlob.Get()
+        </code>
+      </content>
+    </section>
+
+    <section>
+      <title>Queues</title>
+      <content>
+        <para>
+          Want a queue in your database?
+        </para>
+        <code language="c#">
+          byte[] a, b, c;
+
+          QdbQueue myQueue = cluster.Queue("Andrew the queue");
+
+          myQueue.PushBack(a);
+          myQueue.PushBack(b);
+          c = myQueue.PopFront();
+        </code>
+        <code language="vb">
+          Dim a, b, c As Byte()
+
+          Dim myQueue = cluster.Queue("Andrew the queue")
+
+          myQueue.PushBack(a)
+          myQueue.PushBack(b)
+          c = myQueue.PopFront()
+        </code>
+      </content>
+    </section>
+
+    <section>
+      <title>Integers</title>
+      <content>
+        <para>
+          Want atomic integers now?
+        </para>
+        <code language="c#">
+          long a, b, c;
+
+          QdbInteger myInt = cluster.Integer("Roger the integer");
+
+          myInt.Put(a);
+          c = myInt.Add(b);
+        </code>
+        <code language="vb">
+          Dim a, b, c As Long
+
+          Dim myInt = cluster.Integer("Roger the integer")
+
+          myInt.Put(a)
+          c = myInt.Add(b)
+        </code>
+      </content>
+    </section>
+
+    <section>
+      <title>Hash sets</title>
+      <content>
+        <para>
+          What else? a set maybe?
+        </para>
+        <code language="c#">
+          byte[] a, b, c;
+
+          QdbHashSet mySet = cluster.HashSet("Janet the set");
+
+          mySet.Insert(a);
+          mySet.Erase(b);
+          bool hasC = mySet.Contains(c);
+        </code>
+        <code language="vb">
+          Dim a, b, c As Byte()
+
+          Dim mySet = cluster.HashSet("Janet the set")
+
+          mySet.Insert(a)
+          mySet.Erase(b)
+          Dim hasC = mySet.Contains(c)
+        </code>
+      </content>
+    </section>
+   
+		<relatedTopics>
+      <codeEntityReference>T:Quasardb.QdbCluster</codeEntityReference>
+      <codeEntityReference>T:Quasardb.QdbBlob</codeEntityReference>
+      <codeEntityReference>T:Quasardb.QdbQueue</codeEntityReference>
+      <codeEntityReference>T:Quasardb.QdbHashSet</codeEntityReference>
+      <codeEntityReference>T:Quasardb.QdbInteger</codeEntityReference>
+			<link xlink:href="8f113c81-a753-4915-803d-dc6e7927d7d3" />
+		</relatedTopics>
+	</developerConceptualDocument>
+</topic>

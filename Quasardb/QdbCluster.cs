@@ -70,7 +70,7 @@ namespace Quasardb
         }
 
         /// <summary>
-        /// Return a <see cref="HashSet" /> with the specified alias.
+        /// Return a <see cref="QdbHashSet" /> with the specified alias.
         /// </summary>
         /// <remarks>No operation is performed in the database.</remarks>
         /// <param name="alias">The alias of the hash-set in the database.</param>

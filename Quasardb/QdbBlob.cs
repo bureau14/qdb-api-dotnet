@@ -78,6 +78,8 @@ namespace Quasardb
         /// Atomically gets the content and replaces it.
         /// </summary>
         /// <returns>The previous content of the blob.</returns>
+        /// <param name="content">The new content of the blob.</param>
+        /// <param name="expiryTime">The new expiry time of the blob.</param>
         /// <exception cref="QdbAliasNotFoundException">The blob is not present in the database.</exception>
         /// <exception cref="QdbIncompatibleTypeException">The database entry is not a blob.</exception>
         public byte[] GetAndUpdate(byte[] content, DateTime? expiryTime = null)
@@ -100,7 +102,7 @@ namespace Quasardb
         /// Sets the content, but fails if the blob already exists.
         /// </summary>
         /// <param name="content">The new content of the blob.</param>
-        /// <param name="expiryTime">Optional. The expiry time to set.</param>
+        /// <param name="expiryTime">The expiry time to set.</param>
         /// <exception cref="QdbAliasAlreadyExistsException">The entry already exists.</exception>
         public void Put(byte[] content, DateTime? expiryTime=null)
         {
@@ -134,7 +136,7 @@ namespace Quasardb
         /// Replaces the content.
         /// </summary>
         /// <param name="content">The new content of the blob.</param>
-        /// <param name="expiryTime">Optional. The expiry time to set.</param>
+        /// <param name="expiryTime">The expiry time to set.</param>
         /// <returns>true if remove, false if not.</returns>
         /// <exception cref="QdbAliasNotFoundException">The blob is not present in the database.</exception>
         /// <exception cref="QdbIncompatibleTypeException">The database entry is not a blob.</exception>
