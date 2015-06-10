@@ -12,7 +12,7 @@
     <AssemblyName>QuasardbDocumentation</AssemblyName>
     <RootNamespace>QuasardbDocumentation</RootNamespace>
     <Name>QuasardbDocumentation</Name>
-    <!-- SHFB properties -->    
+    <!-- SHFB properties -->
     <FrameworkVersion>.NET Framework 4.5</FrameworkVersion>
     <OutputPath>.\Help\</OutputPath>
     <HtmlHelpName>qdb-api-dotnet</HtmlHelpName>
@@ -96,6 +96,10 @@
     <None Include="Content\VersionHistory\v2.0.0.aml" />
     <None Include="Content\VersionHistory\VersionHistory.aml" />
     <None Include="Content\Welcome.aml" />
+    <Content Include="icons\favicon.ico">
+      <ImageId>favicon</ImageId>
+      <AlternateText>favicon</AlternateText>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ContentLayout Include="ContentLayout.content" />

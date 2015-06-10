@@ -1,15 +1,41 @@
 ﻿/* Style adjustments for websites */
 body {
-		/* quasardb */
-	background-color: #f3f3f3;
+	/* quasardb */	
+	background-color: #333;
+	font-family: sans-serif;
+    font-size: 100%;
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
 .pageBody {
-	padding: 0px 20px 0px 0px;
+	/* quasardb */	
+	background-color: #f3f3f3;
+	padding: 0px 20px 0px 0px;	
 }
 
 .topicContent {
 	margin-left: 280px;
+}
+
+.pageHeader {
+	/*quasardb*/
+	background-color: #151C21;
+	border: 0;
+	color: white;
+	font-family: sans-serif;
+    font-size: 100%;
+}
+
+.pageFooter {
+	/*quasardb*/
+	background-color: #151C21;
+	border: 0;
+	color: white;
+	font-family: sans-serif;
+    font-size: 100%;
 }
 
 table.titleTable {

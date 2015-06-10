@@ -1,45 +1,26 @@
 # quasardb .NET API
 
-Interfacing with a *quasardb* database from a C# program is extremely straightforward, just create a `QdbCluster` and perform the operations.
+This is the quasardb API for .NET.
+
+Here is a quick intro, please review [the official documentation](https://doc.quasardb.net/dotnet) for more detail.
+
+Connecting to a cluster:
 
     var cluster = new QdbCluster("qdb://127.0.0.1:2836");
 
-OK, now that we have a connection to the cluster, let's store some **binary data**:
-
-    byte[] a, b, c;
+Insert and retrieve binary data:
     
-    QdbBlob myBlob = cluster.Blob('Bob the blob');
-    
-    myBlob.Put(a);
-    myBlob.Update(b);
-    c = myBlob.Get();
+    cluster.Blob("my blob").Put(myByteArray);
+    var myByteArray = cluster.Blob("my blob").Get();
 
-Want a **queue** in your database?
+Push and pop from a queue:
 
-    byte[] a, b, c;
+    cluster.Queue("my queue").PushBack(myByteArray);
+    myByteArray = cluster.Queue("my queue").PopFront();
 
-    QdbQueue myQueue = cluster.Queue('Andrew the queue');
+Create and update an atomic integer:
 
-    myQueue.PushBack(a);
-    myQueue.PushBack(b);
-    c = myQueue.PopFront();
+    cluster.Integer("my counter").Put(1934);
+    cluster.Integer("my counter").Add(22);
 
-Want **atomic integers** now?   
-
-    long a, b, c;
-
-    QdbInteger myInt = cluster.Integer('Roger the integer');
-
-    myInt.Put(a);
-    c = myInt.Add(b);
-
-What else? a **set** maybe?
-
-    byte[] a, b, c;
-
-    QdbHashSet mySet = cluster.HashSet('Janet the set');
-
-    mySet.Insert(a);
-    mySet.Remove(b);
-    bool hasC = mySet.Contains(c);
-
+[Got to the official documentation](https://doc.quasardb.net/dotnet)
