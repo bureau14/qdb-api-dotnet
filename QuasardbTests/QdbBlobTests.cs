@@ -238,14 +238,33 @@ namespace QuasardbTests
         [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void AddTag()
         {
-            _blob.AddTag("tag name");
+            _blob.AddTag("tag");
         }
 
         [TestMethod]
-        public void Put_AddTag()
+        [ExpectedException(typeof(QdbAliasNotFoundException))]
+        public void HasTag()
+        {
+            _blob.HasTag("tag");
+        }
+
+        [TestMethod]        
+        public void Put_HasTag()
         {
             _blob.Put(_content1);
-            _blob.AddTag("tag name");
+            var result = _blob.HasTag("tag");
+
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        public void Put_AddTag_HasTag()
+        {
+            _blob.Put(_content1);
+            _blob.AddTag("tag");
+            var result = _blob.HasTag("tag");
+
+            Assert.IsTrue(result);
         }
     }
 }
