@@ -33,5 +33,11 @@ namespace Quasardb
             var error = qdb_api.qdb_remove(Handle, Alias);
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
+
+        public void AddTag(string tag)
+        {
+            var error = qdb_api.qdb_tag(Handle, Alias, tag);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+        }
     }
 }

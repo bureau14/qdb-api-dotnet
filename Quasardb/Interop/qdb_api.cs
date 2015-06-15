@@ -205,7 +205,7 @@ namespace Quasardb.Interop
 
         #endregion
 
-        #region Function specific to sets
+        #region Functions specific to sets
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error qdb_hset_contains(
@@ -230,5 +230,14 @@ namespace Quasardb.Interop
 
         #endregion
 
+        #region Functions specific to tags
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_tag(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In] [MarshalAs(ALIAS_TYPE)] string tag);
+
+        #endregion
     }
 }

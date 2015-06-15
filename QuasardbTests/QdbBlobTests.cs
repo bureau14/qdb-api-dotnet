@@ -233,5 +233,19 @@ namespace QuasardbTests
             Assert.IsTrue(result > DateTime.UtcNow.AddMinutes(5));
             Assert.IsTrue(result < DateTime.UtcNow.AddMinutes(15));
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(QdbAliasNotFoundException))]
+        public void AddTag()
+        {
+            _blob.AddTag("tag name");
+        }
+
+        [TestMethod]
+        public void Put_AddTag()
+        {
+            _blob.Put(_content1);
+            _blob.AddTag("tag name");
+        }
     }
 }
