@@ -34,15 +34,25 @@ namespace Quasardb
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
 
-        public void AddTag(string tag)
+        public bool AddTag(string tag)
         {
             var error = qdb_api.qdb_tag(Handle, Alias, tag);
+            if (error == qdb_error.qdb_e_tag_already_set) return false;
             QdbExceptionThrower.ThrowIfNeeded(error);
+            return true;
         }
 
         public bool HasTag(string tag)
         {
             var error = qdb_api.qdb_is_tagged(Handle, Alias, tag);
+            if (error == qdb_error.qdb_e_tag_not_set) return false;
+            QdbExceptionThrower.ThrowIfNeeded(error);
+            return true;
+        }
+
+        public bool RemoveTag(string tag)
+        {
+            var error = qdb_api.qdb_untag(Handle, Alias, tag);
             if (error == qdb_error.qdb_e_tag_not_set) return false;
             QdbExceptionThrower.ThrowIfNeeded(error);
             return true;

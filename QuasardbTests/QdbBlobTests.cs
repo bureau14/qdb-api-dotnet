@@ -11,6 +11,7 @@ namespace QuasardbTests
         QdbBlob _blob;
         byte[] _content1, _content2;
         DateTime _expiry1, _expiry2;
+        string _tag1;
 
         [TestInitialize]
         public void Initialize()
@@ -22,6 +23,7 @@ namespace QuasardbTests
             _content2 = Utils.CreateRandomContent();
             _expiry1 = new DateTime(3000, 12, 25);
             _expiry2 = new DateTime(4000, 12, 25);
+            _tag1 = Utils.CreateUniqueAlias();
         }
 
         [TestMethod]
@@ -238,21 +240,28 @@ namespace QuasardbTests
         [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void AddTag()
         {
-            _blob.AddTag("tag");
+            _blob.AddTag(_tag1);
         }
 
         [TestMethod]
         [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void HasTag()
         {
-            _blob.HasTag("tag");
+            _blob.HasTag(_tag1);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(QdbAliasNotFoundException))]
+        public void RemoveTag()
+        {
+            _blob.RemoveTag(_tag1);
         }
 
         [TestMethod]        
         public void Put_HasTag()
         {
             _blob.Put(_content1);
-            var result = _blob.HasTag("tag");
+            var result = _blob.HasTag(_tag1);
 
             Assert.IsFalse(result);
         }
@@ -261,10 +270,48 @@ namespace QuasardbTests
         public void Put_AddTag_HasTag()
         {
             _blob.Put(_content1);
-            _blob.AddTag("tag");
-            var result = _blob.HasTag("tag");
+            _blob.AddTag(_tag1);
+            var result = _blob.HasTag(_tag1);
 
             Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void Put_AddTag()
+        {
+            _blob.Put(_content1);
+            var result = _blob.AddTag(_tag1);
+
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void Put_AddTag_AddTag()
+        {
+            _blob.Put(_content1);
+            _blob.AddTag(_tag1);
+            var result = _blob.AddTag(_tag1);
+
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        public void Put_AddTag_RemoveTag()
+        {
+            _blob.Put(_content1);
+            _blob.AddTag(_tag1);
+            var result = _blob.RemoveTag(_tag1);
+
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void Put_RemoveTag()
+        {
+            _blob.Put(_content1);
+            var result = _blob.RemoveTag(_tag1);
+
+            Assert.IsFalse(result);
         }
     }
 }
