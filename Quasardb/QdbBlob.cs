@@ -104,7 +104,8 @@ namespace Quasardb
         /// <param name="content">The new content of the blob.</param>
         /// <param name="expiryTime">The expiry time to set.</param>
         /// <exception cref="QdbAliasAlreadyExistsException">The entry already exists.</exception>
-        public void Put(byte[] content, DateTime? expiryTime=null)
+        /// <returns><c>this</c>, allowing to chain other commands</returns>
+        public QdbBlob Put(byte[] content, DateTime? expiryTime=null)
         {
             if (content == null) throw new ArgumentNullException("content");
 
@@ -113,6 +114,7 @@ namespace Quasardb
                 qdb_time.FromOptionalDateTime(expiryTime));
 
             QdbExceptionThrower.ThrowIfNeeded(error);
+            return this;
         }
 
         /// <summary>

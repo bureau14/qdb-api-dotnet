@@ -74,11 +74,23 @@ namespace Quasardb
         /// </summary>
         /// <remarks>No operation is performed in the database.</remarks>
         /// <param name="alias">The alias of the hash-set in the database.</param>
-        /// <returns>A <see cref="HashSet" />.</returns>
+        /// <returns>A <see cref="QdbHashSet" />.</returns>
         public QdbHashSet HashSet(string alias)
         {
             if (alias == null) throw new ArgumentNullException("alias");
             return new QdbHashSet(_handle, alias);
+        }
+
+        /// <summary>
+        /// Return a <see cref="QdbTag" /> with the specified alias.
+        /// </summary>
+        /// <remarks>No operation is performed in the database.</remarks>
+        /// <param name="alias">The name of the tag.</param>
+        /// <returns>A <see cref="QdbTag" />.</returns>
+        public QdbTag Tag(string alias)
+        {
+            if (alias == null) throw new ArgumentNullException("alias");
+            return new QdbTag(_handle, alias);
         }
     }
 }

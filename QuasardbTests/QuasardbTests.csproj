@@ -62,6 +62,7 @@
     <Compile Include="QdbIntegerTests.cs" />
     <Compile Include="QdbHashSetTests.cs" />
     <Compile Include="QdbQueueTests.cs" />
+    <Compile Include="QdbTagTests.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>

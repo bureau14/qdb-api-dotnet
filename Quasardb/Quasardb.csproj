@@ -62,6 +62,7 @@
     <Compile Include="QdbHashSet.cs" />
     <Compile Include="QdbInteger.cs" />
     <Compile Include="QdbQueue.cs" />
+    <Compile Include="QdbTag.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Exceptions\QdbExceptions.tt">

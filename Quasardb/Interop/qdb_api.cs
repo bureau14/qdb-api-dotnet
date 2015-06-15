@@ -250,6 +250,14 @@ namespace Quasardb.Interop
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] [MarshalAs(ALIAS_TYPE)] string tag);
 
+        /*
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_get_tagged(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string tag,
+            const char *** aliases,
+            size_t * aliases_count);*/
+
         #endregion
     }
 }

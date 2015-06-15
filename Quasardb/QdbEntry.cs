@@ -48,6 +48,16 @@ namespace Quasardb
         }
 
         /// <summary>
+        /// Adds a tag on the entry.
+        /// </summary>
+        /// <param name="tag">A <see cref="QdbTag"/>.</param>
+        /// <returns><c>true</c> if the tag was added, <c>false</c> if the entry already had this tag.</returns>
+        public bool AddTag(QdbTag tag)
+        {
+            return AddTag(tag.Alias);
+        }
+
+        /// <summary>
         /// Checks if the entry has the specified tag.
         /// </summary>
         /// <param name="tag">The label of the tag.</param>
