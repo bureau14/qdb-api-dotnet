@@ -84,30 +84,6 @@ namespace Quasardb.Exceptions
 	}
 
     /// <summary>
-    /// Quasardb: The option is invalid.
-    /// </summary>
-	public sealed class QdbInvalidOptionException : QdbExceptionBase 
-	{
-		/// <inheritdoc />
-        public override string Message
-        {
-            get { return "Quasardb: The option is invalid."; }
-        }
-	}
-
-    /// <summary>
-    /// Quasardb: The provided alias length is too long.
-    /// </summary>
-	public sealed class QdbAliasTooLongException : QdbExceptionBase 
-	{
-		/// <inheritdoc />
-        public override string Message
-        {
-            get { return "Quasardb: The provided alias length is too long."; }
-        }
-	}
-
-    /// <summary>
     /// Quasardb: An entry matching the provided alias cannot be found.
     /// </summary>
 	public sealed class QdbAliasNotFoundException : QdbExceptionBase 
@@ -152,18 +128,6 @@ namespace Quasardb.Exceptions
         public override string Message
         {
             get { return "Quasardb: The provided buffer is too small."; }
-        }
-	}
-
-    /// <summary>
-    /// Quasardb: The requested command is invalid.
-    /// </summary>
-	public sealed class QdbInvalidCommandException : QdbExceptionBase 
-	{
-		/// <inheritdoc />
-        public override string Message
-        {
-            get { return "Quasardb: The requested command is invalid."; }
         }
 	}
 
@@ -218,7 +182,7 @@ namespace Quasardb.Exceptions
     /// <summary>
     /// Quasardb: The cluster is unstable. Please try again later.
     /// </summary>
-	public sealed class QdbUnstableHiveException : QdbExceptionBase 
+	public sealed class QdbUnstableClusterException : QdbExceptionBase 
 	{
 		/// <inheritdoc />
         public override string Message
@@ -549,18 +513,15 @@ namespace Quasardb.Exceptions
 			{qdb_error.qdb_e_no_memory, typeof(QdbNoMemoryException)},
 			{qdb_error.qdb_e_invalid_protocol, typeof(QdbInvalidProtocolException)},
 			{qdb_error.qdb_e_host_not_found, typeof(QdbHostNotFoundException)},
-			{qdb_error.qdb_e_invalid_option, typeof(QdbInvalidOptionException)},
-			{qdb_error.qdb_e_alias_too_long, typeof(QdbAliasTooLongException)},
 			{qdb_error.qdb_e_alias_not_found, typeof(QdbAliasNotFoundException)},
 			{qdb_error.qdb_e_alias_already_exists, typeof(QdbAliasAlreadyExistsException)},
 			{qdb_error.qdb_e_timeout, typeof(QdbTimeoutException)},
 			{qdb_error.qdb_e_buffer_too_small, typeof(QdbBufferTooSmallException)},
-			{qdb_error.qdb_e_invalid_command, typeof(QdbInvalidCommandException)},
 			{qdb_error.qdb_e_connection_refused, typeof(QdbConnectionRefusedException)},
 			{qdb_error.qdb_e_connection_reset, typeof(QdbConnectionResetException)},
 			{qdb_error.qdb_e_unexpected_reply, typeof(QdbUnexpectedReplyException)},
 			{qdb_error.qdb_e_not_implemented, typeof(QdbNotImplementedException)},
-			{qdb_error.qdb_e_unstable_hive, typeof(QdbUnstableHiveException)},
+			{qdb_error.qdb_e_unstable_cluster, typeof(QdbUnstableClusterException)},
 			{qdb_error.qdb_e_protocol_error, typeof(QdbProtocolErrorException)},
 			{qdb_error.qdb_e_outdated_topology, typeof(QdbOutdatedTopologyException)},
 			{qdb_error.qdb_e_wrong_peer, typeof(QdbWrongPeerException)},
