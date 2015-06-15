@@ -34,6 +34,11 @@ namespace Quasardb
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
 
+        /// <summary>
+        /// Adds a tag on the entry.
+        /// </summary>
+        /// <param name="tag">The label of the tag.</param>
+        /// <returns><c>true</c> if the tag was added, <c>false</c> if the entry already had this tag.</returns>
         public bool AddTag(string tag)
         {
             var error = qdb_api.qdb_tag(Handle, Alias, tag);
@@ -42,6 +47,11 @@ namespace Quasardb
             return true;
         }
 
+        /// <summary>
+        /// Checks if the entry has the specified tag.
+        /// </summary>
+        /// <param name="tag">The label of the tag.</param>
+        /// <returns><c>true</c> if the entry has this tag, <c>false</c> if not.</returns>
         public bool HasTag(string tag)
         {
             var error = qdb_api.qdb_is_tagged(Handle, Alias, tag);
@@ -50,6 +60,11 @@ namespace Quasardb
             return true;
         }
 
+        /// <summary>
+        /// Removes a tag on the entry.
+        /// </summary>
+        /// <param name="tag">The label of the tag.</param>
+        /// <returns><c>true</c> if the entry had this tag, <c>false</c> if not.</returns>
         public bool RemoveTag(string tag)
         {
             var error = qdb_api.qdb_untag(Handle, Alias, tag);
