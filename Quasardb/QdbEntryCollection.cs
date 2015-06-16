@@ -41,12 +41,15 @@ namespace Quasardb
 
         public IEnumerator<QdbEntry> GetEnumerator()
         {
+            var factory = new QdbEntryFactory(_handle);
+
             // CAUTION: limited to 32 bits!!!
             for (var i = 0; i < (int) Size; i++)
             {
                 var aliasPointer = Marshal.ReadIntPtr(Pointer,  i*IntPtr.Size);
                 var alias = Marshal.PtrToStringAnsi(aliasPointer);
-                yield return new QdbBlob(_handle, alias);
+
+                yield return factory.Create(alias);
             }
         }
 
@@ -54,5 +57,7 @@ namespace Quasardb
         {
             return GetEnumerator();
         }
+
+
     }
 }

@@ -144,13 +144,16 @@ namespace Quasardb
         /// <returns>true if remove, false if not.</returns>
         /// <exception cref="QdbAliasNotFoundException">The blob is not present in the database.</exception>
         /// <exception cref="QdbIncompatibleTypeException">The database entry is not a blob.</exception>
-        public void Update(byte[] content, DateTime? expiryTime = null)
+        /// <returns><c>this</c>, allowing to chain other commands</returns>
+        public QdbBlob Update(byte[] content, DateTime? expiryTime = null)
         {
             var error = qdb_api.qdb_update(Handle, Alias, 
                 content, (IntPtr) content.Length, 
                 qdb_time.FromOptionalDateTime(expiryTime));
 
             QdbExceptionThrower.ThrowIfNeeded(error);
+
+            return this;
         }
     }
 }

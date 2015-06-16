@@ -36,6 +36,18 @@ namespace Quasardb.Interop
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_handle qdb_open_tcp();
 
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern void qdb_free_buffer(
+            [In] qdb_handle handle,
+            [In] IntPtr buffer);
+
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_get_type(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [Out] out qdb_entry_type entry_type);
+
         #region Functions common to all entries
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
@@ -100,11 +112,6 @@ namespace Quasardb.Interop
             [In] qdb_time_t expiry_time,
             [Out] out IntPtr old_content,
             [Out] out size_t old_content_length);
-
-        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern void qdb_free_buffer(
-            [In] qdb_handle handle,
-            [In] IntPtr buffer);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error qdb_put(

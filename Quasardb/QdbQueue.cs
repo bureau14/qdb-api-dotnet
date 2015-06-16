@@ -84,12 +84,15 @@ namespace Quasardb
         /// </summary>
         /// <param name="content">The value to enqueue.</param>
         /// <exception cref="QdbIncompatibleTypeException">The matching entry in the database is not a queue.</exception>
-        public void PushBack(byte[] content)
+        /// <returns><c>this</c>, allowing to chain other commands</returns>
+        public QdbQueue PushBack(byte[] content)
         {
             if (content == null) throw new ArgumentNullException("content");
 
             var error = qdb_api.qdb_queue_push_back(Handle, Alias, content, (IntPtr) content.LongLength);
             QdbExceptionThrower.ThrowIfNeeded(error);
+
+            return this;
         }
 
         /// <summary>
@@ -97,12 +100,15 @@ namespace Quasardb
         /// </summary>
         /// <param name="content">The value to enqueue.</param>
         /// <exception cref="QdbIncompatibleTypeException">The matching entry in the database is not a queue.</exception>
-        public void PushFront(byte[] content)
+        /// <returns><c>this</c>, allowing to chain other commands</returns>
+        public QdbQueue PushFront(byte[] content)
         {
             if (content == null) throw new ArgumentNullException("content");
 
             var error = qdb_api.qdb_queue_push_front(Handle, Alias, content, (IntPtr) content.LongLength);
             QdbExceptionThrower.ThrowIfNeeded(error);
+
+            return this;
         }
     }
 }

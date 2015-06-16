@@ -21,5 +21,11 @@ namespace Quasardb
 
             return entryCollection;
         }
+
+        public QdbTag AddEntry(QdbEntry entry)
+        {
+            entry.AddTag(this);
+            return this;
+        }
     }
 }

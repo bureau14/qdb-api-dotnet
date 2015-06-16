@@ -44,10 +44,11 @@ namespace Quasardb
         /// </summary>
         /// <param name="value">The initial value of the new integer.</param>
         /// <exception cref="QdbAliasAlreadyExistsException">The entry already exists in the database./</exception>
-        public void Put(long value)
+        public QdbInteger Put(long value)
         {
             var error = qdb_api.qdb_int_put(Handle, Alias, value);
             QdbExceptionThrower.ThrowIfNeeded(error);
+            return this;
         }
 
         /// <summary>
@@ -55,10 +56,11 @@ namespace Quasardb
         /// </summary>
         /// <param name="value">The new value of the integer.</param>
         /// <exception cref="QdbIncompatibleTypeException">The entry in the database is not an integer.</exception>
-        public void Update(long value)
+        public QdbInteger Update(long value)
         {
             var error = qdb_api.qdb_int_update(Handle, Alias, value);
             QdbExceptionThrower.ThrowIfNeeded(error);
+            return this;
         }
     }
 }
