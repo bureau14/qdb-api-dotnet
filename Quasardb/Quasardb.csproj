@@ -51,6 +51,7 @@
       <DependentUpon>QdbExceptions.tt</DependentUpon>
     </Compile>
     <Compile Include="Exceptions\QdbExceptionThrower.cs" />
+    <Compile Include="Internals\QdbTagHelper.cs" />
     <Compile Include="Interop\qdb_buffer.cs" />
     <Compile Include="Interop\qdb_entry_type.cs" />
     <Compile Include="Interop\qdb_error.cs" />

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Quasardb.Exceptions;
+using Quasardb.Internals;
 using Quasardb.Interop;
 
 namespace Quasardb
@@ -22,10 +23,24 @@ namespace Quasardb
             return entryCollection;
         }
 
-        public QdbTag AddEntry(QdbEntry entry)
+        public bool AddEntry(QdbEntry entry)
         {
-            entry.AddTag(this);
-            return this;
+            return QdbTagHelper.AddTag(Handle, entry.Alias, Alias);
+        }
+
+        public bool AddEntry(string entry)
+        {
+            return QdbTagHelper.AddTag(Handle, entry, Alias);
+        }
+
+        public bool RemoveEntry(QdbEntry entry)
+        {
+            return QdbTagHelper.RemoveTag(Handle, entry.Alias, Alias);
+        }
+
+        public bool RemoveEntry(string entry)
+        {
+            return QdbTagHelper.RemoveTag(Handle, entry, Alias);
         }
     }
 }

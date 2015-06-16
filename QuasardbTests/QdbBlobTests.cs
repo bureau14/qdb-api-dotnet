@@ -279,12 +279,10 @@ namespace QuasardbTests
         [TestMethod]
         public void Put_AddTag()
         {
-            bool alreadySet;
-
             _blob.Put(_content1);
-            _blob.AddTag(_tag1, out alreadySet);
+            var result = _blob.AddTag(_tag1);
 
-            Assert.IsFalse(alreadySet);
+            Assert.IsTrue(result);
         }
 
         [TestMethod]
@@ -294,9 +292,9 @@ namespace QuasardbTests
 
             _blob.Put(_content1);
             _blob.AddTag(_tag1);
-            _blob.AddTag(_tag1, out alreadySet);
+            var result = _blob.AddTag(_tag1);
 
-            Assert.IsTrue(alreadySet);
+            Assert.IsFalse(result);
         }
 
         [TestMethod]

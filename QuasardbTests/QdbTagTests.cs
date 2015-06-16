@@ -12,7 +12,8 @@ namespace QuasardbTests
     {
         QdbCluster _cluster;
         QdbTag _tag;
-        QdbEntry _blob1, _queue1, _hashSet1, _integer1, _tag1;
+        QdbEntry _blob1, _queue1, _hashSet1, _integer1;
+        QdbTag _tag1;
         
         [TestInitialize]
         public void Initialize()
@@ -23,7 +24,9 @@ namespace QuasardbTests
             _queue1 = _cluster.Queue(Utils.CreateUniqueAlias()).PushBack(Utils.CreateRandomContent());
             _hashSet1 = _cluster.HashSet(Utils.CreateUniqueAlias()).Insert(Utils.CreateRandomContent());
             _integer1 = _cluster.Integer(Utils.CreateUniqueAlias()).Put(42);
-            _tag1 = _cluster.Tag(Utils.CreateUniqueAlias()).AddEntry(_blob1);
+
+            _tag1 = _cluster.Tag(Utils.CreateUniqueAlias());
+            _tag1.AddEntry(_blob1);
         }
 
         [TestMethod]

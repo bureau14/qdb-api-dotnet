@@ -1,4 +1,5 @@
 ﻿using Quasardb.Exceptions;
+using Quasardb.Internals;
 using Quasardb.Interop;
 
 namespace Quasardb
@@ -33,65 +34,25 @@ namespace Quasardb
             var error = qdb_api.qdb_remove(Handle, Alias);
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
-
-        /// <summary>
-        /// Adds a tag on the entry.
-        /// </summary>
-        /// <param name="tag">A <see cref="QdbTag"/>.</param>
-        /// <returns><c>true</c> if the tag was added, <c>false</c> if the entry already had this tag.</returns>
-        public QdbEntry AddTag(QdbTag tag)
-        {
-            bool dummy;
-            return AddTag(tag, out dummy);
-        }
         
         /// <summary>
         /// Adds a tag on the entry.
         /// </summary>
         /// <param name="tag">The label of the tag.</param>
-        /// <returns><c>this</c>, allowing to chain operations.</returns>
-        public QdbEntry AddTag(string tag)
+        /// <returns><c>true</c> if the tag was added, <c>false</c> if the entry already had this tag.</returns>
+        public bool AddTag(QdbTag tag)
         {
-            bool dummy;
-            return AddTag(tag, out dummy);
+            return QdbTagHelper.AddTag(Handle, Alias, tag.Alias);
         }
 
         /// <summary>
         /// Adds a tag on the entry.
         /// </summary>
         /// <param name="tag">The label of the tag.</param>
-        /// <param name="alreadySet"><c>true</c> if the tag was already set, <c>false</c> if not.</param>
-        /// <returns><c>this</c>, allowing to chain operations.</returns>
-        public QdbEntry AddTag(QdbTag tag, out bool alreadySet)
+        /// <returns><c>true</c> if the tag was added, <c>false</c> if the entry already had this tag.</returns>
+        public bool AddTag(string tag)
         {
-            return AddTag(tag.Alias, out alreadySet);
-        }
-
-        /// <summary>
-        /// Adds a tag on the entry.
-        /// </summary>
-        /// <param name="tag">The label of the tag.</param>
-        /// <param name="alreadySet"><c>true</c> if the tag was already set, <c>false</c> if not.</param>
-        /// <returns><c>this</c>, allowing to chain operations.</returns>
-        public QdbEntry AddTag(string tag, out bool alreadySet)
-        {
-            var error = qdb_api.qdb_add_tag(Handle, Alias, tag);
-
-            switch (error)
-            {
-                case qdb_error.qdb_e_tag_already_set:
-                    alreadySet = true;
-                    break;
-
-                case qdb_error.qdb_e_ok:
-                    alreadySet = false;
-                    break;
-
-                default:
-                    throw QdbExceptionFactory.Create(error);
-            }
-
-            return this;
+            return QdbTagHelper.AddTag(Handle, Alias, tag);
         }
 
         /// <summary>
@@ -101,7 +62,7 @@ namespace Quasardb
         /// <returns><c>true</c> if the entry has this tag, <c>false</c> if not.</returns>
         public bool HasTag(QdbTag tag)
         {
-            return HasTag(tag.Alias);
+            return QdbTagHelper.HasTag(Handle, Alias, tag.Alias);
         }
 
         /// <summary>
@@ -111,10 +72,17 @@ namespace Quasardb
         /// <returns><c>true</c> if the entry has this tag, <c>false</c> if not.</returns>
         public bool HasTag(string tag)
         {
-            var error = qdb_api.qdb_has_tag(Handle, Alias, tag);
-            if (error == qdb_error.qdb_e_tag_not_set) return false;
-            QdbExceptionThrower.ThrowIfNeeded(error);
-            return true;
+            return QdbTagHelper.HasTag(Handle, Alias, tag);
+        }
+
+        /// <summary>
+        /// Removes a tag on the entry.
+        /// </summary>
+        /// <param name="tag">The label of the tag.</param>
+        /// <returns><c>true</c> if the entry had this tag, <c>false</c> if not.</returns>
+        public bool RemoveTag(QdbTag tag)
+        {
+            return QdbTagHelper.RemoveTag(Handle, Alias, tag.Alias);
         }
 
         /// <summary>
@@ -124,10 +92,7 @@ namespace Quasardb
         /// <returns><c>true</c> if the entry had this tag, <c>false</c> if not.</returns>
         public bool RemoveTag(string tag)
         {
-            var error = qdb_api.qdb_remove_tag(Handle, Alias, tag);
-            if (error == qdb_error.qdb_e_tag_not_set) return false;
-            QdbExceptionThrower.ThrowIfNeeded(error);
-            return true;
+            return QdbTagHelper.RemoveTag(Handle, Alias, tag);
         }
     }
 }
