@@ -234,30 +234,37 @@ namespace Quasardb.Interop
         #region Functions specific to tags
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_tag(
+        public static extern qdb_error qdb_add_tag(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] [MarshalAs(ALIAS_TYPE)] string tag);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_untag(
+        public static extern qdb_error qdb_remove_tag(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] [MarshalAs(ALIAS_TYPE)] string tag);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_is_tagged(
+        public static extern qdb_error qdb_has_tag(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] [MarshalAs(ALIAS_TYPE)] string tag);
 
-        /*
+        
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error qdb_get_tagged(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string tag,
-            const char *** aliases,
-            size_t * aliases_count);*/
+            [Out] out IntPtr aliases,
+            [Out] out size_t aliases_count);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern void qdb_free_results(
+            [In] qdb_handle handle,
+            [In] IntPtr results,
+            [In] size_t results_count
+        );
 
         #endregion
     }

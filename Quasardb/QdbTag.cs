@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Quasardb.Exceptions;
 using Quasardb.Interop;
 
 namespace Quasardb
@@ -13,7 +14,12 @@ namespace Quasardb
 
         public IEnumerable<QdbEntry> GetEntries()
         {
-            return Enumerable.Empty<QdbEntry>();
+            var entryCollection = new QdbEntryCollection(Handle);
+            
+            var error = qdb_api.qdb_get_tagged(Handle, Alias, out entryCollection.Pointer, out entryCollection.Size);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+
+            return entryCollection;
         }
     }
 }

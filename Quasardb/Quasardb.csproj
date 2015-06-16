@@ -58,6 +58,7 @@
     <Compile Include="QdbCluster.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QdbEntry.cs" />
+    <Compile Include="QdbEntryCollection.cs" />
     <Compile Include="QdbExpirableEntry.cs" />
     <Compile Include="QdbHashSet.cs" />
     <Compile Include="QdbInteger.cs" />
