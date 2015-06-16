@@ -21,11 +21,12 @@ namespace Quasardb
         /// <exception cref="QdbIncompatibleTypeException">The matching entry in the database is not a queue.</exception>
         public byte[] Back()
         {
-            qdb_buffer content;
-            IntPtr contentLength;
-            var error = qdb_api.qdb_queue_back(Handle, Alias, out content, out contentLength);
-            QdbExceptionThrower.ThrowIfNeeded(error);
-            return content.Copy(contentLength);
+            using (var content = new qdb_buffer(Handle))
+            {
+                var error = qdb_api.qdb_queue_back(Handle, Alias, out content.Pointer, out content.Size);
+                QdbExceptionThrower.ThrowIfNeeded(error);
+                return content.GetBytes();
+            }
         }
 
         /// <summary>
@@ -36,11 +37,12 @@ namespace Quasardb
         /// <exception cref="QdbIncompatibleTypeException">The matching entry in the database is not a queue.</exception>
         public byte[] Front()
         {
-            qdb_buffer content;
-            IntPtr contentLength;
-            var error = qdb_api.qdb_queue_front(Handle, Alias, out content, out contentLength);
-            QdbExceptionThrower.ThrowIfNeeded(error);
-            return content.Copy(contentLength);
+            using (var content = new qdb_buffer(Handle))
+            {
+                var error = qdb_api.qdb_queue_front(Handle, Alias, out content.Pointer, out content.Size);
+                QdbExceptionThrower.ThrowIfNeeded(error);
+                return content.GetBytes();
+            }
         }
 
         /// <summary>
@@ -52,11 +54,12 @@ namespace Quasardb
         /// <exception cref="QdbEmptyContainerException">The queue is empty.</exception>
         public byte[] PopBack()
         {
-            qdb_buffer content;
-            IntPtr contentLength;
-            var error = qdb_api.qdb_queue_pop_back(Handle, Alias, out content, out contentLength);
-            QdbExceptionThrower.ThrowIfNeeded(error);
-            return content.Copy(contentLength);
+            using (var content = new qdb_buffer(Handle))
+            {
+                var error = qdb_api.qdb_queue_pop_back(Handle, Alias, out content.Pointer, out content.Size);
+                QdbExceptionThrower.ThrowIfNeeded(error);
+                return content.GetBytes();
+            }
         }
 
         /// <summary>
@@ -68,11 +71,12 @@ namespace Quasardb
         /// <exception cref="QdbEmptyContainerException">The queue is empty.</exception>
         public byte[] PopFront()
         {
-            qdb_buffer content;
-            IntPtr contentLength;
-            var error = qdb_api.qdb_queue_pop_front(Handle, Alias, out content, out contentLength);
-            QdbExceptionThrower.ThrowIfNeeded(error);
-            return content.Copy(contentLength);
+            using (var content = new qdb_buffer(Handle))
+            {
+                var error = qdb_api.qdb_queue_pop_front(Handle, Alias, out content.Pointer, out content.Size);
+                QdbExceptionThrower.ThrowIfNeeded(error);
+                return content.GetBytes();
+            }
         }
 
         /// <summary>

@@ -53,7 +53,16 @@ namespace QuasardbTests
         [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void Back()
         {
-            _queue.Back();
+            try
+            {
+                _queue.Back();
+            }
+            catch (Exception ex)
+            {
+                
+                throw;
+            }
+            
         }
 
         [TestMethod]
