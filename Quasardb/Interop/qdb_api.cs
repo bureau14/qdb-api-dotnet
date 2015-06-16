@@ -157,13 +157,15 @@ namespace Quasardb.Interop
         public static extern qdb_error qdb_int_put(
             [In] qdb_handle handle, 
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
-            [In] qdb_int value);
+            [In] qdb_int value,
+            [In] qdb_time_t expiry_time);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error qdb_int_update(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
-            [In] qdb_int value);
+            [In] qdb_int value,
+            [In] qdb_time_t expiry_time);
 
         #endregion
 

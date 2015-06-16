@@ -41,6 +41,8 @@
     <DocumentationFile>bin\.NET Framework 4.5\Quasardb.xml</DocumentationFile>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <DefineConstants>
+    </DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Exceptions\QdbExceptions.cs">

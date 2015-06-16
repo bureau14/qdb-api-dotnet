@@ -12,11 +12,7 @@ namespace QuasardbTests
     {
         QdbCluster _cluster;
         QdbTag _tag;
-        QdbBlob _blob1;
-        QdbQueue _queue1;
-        QdbHashSet _hashSet1;
-        QdbInteger _integer1;
-        QdbTag _tag1;
+        QdbEntry _blob1, _queue1, _hashSet1, _integer1, _tag1;
         
         [TestInitialize]
         public void Initialize()
@@ -31,7 +27,6 @@ namespace QuasardbTests
         }
 
         [TestMethod]
-        [Ignore]
         public void Empty()
         {
             var entries = _tag.GetEntries();

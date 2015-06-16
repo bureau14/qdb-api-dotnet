@@ -1,4 +1,5 @@
-﻿using Quasardb.Exceptions;
+﻿using System;
+using Quasardb.Exceptions;
 using Quasardb.Interop;
 
 namespace Quasardb
@@ -44,9 +45,9 @@ namespace Quasardb
         /// </summary>
         /// <param name="value">The initial value of the new integer.</param>
         /// <exception cref="QdbAliasAlreadyExistsException">The entry already exists in the database./</exception>
-        public QdbInteger Put(long value)
+        public QdbInteger Put(long value, DateTime? expiryTime = null)
         {
-            var error = qdb_api.qdb_int_put(Handle, Alias, value);
+            var error = qdb_api.qdb_int_put(Handle, Alias, value, qdb_time.FromOptionalDateTime(expiryTime));
             QdbExceptionThrower.ThrowIfNeeded(error);
             return this;
         }
@@ -56,9 +57,9 @@ namespace Quasardb
         /// </summary>
         /// <param name="value">The new value of the integer.</param>
         /// <exception cref="QdbIncompatibleTypeException">The entry in the database is not an integer.</exception>
-        public QdbInteger Update(long value)
+        public QdbInteger Update(long value, DateTime? expiryTime = null)
         {
-            var error = qdb_api.qdb_int_update(Handle, Alias, value);
+            var error = qdb_api.qdb_int_update(Handle, Alias, value, qdb_time.FromOptionalDateTime(expiryTime));
             QdbExceptionThrower.ThrowIfNeeded(error);
             return this;
         }
