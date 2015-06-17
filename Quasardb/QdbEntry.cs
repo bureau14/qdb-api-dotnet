@@ -1,4 +1,6 @@
-﻿using Quasardb.Exceptions;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Quasardb.Exceptions;
 using Quasardb.Internals;
 using Quasardb.Interop;
 
@@ -89,5 +91,10 @@ namespace Quasardb
         {
             return QdbTagHelper.RemoveTag(Handle, Alias, tag);
         }
+        /*
+        public IEnumerable<QdbTag> GetTags()
+        {
+            
+        }*/
     }
 }

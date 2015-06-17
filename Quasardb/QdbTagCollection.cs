@@ -6,18 +6,18 @@ using Quasardb.Interop;
 
 namespace Quasardb
 {
-    sealed class QdbEntryCollection : IDisposable, IEnumerable<QdbEntry>
+    sealed class QdbTagCollection : IDisposable, IEnumerable<QdbEntry>
     {
         readonly qdb_handle _handle;
         internal IntPtr Pointer;
         internal IntPtr Size;
         
-        internal QdbEntryCollection(qdb_handle handle)
+        internal QdbTagCollection(qdb_handle handle)
         {
             _handle = handle;
         }
 
-        ~QdbEntryCollection()
+        ~QdbTagCollection()
         {
             Dispose(false);
         }
@@ -39,15 +39,13 @@ namespace Quasardb
         {
             ThrowIfDisposed();
 
-            var factory = new QdbEntryFactory(_handle);
-
             // CAUTION: limited to 32 bits!!!
             for (var i = 0; i < (int) Size; i++)
             {
                 var aliasPointer = Marshal.ReadIntPtr(Pointer,  i*IntPtr.Size);
                 var alias = Marshal.PtrToStringAnsi(aliasPointer);
 
-                yield return factory.Create(alias);
+                yield return new QdbTag(_handle, alias);
             }
         }
 
@@ -60,7 +58,7 @@ namespace Quasardb
         {
             if (Pointer != IntPtr.Zero) return;
             if (Size == IntPtr.Zero) return;
-            throw new ObjectDisposedException("The entry collection has been disposed", (Exception)null);
+            throw new ObjectDisposedException("The tag collection has been disposed", (Exception)null);
         }
     }
 }

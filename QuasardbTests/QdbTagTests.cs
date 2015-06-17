@@ -71,5 +71,22 @@ namespace QuasardbTests
 
             Assert.AreEqual(tag1.Alias, tag2.Alias);
         }
+
+        [TestMethod]
+        public void OneOfEach()
+        {
+            _tag.AddEntry(QdbTestCluster.CreateBlob());
+            _tag.AddEntry(QdbTestCluster.CreateHashSet());
+            _tag.AddEntry(QdbTestCluster.CreateInteger());
+            _tag.AddEntry(QdbTestCluster.CreateQueue());
+            _tag.AddEntry(QdbTestCluster.CreateTag());
+
+            Assert.AreEqual(5, _tag.GetEntries().Count());
+            Assert.AreEqual(1, _tag.GetEntries().OfType<QdbBlob>().Count());
+            Assert.AreEqual(1, _tag.GetEntries().OfType<QdbHashSet>().Count());
+            Assert.AreEqual(1, _tag.GetEntries().OfType<QdbInteger>().Count());
+            Assert.AreEqual(1, _tag.GetEntries().OfType<QdbQueue>().Count());
+            Assert.AreEqual(1, _tag.GetEntries().OfType<QdbTag>().Count());
+        }
     }
 }
