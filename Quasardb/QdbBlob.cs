@@ -25,23 +25,21 @@ namespace Quasardb
         /// <returns>The previous content of the blob.</returns>
         /// <exception cref="QdbAliasNotFoundException">The blob is not present in the database.</exception>
         /// <exception cref="QdbIncompatibleTypeException">The database entry is not a blob.</exception>
-        public byte[] CompareAndSwap(byte[] content, byte[] comparand, DateTime? expiryTime = null)
+        public QdbBuffer CompareAndSwap(byte[] content, byte[] comparand, DateTime? expiryTime = null)
         {
             if (content == null) throw new ArgumentNullException("content");
             if (comparand == null) throw new ArgumentNullException("comparand");
 
-            using (var oldContent = new qdb_buffer(Handle))
-            {
-                var error = qdb_api.qdb_compare_and_swap(Handle, Alias,
-                    content, (IntPtr)content.LongLength,
-                    comparand, (IntPtr)comparand.LongLength,
-                    qdb_time.FromOptionalDateTime(expiryTime),
-                    out oldContent.Pointer, out oldContent.Size);
+            var oldContent = new QdbBuffer(Handle);
+            
+            var error = qdb_api.qdb_compare_and_swap(Handle, Alias,
+                content, (IntPtr) content.LongLength,
+                comparand, (IntPtr) comparand.LongLength,
+                qdb_time.FromOptionalDateTime(expiryTime),
+                out oldContent.Pointer, out oldContent.Size);
+            QdbExceptionThrower.ThrowIfNeeded(error);
 
-                QdbExceptionThrower.ThrowIfNeeded(error);
-
-                return oldContent.GetBytes();
-            }
+            return oldContent;
         }
 
         /// <summary>
@@ -50,14 +48,12 @@ namespace Quasardb
         /// <returns>The current content of the blob.</returns>
         /// <exception cref="QdbAliasNotFoundException">The blob is not present in the database.</exception>
         /// <exception cref="QdbIncompatibleTypeException">The database entry is not a blob.</exception>
-        public byte[] Get()
+        public QdbBuffer Get()
         {
-            using (var content = new qdb_buffer(Handle))
-            {
-                var error = qdb_api.qdb_get(Handle, Alias, out content.Pointer, out content.Size);
-                QdbExceptionThrower.ThrowIfNeeded(error);
-                return content.GetBytes();
-            }
+            var content = new QdbBuffer(Handle);
+            var error = qdb_api.qdb_get(Handle, Alias, out content.Pointer, out content.Size);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+            return content;
         }
 
         /// <summary>
@@ -66,14 +62,12 @@ namespace Quasardb
         /// <returns>The previous content of the blob.</returns>
         /// <exception cref="QdbAliasNotFoundException">The blob is not present in the database.</exception>
         /// <exception cref="QdbIncompatibleTypeException">The database entry is not a blob.</exception>
-        public byte[] GetAndRemove()
+        public QdbBuffer GetAndRemove()
         {
-            using (var content = new qdb_buffer(Handle))
-            {
-                var error = qdb_api.qdb_get_and_remove(Handle, Alias, out content.Pointer, out content.Size);
-                QdbExceptionThrower.ThrowIfNeeded(error);
-                return content.GetBytes();
-            }
+            var content = new QdbBuffer(Handle);
+            var error = qdb_api.qdb_get_and_remove(Handle, Alias, out content.Pointer, out content.Size);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+            return content;
         }
 
         /// <summary>
@@ -84,20 +78,18 @@ namespace Quasardb
         /// <param name="expiryTime">The new expiry time of the blob.</param>
         /// <exception cref="QdbAliasNotFoundException">The blob is not present in the database.</exception>
         /// <exception cref="QdbIncompatibleTypeException">The database entry is not a blob.</exception>
-        public byte[] GetAndUpdate(byte[] content, DateTime? expiryTime = null)
+        public QdbBuffer GetAndUpdate(byte[] content, DateTime? expiryTime = null)
         {
             if (content == null) throw new ArgumentNullException("content");
 
-            using (var oldContent = new qdb_buffer(Handle))
-            {
-                var error = qdb_api.qdb_get_and_update(Handle, Alias,
-                    content, (IntPtr) content.LongLength,
-                    qdb_time.FromOptionalDateTime(expiryTime),
-                    out oldContent.Pointer, out oldContent.Size);
+            var oldContent = new QdbBuffer(Handle);
+            var error = qdb_api.qdb_get_and_update(Handle, Alias,
+                content, (IntPtr) content.LongLength,
+                qdb_time.FromOptionalDateTime(expiryTime),
+                out oldContent.Pointer, out oldContent.Size);
 
-                QdbExceptionThrower.ThrowIfNeeded(error);
-                return oldContent.GetBytes();
-            }
+            QdbExceptionThrower.ThrowIfNeeded(error);
+            return oldContent;
         }
 
         /// <summary>

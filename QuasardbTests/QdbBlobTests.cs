@@ -146,6 +146,7 @@ namespace QuasardbTests
             var result = _blob.CompareAndSwap(_content2, _content2);
             var finalContent = _blob.Get();
 
+            
             CollectionAssert.AreEqual(_content1, result);
             CollectionAssert.AreEqual(_content1, finalContent);
         }

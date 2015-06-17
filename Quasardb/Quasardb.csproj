@@ -52,7 +52,6 @@
     </Compile>
     <Compile Include="Exceptions\QdbExceptionThrower.cs" />
     <Compile Include="Internals\QdbTagHelper.cs" />
-    <Compile Include="Interop\qdb_buffer.cs" />
     <Compile Include="Interop\qdb_entry_type.cs" />
     <Compile Include="Interop\qdb_error.cs" />
     <Compile Include="Interop\qdb_api.cs" />
@@ -62,6 +61,7 @@
     <Compile Include="QdbCluster.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QdbEntry.cs" />
+    <Compile Include="QdbBuffer.cs" />
     <Compile Include="QdbTagCollection.cs" />
     <Compile Include="QdbEntryCollection.cs" />
     <Compile Include="QdbEntryFactory.cs" />
