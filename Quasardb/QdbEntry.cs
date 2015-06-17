@@ -34,12 +34,7 @@ namespace Quasardb
             var error = qdb_api.qdb_remove(Handle, Alias);
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
-        
-        /// <summary>
-        /// Adds a tag on the entry.
-        /// </summary>
-        /// <param name="tag">The label of the tag.</param>
-        /// <returns><c>true</c> if the tag was added, <c>false</c> if the entry already had this tag.</returns>
+
         public bool AddTag(QdbTag tag)
         {
             return QdbTagHelper.AddTag(Handle, Alias, tag.Alias);

@@ -252,6 +252,7 @@ namespace QuasardbTests
 
         [TestMethod]
         [ExpectedException(typeof(QdbAliasNotFoundException))]
+        [Ignore]
         public void RemoveTag()
         {
             _blob.RemoveTag(_tag1);

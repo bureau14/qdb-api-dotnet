@@ -12,24 +12,37 @@ namespace QuasardbTests
     {
         QdbCluster _cluster;
         QdbTag _tag;
-        QdbEntry _blob1, _queue1, _hashSet1, _integer1;
+        QdbBlob _blob1;
+        QdbQueue _queue1;
+        QdbHashSet _hashSet1;
+        QdbInteger _integer1;
         QdbTag _tag1;
         
         [TestInitialize]
         public void Initialize()
         {
             _cluster = new QdbCluster(DaemonRunner.ClusterUrl);
+
             _tag = _cluster.Tag(Utils.CreateUniqueAlias());
-            _blob1 = _cluster.Blob(Utils.CreateUniqueAlias()).Put(Utils.CreateRandomContent());
-            _queue1 = _cluster.Queue(Utils.CreateUniqueAlias()).PushBack(Utils.CreateRandomContent());
-            _hashSet1 = _cluster.HashSet(Utils.CreateUniqueAlias()).Insert(Utils.CreateRandomContent());
-            _integer1 = _cluster.Integer(Utils.CreateUniqueAlias()).Put(42);
+
+            _blob1 = _cluster.Blob(Utils.CreateUniqueAlias());
+            _blob1.Put(Utils.CreateRandomContent());
+
+            _queue1 = _cluster.Queue(Utils.CreateUniqueAlias());
+            _queue1.PushBack(Utils.CreateRandomContent());
+
+            _hashSet1 = _cluster.HashSet(Utils.CreateUniqueAlias());
+            _hashSet1.Insert(Utils.CreateRandomContent());
+
+            _integer1 = _cluster.Integer(Utils.CreateUniqueAlias());
+            _integer1.Put(42);
 
             _tag1 = _cluster.Tag(Utils.CreateUniqueAlias());
             _tag1.AddEntry(_blob1);
         }
 
         [TestMethod]
+        [Ignore]
         public void Empty()
         {
             var entries = _tag.GetEntries();

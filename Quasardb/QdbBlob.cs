@@ -106,8 +106,7 @@ namespace Quasardb
         /// <param name="content">The new content of the blob.</param>
         /// <param name="expiryTime">The expiry time to set.</param>
         /// <exception cref="QdbAliasAlreadyExistsException">The entry already exists.</exception>
-        /// <returns><c>this</c>, allowing to chain other commands</returns>
-        public QdbBlob Put(byte[] content, DateTime? expiryTime=null)
+        public void Put(byte[] content, DateTime? expiryTime=null)
         {
             if (content == null) throw new ArgumentNullException("content");
 
@@ -116,7 +115,6 @@ namespace Quasardb
                 qdb_time.FromOptionalDateTime(expiryTime));
 
             QdbExceptionThrower.ThrowIfNeeded(error);
-            return this;
         }
 
         /// <summary>
@@ -144,16 +142,13 @@ namespace Quasardb
         /// <returns>true if remove, false if not.</returns>
         /// <exception cref="QdbAliasNotFoundException">The blob is not present in the database.</exception>
         /// <exception cref="QdbIncompatibleTypeException">The database entry is not a blob.</exception>
-        /// <returns><c>this</c>, allowing to chain other commands</returns>
-        public QdbBlob Update(byte[] content, DateTime? expiryTime = null)
+        public void Update(byte[] content, DateTime? expiryTime = null)
         {
             var error = qdb_api.qdb_update(Handle, Alias, 
                 content, (IntPtr) content.Length, 
                 qdb_time.FromOptionalDateTime(expiryTime));
 
             QdbExceptionThrower.ThrowIfNeeded(error);
-
-            return this;
         }
     }
 }

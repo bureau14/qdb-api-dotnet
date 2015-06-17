@@ -45,26 +45,22 @@ namespace QuasardbTests
         [TestMethod]
         public void Insert_Insert()
         {
-            bool alreadyExisted1, alreadyExisted2;
+            var result1 = _hashSet.Insert(_content1);
+            var result2 = _hashSet.Insert(_content1);
 
-            _hashSet.Insert(_content1, out alreadyExisted1);
-            _hashSet.Insert(_content1, out alreadyExisted2);
-
-            Assert.IsFalse(alreadyExisted1);
-            Assert.IsTrue(alreadyExisted2);
+            Assert.IsTrue(result1);
+            Assert.IsFalse(result2);
         }
 
         [TestMethod]
         public void Insert_Erase_Erase()
         {
-            bool notFound1, notFound2;
-
             _hashSet.Insert(_content1);
-            var result1 = _hashSet.Erase(_content1, out notFound1);
-            var result2 = _hashSet.Erase(_content1, out notFound2);
+            var result1 = _hashSet.Erase(_content1);
+            var result2 = _hashSet.Erase(_content1);
 
-            Assert.IsFalse(notFound1);
-            Assert.IsTrue(notFound2);
+            Assert.IsTrue(result1);
+            Assert.IsFalse(result2);
         }
 
         [TestMethod]

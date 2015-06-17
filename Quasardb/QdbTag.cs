@@ -7,7 +7,7 @@ using Quasardb.Interop;
 
 namespace Quasardb
 {
-    public class QdbTag : QdbEntry
+    public sealed class QdbTag : QdbEntry
     {
         internal QdbTag(qdb_handle handle, string alias) : base(handle, alias)
         {

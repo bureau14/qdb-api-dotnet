@@ -32,8 +32,7 @@ namespace Quasardb
             var error = qdb_api.qdb_expires_from_now(Handle, Alias, qdb_time.FromTimeSpan(ttl));
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
-
-
+        
         /// <summary>
         /// Gets the expiry time.
         /// </summary>
