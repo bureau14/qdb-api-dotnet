@@ -63,7 +63,8 @@
     <Compile Include="QdbHashSetTests.cs" />
     <Compile Include="QdbQueueTests.cs" />
     <Compile Include="QdbTagTests.cs" />
-    <Compile Include="Utils.cs" />
+    <Compile Include="Helpers\QdbTestCluster.cs" />
+    <Compile Include="Helpers\RandomGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Quasardb\Quasardb.csproj">

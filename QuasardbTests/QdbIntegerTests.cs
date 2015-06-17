@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb;
 using Quasardb.Exceptions;
+using QuasardbTests.Helpers;
 
 namespace QuasardbTests
 {
@@ -12,9 +13,7 @@ namespace QuasardbTests
         [TestInitialize]
         public void Initialize()
         {
-            var cluster = new QdbCluster(DaemonRunner.ClusterUrl);
-            var alias = Utils.CreateUniqueAlias();
-            _integer = cluster.Integer(alias);
+            _integer = QdbTestCluster.CreateEmptyInteger();
         }
 
         [TestMethod]

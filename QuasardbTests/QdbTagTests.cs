@@ -4,41 +4,19 @@ using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb;
+using QuasardbTests.Helpers;
 
 namespace QuasardbTests
 {
     [TestClass]
     public class QdbTagTests
     {
-        QdbCluster _cluster;
         QdbTag _tag;
-        QdbBlob _blob1;
-        QdbQueue _queue1;
-        QdbHashSet _hashSet1;
-        QdbInteger _integer1;
-        QdbTag _tag1;
         
         [TestInitialize]
         public void Initialize()
         {
-            _cluster = new QdbCluster(DaemonRunner.ClusterUrl);
-
-            _tag = _cluster.Tag(Utils.CreateUniqueAlias());
-
-            _blob1 = _cluster.Blob(Utils.CreateUniqueAlias());
-            _blob1.Put(Utils.CreateRandomContent());
-
-            _queue1 = _cluster.Queue(Utils.CreateUniqueAlias());
-            _queue1.PushBack(Utils.CreateRandomContent());
-
-            _hashSet1 = _cluster.HashSet(Utils.CreateUniqueAlias());
-            _hashSet1.Insert(Utils.CreateRandomContent());
-
-            _integer1 = _cluster.Integer(Utils.CreateUniqueAlias());
-            _integer1.Put(42);
-
-            _tag1 = _cluster.Tag(Utils.CreateUniqueAlias());
-            _tag1.AddEntry(_blob1);
+            _tag = QdbTestCluster.CreateEmptyTag();
         }
 
         [TestMethod]
@@ -52,51 +30,46 @@ namespace QuasardbTests
         [TestMethod]
         public void OneBlob()
         {
-            _blob1.AddTag(_tag);
+            var blob1 = QdbTestCluster.CreateTaggedBlob(_tag);
+            var blob2 = _tag.GetEntries().Cast<QdbBlob>().Single();
 
-            var blob = _tag.GetEntries().Cast<QdbBlob>().Single();
-
-            Assert.AreEqual(_blob1.Alias, blob.Alias);
+            Assert.AreEqual(blob1.Alias, blob2.Alias);
         }
 
         [TestMethod]
         public void OneQueue()
         {
-            _queue1.AddTag(_tag);
+            var queue1 = QdbTestCluster.CreateTaggedQueue(_tag);
+            var queue2 = _tag.GetEntries().Cast<QdbQueue>().Single();
 
-            var queue = _tag.GetEntries().Cast<QdbQueue>().Single();
-
-            Assert.AreEqual(_queue1.Alias, queue.Alias);
+            Assert.AreEqual(queue1.Alias, queue2.Alias);
         }
 
         [TestMethod]
         public void OneHashSet()
         {
-            _hashSet1.AddTag(_tag);
+            var hashSet1 = QdbTestCluster.CreateTaggedHashSet(_tag);
+            var hashSet2 = _tag.GetEntries().Cast<QdbHashSet>().Single();
 
-            var hashSet = _tag.GetEntries().Cast<QdbHashSet>().Single();
-
-            Assert.AreEqual(_hashSet1.Alias, hashSet.Alias);
+            Assert.AreEqual(hashSet1.Alias, hashSet2.Alias);
         }
 
         [TestMethod]
         public void OneInteger()
         {
-            _integer1.AddTag(_tag);
+            var integer1 = QdbTestCluster.CreateTaggedInteger(_tag);
+            var integer2 = _tag.GetEntries().Cast<QdbInteger>().Single();
 
-            var integer = _tag.GetEntries().Cast<QdbInteger>().Single();
-
-            Assert.AreEqual(_integer1.Alias, integer.Alias);
+            Assert.AreEqual(integer1.Alias, integer2.Alias);
         }
 
         [TestMethod]
         public void OneTag()
         {
-            _tag1.AddTag(_tag);
+            var tag1 = QdbTestCluster.CreateTaggedTag(_tag);
+            var tag2 = _tag.GetEntries().Cast<QdbTag>().Single();
 
-            var tag = _tag.GetEntries().Cast<QdbTag>().Single();
-
-            Assert.AreEqual(_tag1.Alias, tag.Alias);
+            Assert.AreEqual(tag1.Alias, tag2.Alias);
         }
     }
 }

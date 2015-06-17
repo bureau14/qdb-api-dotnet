@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb;
 using Quasardb.Exceptions;
+using QuasardbTests.Helpers;
 
 namespace QuasardbTests
 {
@@ -35,40 +36,35 @@ namespace QuasardbTests
         [ExpectedException(typeof(ArgumentNullException))]
         public void BlobNull()
         {
-            var cluster = new QdbCluster(DaemonRunner.ClusterUrl);
-            cluster.Blob(null);
+            QdbTestCluster.Instance.Blob(null);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void IntegerNull()
         {
-            var cluster = new QdbCluster(DaemonRunner.ClusterUrl);
-            cluster.Integer(null);
+            QdbTestCluster.Instance.Integer(null);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void QueueNull()
         {
-            var cluster = new QdbCluster(DaemonRunner.ClusterUrl);
-            cluster.Queue(null);
+            QdbTestCluster.Instance.Queue(null);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void HashSetNull()
         {
-            var cluster = new QdbCluster(DaemonRunner.ClusterUrl);
-            cluster.HashSet(null);
+            QdbTestCluster.Instance.HashSet(null);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void TagNull()
         {
-            var cluster = new QdbCluster(DaemonRunner.ClusterUrl);
-            cluster.Tag(null);
+            QdbTestCluster.Instance.Tag(null);
         }
     }
 }
