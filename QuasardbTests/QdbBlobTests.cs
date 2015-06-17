@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb;
 using Quasardb.Exceptions;
@@ -251,7 +252,6 @@ namespace QuasardbTests
 
         [TestMethod]
         [ExpectedException(typeof(QdbAliasNotFoundException))]
-        [Ignore]
         public void RemoveTag()
         {
             _blob.RemoveTag(_tag1);
@@ -288,8 +288,6 @@ namespace QuasardbTests
         [TestMethod]
         public void Put_AddTag_AddTag()
         {
-            bool alreadySet;
-
             _blob.Put(_content1);
             _blob.AddTag(_tag1);
             var result = _blob.AddTag(_tag1);
@@ -314,6 +312,33 @@ namespace QuasardbTests
             var result = _blob.RemoveTag(_tag1);
 
             Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof (QdbAliasNotFoundException))]
+        public void GetTags()
+        {
+            _blob.GetTags();
+        }
+
+        [TestMethod]
+        public void Put_GetTags()
+        {
+            _blob.Put(RandomGenerator.CreateRandomContent());
+            var tags = _blob.GetTags();
+            Assert.IsFalse(tags.Any());
+        }
+
+        [TestMethod]
+        public void Put_AddTag_GetTags()
+        {
+            var tag1 = RandomGenerator.CreateUniqueAlias();
+
+            _blob.Put(RandomGenerator.CreateRandomContent());
+            _blob.AddTag(tag1);
+            var tag2 = _blob.GetTags().Single().Alias;
+            
+            Assert.AreEqual(tag1, tag2);
         }
     }
 }

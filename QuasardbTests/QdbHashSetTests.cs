@@ -39,8 +39,7 @@ namespace QuasardbTests
         {
             _hashSet.Erase(null);
         }
-
-
+        
         [TestMethod]
         public void Insert_Insert()
         {

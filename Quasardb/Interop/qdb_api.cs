@@ -269,6 +269,13 @@ namespace Quasardb.Interop
             [Out] out size_t aliases_count);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_get_tags(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias, 
+            [Out] out IntPtr pointer,
+            [Out] out IntPtr size);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern void qdb_free_results(
             [In] qdb_handle handle,
             [In] IntPtr results,

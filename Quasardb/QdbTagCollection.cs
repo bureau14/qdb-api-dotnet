@@ -6,7 +6,7 @@ using Quasardb.Interop;
 
 namespace Quasardb
 {
-    sealed class QdbTagCollection : IDisposable, IEnumerable<QdbEntry>
+    sealed class QdbTagCollection : IDisposable, IEnumerable<QdbTag>
     {
         readonly qdb_handle _handle;
         internal IntPtr Pointer;
@@ -35,7 +35,7 @@ namespace Quasardb
             Size = IntPtr.Zero;
         }
 
-        public IEnumerator<QdbEntry> GetEnumerator()
+        public IEnumerator<QdbTag> GetEnumerator()
         {
             ThrowIfDisposed();
 
