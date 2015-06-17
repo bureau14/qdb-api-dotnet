@@ -9,6 +9,7 @@ namespace Quasardb
     sealed class QdbEntryCollection : IDisposable, IEnumerable<QdbEntry>
     {
         readonly qdb_handle _handle;
+
         internal IntPtr Pointer;
         internal IntPtr Size;
         

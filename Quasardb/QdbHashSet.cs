@@ -22,7 +22,7 @@ namespace Quasardb
         /// <param name="content">The value.</param>
         /// <returns>false if the value was already in the set.</returns>
         /// <exception cref="QdbIncompatibleTypeException">The entry in the database is not a hash-set.</exception>
-        public  bool Insert(byte[] content)
+        public bool Insert(byte[] content)
         {
             if (content == null) throw new ArgumentNullException("content");
 
@@ -77,9 +77,18 @@ namespace Quasardb
             if (content == null) throw new ArgumentNullException("content");
 
             var error = qdb_api.qdb_hset_contains(Handle, Alias, content, (IntPtr) content.LongLength);
-            if (error == qdb_error.qdb_e_element_not_found) return false;
-            QdbExceptionThrower.ThrowIfNeeded(error);
-            return true;
+
+            switch (error)
+            {
+                case qdb_error.qdb_e_element_not_found:
+                    return false;
+
+                case qdb_error.qdb_e_ok:
+                    return true;
+
+                default:
+                    throw QdbExceptionFactory.Create(error);
+            }
         }
     }
 }
