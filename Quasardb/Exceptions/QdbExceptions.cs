@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using Quasardb.Interop;
 
 namespace Quasardb.Exceptions
 {
@@ -10,18 +8,6 @@ namespace Quasardb.Exceptions
     public abstract class QdbExceptionBase : Exception
     {
     }
-
-    /// <summary>
-    /// Quasardb: Uninitialized error variable.
-    /// </summary>
-	public sealed class QdbUninitializedException : QdbExceptionBase 
-	{
-		/// <inheritdoc />
-        public override string Message
-        {
-            get { return "Quasardb: Uninitialized error variable."; }
-        }
-	}
 
     /// <summary>
     /// Quasardb: A system error occurred.
@@ -84,30 +70,6 @@ namespace Quasardb.Exceptions
 	}
 
     /// <summary>
-    /// Quasardb: The option is invalid.
-    /// </summary>
-	public sealed class QdbInvalidOptionException : QdbExceptionBase 
-	{
-		/// <inheritdoc />
-        public override string Message
-        {
-            get { return "Quasardb: The option is invalid."; }
-        }
-	}
-
-    /// <summary>
-    /// Quasardb: The provided alias length is too long.
-    /// </summary>
-	public sealed class QdbAliasTooLongException : QdbExceptionBase 
-	{
-		/// <inheritdoc />
-        public override string Message
-        {
-            get { return "Quasardb: The provided alias length is too long."; }
-        }
-	}
-
-    /// <summary>
     /// Quasardb: An entry matching the provided alias cannot be found.
     /// </summary>
 	public sealed class QdbAliasNotFoundException : QdbExceptionBase 
@@ -152,18 +114,6 @@ namespace Quasardb.Exceptions
         public override string Message
         {
             get { return "Quasardb: The provided buffer is too small."; }
-        }
-	}
-
-    /// <summary>
-    /// Quasardb: The requested command is invalid.
-    /// </summary>
-	public sealed class QdbInvalidCommandException : QdbExceptionBase 
-	{
-		/// <inheritdoc />
-        public override string Message
-        {
-            get { return "Quasardb: The requested command is invalid."; }
         }
 	}
 
@@ -218,7 +168,7 @@ namespace Quasardb.Exceptions
     /// <summary>
     /// Quasardb: The cluster is unstable. Please try again later.
     /// </summary>
-	public sealed class QdbUnstableHiveException : QdbExceptionBase 
+	public sealed class QdbUnstableClusterException : QdbExceptionBase 
 	{
 		/// <inheritdoc />
         public override string Message
@@ -396,14 +346,14 @@ namespace Quasardb.Exceptions
 	}
 
     /// <summary>
-    /// Quasardb: This operation has been skipped because of an error that occured in another operation.
+    /// Quasardb: This operation has been skipped because of an error that occured in another operatio
     /// </summary>
 	public sealed class QdbSkippedException : QdbExceptionBase 
 	{
 		/// <inheritdoc />
         public override string Message
         {
-            get { return "Quasardb: This operation has been skipped because of an error that occured in another operation."; }
+            get { return "Quasardb: This operation has been skipped because of an error that occured in another operatio"; }
         }
 	}
 
@@ -537,65 +487,5 @@ namespace Quasardb.Exceptions
         {
             get { return "Quasardb: An unrecoverable occurred while committing or rollbacking the transaction."; }
         }
-	}
-
-	static class QdbExceptionFactory 
-	{
-		static readonly Dictionary<qdb_error,Type> _types = new Dictionary<qdb_error,Type>
-		{
-			{qdb_error.qdb_e_uninitialized, typeof(QdbUninitializedException)},
-			{qdb_error.qdb_e_system, typeof(QdbSystemException)},
-			{qdb_error.qdb_e_internal, typeof(QdbInternalException)},
-			{qdb_error.qdb_e_no_memory, typeof(QdbNoMemoryException)},
-			{qdb_error.qdb_e_invalid_protocol, typeof(QdbInvalidProtocolException)},
-			{qdb_error.qdb_e_host_not_found, typeof(QdbHostNotFoundException)},
-			{qdb_error.qdb_e_invalid_option, typeof(QdbInvalidOptionException)},
-			{qdb_error.qdb_e_alias_too_long, typeof(QdbAliasTooLongException)},
-			{qdb_error.qdb_e_alias_not_found, typeof(QdbAliasNotFoundException)},
-			{qdb_error.qdb_e_alias_already_exists, typeof(QdbAliasAlreadyExistsException)},
-			{qdb_error.qdb_e_timeout, typeof(QdbTimeoutException)},
-			{qdb_error.qdb_e_buffer_too_small, typeof(QdbBufferTooSmallException)},
-			{qdb_error.qdb_e_invalid_command, typeof(QdbInvalidCommandException)},
-			{qdb_error.qdb_e_connection_refused, typeof(QdbConnectionRefusedException)},
-			{qdb_error.qdb_e_connection_reset, typeof(QdbConnectionResetException)},
-			{qdb_error.qdb_e_unexpected_reply, typeof(QdbUnexpectedReplyException)},
-			{qdb_error.qdb_e_not_implemented, typeof(QdbNotImplementedException)},
-			{qdb_error.qdb_e_unstable_hive, typeof(QdbUnstableHiveException)},
-			{qdb_error.qdb_e_protocol_error, typeof(QdbProtocolErrorException)},
-			{qdb_error.qdb_e_outdated_topology, typeof(QdbOutdatedTopologyException)},
-			{qdb_error.qdb_e_wrong_peer, typeof(QdbWrongPeerException)},
-			{qdb_error.qdb_e_invalid_version, typeof(QdbInvalidVersionException)},
-			{qdb_error.qdb_e_try_again, typeof(QdbTryAgainException)},
-			{qdb_error.qdb_e_invalid_argument, typeof(QdbInvalidArgumentException)},
-			{qdb_error.qdb_e_out_of_bounds, typeof(QdbOutOfBoundsException)},
-			{qdb_error.qdb_e_conflict, typeof(QdbConflictException)},
-			{qdb_error.qdb_e_not_connected, typeof(QdbNotConnectedException)},
-			{qdb_error.qdb_e_invalid_handle, typeof(QdbInvalidHandleException)},
-			{qdb_error.qdb_e_reserved_alias, typeof(QdbReservedAliasException)},
-			{qdb_error.qdb_e_unmatched_content, typeof(QdbUnmatchedContentException)},
-			{qdb_error.qdb_e_invalid_iterator, typeof(QdbInvalidIteratorException)},
-			{qdb_error.qdb_e_prefix_too_short, typeof(QdbPrefixTooShortException)},
-			{qdb_error.qdb_e_skipped, typeof(QdbSkippedException)},
-			{qdb_error.qdb_e_incompatible_type, typeof(QdbIncompatibleTypeException)},
-			{qdb_error.qdb_e_empty_container, typeof(QdbEmptyContainerException)},
-			{qdb_error.qdb_e_container_full, typeof(QdbContainerFullException)},
-			{qdb_error.qdb_e_element_not_found, typeof(QdbElementNotFoundException)},
-			{qdb_error.qdb_e_element_already_exists, typeof(QdbElementAlreadyExistsException)},
-			{qdb_error.qdb_e_overflow, typeof(QdbOverflowException)},
-			{qdb_error.qdb_e_underflow, typeof(QdbUnderflowException)},
-			{qdb_error.qdb_e_tag_already_set, typeof(QdbTagAlreadySetException)},
-			{qdb_error.qdb_e_tag_not_set, typeof(QdbTagNotSetException)},
-			{qdb_error.qdb_e_entry_too_large, typeof(QdbEntryTooLargeException)},
-			{qdb_error.qdb_e_transaction_partial_failure, typeof(QdbTransactionPartialFailureException)},
-		};
-
-		public static QdbExceptionBase Create(qdb_error error)
-		{
-			Type exceptionType;
-            if (!_types.TryGetValue(error, out exceptionType))
-				throw new NotSupportedException("Unexpected qdb_error: " + error);
-            
-			return (QdbExceptionBase)Activator.CreateInstance(exceptionType);
-		}
 	}
 }

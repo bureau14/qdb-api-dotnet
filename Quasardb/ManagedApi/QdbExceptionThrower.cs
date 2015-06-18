@@ -1,6 +1,6 @@
-﻿using Quasardb.Interop;
+﻿using Quasardb.NativeApi;
 
-namespace Quasardb.Exceptions
+namespace Quasardb.ManagedApi
 {
     static class QdbExceptionThrower
     {

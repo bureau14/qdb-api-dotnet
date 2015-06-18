@@ -55,6 +55,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="QdbEntryTests.cs" />
     <Compile Include="QdbBlobTests.cs" />
     <Compile Include="QdbClusterTests.cs" />
     <Compile Include="DaemonRunner.cs" />
@@ -62,7 +63,9 @@
     <Compile Include="QdbIntegerTests.cs" />
     <Compile Include="QdbHashSetTests.cs" />
     <Compile Include="QdbQueueTests.cs" />
-    <Compile Include="Utils.cs" />
+    <Compile Include="QdbTagTests.cs" />
+    <Compile Include="Helpers\QdbTestCluster.cs" />
+    <Compile Include="Helpers\RandomGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Quasardb\Quasardb.csproj">

@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb;
 using Quasardb.Exceptions;
+using QuasardbTests.Helpers;
 
 namespace QuasardbTests
 {
@@ -15,13 +16,12 @@ namespace QuasardbTests
         [TestInitialize]
         public void Initialize()
         {
-            var cluster = new QdbCluster(DaemonRunner.ClusterUrl);
-            var alias = Utils.CreateUniqueAlias();
-            _blob = cluster.Blob(alias);
-            _content1 = Utils.CreateRandomContent();
-            _content2 = Utils.CreateRandomContent();
+            _blob = QdbTestCluster.CreateEmptyBlob();
+            _content1 = RandomGenerator.CreateRandomContent();
+            _content2 = RandomGenerator.CreateRandomContent();
             _expiry1 = new DateTime(3000, 12, 25);
             _expiry2 = new DateTime(4000, 12, 25);
+            RandomGenerator.CreateUniqueAlias();
         }
 
         [TestMethod]
@@ -101,6 +101,13 @@ namespace QuasardbTests
 
             CollectionAssert.AreEqual(result, _content1);
             Assert.AreEqual(_expiry2, expiryTime);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Update_Null()
+        {
+            _blob.Update(null);
         }
 
         [TestMethod]

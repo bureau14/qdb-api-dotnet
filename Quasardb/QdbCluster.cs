@@ -1,6 +1,5 @@
 ﻿using System;
-using Quasardb.Exceptions;
-using Quasardb.Interop;
+using Quasardb.ManagedApi;
 
 namespace Quasardb
 {
@@ -9,7 +8,7 @@ namespace Quasardb
     /// </summary>
     public sealed class QdbCluster : IDisposable
     {
-        readonly qdb_handle _handle;
+        readonly QdbApi _api;
 
         /// <summary>
         /// Connects to a quasardb database.
@@ -17,68 +16,81 @@ namespace Quasardb
         /// <param name="uri">The URI of the quasardb database.</param>
         public QdbCluster(string uri)
         {
-            if (uri == null) throw new ArgumentNullException("uri");
-
-            _handle = qdb_api.qdb_open_tcp();
-
-            var error = qdb_api.qdb_connect(_handle, uri);
-            QdbExceptionThrower.ThrowIfNeeded(error);
+            _api = new QdbApi();
+            _api.Connect(uri);
         }
 
         /// <summary>
-        /// Close the connection.
+        /// Close the connection to the database.
         /// </summary>
         public void Dispose()
         {
-            _handle.Dispose();
+            _api.Dispose();
         }
 
         /// <summary>
-        /// Return a <see cref="QdbBlob" /> with the specified alias.
+        /// Returns a <see cref="QdbBlob" /> with the specified alias.
         /// </summary>
         /// <remarks>No operation is performed in the database.</remarks>
         /// <param name="alias">The alias of the blob in the database.</param>
-        /// <returns>A <see cref="QdbBlob" />.</returns>
+        /// <returns>A blob associated with the specified alias.</returns>
+        /// <seealso cref="QdbBlob"/>
         public QdbBlob Blob(string alias)
         {
             if (alias == null) throw new ArgumentNullException("alias");
-            return new QdbBlob(_handle, alias);
+            return new QdbBlob(_api, alias);
         }
 
         /// <summary>
-        /// Return a <see cref="QdbInteger" /> with the specified alias.
+        /// Returns a <see cref="QdbInteger" /> with the specified alias.
         /// </summary>
         /// <remarks>No operation is performed in the database.</remarks>
         /// <param name="alias">The alias of the integer in the database.</param>
-        /// <returns>A <see cref="QdbInteger" />.</returns>
+        /// <returns>An integer associated with the specified alias.</returns>
+        /// <seealso cref="QdbInteger"/>
         public QdbInteger Integer(string alias)
         {
             if (alias == null) throw new ArgumentNullException("alias");
-            return new QdbInteger(_handle, alias);
+            return new QdbInteger(_api, alias);
         }
 
         /// <summary>
-        /// Return a <see cref="QdbQueue" /> with the specified alias.
+        /// Returns a <see cref="QdbQueue" /> with the specified alias.
         /// </summary>
         /// <remarks>No operation is performed in the database.</remarks>
         /// <param name="alias">The alias of the queue in the database.</param>
-        /// <returns>A <see cref="QdbQueue" />.</returns>
+        /// <returns>A queue associated with the specified alias.</returns>
+        /// <seealso cref="QdbQueue"/>
         public QdbQueue Queue(string alias)
         {
             if (alias == null) throw new ArgumentNullException("alias");
-            return new QdbQueue(_handle, alias);
+            return new QdbQueue(_api, alias);
         }
 
         /// <summary>
-        /// Return a <see cref="QdbHashSet" /> with the specified alias.
+        /// Returns a <see cref="QdbHashSet" /> with the specified alias.
         /// </summary>
         /// <remarks>No operation is performed in the database.</remarks>
         /// <param name="alias">The alias of the hash-set in the database.</param>
-        /// <returns>A <see cref="HashSet" />.</returns>
+        /// <returns>A hash-set associated with the specified alias.</returns>
+        /// <seealso cref="QdbHashSet"/>
         public QdbHashSet HashSet(string alias)
         {
             if (alias == null) throw new ArgumentNullException("alias");
-            return new QdbHashSet(_handle, alias);
+            return new QdbHashSet(_api, alias);
+        }
+
+        /// <summary>
+        /// Returns a <see cref="QdbTag" /> with the specified alias.
+        /// </summary>
+        /// <remarks>No operation is performed in the database.</remarks>
+        /// <param name="alias">The alias of the tag in the database.</param>
+        /// <returns>A tag associated with the specified alias.</returns>
+        /// <seealso cref="QdbTag"/>
+        public QdbTag Tag(string alias)
+        {
+            if (alias == null) throw new ArgumentNullException("alias");
+            return new QdbTag(_api, alias);
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
 
-namespace QuasardbTests
+namespace QuasardbTests.Helpers
 {
-    class Utils
+    class RandomGenerator
     {
         static readonly Random _rand = new Random();
         static long _uniqueId = DateTime.Now.Ticks;

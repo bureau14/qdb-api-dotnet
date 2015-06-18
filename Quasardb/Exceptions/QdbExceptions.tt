@@ -1,13 +1,6 @@
-﻿<#@ template debug="false" hostspecific="false" language="C#" #>
-<#@ assembly name="System.Core" #>
-<#@ import namespace="System.Linq" #>
-<#@ import namespace="System.Text" #>
-<#@ import namespace="System.Globalization" #>
-<#@ import namespace="System.Collections.Generic" #>
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
 <#@ output extension=".cs" #>
-using System;
-using System.Collections.Generic;
-using Quasardb.Interop;
+<#@ include file="../Meta/errors.t4" #>using System;
 
 namespace Quasardb.Exceptions
 {
@@ -17,95 +10,23 @@ namespace Quasardb.Exceptions
     public abstract class QdbExceptionBase : Exception
     {
     }
-
 <#
-var errors = new string[][]
-{
-    new[] {"QdbUninitializedException",             "qdb_e_uninitialized",               "Uninitialized error variable."                                                         },
-    new[] {"QdbSystemException",                    "qdb_e_system",                      "A system error occurred."                                                              },
-    new[] {"QdbInternalException",                  "qdb_e_internal",                    "An internal error occurred."                                                           },
-    new[] {"QdbNoMemoryException",                  "qdb_e_no_memory",                   "Insufficient memory is available to complete the operation."                           },
-    new[] {"QdbInvalidProtocolException",           "qdb_e_invalid_protocol",            "The remote host protocol mismatches the client API protocol."                          },
-    new[] {"QdbHostNotFoundException",              "qdb_e_host_not_found",              "The remote host cannot be resolved."                                                   },
-    new[] {"QdbInvalidOptionException",             "qdb_e_invalid_option",              "The option is invalid."                                                                },
-    new[] {"QdbAliasTooLongException",              "qdb_e_alias_too_long",              "The provided alias length is too long."                                                },
-    new[] {"QdbAliasNotFoundException",             "qdb_e_alias_not_found",             "An entry matching the provided alias cannot be found."                                 },
-    new[] {"QdbAliasAlreadyExistsException",        "qdb_e_alias_already_exists",        "An entry matching the provided alias already exists."                                  },
-    new[] {"QdbTimeoutException",                   "qdb_e_timeout",                     "The operation timed out."                                                              },
-    new[] {"QdbBufferTooSmallException",            "qdb_e_buffer_too_small",            "The provided buffer is too small."                                                     },
-    new[] {"QdbInvalidCommandException",            "qdb_e_invalid_command",             "The requested command is invalid."                                                     },
-    new[] {"QdbConnectionRefusedException",         "qdb_e_connection_refused",          "Connection refused."                                                                   },
-    new[] {"QdbConnectionResetException",           "qdb_e_connection_reset",            "Connection reset by peer."                                                             },
-    new[] {"QdbUnexpectedReplyException",           "qdb_e_unexpected_reply",            "Unexpected reply from the remote host."                                                },
-    new[] {"QdbNotImplementedException",            "qdb_e_not_implemented",             "The requested operation is not yet available."                                         },
-    new[] {"QdbUnstableHiveException",              "qdb_e_unstable_hive",               "The cluster is unstable. Please try again later."                                      },
-    new[] {"QdbProtocolErrorException",             "qdb_e_protocol_error",              "A protocol error occurred."                                                            },
-    new[] {"QdbOutdatedTopologyException",          "qdb_e_outdated_topology",           "The cluster topology has changed. Please try again."                                   },
-    new[] {"QdbWrongPeerException",                 "qdb_e_wrong_peer",                  "A request to the wrong peer has been made. Please try again."                          },
-    new[] {"QdbInvalidVersionException",            "qdb_e_invalid_version",             "The remote host and Client API versions mismatch."                                     },
-    new[] {"QdbTryAgainException",                  "qdb_e_try_again",                   "A temporary error occurred. Please try again."                                         },
-    new[] {"QdbInvalidArgumentException",           "qdb_e_invalid_argument",            "The argument is invalid."                                                              },
-    new[] {"QdbOutOfBoundsException",               "qdb_e_out_of_bounds",               "Invalid memory access: out of bounds."                                                 },
-    new[] {"QdbConflictException",                  "qdb_e_conflict",                    "The operation has been aborted as it conflicts with another ongoing operation."        },
-    new[] {"QdbNotConnectedException",              "qdb_e_not_connected",               "The handle is not connected."                                                          },
-    new[] {"QdbInvalidHandleException",             "qdb_e_invalid_handle",              "The handle is invalid."                                                                },
-    new[] {"QdbReservedAliasException",             "qdb_e_reserved_alias",              "The alias name or prefix is reserved."                                                 },
-    new[] {"QdbUnmatchedContentException",          "qdb_e_unmatched_content",           "The content does not match."                                                           },
-    new[] {"QdbInvalidIteratorException",           "qdb_e_invalid_iterator",            "The iterator is invalid"                                                               },
-    new[] {"QdbPrefixTooShortException",            "qdb_e_prefix_too_short",            "The supplied prefix is too short"                                                      },
-    new[] {"QdbSkippedException",                   "qdb_e_skipped",                     "This operation has been skipped because of an error that occured in another operation."},
-    new[] {"QdbIncompatibleTypeException",          "qdb_e_incompatible_type",           "The alias has a type incompatible for this operation."                                 },
-    new[] {"QdbEmptyContainerException",            "qdb_e_empty_container",             "The entry contains an empty container."                                                },
-    new[] {"QdbContainerFullException",             "qdb_e_container_full",              "The container is full."                                                                },
-    new[] {"QdbElementNotFoundException",           "qdb_e_element_not_found",           "The entry does not contain the given element."                                         },
-    new[] {"QdbElementAlreadyExistsException",      "qdb_e_element_already_exists",      "The entry already contains the given element."                                         },
-    new[] {"QdbOverflowException",                  "qdb_e_overflow",                    "The operation provokes overflow."                                                      },
-    new[] {"QdbUnderflowException",                 "qdb_e_underflow",                   "The operation provokes underflow."                                                     },
-    new[] {"QdbTagAlreadySetException",             "qdb_e_tag_already_set",             "The entry is already marked with the provided tag."                                    },
-    new[] {"QdbTagNotSetException",                 "qdb_e_tag_not_set",                 "The entry is not marked with the provided tag."                                        },
-    new[] {"QdbEntryTooLargeException",             "qdb_e_entry_too_large",             "The entry is larger than the allowed limit on the remote node."                        },
-    new[] {"QdbTransactionPartialFailureException", "qdb_e_transaction_partial_failure", "An unrecoverable occurred while committing or rollbacking the transaction."            },
-};  
-  
-foreach(var error in errors)  
+foreach(var error in ReadErrors("../Meta/errors.csv"))  
 {   
 #>
+
     /// <summary>
-    /// Quasardb: <#=error[2]#>
+    /// Quasardb: <#=error.Message#>
     /// </summary>
-	public sealed class <#=error[0]#> : QdbExceptionBase 
+	public sealed class <#=error.ExceptionName#> : QdbExceptionBase 
 	{
 		/// <inheritdoc />
         public override string Message
         {
-            get { return "Quasardb: <#=error[2]#>"; }
+            get { return "Quasardb: <#=error.Message#>"; }
         }
 	}
-
 <# 
 }
 #>
-	static class QdbExceptionFactory 
-	{
-		static readonly Dictionary<qdb_error,Type> _types = new Dictionary<qdb_error,Type>
-		{
-<#
-foreach(var error in errors)
-{ 
-#>
-			{qdb_error.<#=error[1]#>, typeof(<#=error[0]#>)},
-<#
-}
-#>
-		};
-
-		public static QdbExceptionBase Create(qdb_error error)
-		{
-			Type exceptionType;
-            if (!_types.TryGetValue(error, out exceptionType))
-				throw new NotSupportedException("Unexpected qdb_error: " + error);
-            
-			return (QdbExceptionBase)Activator.CreateInstance(exceptionType);
-		}
-	}
 }

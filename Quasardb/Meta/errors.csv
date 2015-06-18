@@ -1,0 +1,40 @@
+1;qdb_e_system;QdbSystemException;A system error occurred.
+2;qdb_e_internal;QdbInternalException;An internal error occurred.
+3;qdb_e_no_memory;QdbNoMemoryException;Insufficient memory is available to complete the operation.
+4;qdb_e_invalid_protocol;QdbInvalidProtocolException;The remote host protocol mismatches the client API protocol.
+5;qdb_e_host_not_found;QdbHostNotFoundException;The remote host cannot be resolved.
+8;qdb_e_alias_not_found;QdbAliasNotFoundException;An entry matching the provided alias cannot be found.
+9;qdb_e_alias_already_exists;QdbAliasAlreadyExistsException;An entry matching the provided alias already exists.
+10;qdb_e_timeout;QdbTimeoutException;The operation timed out.
+11;qdb_e_buffer_too_small;QdbBufferTooSmallException;The provided buffer is too small.
+14;qdb_e_connection_refused;QdbConnectionRefusedException;Connection refused.
+15;qdb_e_connection_reset;QdbConnectionResetException;Connection reset by peer.
+16;qdb_e_unexpected_reply;QdbUnexpectedReplyException;Unexpected reply from the remote host.
+17;qdb_e_not_implemented;QdbNotImplementedException;The requested operation is not yet available.
+18;qdb_e_unstable_cluster;QdbUnstableClusterException;The cluster is unstable. Please try again later.
+19;qdb_e_protocol_error;QdbProtocolErrorException;A protocol error occurred.
+20;qdb_e_outdated_topology;QdbOutdatedTopologyException;The cluster topology has changed. Please try again.
+21;qdb_e_wrong_peer;QdbWrongPeerException;A request to the wrong peer has been made. Please try again.
+22;qdb_e_invalid_version;QdbInvalidVersionException;The remote host and Client API versions mismatch.
+23;qdb_e_try_again;QdbTryAgainException;A temporary error occurred. Please try again.
+24;qdb_e_invalid_argument;QdbInvalidArgumentException;The argument is invalid.
+25;qdb_e_out_of_bounds;QdbOutOfBoundsException;Invalid memory access: out of bounds.
+26;qdb_e_conflict;QdbConflictException;The operation has been aborted as it conflicts with another ongoing operation.
+27;qdb_e_not_connected;QdbNotConnectedException;The handle is not connected.
+28;qdb_e_invalid_handle;QdbInvalidHandleException;The handle is invalid.
+29;qdb_e_reserved_alias;QdbReservedAliasException;The alias name or prefix is reserved.
+30;qdb_e_unmatched_content;QdbUnmatchedContentException;The content does not match.
+31;qdb_e_invalid_iterator;QdbInvalidIteratorException;The iterator is invalid
+32;qdb_e_prefix_too_short;QdbPrefixTooShortException;The supplied prefix is too short
+33;qdb_e_skipped;QdbSkippedException;This operation has been skipped because of an error that occured in another operation.
+34;qdb_e_incompatible_type;QdbIncompatibleTypeException;The alias has a type incompatible for this operation.
+35;qdb_e_empty_container;QdbEmptyContainerException;The entry contains an empty container.
+36;qdb_e_container_full;QdbContainerFullException;The container is full.
+37;qdb_e_element_not_found;QdbElementNotFoundException;The entry does not contain the given element.
+38;qdb_e_element_already_exists;QdbElementAlreadyExistsException;The entry already contains the given element.
+39;qdb_e_overflow;QdbOverflowException;The operation provokes overflow.
+40;qdb_e_underflow;QdbUnderflowException;The operation provokes underflow.
+41;qdb_e_tag_already_set;QdbTagAlreadySetException;The entry is already marked with the provided tag.
+42;qdb_e_tag_not_set;QdbTagNotSetException;The entry is not marked with the provided tag.
+43;qdb_e_entry_too_large;QdbEntryTooLargeException;The entry is larger than the allowed limit on the remote node.
+44;qdb_e_transaction_partial_failure;QdbTransactionPartialFailureException;An unrecoverable occurred while committing or rollbacking the transaction.

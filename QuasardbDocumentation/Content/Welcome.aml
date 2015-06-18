@@ -51,7 +51,7 @@
       <title>Queues</title>
       <content>
         <para>
-          Want a queue in your database?
+          Want a queue? We have distributed queues.
         </para>
         <code language="c#">
           byte[] a, b, c;
@@ -72,38 +72,13 @@
           c = myQueue.PopFront()
         </code>
       </content>
-    </section>
-
-    <section>
-      <title>Integers</title>
-      <content>
-        <para>
-          Want atomic integers now?
-        </para>
-        <code language="c#">
-          long a, b, c;
-
-          QdbInteger myInt = cluster.Integer("Roger the integer");
-
-          myInt.Put(a);
-          c = myInt.Add(b);
-        </code>
-        <code language="vb">
-          Dim a, b, c As Long
-
-          Dim myInt = cluster.Integer("Roger the integer")
-
-          myInt.Put(a)
-          c = myInt.Add(b)
-        </code>
-      </content>
-    </section>
+    </section>  
 
     <section>
       <title>Hash sets</title>
       <content>
         <para>
-          What else? a set maybe?
+          We also provide distributed sets.
         </para>
         <code language="c#">
           byte[] a, b, c;
@@ -125,6 +100,52 @@
         </code>
       </content>
     </section>
+    
+    <section>
+      <title>Integers</title>
+      <content>
+        <para>
+          quasardb comes out of the box with server-side atomic integers:
+        </para>
+        <code language="c#">
+          long a, b, c;
+
+          QdbInteger myInt = cluster.Integer("Roger the integer");
+
+          myInt.Put(a);
+          c = myInt.Add(b);
+        </code>
+        <code language="vb">
+          Dim a, b, c As Long
+
+          Dim myInt = cluster.Integer("Roger the integer")
+
+          myInt.Put(a)
+          c = myInt.Add(b)
+        </code>
+      </content>
+    </section>
+    
+    <section>
+      <title>Tags</title>
+      <content>
+        <para>
+          Here's how you can easily find your data, using tags:
+        </para>
+        <code language="c#">
+          cluster.Blob("Bob the blob").AddTag("Male");
+          cluster.Integer("Roger the integer").AddTag("Male");
+          
+          IEnumerable&lt;QdbEntry&gt; males = cluster.Tag("Male").GetEntries();
+        </code>
+        <code language="vb">
+          cluster.Blob("Bob the blob").AddTag("Male");
+          cluster.Integer("Roger the integer").AddTag("Male");
+          
+          Dim males = cluster.Tag("Males").GetEntries()
+        </code>
+      </content>
+    </section>
    
 		<relatedTopics>
       <codeEntityReference>T:Quasardb.QdbCluster</codeEntityReference>
@@ -132,7 +153,7 @@
       <codeEntityReference>T:Quasardb.QdbQueue</codeEntityReference>
       <codeEntityReference>T:Quasardb.QdbHashSet</codeEntityReference>
       <codeEntityReference>T:Quasardb.QdbInteger</codeEntityReference>
-			<link xlink:href="8f113c81-a753-4915-803d-dc6e7927d7d3" />
+      <codeEntityReference>T:Quasardb.QdbTag</codeEntityReference>
 		</relatedTopics>
 	</developerConceptualDocument>
 </topic>

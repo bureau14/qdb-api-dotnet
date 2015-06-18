@@ -1,6 +1,8 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb;
+using Quasardb.Exceptions;
+using QuasardbTests.Helpers;
 
 namespace QuasardbTests
 {
@@ -13,65 +15,61 @@ namespace QuasardbTests
         [TestInitialize]
         public void Initialize()
         {
-            var cluster = new QdbCluster(DaemonRunner.ClusterUrl);
-            var alias = Utils.CreateUniqueAlias();
-            _hashSet = cluster.HashSet(alias);
-            _content1 = Utils.CreateRandomContent();
-            _content2 = Utils.CreateRandomContent();
+            _hashSet = QdbTestCluster.CreateEmptyHashSet();
+            _content1 = RandomGenerator.CreateRandomContent();
+            _content2 = RandomGenerator.CreateRandomContent();
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void Insert_Null()
-        {
-            _hashSet.Insert(null);
-        }
-        
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void Erase_Null()
-        {
-            _hashSet.Contains(null);
-        }
-        
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Contains_Null()
         {
+            _hashSet.Contains(null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(QdbIncompatibleTypeException))]
+        public void Contains_Incompatible()
+        {
+            QdbTestCluster.CreateBlob(_hashSet.Alias);
+            _hashSet.Contains(RandomGenerator.CreateRandomContent());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(QdbAliasNotFoundException))]
+        public void Contains_NotFound()
+        {
+            _hashSet.Contains(RandomGenerator.CreateRandomContent());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Erase_Null()
+        {
             _hashSet.Erase(null);
         }
 
-
         [TestMethod]
-        public void Insert_Insert()
+        [ExpectedException(typeof(QdbAliasNotFoundException))]
+        public void Erase_NotFound()
         {
-            var result1 = _hashSet.Insert(_content1);
-            var result2 = _hashSet.Insert(_content1);
-
-            Assert.IsTrue(result1);
-            Assert.IsFalse(result2);
+            _hashSet.Erase(RandomGenerator.CreateRandomContent());
         }
 
         [TestMethod]
-        public void Insert_Erase_Erase()
+        [ExpectedException(typeof(QdbIncompatibleTypeException))]
+        public void Erase_Incompatible()
         {
-            _hashSet.Insert(_content1);
-            var result1 = _hashSet.Erase(_content1);
-            var result2 = _hashSet.Erase(_content1);
-
-            Assert.IsTrue(result1);
-            Assert.IsFalse(result2);
+            QdbTestCluster.CreateBlob(_hashSet.Alias);
+            _hashSet.Erase(RandomGenerator.CreateRandomContent());
         }
 
         [TestMethod]
         public void Insert_Contains()
         {
             _hashSet.Insert(_content1);
-            var result1 = _hashSet.Contains(_content1);
-            var result2 = _hashSet.Contains(_content2);
-
-            Assert.IsTrue(result1);
-            Assert.IsFalse(result2);
+            Assert.IsTrue(_hashSet.Contains(_content1));
+            Assert.IsFalse(_hashSet.Contains(_content2));
         }
 
         [TestMethod]
@@ -79,9 +77,29 @@ namespace QuasardbTests
         {
             _hashSet.Insert(_content1);
             _hashSet.Erase(_content1);
-            var result = _hashSet.Contains(_content1);
+            Assert.IsFalse(_hashSet.Contains(_content1));
+        }
 
-            Assert.IsFalse(result);
+        [TestMethod]
+        public void Insert_Erase_Erase()
+        {
+            _hashSet.Insert(_content1);
+            Assert.IsTrue(_hashSet.Erase(_content1));
+            Assert.IsFalse(_hashSet.Erase(_content1));
+        }
+
+        [TestMethod]
+        public void Insert_Insert()
+        {
+            Assert.IsTrue(_hashSet.Insert(_content1));
+            Assert.IsFalse(_hashSet.Insert(_content1));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Insert_Null()
+        {
+            _hashSet.Insert(null);
         }
     }
 }

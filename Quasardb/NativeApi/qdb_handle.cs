@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 // ReSharper disable InconsistentNaming
 
-namespace Quasardb.Interop
+namespace Quasardb.NativeApi
 {
     sealed class qdb_handle : SafeHandle
     {

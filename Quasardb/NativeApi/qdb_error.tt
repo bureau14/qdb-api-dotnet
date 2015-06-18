@@ -1,0 +1,20 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ output extension=".cs" #>
+<#@ include file="../Meta/errors.t4" once="true" #>// ReSharper disable InconsistentNaming
+
+namespace Quasardb.NativeApi
+{
+    enum qdb_error
+    {
+        qdb_e_uninitialized = -1,
+        qdb_e_ok = 0,
+<#
+foreach(var error in ReadErrors("../Meta/errors.csv"))
+{ 
+#>
+		<#=error.ErrorName#> = <#=error.ErrorCode#>,
+<#
+}
+#>
+    }
+}

@@ -1,9 +1,10 @@
 ﻿using System;
+
 // ReSharper disable InconsistentNaming
 
 using qdb_time_t = System.Int64;
 
-namespace Quasardb.Interop
+namespace Quasardb.NativeApi
 {
     static class qdb_time
     {

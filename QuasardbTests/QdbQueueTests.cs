@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb;
 using Quasardb.Exceptions;
+using QuasardbTests.Helpers;
 
 namespace QuasardbTests
 {
@@ -14,11 +15,105 @@ namespace QuasardbTests
         [TestInitialize]
         public void Initialize()
         {
-            var cluster = new QdbCluster(DaemonRunner.ClusterUrl);
-            var alias = Utils.CreateUniqueAlias();
-            _queue = cluster.Queue(alias);
-            _content1 = Utils.CreateRandomContent();
-            _content2 = Utils.CreateRandomContent();
+            _queue = QdbTestCluster.CreateEmptyQueue();
+            _content1 = RandomGenerator.CreateRandomContent();
+            _content2 = RandomGenerator.CreateRandomContent();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(QdbEmptyContainerException))]
+        public void Back_Empty()
+        {
+            _queue.PushBack(RandomGenerator.CreateRandomContent());
+            _queue.PopBack();
+            _queue.Back();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(QdbAliasNotFoundException))]
+        public void Back_NotFound()
+        {
+            _queue.Back();          
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(QdbIncompatibleTypeException))]
+        public void Back_Incompatible()
+        {
+            QdbTestCluster.CreateBlob(_queue.Alias);
+            _queue.Back();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(QdbEmptyContainerException))]
+        public void Front_Empty()
+        {
+            _queue.PushFront(RandomGenerator.CreateRandomContent());
+            _queue.PopFront();
+            _queue.Front();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(QdbAliasNotFoundException))]
+        public void Front_NotFound()
+        {
+            _queue.Front();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(QdbIncompatibleTypeException))]
+        public void Front_Incompatible()
+        {
+            QdbTestCluster.CreateBlob(_queue.Alias);
+            _queue.Front();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(QdbEmptyContainerException))]
+        public void PopBack_Empty()
+        {
+            _queue.PushBack(RandomGenerator.CreateRandomContent());
+            _queue.PopBack();
+            _queue.PopBack();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(QdbAliasNotFoundException))]
+        public void PopBack_NotFound()
+        {
+            _queue.PopBack();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(QdbIncompatibleTypeException))]
+        public void PopBack_Incompatible()
+        {
+            QdbTestCluster.CreateBlob(_queue.Alias);
+            _queue.PopBack();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(QdbEmptyContainerException))]
+        public void PopFront_Empty()
+        {
+            _queue.PushFront(RandomGenerator.CreateRandomContent());
+            _queue.PopFront();
+            _queue.PopFront();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(QdbAliasNotFoundException))]
+        public void PopFront_NotFound()
+        {
+            _queue.PopFront();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(QdbIncompatibleTypeException))]
+        public void PopFront_Incompatible()
+        {
+            QdbTestCluster.CreateBlob(_queue.Alias);
+            _queue.PopFront();
         }
 
         [TestMethod]
@@ -29,6 +124,14 @@ namespace QuasardbTests
         }
 
         [TestMethod]
+        [ExpectedException(typeof(QdbIncompatibleTypeException))]
+        public void PushFront_Incompatible()
+        {
+            QdbTestCluster.CreateBlob(_queue.Alias);
+            _queue.PushFront(RandomGenerator.CreateRandomContent());
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void PushBack_Null()
         {
@@ -36,63 +139,11 @@ namespace QuasardbTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
-        public void PopBack()
+        [ExpectedException(typeof(QdbIncompatibleTypeException))]
+        public void PushBack_Incompatible()
         {
-            _queue.PopBack();
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
-        public void PopFront()
-        {
-            _queue.PopFront();
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
-        public void Back()
-        {
-            _queue.Back();
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
-        public void Front()
-        {
-            _queue.Front();
-        }
-
-        [TestMethod]
-        public void PushFront_PopBack()
-        {
-            _queue.PushFront(_content1);
-            _queue.PushFront(_content2);
-            var result1 = _queue.PopBack();
-            var result2 = _queue.PopBack();
-
-            CollectionAssert.AreEqual(_content1, result1);
-            CollectionAssert.AreEqual(_content2, result2);
-        }
-
-        [TestMethod]
-        public void PushFront_Back()
-        {
-            _queue.PushFront(_content1);
-            _queue.PushFront(_content2);
-            var result = _queue.Back();
-
-            CollectionAssert.AreEqual(_content1, result);
-        }
-
-        [TestMethod]
-        public void PushFront_Front()
-        {
-            _queue.PushFront(_content1);
-            _queue.PushFront(_content2);
-            var result = _queue.Front();
-
-            CollectionAssert.AreEqual(_content2, result);
+            QdbTestCluster.CreateBlob(_queue.Alias);
+            _queue.PushBack(RandomGenerator.CreateRandomContent());
         }
 
         [TestMethod]
@@ -100,11 +151,33 @@ namespace QuasardbTests
         {
             _queue.PushBack(_content1);
             _queue.PushBack(_content2);
-            var result1 = _queue.PopBack();
-            var result2 = _queue.PopBack();
+            CollectionAssert.AreEqual(_content2, _queue.PopBack());
+            CollectionAssert.AreEqual(_content1, _queue.PopBack());
+        }
 
-            CollectionAssert.AreEqual(_content2, result1);
-            CollectionAssert.AreEqual(_content1, result2);
+        [TestMethod]
+        public void PushFront_PopBack()
+        {
+            _queue.PushFront(_content1);
+            _queue.PushFront(_content2);
+            CollectionAssert.AreEqual(_content1, _queue.PopBack());
+            CollectionAssert.AreEqual(_content2, _queue.PopBack());
+        }
+
+        [TestMethod]
+        public void PushFront_Back()
+        {
+            _queue.PushFront(_content1);
+            _queue.PushFront(_content2);
+            CollectionAssert.AreEqual(_content1, _queue.Back());
+        }
+
+        [TestMethod]
+        public void PushFront_Front()
+        {
+            _queue.PushFront(_content1);
+            _queue.PushFront(_content2);
+            CollectionAssert.AreEqual(_content2, _queue.Front());
         }
 
         [TestMethod]
@@ -112,11 +185,8 @@ namespace QuasardbTests
         {
             _queue.PushFront(_content1);
             _queue.PushFront(_content2);
-            var result1 = _queue.PopFront();
-            var result2 = _queue.PopFront();
-
-            CollectionAssert.AreEqual(_content2, result1);
-            CollectionAssert.AreEqual(_content1, result2);
+            CollectionAssert.AreEqual(_content2, _queue.PopFront());
+            CollectionAssert.AreEqual(_content1, _queue.PopFront());
         }
     }
 }

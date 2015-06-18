@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb;
 using Quasardb.Exceptions;
+using QuasardbTests.Helpers;
 
 namespace QuasardbTests
 {
@@ -12,15 +13,21 @@ namespace QuasardbTests
         [TestInitialize]
         public void Initialize()
         {
-            var cluster = new QdbCluster(DaemonRunner.ClusterUrl);
-            var alias = Utils.CreateUniqueAlias();
-            _integer = cluster.Integer(alias);
+            _integer = QdbTestCluster.CreateEmptyInteger();
         }
 
         [TestMethod]
         [ExpectedException(typeof(QdbAliasNotFoundException))]
-        public void Add()
+        public void Add_NotFound()
         {
+            _integer.Add(22);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(QdbIncompatibleTypeException))]
+        public void Add_Incompatible()
+        {
+            QdbTestCluster.CreateBlob(_integer.Alias);
             _integer.Add(22);
         }
 
@@ -28,35 +35,38 @@ namespace QuasardbTests
         public void Put_Add_Get()
         {
             _integer.Put(1934);
-            var resultOfAdd = _integer.Add(22);
-            var resultOfGet = _integer.Get();
-
-            Assert.AreEqual(1956, resultOfAdd);
-            Assert.AreEqual(1956, resultOfGet);
+            Assert.AreEqual(1956, _integer.Add(22));
+            Assert.AreEqual(1956, _integer.Get());
         }
 
         [TestMethod]
         [ExpectedException(typeof(QdbAliasNotFoundException))]
-        public void Get()
+        public void Get_NotFound()
         {
             _integer.Get();
         }
 
         [TestMethod]
-        [ExpectedException(typeof(QdbAliasAlreadyExistsException))]
-        public void Put_Put()
+        [ExpectedException(typeof(QdbIncompatibleTypeException))]
+        public void Get_Incompatible()
         {
+            QdbTestCluster.CreateBlob(_integer.Alias);
+            _integer.Get();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(QdbAliasAlreadyExistsException))]
+        public void Put_AlreadyExists()
+        {
+            QdbTestCluster.CreateBlob(_integer.Alias);
             _integer.Put(1934);
-            _integer.Put(1956);
         }
 
         [TestMethod]
         public void Put_Get()
         {
             _integer.Put(42);
-            var value = _integer.Get();
-
-            Assert.AreEqual(42, value);
+            Assert.AreEqual(42, _integer.Get());
         }
 
         [TestMethod]
@@ -64,9 +74,15 @@ namespace QuasardbTests
         {
             _integer.Put(1934);
             _integer.Update(1956);
-            var value = _integer.Get();
+            Assert.AreEqual(1956, _integer.Get());
+        }
 
-            Assert.AreEqual(1956, value);
+        [TestMethod]
+        [ExpectedException(typeof(QdbIncompatibleTypeException))]
+        public void Update_Incompatible()
+        {
+            QdbTestCluster.CreateBlob(_integer.Alias);
+            _integer.Update(1956);
         }
     }
 }

@@ -1,15 +1,30 @@
 ﻿using System;
 using Quasardb.Exceptions;
-using Quasardb.Interop;
+using Quasardb.ManagedApi;
 
 namespace Quasardb
 {
     /// <summary>
     /// A queue in the database.
     /// </summary>
+    /// <example>
+    /// Here is how to put a blob in the database:
+    /// <code language="c#">
+    /// byte[] myData;
+    /// var cluster = new QdbCluster("qdb://127.0.0.1:2836");
+    /// 
+    /// cluster.Queue("some name").PushBack(myData);
+    /// </code>
+    /// <code language="vb">
+    /// Dim myData As Byte()
+    /// Dim cluster = New QdbCluster("qdb://127.0.0.1:2836")
+    /// 
+    /// cluster.Queue("some name").PushBack(myData)
+    /// </code>
+    /// </example>
     public sealed class QdbQueue : QdbEntry
     {
-        internal QdbQueue(qdb_handle handle, string alias) : base(handle, alias)
+        internal QdbQueue(QdbApi api, string alias) : base(api, alias)
         {
         }
         
@@ -18,14 +33,11 @@ namespace Quasardb
         /// </summary>
         /// <returns>The value at the end of the queue.</returns>
         /// <exception cref="QdbAliasNotFoundException">The queue doesn't exists in the database.</exception>
+        /// <exception cref="QdbEmptyContainerException">The queue is empty.</exception>
         /// <exception cref="QdbIncompatibleTypeException">The matching entry in the database is not a queue.</exception>
         public byte[] Back()
         {
-            qdb_buffer content;
-            IntPtr contentLength;
-            var error = qdb_api.qdb_queue_back(Handle, Alias, out content, out contentLength);
-            QdbExceptionThrower.ThrowIfNeeded(error);
-            return content.Copy(contentLength);
+            return Api.QueueBack(Alias);
         }
 
         /// <summary>
@@ -33,14 +45,11 @@ namespace Quasardb
         /// </summary>
         /// <returns>The value at the beginning of the queue.</returns>
         /// <exception cref="QdbAliasNotFoundException">The queue doesn't exists in the database.</exception>
+        /// <exception cref="QdbEmptyContainerException">The queue is empty.</exception>
         /// <exception cref="QdbIncompatibleTypeException">The matching entry in the database is not a queue.</exception>
         public byte[] Front()
         {
-            qdb_buffer content;
-            IntPtr contentLength;
-            var error = qdb_api.qdb_queue_front(Handle, Alias, out content, out contentLength);
-            QdbExceptionThrower.ThrowIfNeeded(error);
-            return content.Copy(contentLength);
+            return Api.QueueFront(Alias);
         }
 
         /// <summary>
@@ -48,15 +57,11 @@ namespace Quasardb
         /// </summary>
         /// <returns>The value from the end of the queue.</returns>
         /// <exception cref="QdbAliasNotFoundException">The queue doesn't exists in the database.</exception>
-        /// <exception cref="QdbIncompatibleTypeException">The matching entry in the database is not a queue.</exception>
         /// <exception cref="QdbEmptyContainerException">The queue is empty.</exception>
+        /// <exception cref="QdbIncompatibleTypeException">The matching entry in the database is not a queue.</exception>
         public byte[] PopBack()
         {
-            qdb_buffer content;
-            IntPtr contentLength;
-            var error = qdb_api.qdb_queue_pop_back(Handle, Alias, out content, out contentLength);
-            QdbExceptionThrower.ThrowIfNeeded(error);
-            return content.Copy(contentLength);
+            return Api.QueuePopBack(Alias);
         }
 
         /// <summary>
@@ -64,15 +69,11 @@ namespace Quasardb
         /// </summary>
         /// <returns>The value from the beginning of the queue.</returns>
         /// <exception cref="QdbAliasNotFoundException">The queue doesn't exists in the database.</exception>
-        /// <exception cref="QdbIncompatibleTypeException">The matching entry in the database is not a queue.</exception>
         /// <exception cref="QdbEmptyContainerException">The queue is empty.</exception>
+        /// <exception cref="QdbIncompatibleTypeException">The matching entry in the database is not a queue.</exception>
         public byte[] PopFront()
         {
-            qdb_buffer content;
-            IntPtr contentLength;
-            var error = qdb_api.qdb_queue_pop_front(Handle, Alias, out content, out contentLength);
-            QdbExceptionThrower.ThrowIfNeeded(error);
-            return content.Copy(contentLength);
+            return Api.QueuePopFront(Alias);
         }
 
         /// <summary>
@@ -84,8 +85,7 @@ namespace Quasardb
         {
             if (content == null) throw new ArgumentNullException("content");
 
-            var error = qdb_api.qdb_queue_push_back(Handle, Alias, content, (IntPtr) content.LongLength);
-            QdbExceptionThrower.ThrowIfNeeded(error);
+            Api.QueuePushBack(Alias, content);
         }
 
         /// <summary>
@@ -97,8 +97,7 @@ namespace Quasardb
         {
             if (content == null) throw new ArgumentNullException("content");
 
-            var error = qdb_api.qdb_queue_push_front(Handle, Alias, content, (IntPtr) content.LongLength);
-            QdbExceptionThrower.ThrowIfNeeded(error);
+            Api.QueuePushFront(Alias, content);
         }
     }
 }

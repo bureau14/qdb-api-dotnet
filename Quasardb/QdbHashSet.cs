@@ -1,6 +1,6 @@
 ﻿using System;
 using Quasardb.Exceptions;
-using Quasardb.Interop;
+using Quasardb.ManagedApi;
 
 namespace Quasardb
 {
@@ -12,7 +12,7 @@ namespace Quasardb
     /// </remarks>
     public sealed class QdbHashSet : QdbEntry
     {
-        internal QdbHashSet(qdb_handle handle, string alias) : base(handle, alias)
+        internal QdbHashSet(QdbApi api, string alias) : base(api, alias)
         {
         }
 
@@ -26,10 +26,7 @@ namespace Quasardb
         {
             if (content == null) throw new ArgumentNullException("content");
 
-            var error = qdb_api.qdb_hset_insert(Handle, Alias, content, (IntPtr) content.LongLength);
-            if (error == qdb_error.qdb_e_element_already_exists) return false;
-            QdbExceptionThrower.ThrowIfNeeded(error);
-            return true;
+            return Api.HashSetInsert(Alias, content);
         }
         
         /// <summary>
@@ -37,15 +34,13 @@ namespace Quasardb
         /// </summary>
         /// <param name="content">The value to remove.</param>
         /// <returns>false if the value was not present.</returns>
+        /// <exception cref="QdbAliasNotFoundException">The hash-set doesn't exist.</exception>
         /// <exception cref="QdbIncompatibleTypeException">The entry in the database is not a hash-set.</exception>
         public bool Erase(byte[] content)
         {
             if (content == null) throw new ArgumentNullException("content");
 
-            var error = qdb_api.qdb_hset_erase(Handle, Alias, content, (IntPtr) content.LongLength);
-            if (error == qdb_error.qdb_e_element_not_found) return false;
-            QdbExceptionThrower.ThrowIfNeeded(error);
-            return true;
+            return Api.HashSetErase(Alias, content);
         }
 
         /// <summary>
@@ -53,15 +48,13 @@ namespace Quasardb
         /// </summary>
         /// <param name="content">The value to remove.</param>
         /// <returns>true if the value is present, false if not.</returns>
+        /// <exception cref="QdbAliasNotFoundException">The hash-set doesn't exist.</exception>
         /// <exception cref="QdbIncompatibleTypeException">The entry in the database is not a hash-set.</exception>
         public bool Contains(byte[] content)
         {
             if (content == null) throw new ArgumentNullException("content");
 
-            var error = qdb_api.qdb_hset_contains(Handle, Alias, content, (IntPtr) content.LongLength);
-            if (error == qdb_error.qdb_e_element_not_found) return false;
-            QdbExceptionThrower.ThrowIfNeeded(error);
-            return true;
+            return Api.HashSetContains(Alias, content);
         }
     }
 }
