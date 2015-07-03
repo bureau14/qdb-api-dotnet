@@ -138,7 +138,6 @@ namespace QuasardbTests
         }
 
         [TestMethod]
-        [Ignore]
         [ExpectedException(typeof(QdbIncompatibleTypeException))]
         public void HasTag_Incompatible()
         {
@@ -173,7 +172,6 @@ namespace QuasardbTests
         }
 
         [TestMethod]
-        [Ignore]
         [ExpectedException(typeof(QdbIncompatibleTypeException))]
         public void RemoveTag_Incompatible()
         {

@@ -154,7 +154,6 @@ namespace QuasardbTests
         }
 
         [TestMethod]
-        [Ignore]
         [ExpectedException(typeof(QdbIncompatibleTypeException))]
         public void RemoveEntry_Incompatible()
         {
@@ -220,7 +219,6 @@ namespace QuasardbTests
         }
 
         [TestMethod]
-        [Ignore]
         [ExpectedException(typeof(QdbIncompatibleTypeException))]
         public void HasEntry_Incompatible()
         {

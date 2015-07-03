@@ -55,8 +55,8 @@ namespace QuasardbTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(QdbAliasAlreadyExistsException))]
-        public void Put_AlreadyExists()
+        [ExpectedException(typeof(QdbIncompatibleTypeException))]
+        public void Put_IncompatibleType()
         {
             QdbTestCluster.CreateBlob(_integer.Alias);
             _integer.Put(1934);
