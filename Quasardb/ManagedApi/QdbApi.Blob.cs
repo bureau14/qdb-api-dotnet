@@ -15,9 +15,17 @@ namespace Quasardb.ManagedApi
                     qdb_time.FromOptionalDateTime(expiryTime),
                     out oldContent.Pointer, out oldContent.Size);
 
-                QdbExceptionThrower.ThrowIfNeeded(error);
+                switch (error)
+                {
+                    case qdb_error.qdb_e_ok:
+                        return null;
 
-                return oldContent.GetBytes();
+                    case qdb_error.qdb_e_unmatched_content:
+                        return oldContent.GetBytes();
+
+                    default:
+                        throw QdbExceptionFactory.Create(error);
+                }
             }
         }
 

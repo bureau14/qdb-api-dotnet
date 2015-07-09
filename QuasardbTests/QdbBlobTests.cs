@@ -162,7 +162,7 @@ namespace QuasardbTests
             var result = _blob.CompareAndSwap(_content2, _content1);
             var finalContent = _blob.Get();
 
-            CollectionAssert.AreEqual(_content1, result);
+            Assert.IsNull(result);
             CollectionAssert.AreEqual(_content2, finalContent);
         }
 

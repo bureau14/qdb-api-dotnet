@@ -37,7 +37,7 @@ namespace Quasardb
         /// <param name="content">The new content to put in the blob.</param>
         /// <param name="comparand">The content to be compared to.</param>
         /// <param name="expiryTime">The expiry time to set if the blob's content is replaced.</param>
-        /// <returns>The previous content of the blob.</returns>
+        /// <returns>The previous content of the blob if it didn't match; <c>null</c> if it matched.</returns>
         /// <exception cref="QdbAliasNotFoundException">The blob is not present in the database.</exception>
         /// <exception cref="QdbIncompatibleTypeException">The database entry is not a blob.</exception>
         public byte[] CompareAndSwap(byte[] content, byte[] comparand, DateTime? expiryTime = null)
