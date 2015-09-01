@@ -5,7 +5,7 @@ using Quasardb.ManagedApi;
 namespace Quasardb
 {
     /// <summary>
-    /// A queue in the database.
+    /// A double-ended queue in the database.
     /// </summary>
     /// <example>
     /// Here is how to put a blob in the database:
@@ -13,18 +13,18 @@ namespace Quasardb
     /// byte[] myData;
     /// var cluster = new QdbCluster("qdb://127.0.0.1:2836");
     /// 
-    /// cluster.Queue("some name").PushBack(myData);
+    /// cluster.Deque("some name").PushBack(myData);
     /// </code>
     /// <code language="vb">
     /// Dim myData As Byte()
     /// Dim cluster = New QdbCluster("qdb://127.0.0.1:2836")
     /// 
-    /// cluster.Queue("some name").PushBack(myData)
+    /// cluster.Deque("some name").PushBack(myData)
     /// </code>
     /// </example>
-    public sealed class QdbQueue : QdbEntry
+    public sealed class QdbDeque : QdbEntry
     {
-        internal QdbQueue(QdbApi api, string alias) : base(api, alias)
+        internal QdbDeque(QdbApi api, string alias) : base(api, alias)
         {
         }
         
@@ -37,7 +37,7 @@ namespace Quasardb
         /// <exception cref="QdbIncompatibleTypeException">The matching entry in the database is not a queue.</exception>
         public byte[] Back()
         {
-            return Api.QueueBack(Alias);
+            return Api.DequeBack(Alias);
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Quasardb
         /// <exception cref="QdbIncompatibleTypeException">The matching entry in the database is not a queue.</exception>
         public byte[] Front()
         {
-            return Api.QueueFront(Alias);
+            return Api.DequeFront(Alias);
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Quasardb
         /// <exception cref="QdbIncompatibleTypeException">The matching entry in the database is not a queue.</exception>
         public byte[] PopBack()
         {
-            return Api.QueuePopBack(Alias);
+            return Api.DequePopBack(Alias);
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace Quasardb
         /// <exception cref="QdbIncompatibleTypeException">The matching entry in the database is not a queue.</exception>
         public byte[] PopFront()
         {
-            return Api.QueuePopFront(Alias);
+            return Api.DequePopFront(Alias);
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace Quasardb
         {
             if (content == null) throw new ArgumentNullException("content");
 
-            Api.QueuePushBack(Alias, content);
+            Api.DequePushBack(Alias, content);
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace Quasardb
         {
             if (content == null) throw new ArgumentNullException("content");
 
-            Api.QueuePushFront(Alias, content);
+            Api.DequePushFront(Alias, content);
         }
     }
 }

@@ -48,15 +48,15 @@
     </section>
 
     <section>
-      <title>Queues</title>
+      <title>Double-ended queues</title>
       <content>
         <para>
-          Want a queue? We have distributed queues.
+          Quasardb provides double-ended queues, or simply "deque".
         </para>
         <code language="c#">
           byte[] a, b, c;
 
-          QdbQueue myQueue = cluster.Queue("Andrew the queue");
+          QdbDeque myQueue = cluster.Deque("Andrew the queue");
 
           myQueue.PushBack(a);
           myQueue.PushBack(b);
@@ -65,7 +65,7 @@
         <code language="vb">
           Dim a, b, c As Byte()
 
-          Dim myQueue = cluster.Queue("Andrew the queue")
+          Dim myQueue = cluster.Deque("Andrew the queue")
 
           myQueue.PushBack(a)
           myQueue.PushBack(b)
@@ -150,7 +150,7 @@
 		<relatedTopics>
       <codeEntityReference>T:Quasardb.QdbCluster</codeEntityReference>
       <codeEntityReference>T:Quasardb.QdbBlob</codeEntityReference>
-      <codeEntityReference>T:Quasardb.QdbQueue</codeEntityReference>
+      <codeEntityReference>T:Quasardb.QdbDeque</codeEntityReference>
       <codeEntityReference>T:Quasardb.QdbHashSet</codeEntityReference>
       <codeEntityReference>T:Quasardb.QdbInteger</codeEntityReference>
       <codeEntityReference>T:Quasardb.QdbTag</codeEntityReference>

@@ -9,7 +9,7 @@ namespace Quasardb.ManagedApi
         {
             using (var oldContent = new qdb_buffer(_handle))
             {
-                var error = qdb_api.qdb_compare_and_swap(_handle, alias,
+                var error = qdb_api.qdb_blob_compare_and_swap(_handle, alias,
                     content, (IntPtr)content.LongLength,
                     comparand, (IntPtr)comparand.LongLength,
                     qdb_time.FromOptionalDateTime(expiryTime),
@@ -33,7 +33,7 @@ namespace Quasardb.ManagedApi
         {
             using (var content = new qdb_buffer(_handle))
             {
-                var error = qdb_api.qdb_get(_handle, alias, out content.Pointer, out content.Size);
+                var error = qdb_api.qdb_blob_get(_handle, alias, out content.Pointer, out content.Size);
                 QdbExceptionThrower.ThrowIfNeeded(error);
                 return content.GetBytes();
             }
@@ -43,7 +43,7 @@ namespace Quasardb.ManagedApi
         {
             using (var content = new qdb_buffer(_handle))
             {
-                var error = qdb_api.qdb_get_and_remove(_handle, alias, out content.Pointer, out content.Size);
+                var error = qdb_api.qdb_blob_get_and_remove(_handle, alias, out content.Pointer, out content.Size);
                 QdbExceptionThrower.ThrowIfNeeded(error);
                 return content.GetBytes();
             }
@@ -53,7 +53,7 @@ namespace Quasardb.ManagedApi
         {
             using (var oldContent = new qdb_buffer(_handle))
             {
-                var error = qdb_api.qdb_get_and_update(_handle, alias,
+                var error = qdb_api.qdb_blob_get_and_update(_handle, alias,
                     content, (IntPtr)content.LongLength,
                     qdb_time.FromOptionalDateTime(expiryTime),
                     out oldContent.Pointer, out oldContent.Size);
@@ -65,7 +65,7 @@ namespace Quasardb.ManagedApi
 
         public void BlobPut(string alias, byte[] content, DateTime? expiryTime)
         {
-            var error = qdb_api.qdb_put(_handle, alias,
+            var error = qdb_api.qdb_blob_put(_handle, alias,
                 content, (IntPtr)content.LongLength,
                 qdb_time.FromOptionalDateTime(expiryTime));
 
@@ -74,7 +74,7 @@ namespace Quasardb.ManagedApi
 
         public bool BlobRemoveIf(string alias, byte[] comparand)
         {
-            var error = qdb_api.qdb_remove_if(_handle, alias, comparand, (IntPtr)comparand.Length);
+            var error = qdb_api.qdb_blob_remove_if(_handle, alias, comparand, (IntPtr)comparand.Length);
 
             switch (error)
             {
@@ -91,7 +91,7 @@ namespace Quasardb.ManagedApi
 
         public void BlobUpdate(string alias, byte[] content, DateTime? expiryTime)
         {
-            var error = qdb_api.qdb_update(_handle, alias,
+            var error = qdb_api.qdb_blob_update(_handle, alias,
                 content, (IntPtr)content.Length,
                 qdb_time.FromOptionalDateTime(expiryTime));
 

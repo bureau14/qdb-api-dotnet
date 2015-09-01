@@ -60,7 +60,7 @@
     <Compile Include="ManagedApi\QdbApi.Integer.cs" />
     <Compile Include="ManagedApi\QdbApi.HashSet.cs" />
     <Compile Include="ManagedApi\QdbApi.Expiry.cs" />
-    <Compile Include="ManagedApi\QdbApi.Queue.cs" />
+    <Compile Include="ManagedApi\QdbApi.Deque.cs" />
     <Compile Include="ManagedApi\QdbApi.Tags.cs" />
     <Compile Include="ManagedApi\QdbApi.cs" />
     <Compile Include="ManagedApi\QdbEntryType.cs" />
@@ -87,7 +87,7 @@
     <Compile Include="QdbExpirableEntry.cs" />
     <Compile Include="QdbHashSet.cs" />
     <Compile Include="QdbInteger.cs" />
-    <Compile Include="QdbQueue.cs" />
+    <Compile Include="QdbDeque.cs" />
     <Compile Include="QdbTag.cs" />
   </ItemGroup>
   <ItemGroup>

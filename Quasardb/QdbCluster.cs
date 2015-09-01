@@ -42,29 +42,16 @@ namespace Quasardb
         }
 
         /// <summary>
-        /// Returns a <see cref="QdbInteger" /> with the specified alias.
-        /// </summary>
-        /// <remarks>No operation is performed in the database.</remarks>
-        /// <param name="alias">The alias of the integer in the database.</param>
-        /// <returns>An integer associated with the specified alias.</returns>
-        /// <seealso cref="QdbInteger"/>
-        public QdbInteger Integer(string alias)
-        {
-            if (alias == null) throw new ArgumentNullException("alias");
-            return new QdbInteger(_api, alias);
-        }
-
-        /// <summary>
-        /// Returns a <see cref="QdbQueue" /> with the specified alias.
+        /// Returns a <see cref="QdbDeque" /> with the specified alias.
         /// </summary>
         /// <remarks>No operation is performed in the database.</remarks>
         /// <param name="alias">The alias of the queue in the database.</param>
         /// <returns>A queue associated with the specified alias.</returns>
-        /// <seealso cref="QdbQueue"/>
-        public QdbQueue Queue(string alias)
+        /// <seealso cref="QdbDeque"/>
+        public QdbDeque Deque(string alias)
         {
             if (alias == null) throw new ArgumentNullException("alias");
-            return new QdbQueue(_api, alias);
+            return new QdbDeque(_api, alias);
         }
 
         /// <summary>
@@ -78,6 +65,19 @@ namespace Quasardb
         {
             if (alias == null) throw new ArgumentNullException("alias");
             return new QdbHashSet(_api, alias);
+        }
+
+        /// <summary>
+        /// Returns a <see cref="QdbInteger" /> with the specified alias.
+        /// </summary>
+        /// <remarks>No operation is performed in the database.</remarks>
+        /// <param name="alias">The alias of the integer in the database.</param>
+        /// <returns>An integer associated with the specified alias.</returns>
+        /// <seealso cref="QdbInteger"/>
+        public QdbInteger Integer(string alias)
+        {
+            if (alias == null) throw new ArgumentNullException("alias");
+            return new QdbInteger(_api, alias);
         }
 
         /// <summary>

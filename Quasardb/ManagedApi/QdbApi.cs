@@ -12,7 +12,7 @@ namespace Quasardb.ManagedApi
             {qdb_entry_type.qdb_entry_blob, QdbEntryType.Blob},
             {qdb_entry_type.qdb_entry_hset, QdbEntryType.HashSet},
             {qdb_entry_type.qdb_entry_integer, QdbEntryType.Integer},
-            {qdb_entry_type.qdb_entry_queue, QdbEntryType.Queue},
+            {qdb_entry_type.qdb_entry_queue, QdbEntryType.Deque},
             {qdb_entry_type.qdb_entry_tag, QdbEntryType.Tag}
         };
 

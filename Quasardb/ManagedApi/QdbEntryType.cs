@@ -3,9 +3,9 @@
     enum QdbEntryType
     {
         Blob,
+        Deque,
         HashSet,
         Integer,
-        Queue,
         Tag
     }
 }

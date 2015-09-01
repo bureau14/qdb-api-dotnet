@@ -57,21 +57,21 @@ namespace QuasardbTests.Helpers
 
         #endregion
 
-        #region Queue
+        #region Deque
 
-        public static QdbQueue CreateEmptyQueue()
+        public static QdbDeque CreateEmptyQueue()
         {
-            return Instance.Queue(RandomGenerator.CreateUniqueAlias());
+            return Instance.Deque(RandomGenerator.CreateUniqueAlias());
         }
 
-        public static QdbQueue CreateQueue()
+        public static QdbDeque CreateQueue()
         {
             var queue = CreateEmptyQueue();
             queue.PushBack(RandomGenerator.CreateRandomContent());
             return queue;
         }
 
-        public static QdbQueue CreateTaggedQueue(QdbTag tag)
+        public static QdbDeque CreateTaggedQueue(QdbTag tag)
         {
             var queue = CreateQueue();
             queue.AddTag(tag);

@@ -38,7 +38,7 @@ namespace QuasardbTests
         public void GetEntries_OneQueue()
         {
             var queue1 = QdbTestCluster.CreateTaggedQueue(_tag);
-            var queue2 = _tag.GetEntries().Cast<QdbQueue>().Single();
+            var queue2 = _tag.GetEntries().Cast<QdbDeque>().Single();
 
             Assert.AreEqual(queue1.Alias, queue2.Alias);
         }
@@ -83,7 +83,7 @@ namespace QuasardbTests
             Assert.AreEqual(1, _tag.GetEntries().OfType<QdbBlob>().Count());
             Assert.AreEqual(1, _tag.GetEntries().OfType<QdbHashSet>().Count());
             Assert.AreEqual(1, _tag.GetEntries().OfType<QdbInteger>().Count());
-            Assert.AreEqual(1, _tag.GetEntries().OfType<QdbQueue>().Count());
+            Assert.AreEqual(1, _tag.GetEntries().OfType<QdbDeque>().Count());
             Assert.AreEqual(1, _tag.GetEntries().OfType<QdbTag>().Count());
         }
 

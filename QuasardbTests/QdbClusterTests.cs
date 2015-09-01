@@ -50,7 +50,7 @@ namespace QuasardbTests
         [ExpectedException(typeof(ArgumentNullException))]
         public void QueueNull()
         {
-            QdbTestCluster.Instance.Queue(null);
+            QdbTestCluster.Instance.Deque(null);
         }
 
         [TestMethod]

@@ -79,7 +79,7 @@ namespace Quasardb.NativeApi
         #region Functions specific to blob entries
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_compare_and_swap(
+        public static extern qdb_error qdb_blob_compare_and_swap(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] byte[] new_content,
@@ -91,21 +91,21 @@ namespace Quasardb.NativeApi
             [Out] out size_t original_content_length);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_get(
+        public static extern qdb_error qdb_blob_get(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [Out] out IntPtr content,
             [Out] out size_t content_length);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_get_and_remove(
+        public static extern qdb_error qdb_blob_get_and_remove(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [Out] out IntPtr content,
             [Out] out size_t content_length);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_get_and_update(
+        public static extern qdb_error qdb_blob_get_and_update(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] byte[] new_content,
@@ -115,7 +115,7 @@ namespace Quasardb.NativeApi
             [Out] out size_t old_content_length);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_put(
+        public static extern qdb_error qdb_blob_put(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] byte[] content,
@@ -123,7 +123,7 @@ namespace Quasardb.NativeApi
             [In] qdb_time_t expiry_time);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_update(
+        public static extern qdb_error qdb_blob_update(
             [In] qdb_handle handle, 
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] byte[] content,
@@ -131,7 +131,7 @@ namespace Quasardb.NativeApi
             [In] qdb_time_t expiry_time);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_remove_if(
+        public static extern qdb_error qdb_blob_remove_if(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] byte[] comparand,
@@ -170,45 +170,45 @@ namespace Quasardb.NativeApi
 
         #endregion
 
-        #region Functions specific to queues
+        #region Functions specific to deques
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_queue_back(
+        public static extern qdb_error qdb_deque_back(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [Out] out IntPtr buffer,
             [Out] out size_t contentLength);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_queue_front(
+        public static extern qdb_error qdb_deque_front(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [Out] out IntPtr buffer,
             [Out] out size_t contentLength);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_queue_pop_back(
+        public static extern qdb_error qdb_deque_pop_back(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [Out] out IntPtr buffer,
             [Out] out size_t contentLength);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_queue_pop_front(
+        public static extern qdb_error qdb_deque_pop_front(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [Out] out IntPtr buffer,
             [Out] out size_t contentLength);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_queue_push_front(
+        public static extern qdb_error qdb_deque_push_front(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] byte[] content,
             [Out] size_t content_length);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_queue_push_back(
+        public static extern qdb_error qdb_deque_push_back(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] byte[] content,

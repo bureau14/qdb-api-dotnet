@@ -24,14 +24,14 @@ namespace Quasardb
                 case QdbEntryType.Blob:
                     return new QdbBlob(_handle, alias);
 
+                case QdbEntryType.Deque:
+                    return new QdbDeque(_handle, alias);
+
                 case QdbEntryType.HashSet:
                     return new QdbHashSet(_handle, alias);
 
                 case QdbEntryType.Integer:
                     return new QdbInteger(_handle, alias);
-
-                case QdbEntryType.Queue:
-                    return new QdbQueue(_handle, alias);
 
                 case QdbEntryType.Tag:
                     return new QdbTag(_handle, alias);
