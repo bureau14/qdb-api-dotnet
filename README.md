@@ -15,8 +15,8 @@ Insert and retrieve binary data:
 
 Push and pop from a queue:
 
-    cluster.Queue("my queue").PushBack(myByteArray);
-    myByteArray = cluster.Queue("my queue").PopFront();
+    cluster.Deque("my double-ended queue").PushBack(myByteArray);
+    myByteArray = cluster.Deque("my double-ended queue").PopFront();
 
 Create and update an atomic integer:
 
