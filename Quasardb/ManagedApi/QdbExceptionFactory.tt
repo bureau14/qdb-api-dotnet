@@ -24,7 +24,7 @@ foreach(var error in ReadErrors("../Meta/errors.csv"))
 }
 #>
 				default:
-					throw new NotSupportedException("Unexpected qdb_error: " + error);
+					throw new NotSupportedException("Unexpected qdb_error: 0x" + error.ToString("X"));
 			}
 		}
 	}

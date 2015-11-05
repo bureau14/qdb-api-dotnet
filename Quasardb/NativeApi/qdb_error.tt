@@ -4,9 +4,8 @@
 
 namespace Quasardb.NativeApi
 {
-    enum qdb_error
+    enum qdb_error : uint
     {
-        qdb_e_uninitialized = -1,
         qdb_e_ok = 0,
 <#
 foreach(var error in ReadErrors("../Meta/errors.csv"))

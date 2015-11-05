@@ -4,8 +4,8 @@
 <#+
 struct ErrorDescriptor
 {
-	public string ErrorCode;
 	public string ErrorName;
+	public string ErrorCode;
 	public string ExceptionName;
 	public string Message;
 }
@@ -20,8 +20,8 @@ IEnumerable<ErrorDescriptor> ReadErrors(string fileName)
 		
 		yield return new ErrorDescriptor
 		{
-			ErrorCode = tokens[0],
-			ErrorName = tokens[1],
+			ErrorName = tokens[0],
+			ErrorCode = tokens[1],
 			ExceptionName = tokens[2],
 			Message = tokens[3],
 		};
