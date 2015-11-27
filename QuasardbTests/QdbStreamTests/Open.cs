@@ -3,7 +3,7 @@ using Quasardb;
 using Quasardb.Exceptions;
 using QuasardbTests.Helpers;
 
-namespace QuasardbTests.QdbStream
+namespace QuasardbTests.QdbStreamTests
 {
     [TestClass]
     public class Open
@@ -12,7 +12,8 @@ namespace QuasardbTests.QdbStream
         [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void ThrowsAliasNotFoundException()
         {
-            QdbTestCluster.Instance.Stream("toto").Open(QdbStreamMode.Open);
+            var stream = QdbTestCluster.Instance.Stream(RandomGenerator.CreateUniqueAlias());
+            stream.Open(QdbStreamMode.Read);
         }
 
         [TestMethod]
@@ -20,7 +21,7 @@ namespace QuasardbTests.QdbStream
         public void ThrowsIncompatibleTypeException_OpenMode()
         {
             var blob = QdbTestCluster.CreateBlob();
-            QdbTestCluster.Instance.Stream(blob.Alias).Open(QdbStreamMode.Open);
+            QdbTestCluster.Instance.Stream(blob.Alias).Open(QdbStreamMode.Read);
         }
 
         [TestMethod]

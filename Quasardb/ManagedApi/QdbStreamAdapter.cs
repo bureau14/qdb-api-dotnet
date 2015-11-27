@@ -8,10 +8,12 @@ namespace Quasardb.ManagedApi
     unsafe class QdbStreamAdapter : Stream
     {
         private readonly qdb_stream_handle _handle;
+        private readonly bool _isWritable;
 
-        public QdbStreamAdapter(qdb_stream_handle handle)
+        public QdbStreamAdapter(qdb_stream_handle handle, bool isWritable)
         {
             _handle = handle;
+            _isWritable = isWritable;
         }
 
         protected override void Dispose(bool disposing)
@@ -76,7 +78,7 @@ namespace Quasardb.ManagedApi
 
         public override bool CanWrite
         {
-            get { throw new NotImplementedException(); }
+            get { return _isWritable && !_handle.IsClosed; }
         }
 
         public override long Length

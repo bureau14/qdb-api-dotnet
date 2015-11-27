@@ -6,7 +6,7 @@ namespace Quasardb
 {
     public enum QdbStreamMode
     {
-        Open,
+        Read,
         Append
     }
 

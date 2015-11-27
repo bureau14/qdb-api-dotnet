@@ -17,7 +17,7 @@ namespace Quasardb.ManagedApi
             qdb_stream_handle handle;
             var error = qdb_api.qdb_stream_open(_handle, alias, (qdb_stream_mode) mode, out handle);
             QdbExceptionThrower.ThrowIfNeeded(error);
-            return new QdbStreamAdapter(handle);
+            return new QdbStreamAdapter(handle, mode == QdbStreamMode.Append);
         }
     }
 }

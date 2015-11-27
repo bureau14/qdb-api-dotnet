@@ -3,7 +3,7 @@ using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using QuasardbTests.Helpers;
 
-namespace QuasardbTests.QdbStream
+namespace QuasardbTests.QdbStreamTests
 {
     [TestClass]
     public class Write
@@ -13,7 +13,7 @@ namespace QuasardbTests.QdbStream
         [TestInitialize]
         public void Initiliaze()
         {
-            _stream = QdbTestCluster.CreateStream();
+            _stream = QdbTestCluster.CreateAndOpenStream();
         }
 
         [TestCleanup]

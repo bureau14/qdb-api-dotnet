@@ -127,9 +127,24 @@ namespace QuasardbTests.Helpers
 
         #endregion
 
-        public static Stream CreateStream()
+        public static Stream CreateAndOpenStream()
         {
-            return Instance.Stream(RandomGenerator.CreateUniqueAlias()).Open(QdbStreamMode.Append);
+            return CreateEmptyStream().Open(QdbStreamMode.Append);
+        }
+
+        public static QdbStream CreateEmptyStream()
+        {
+            return Instance.Stream(RandomGenerator.CreateUniqueAlias());
+        }
+
+        public static QdbStream CreateStream()
+        {
+            var qdbStream = CreateEmptyStream();
+            using (var stream = qdbStream.Open(QdbStreamMode.Append))
+            {
+                stream.WriteByte(1);
+            }
+            return qdbStream;
         }
     }
 }

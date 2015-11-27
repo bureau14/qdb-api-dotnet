@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
+using System.Security;
 
 // ReSharper disable InconsistentNaming
 
@@ -9,6 +11,7 @@ using size_t = System.IntPtr;
 
 namespace Quasardb.NativeApi
 {
+    [SuppressUnmanagedCodeSecurity]
     static class qdb_api
     {
         const string DLL_NAME = "qdb_api.dll";
@@ -26,6 +29,7 @@ namespace Quasardb.NativeApi
         private static extern IntPtr LoadLibrary(string dllToLoad);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
         public static extern qdb_error qdb_close(
             [In] IntPtr handle);
 
@@ -294,6 +298,7 @@ namespace Quasardb.NativeApi
             [Out] out qdb_stream_handle stream);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
         public static extern qdb_error qdb_stream_close(
             [In] IntPtr stream);
 
