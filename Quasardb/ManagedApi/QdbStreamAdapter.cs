@@ -68,12 +68,12 @@ namespace Quasardb.ManagedApi
 
         public override bool CanRead
         {
-            get { throw new NotImplementedException(); }
+            get { return !_handle.IsClosed; }
         }
 
         public override bool CanSeek
         {
-            get { throw new NotImplementedException(); }
+            get { throw new NotImplementedException();}
         }
 
         public override bool CanWrite
