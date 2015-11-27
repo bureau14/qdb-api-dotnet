@@ -10,8 +10,8 @@ namespace Quasardb.ManagedApi
             using (var oldContent = new qdb_buffer(_handle))
             {
                 var error = qdb_api.qdb_blob_compare_and_swap(_handle, alias,
-                    content, (IntPtr)content.LongLength,
-                    comparand, (IntPtr)comparand.LongLength,
+                    content, (UIntPtr)content.LongLength,
+                    comparand, (UIntPtr)comparand.LongLength,
                     qdb_time.FromOptionalDateTime(expiryTime),
                     out oldContent.Pointer, out oldContent.Size);
 
@@ -54,7 +54,7 @@ namespace Quasardb.ManagedApi
             using (var oldContent = new qdb_buffer(_handle))
             {
                 var error = qdb_api.qdb_blob_get_and_update(_handle, alias,
-                    content, (IntPtr)content.LongLength,
+                    content, (UIntPtr)content.LongLength,
                     qdb_time.FromOptionalDateTime(expiryTime),
                     out oldContent.Pointer, out oldContent.Size);
 
@@ -66,7 +66,7 @@ namespace Quasardb.ManagedApi
         public void BlobPut(string alias, byte[] content, DateTime? expiryTime)
         {
             var error = qdb_api.qdb_blob_put(_handle, alias,
-                content, (IntPtr)content.LongLength,
+                content, (UIntPtr)content.LongLength,
                 qdb_time.FromOptionalDateTime(expiryTime));
 
             QdbExceptionThrower.ThrowIfNeeded(error);
@@ -74,7 +74,7 @@ namespace Quasardb.ManagedApi
 
         public bool BlobRemoveIf(string alias, byte[] comparand)
         {
-            var error = qdb_api.qdb_blob_remove_if(_handle, alias, comparand, (IntPtr)comparand.Length);
+            var error = qdb_api.qdb_blob_remove_if(_handle, alias, comparand, (UIntPtr)comparand.Length);
 
             switch (error)
             {
@@ -92,7 +92,7 @@ namespace Quasardb.ManagedApi
         public void BlobUpdate(string alias, byte[] content, DateTime? expiryTime)
         {
             var error = qdb_api.qdb_blob_update(_handle, alias,
-                content, (IntPtr)content.Length,
+                content, (UIntPtr)content.Length,
                 qdb_time.FromOptionalDateTime(expiryTime));
 
             QdbExceptionThrower.ThrowIfNeeded(error);

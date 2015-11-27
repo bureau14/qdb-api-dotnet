@@ -10,7 +10,7 @@ namespace Quasardb.ManagedApi
     {
         readonly qdb_handle _handle;
         internal IntPtr Pointer;
-        internal IntPtr Size;
+        internal UIntPtr Size;
         
         internal QdbAliasCollection(qdb_handle handle)
         {

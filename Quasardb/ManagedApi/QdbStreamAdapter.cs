@@ -24,7 +24,7 @@ namespace Quasardb.ManagedApi
 
         public override void Flush()
         {
-            throw new NotImplementedException();
+            // no need to flush anything
         }
 
         public override long Seek(long offset, SeekOrigin origin)
@@ -39,7 +39,29 @@ namespace Quasardb.ManagedApi
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            throw new NotImplementedException();
+            if (_handle.IsClosed)
+                throw new ObjectDisposedException("Cannot access a closed Stream.");
+
+            if (buffer == null)
+                throw new ArgumentNullException("buffer", "Buffer cannot be null");
+
+            if (offset < 0)
+                throw new ArgumentOutOfRangeException("offset", "Non-negative number required");
+
+            if (count < 0)
+                throw new ArgumentOutOfRangeException("count", "Non-negative number required");
+
+            if (offset + count > buffer.Length)
+                throw new ArgumentException("Offset and length were out of bounds for the array or count is greater than the number of elements from index to the end of the source collection.");
+
+            UIntPtr size = (UIntPtr)count;
+            fixed (byte* ptr = buffer)
+            {
+                var error = qdb_api.qdb_stream_read(_handle, ptr + offset, ref size);
+                QdbExceptionThrower.ThrowIfNeeded(error);
+            }
+
+            return (int)size;
         }
 
         public override void Write(byte[] buffer, int offset, int count)
@@ -61,7 +83,7 @@ namespace Quasardb.ManagedApi
 
             fixed (byte* ptr = buffer)
             {
-                var error = qdb_api.qdb_stream_write(_handle, ptr+offset, count);
+                var error = qdb_api.qdb_stream_write(_handle, ptr+offset, (UIntPtr)count);
                 QdbExceptionThrower.ThrowIfNeeded(error);
             }
         }
@@ -92,6 +114,10 @@ namespace Quasardb.ManagedApi
             }
         }
 
-        public override long Position { get; set; }
+        public override long Position
+        {
+            get { throw new NotImplementedException(); }
+            set { throw new NotImplementedException(); }
+        }
     }
 }

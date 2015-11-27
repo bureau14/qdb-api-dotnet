@@ -1,12 +1,13 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using QuasardbTests.Helpers;
 
 namespace QuasardbTests.QdbStreamTests
 {
     [TestClass]
-    public class Write
+    public class Read
     {
         private Stream _stream;
 
@@ -14,6 +15,9 @@ namespace QuasardbTests.QdbStreamTests
         public void Initiliaze()
         {
             _stream = QdbTestCluster.CreateAndOpenStream();
+            
+            var content = Encoding.ASCII.GetBytes("Hello World!");
+            _stream.Write(content, 0, content.Length);
         }
 
         [TestCleanup]
@@ -23,10 +27,11 @@ namespace QuasardbTests.QdbStreamTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException), "Offset and length were out of bounds for the array or count is greater than the number of elements from index to the end of the source collection.")]
-        public void ThrowsArgumentException_WhenSumOfOffsetAndLengthIsToBig()
+        [ExpectedException(typeof(ObjectDisposedException), "Cannot access a closed Stream.")]
+        public void ThrowsObjectDisposedException()
         {
-            _stream.Write(new byte[2], 1, 2);
+            _stream.Close();
+            _stream.Read(new byte[2], 0, 2);
         }
 
         [TestMethod]
@@ -34,29 +39,36 @@ namespace QuasardbTests.QdbStreamTests
         public void ThrowsArgumentNullException_WhenBufferIsNull()
         {
             // ReSharper disable once AssignNullToNotNullAttribute
-            _stream.Write(null, 0, 0);
+            _stream.Read(null, 0, 0);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException), "Non-negative number required.Parameter name: offset.")]
         public void ThrowsArgumentOutOfRangeException_WhenOffsetIsNegative()
         {
-            _stream.Write(new byte[2], -1, 4);
+            _stream.Read(new byte[2], -1, 4);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException), "Non-negative number required.Parameter name: count.")]
         public void ThrowsArgumentOutOfRangeException_WhenCountIsNegative()
         {
-            _stream.Write(new byte[2], 4, -1);
+            _stream.Read(new byte[2], 4, -1);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ObjectDisposedException), "Cannot access a closed Stream.")]
-        public void ThrowsObjectDisposedException()
+        [ExpectedException(typeof(ArgumentException), "Offset and length were out of bounds for the array or count is greater than the number of elements from index to the end of the source collection.")]
+        public void ThrowsArgumentException_WhenSumOfOffsetAndLengthIsToBig()
         {
-            _stream.Close();
-            _stream.Write(new byte[2], 0, 2);
+            _stream.Read(new byte[2], 1, 2);
         }
+
+        // TODO: need Seek
+        /*[TestMethod]
+        public void ReturnsNumberOfBytes()
+        {
+            var result = _stream.Read(new byte[2], 0, 2);
+            Assert.AreEqual(2, result);
+        }*/
     }
 }

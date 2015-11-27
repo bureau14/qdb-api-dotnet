@@ -7,12 +7,12 @@ using System.Security;
 
 using qdb_int = System.Int64;
 using qdb_time_t = System.Int64;
-using size_t = System.IntPtr;
+using size_t = System.UIntPtr;
 
 namespace Quasardb.NativeApi
 {
     [SuppressUnmanagedCodeSecurity]
-    static class qdb_api
+    static unsafe class qdb_api
     {
         const string DLL_NAME = "qdb_api.dll";
         const UnmanagedType ALIAS_TYPE = UnmanagedType.LPStr;
@@ -277,7 +277,7 @@ namespace Quasardb.NativeApi
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias, 
             [Out] out IntPtr pointer,
-            [Out] out IntPtr size);
+            [Out] out size_t size);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern void qdb_free_results(
@@ -306,19 +306,20 @@ namespace Quasardb.NativeApi
         public static extern qdb_error qdb_stream_size(
             [In] qdb_stream_handle handle,
             [Out] out ulong size);
-
-        #endregion
-
+        
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error qdb_stream_write(
             [In] qdb_stream_handle handle,
-            [In] IntPtr buffer,
-            [In] int count);
+            [In] byte* buffer,
+            [In] size_t count);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern unsafe qdb_error qdb_stream_write(
+        public static extern qdb_error qdb_stream_read(
             [In] qdb_stream_handle handle,
             [In] byte* buffer,
-            [In] int count);
+            [In,Out] ref size_t size);
+
+
+        #endregion
     }
 }
