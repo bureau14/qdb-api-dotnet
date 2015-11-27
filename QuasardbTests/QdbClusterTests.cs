@@ -62,6 +62,13 @@ namespace QuasardbTests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
+        public void StreamNull()
+        {
+            QdbTestCluster.Instance.Stream(null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
         public void TagNull()
         {
             QdbTestCluster.Instance.Tag(null);

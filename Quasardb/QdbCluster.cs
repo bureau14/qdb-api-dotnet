@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Remoting.Messaging;
 using Quasardb.ManagedApi;
 
 namespace Quasardb
@@ -78,6 +79,12 @@ namespace Quasardb
         {
             if (alias == null) throw new ArgumentNullException("alias");
             return new QdbInteger(_api, alias);
+        }
+
+        public QdbStream Stream(string alias)
+        {
+            if (alias == null) throw new ArgumentNullException("alias");
+            return new QdbStream(_api, alias);
         }
 
         /// <summary>
