@@ -1,4 +1,5 @@
-﻿using Quasardb;
+﻿using System.IO;
+using Quasardb;
 
 namespace QuasardbTests.Helpers
 {
@@ -126,9 +127,9 @@ namespace QuasardbTests.Helpers
 
         #endregion
 
-        public static QdbStream CreateStream()
+        public static Stream CreateStream()
         {
-            return Instance.Stream(RandomGenerator.CreateUniqueAlias());
+            return Instance.Stream(RandomGenerator.CreateUniqueAlias()).Open(QdbStreamMode.Append);
         }
     }
 }

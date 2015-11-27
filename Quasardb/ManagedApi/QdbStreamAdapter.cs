@@ -13,6 +13,12 @@ namespace Quasardb.ManagedApi
             _handle = handle;
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            _handle.Dispose();
+            base.Dispose(disposing);
+        }
+
         public override void Flush()
         {
             throw new NotImplementedException();
@@ -35,7 +41,20 @@ namespace Quasardb.ManagedApi
 
         public override void Write(byte[] buffer, int offset, int count)
         {
-            throw new NotImplementedException();
+            if (_handle.IsClosed)
+                throw new ObjectDisposedException("Cannot access a closed Stream.");
+
+            if (buffer == null)
+                throw new ArgumentNullException("buffer", "Buffer cannot be null");
+
+            if (offset < 0)
+                throw new ArgumentOutOfRangeException("offset", "Non-negative number required");
+
+            if (count < 0)
+                throw new ArgumentOutOfRangeException("count", "Non-negative number required");
+
+            if (offset + count > buffer.Length)
+                throw new ArgumentException("Offset and length were out of bounds for the array or count is greater than the number of elements from index to the end of the source collection.");
         }
 
         public override bool CanRead
