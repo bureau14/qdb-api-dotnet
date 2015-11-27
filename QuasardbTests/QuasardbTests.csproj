@@ -63,7 +63,9 @@
     <Compile Include="QdbIntegerTests.cs" />
     <Compile Include="QdbHashSetTests.cs" />
     <Compile Include="QdbDequeTests.cs" />
-    <Compile Include="QdbStreamTests.cs" />
+    <Compile Include="QdbStream\Open.cs" />
+    <Compile Include="QdbStream\Length.cs" />
+    <Compile Include="QdbStream\Write.cs" />
     <Compile Include="QdbTagTests.cs" />
     <Compile Include="Helpers\QdbTestCluster.cs" />
     <Compile Include="Helpers\RandomGenerator.cs" />

@@ -1,15 +1,12 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Quasardb;
-using Quasardb.Exceptions;
 using QuasardbTests.Helpers;
 
-namespace QuasardbTests
+namespace QuasardbTests.QdbStream
 {
     [TestClass]
-    public class QdbStreamTest
+    public class Write
     {
         private Stream _stream;
 
@@ -24,66 +21,6 @@ namespace QuasardbTests
         {
             _stream.Close();
         }
-
-        #region Open()
-
-        [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
-        public void GivenRandomAlias_WhenOpen_ThenAliasNotFound()
-        {
-            QdbTestCluster.Instance.Stream("toto").Open(QdbStreamMode.Open);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(QdbIncompatibleTypeException))]
-        public void GivenExistingAlias_WhenOpen_ThenIncompatibleType()
-        {
-            var blob = QdbTestCluster.CreateBlob();
-            QdbTestCluster.Instance.Stream(blob.Alias).Open(QdbStreamMode.Open);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(QdbIncompatibleTypeException))]
-        public void GivenExistingAlias_WhenAppend_ThenIncompatibleType()
-        {
-            var blob = QdbTestCluster.CreateBlob();
-            QdbTestCluster.Instance.Stream(blob.Alias).Open(QdbStreamMode.Append);
-        }
-
-        #endregion
-
-        #region Length
-
-        [TestMethod]
-        public void GivenEmptyStream_ThenLengthIsZero()
-        {
-            Assert.AreEqual(0, _stream.Length);
-        }
-
-        [TestMethod]
-        public void GivenEmptyStream_WhenWriteByte_ThenLengthIsOne()
-        {
-            _stream.WriteByte(42);
-            Assert.AreEqual(1, _stream.Length);
-        }
-
-        [TestMethod]
-        public void GivenEmptyStream_WhenWriteTwoBytes_ThenLengthIsTwo()
-        {
-            _stream.Write(new byte[10], 2, 2);
-            Assert.AreEqual(2, _stream.Length);
-        }
-
-        [TestMethod]
-        public void GivenEmptyStream_WhenWriteZeroBytes_ThenLengthIsZero()
-        {
-            _stream.Write(new byte[10], 2, 0);
-            Assert.AreEqual(0, _stream.Length);
-        }
-
-        #endregion
-
-        #region Write()
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException), "Offset and length were out of bounds for the array or count is greater than the number of elements from index to the end of the source collection.")]
@@ -121,7 +58,5 @@ namespace QuasardbTests
             _stream.Close();
             _stream.Write(new byte[2], 0, 2);
         }
-
-        #endregion
     }
 }
