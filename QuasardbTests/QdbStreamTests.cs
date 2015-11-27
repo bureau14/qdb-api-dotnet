@@ -17,5 +17,30 @@ namespace QuasardbTests
         {
             QdbTestCluster.Instance.Stream("toto").Open(QdbStreamMode.Open);
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(QdbIncompatibleTypeException))]
+        public void GivenExistingAlias_WhenOpen_ThenIncompatibleType()
+        {
+            var blob = QdbTestCluster.CreateBlob();
+            QdbTestCluster.Instance.Stream(blob.Alias).Open(QdbStreamMode.Open);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(QdbIncompatibleTypeException))]
+        public void GivenExistingAlias_WhenAppend_ThenIncompatibleType()
+        {
+            var blob = QdbTestCluster.CreateBlob();
+            QdbTestCluster.Instance.Stream(blob.Alias).Open(QdbStreamMode.Append);
+        }
+
+        [TestMethod]
+        public void GivenEmptyStream_ThenLengthIsZero()
+        {
+            using (Stream stream = QdbTestCluster.CreateStream().Open(QdbStreamMode.Append))
+            {
+                Assert.AreEqual(0, stream.Length);
+            }
+        }
     }
 }

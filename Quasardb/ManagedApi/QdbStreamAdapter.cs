@@ -55,7 +55,13 @@ namespace Quasardb.ManagedApi
 
         public override long Length
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                ulong size;
+                var error = qdb_api.qdb_stream_size(_handle, out size);
+                QdbExceptionThrower.ThrowIfNeeded(error);
+                return checked((long) size);
+            }
         }
 
         public override long Position { get; set; }

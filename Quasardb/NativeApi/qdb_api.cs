@@ -284,7 +284,7 @@ namespace Quasardb.NativeApi
 
         #endregion
 
-        #region Functions specific to tags
+        #region Functions specific to streams
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error qdb_stream_open(
@@ -296,6 +296,11 @@ namespace Quasardb.NativeApi
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error qdb_stream_close(
             [In] IntPtr stream);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_stream_size(
+            [In] qdb_stream_handle handle,
+            [Out] out ulong size);
 
         #endregion
     }
