@@ -42,7 +42,6 @@ namespace Quasardb.NativeApi
             [In] qdb_handle handle,
             [In] IntPtr buffer);
 
-
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error qdb_get_type(
             [In] qdb_handle handle,
@@ -282,6 +281,21 @@ namespace Quasardb.NativeApi
             [In] IntPtr results,
             [In] size_t results_count
         );
+
+        #endregion
+
+        #region Functions specific to tags
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_stream_open(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In] qdb_stream_mode mode,
+            [Out] out qdb_stream_handle stream);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_stream_close(
+            [In] IntPtr stream);
 
         #endregion
     }

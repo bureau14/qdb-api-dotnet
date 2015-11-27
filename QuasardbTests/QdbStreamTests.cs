@@ -11,11 +11,11 @@ namespace QuasardbTests
     [TestClass]
     public class QdbStreamTest
     {
-
         [TestMethod]
-        public void Open()
+        [ExpectedException(typeof(QdbAliasNotFoundException))]
+        public void GivenRandomAlias_WhenOpen_ThenAliasNotFound()
         {
-            Stream s = QdbTestCluster.Instance.Stream("toto").Open(FileMode.Open);
+            QdbTestCluster.Instance.Stream("toto").Open(QdbStreamMode.Open);
         }
     }
 }
