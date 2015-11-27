@@ -4,13 +4,13 @@ using QuasardbTests.Helpers;
 namespace QuasardbTests.QdbStreamTests
 {
     [TestClass]
-    public class CanRead
+    public class CanSeek
     {
         [TestMethod]
         public void ReturnsTrue()
         {
             var stream = QdbTestCluster.CreateAndOpenStream();
-            Assert.IsTrue(stream.CanRead);
+            Assert.IsTrue(stream.CanSeek);
         }
 
         [TestMethod]
@@ -18,7 +18,7 @@ namespace QuasardbTests.QdbStreamTests
         {
             var stream = QdbTestCluster.CreateAndOpenStream();
             stream.Close();
-            Assert.IsFalse(stream.CanRead);
+            Assert.IsFalse(stream.CanSeek);
         }
     }
 }
