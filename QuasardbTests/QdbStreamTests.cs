@@ -50,9 +50,34 @@ namespace QuasardbTests
             QdbTestCluster.Instance.Stream(blob.Alias).Open(QdbStreamMode.Append);
         }
 
+        #endregion
+
+        #region Length
+
         [TestMethod]
         public void GivenEmptyStream_ThenLengthIsZero()
         {
+            Assert.AreEqual(0, _stream.Length);
+        }
+
+        [TestMethod]
+        public void GivenEmptyStream_WhenWriteByte_ThenLengthIsOne()
+        {
+            _stream.WriteByte(42);
+            Assert.AreEqual(1, _stream.Length);
+        }
+
+        [TestMethod]
+        public void GivenEmptyStream_WhenWriteTwoBytes_ThenLengthIsTwo()
+        {
+            _stream.Write(new byte[10], 2, 2);
+            Assert.AreEqual(2, _stream.Length);
+        }
+
+        [TestMethod]
+        public void GivenEmptyStream_WhenWriteZeroBytes_ThenLengthIsZero()
+        {
+            _stream.Write(new byte[10], 2, 0);
             Assert.AreEqual(0, _stream.Length);
         }
 

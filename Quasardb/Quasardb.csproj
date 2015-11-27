@@ -23,6 +23,7 @@
     <DocumentationFile>bin\.NET Framework 2.0\Quasardb.xml</DocumentationFile>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '.NET Framework 3.5|AnyCPU'">
     <OutputPath>bin\.NET Framework 3.5\</OutputPath>

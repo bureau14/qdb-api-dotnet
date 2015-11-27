@@ -1,10 +1,11 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using Quasardb.NativeApi;
 
 namespace Quasardb.ManagedApi
 {
-    class QdbStreamAdapter : Stream
+    unsafe class QdbStreamAdapter : Stream
     {
         private readonly qdb_stream_handle _handle;
 
@@ -55,6 +56,12 @@ namespace Quasardb.ManagedApi
 
             if (offset + count > buffer.Length)
                 throw new ArgumentException("Offset and length were out of bounds for the array or count is greater than the number of elements from index to the end of the source collection.");
+
+            fixed (byte* ptr = buffer)
+            {
+                var error = qdb_api.qdb_stream_write(_handle, ptr+offset, count);
+                QdbExceptionThrower.ThrowIfNeeded(error);
+            }
         }
 
         public override bool CanRead

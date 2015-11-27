@@ -303,5 +303,17 @@ namespace Quasardb.NativeApi
             [Out] out ulong size);
 
         #endregion
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_stream_write(
+            [In] qdb_stream_handle handle,
+            [In] IntPtr buffer,
+            [In] int count);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern unsafe qdb_error qdb_stream_write(
+            [In] qdb_stream_handle handle,
+            [In] byte* buffer,
+            [In] int count);
     }
 }
