@@ -29,7 +29,12 @@ namespace Quasardb.ManagedApi
 
         public override long Seek(long offset, SeekOrigin origin)
         {
-            throw new NotImplementedException();
+            if (_handle.IsClosed)
+                throw new ObjectDisposedException("Cannot access a closed Stream.");
+
+
+
+            return 0;
         }
 
         public override void SetLength(long value)

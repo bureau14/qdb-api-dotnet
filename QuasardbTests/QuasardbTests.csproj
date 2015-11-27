@@ -63,6 +63,7 @@
     <Compile Include="QdbIntegerTests.cs" />
     <Compile Include="QdbHashSetTests.cs" />
     <Compile Include="QdbDequeTests.cs" />
+    <Compile Include="QdbStreamTests\Seek.cs" />
     <Compile Include="QdbStreamTests\Flush.cs" />
     <Compile Include="QdbStreamTests\CanSeek.cs" />
     <Compile Include="QdbStreamTests\CanRead.cs" />
