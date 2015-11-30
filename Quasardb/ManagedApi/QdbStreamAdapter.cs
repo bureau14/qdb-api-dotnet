@@ -29,8 +29,7 @@ namespace Quasardb.ManagedApi
 
         public override long Seek(long offset, SeekOrigin origin)
         {
-            if (_handle.IsClosed)
-                throw new ObjectDisposedException("Cannot access a closed Stream.");
+            ThrowIfClosed();
 
             long pos;
             bool checkUpperBound;
@@ -69,16 +68,14 @@ namespace Quasardb.ManagedApi
 
         public override void SetLength(long value)
         {
-            if (_handle.IsClosed)
-                throw new ObjectDisposedException("Cannot access a closed Stream.");
-            else
-                throw new NotSupportedException();
+            ThrowIfClosed();
+                
+            throw new NotSupportedException();
         }
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            if (_handle.IsClosed)
-                throw new ObjectDisposedException("Cannot access a closed Stream.");
+            ThrowIfClosed();
 
             if (buffer == null)
                 throw new ArgumentNullException("buffer", "Buffer cannot be null");
@@ -104,8 +101,7 @@ namespace Quasardb.ManagedApi
 
         public override void Write(byte[] buffer, int offset, int count)
         {
-            if (_handle.IsClosed)
-                throw new ObjectDisposedException("Cannot access a closed Stream.");
+            ThrowIfClosed();
 
             if (buffer == null)
                 throw new ArgumentNullException("buffer", "Buffer cannot be null");
@@ -145,6 +141,8 @@ namespace Quasardb.ManagedApi
         {
             get
             {
+                ThrowIfClosed();
+
                 ulong size;
                 var error = qdb_api.qdb_stream_size(_handle, out size);
                 QdbExceptionThrower.ThrowIfNeeded(error);
@@ -156,12 +154,29 @@ namespace Quasardb.ManagedApi
         {
             get
             {
+                ThrowIfClosed();
+
                 ulong position;
                 var error = qdb_api.qdb_stream_getpos(_handle, out position);
                 QdbExceptionThrower.ThrowIfNeeded(error);
-                return checked((long)position); ;
+                return checked((long)position);
             }
-            set { throw new NotImplementedException(); }
+            set
+            {
+                ThrowIfClosed();
+
+                var pos = Math.Max(0, Math.Min(value, Length));
+
+                var upos = checked((ulong)pos);
+                var error = qdb_api.qdb_stream_setpos(_handle, ref upos);
+                QdbExceptionThrower.ThrowIfNeeded(error);
+            }
+        }
+
+        private void ThrowIfClosed()
+        {
+            if (_handle.IsClosed)
+                throw new ObjectDisposedException("Cannot access a closed Stream.");
         }
     }
 }
