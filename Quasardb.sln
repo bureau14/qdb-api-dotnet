@@ -9,13 +9,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuasardbTests", "QuasardbTe
 EndProject
 Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "QuasardbDocumentation", "QuasardbDocumentation\QuasardbDocumentation.shfbproj", "{2139D0F2-ED04-49F4-BA98-D8DEE9A0E4B4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamDemo", "StreamDemo\StreamDemo.csproj", "{86589766-2390-4023-BB37-FBB9DBA9CE2D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		.NET Framework 2.0|Any CPU = .NET Framework 2.0|Any CPU
 		.NET Framework 3.5|Any CPU = .NET Framework 3.5|Any CPU
 		.NET Framework 4.5|Any CPU = .NET Framework 4.5|Any CPU
 		.NET Framework 4|Any CPU = .NET Framework 4|Any CPU
+		Debug|Any CPU = Debug|Any CPU
 		Documentation|Any CPU = Documentation|Any CPU
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{D8232795-82C5-405E-A081-0F03F158B036}..NET Framework 2.0|Any CPU.ActiveCfg = .NET Framework 2.0|Any CPU
@@ -26,8 +30,12 @@ Global
 		{D8232795-82C5-405E-A081-0F03F158B036}..NET Framework 4.5|Any CPU.Build.0 = .NET Framework 4.5|Any CPU
 		{D8232795-82C5-405E-A081-0F03F158B036}..NET Framework 4|Any CPU.ActiveCfg = .NET Framework 4|Any CPU
 		{D8232795-82C5-405E-A081-0F03F158B036}..NET Framework 4|Any CPU.Build.0 = .NET Framework 4|Any CPU
+		{D8232795-82C5-405E-A081-0F03F158B036}.Debug|Any CPU.ActiveCfg = .NET Framework 4|Any CPU
+		{D8232795-82C5-405E-A081-0F03F158B036}.Debug|Any CPU.Build.0 = .NET Framework 4|Any CPU
 		{D8232795-82C5-405E-A081-0F03F158B036}.Documentation|Any CPU.ActiveCfg = .NET Framework 4.5|Any CPU
 		{D8232795-82C5-405E-A081-0F03F158B036}.Documentation|Any CPU.Build.0 = .NET Framework 4.5|Any CPU
+		{D8232795-82C5-405E-A081-0F03F158B036}.Release|Any CPU.ActiveCfg = .NET Framework 4|Any CPU
+		{D8232795-82C5-405E-A081-0F03F158B036}.Release|Any CPU.Build.0 = .NET Framework 4|Any CPU
 		{BE25CD87-9FB3-4CBA-87C5-5928F3CCB5C9}..NET Framework 2.0|Any CPU.ActiveCfg = .NET Framework 2.0|Any CPU
 		{BE25CD87-9FB3-4CBA-87C5-5928F3CCB5C9}..NET Framework 2.0|Any CPU.Build.0 = .NET Framework 2.0|Any CPU
 		{BE25CD87-9FB3-4CBA-87C5-5928F3CCB5C9}..NET Framework 3.5|Any CPU.ActiveCfg = .NET Framework 3.5|Any CPU
@@ -36,13 +44,35 @@ Global
 		{BE25CD87-9FB3-4CBA-87C5-5928F3CCB5C9}..NET Framework 4.5|Any CPU.Build.0 = .NET Framework 4.5|Any CPU
 		{BE25CD87-9FB3-4CBA-87C5-5928F3CCB5C9}..NET Framework 4|Any CPU.ActiveCfg = .NET Framework 4|Any CPU
 		{BE25CD87-9FB3-4CBA-87C5-5928F3CCB5C9}..NET Framework 4|Any CPU.Build.0 = .NET Framework 4|Any CPU
+		{BE25CD87-9FB3-4CBA-87C5-5928F3CCB5C9}.Debug|Any CPU.ActiveCfg = .NET Framework 4|Any CPU
+		{BE25CD87-9FB3-4CBA-87C5-5928F3CCB5C9}.Debug|Any CPU.Build.0 = .NET Framework 4|Any CPU
 		{BE25CD87-9FB3-4CBA-87C5-5928F3CCB5C9}.Documentation|Any CPU.ActiveCfg = .NET Framework 4.5|Any CPU
+		{BE25CD87-9FB3-4CBA-87C5-5928F3CCB5C9}.Release|Any CPU.ActiveCfg = .NET Framework 4|Any CPU
+		{BE25CD87-9FB3-4CBA-87C5-5928F3CCB5C9}.Release|Any CPU.Build.0 = .NET Framework 4|Any CPU
 		{2139D0F2-ED04-49F4-BA98-D8DEE9A0E4B4}..NET Framework 2.0|Any CPU.ActiveCfg = .NET Framework 2.0|Any CPU
 		{2139D0F2-ED04-49F4-BA98-D8DEE9A0E4B4}..NET Framework 3.5|Any CPU.ActiveCfg = .NET Framework 3.5|Any CPU
 		{2139D0F2-ED04-49F4-BA98-D8DEE9A0E4B4}..NET Framework 4.5|Any CPU.ActiveCfg = .NET Framework 4.5|Any CPU
 		{2139D0F2-ED04-49F4-BA98-D8DEE9A0E4B4}..NET Framework 4|Any CPU.ActiveCfg = .NET Framework 4|Any CPU
+		{2139D0F2-ED04-49F4-BA98-D8DEE9A0E4B4}.Debug|Any CPU.ActiveCfg = .NET Framework 4|Any CPU
+		{2139D0F2-ED04-49F4-BA98-D8DEE9A0E4B4}.Debug|Any CPU.Build.0 = .NET Framework 4|Any CPU
 		{2139D0F2-ED04-49F4-BA98-D8DEE9A0E4B4}.Documentation|Any CPU.ActiveCfg = .NET Framework 4.5|Any CPU
 		{2139D0F2-ED04-49F4-BA98-D8DEE9A0E4B4}.Documentation|Any CPU.Build.0 = .NET Framework 4.5|Any CPU
+		{2139D0F2-ED04-49F4-BA98-D8DEE9A0E4B4}.Release|Any CPU.ActiveCfg = .NET Framework 4|Any CPU
+		{2139D0F2-ED04-49F4-BA98-D8DEE9A0E4B4}.Release|Any CPU.Build.0 = .NET Framework 4|Any CPU
+		{86589766-2390-4023-BB37-FBB9DBA9CE2D}..NET Framework 2.0|Any CPU.ActiveCfg = Release|Any CPU
+		{86589766-2390-4023-BB37-FBB9DBA9CE2D}..NET Framework 2.0|Any CPU.Build.0 = Release|Any CPU
+		{86589766-2390-4023-BB37-FBB9DBA9CE2D}..NET Framework 3.5|Any CPU.ActiveCfg = Release|Any CPU
+		{86589766-2390-4023-BB37-FBB9DBA9CE2D}..NET Framework 3.5|Any CPU.Build.0 = Release|Any CPU
+		{86589766-2390-4023-BB37-FBB9DBA9CE2D}..NET Framework 4.5|Any CPU.ActiveCfg = Release|Any CPU
+		{86589766-2390-4023-BB37-FBB9DBA9CE2D}..NET Framework 4.5|Any CPU.Build.0 = Release|Any CPU
+		{86589766-2390-4023-BB37-FBB9DBA9CE2D}..NET Framework 4|Any CPU.ActiveCfg = Release|Any CPU
+		{86589766-2390-4023-BB37-FBB9DBA9CE2D}..NET Framework 4|Any CPU.Build.0 = Release|Any CPU
+		{86589766-2390-4023-BB37-FBB9DBA9CE2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86589766-2390-4023-BB37-FBB9DBA9CE2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86589766-2390-4023-BB37-FBB9DBA9CE2D}.Documentation|Any CPU.ActiveCfg = Debug|Any CPU
+		{86589766-2390-4023-BB37-FBB9DBA9CE2D}.Documentation|Any CPU.Build.0 = Debug|Any CPU
+		{86589766-2390-4023-BB37-FBB9DBA9CE2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86589766-2390-4023-BB37-FBB9DBA9CE2D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
