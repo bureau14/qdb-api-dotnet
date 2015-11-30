@@ -32,9 +32,39 @@ namespace Quasardb.ManagedApi
             if (_handle.IsClosed)
                 throw new ObjectDisposedException("Cannot access a closed Stream.");
 
+            long pos;
+            bool checkUpperBound;
 
+            switch (origin)
+            {
+                case SeekOrigin.Begin:
+                    pos = offset > 0 ? offset : 0;
+                    checkUpperBound = offset > 0;
+                    break;
 
-            return 0;
+                case SeekOrigin.Current:
+                    pos = Position + offset;
+                    checkUpperBound = offset > 0;
+                    break;
+
+                case SeekOrigin.End:
+                    pos = offset >= 0 ? Length : Length + offset;
+                    checkUpperBound = false;
+                    break;
+
+                default:
+                    throw new NotSupportedException("SeekOrigin." + origin + " is not supported by stream");
+            }
+
+            pos = Math.Max(0, pos);
+            if (checkUpperBound)
+                pos = Math.Min(pos, Length);
+
+            var upos = checked((ulong) pos);
+            var error = qdb_api.qdb_stream_setpos(_handle, ref upos);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+         
+            return pos;
         }
 
         public override void SetLength(long value)
@@ -121,7 +151,13 @@ namespace Quasardb.ManagedApi
 
         public override long Position
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                ulong position;
+                var error = qdb_api.qdb_stream_getpos(_handle, out position);
+                QdbExceptionThrower.ThrowIfNeeded(error);
+                return checked((long)position); ;
+            }
             set { throw new NotImplementedException(); }
         }
     }
