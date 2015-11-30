@@ -71,6 +71,7 @@
     <Compile Include="QdbStreamTests\Open.cs" />
     <Compile Include="QdbStreamTests\Length.cs" />
     <Compile Include="QdbStreamTests\Read.cs" />
+    <Compile Include="QdbStreamTests\SetLength.cs" />
     <Compile Include="QdbStreamTests\Write.cs" />
     <Compile Include="QdbTagTests.cs" />
     <Compile Include="Helpers\QdbTestCluster.cs" />

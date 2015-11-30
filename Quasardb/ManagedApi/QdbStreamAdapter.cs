@@ -69,7 +69,10 @@ namespace Quasardb.ManagedApi
 
         public override void SetLength(long value)
         {
-            throw new NotImplementedException();
+            if (_handle.IsClosed)
+                throw new ObjectDisposedException("Cannot access a closed Stream.");
+            else
+                throw new NotSupportedException();
         }
 
         public override int Read(byte[] buffer, int offset, int count)
