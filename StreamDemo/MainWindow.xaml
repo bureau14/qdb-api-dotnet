@@ -59,12 +59,12 @@
         <TextBox Grid.Column="2" Grid.Row="0" FontSize="20" Grid.ColumnSpan="2" x:Name="clusterUri">qdb://127.0.0.1:2836</TextBox>
         <Separator Grid.Column="0"  Grid.Row="1" Grid.ColumnSpan="4"></Separator>
         <Label Grid.Column="0" Grid.Row="2" Content="❷"/>
-        <Label Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2">Entry alias:</Label>
-        <TextBox Grid.Column="2" Grid.Row="2" x:Name="entryAlias">hello.big.data.world</TextBox>
+        <Label Grid.Column="1" Grid.Row="2" >Entry alias:</Label>
+        <TextBox Grid.Column="2" Grid.Row="2" Grid.ColumnSpan="2" x:Name="entryAlias">hello.big.data.world</TextBox>
         <Separator Grid.Column="0"  Grid.Row="3" Grid.ColumnSpan="4"></Separator>
         <Label Grid.Column="0" Grid.Row="4" Content="❸"/>
         <StackPanel Grid.Column="1"  Grid.Row="4" Grid.ColumnSpan="3" Orientation="Horizontal" VerticalAlignment="Top">
-            <Button Width="150" Click="OnUploadButtonClicked">
+            <Button Width="150" x:Name="uploadButton">
                 <StackPanel>
                     <Path Style="{StaticResource logo}" Margin="10"/>
                     <Path Style="{StaticResource arrow}"><Path.RenderTransform><ScaleTransform /></Path.RenderTransform></Path>
@@ -72,7 +72,7 @@
                 </StackPanel>
             </Button>
             <Label>or</Label>
-            <Button Width="150" Click="OnDownloadButtonClicked">
+            <Button Width="150" x:Name="downloadButton">
                 <StackPanel>
                     <Path Style="{StaticResource logo}" Margin="10"/>
                     <Path Style="{StaticResource arrow}">
@@ -86,7 +86,7 @@
         </StackPanel>
         <Separator Grid.Column="0"  Grid.Row="5" Grid.ColumnSpan="4"></Separator>
         <ProgressBar Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="3" x:Name="progressBar"/>
-        <Button Grid.Column="3" Grid.Row="6" Padding="5,0,5,0" Click="OnCancelClicked">Cancel</Button>
-        <Label Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="4" Foreground="Red" x:Name="errorLabel"></Label>
+        <Label Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="4" Foreground="Red" x:Name="statusLabel"></Label>
+        <Button Grid.Column="3" Grid.Row="6" Padding="5,0,5,0" Margin="5,0,0,0" x:Name="cancelButton">Cancel</Button>
     </Grid>
 </Window>

@@ -1,80 +1,54 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Humanizer;
+using Humanizer.Bytes;
 using Microsoft.Win32;
 using Quasardb;
 
 namespace StreamDemo
 {
-
-    public partial class MainWindow : Window, IStreamCopyObserver
+    public partial class MainWindow : Window
     {
-        readonly CancellationTokenSource _cancellationTokenSource;
+        CancellationTokenSource _cancellationTokenSource;
 
         public MainWindow()
         {
             InitializeComponent();
 
             _cancellationTokenSource = new CancellationTokenSource();
-        }
 
-        private async void OnUploadButtonClicked(object sender, RoutedEventArgs e)
-        {
-            var dlg = new OpenFileDialog();
-            var ok = dlg.ShowDialog(this);
-            if (!ok.Value) return;
-
-            try
-            {
-                await Upload(dlg.FileName);
-            }
-            catch (Exception ex)
-            {
-                errorLabel.Content = ex.Message;
-            }
-        }
-
-        private async void OnDownloadButtonClicked(object sender, RoutedEventArgs e)
-        {
-            var dlg = new SaveFileDialog();
-            var ok = dlg.ShowDialog(this);
-            if (!ok.Value) return;
-
-            try
-            {
-                await Download(dlg.FileName);
-            }
-            catch (Exception ex)
-            {
-                errorLabel.Content = ex.Message;
-            }
+            cancelButton.Click += OnCancelClicked;
+            downloadButton.Click += OnDownloadClicked;
+            uploadButton.Click += OnUploadClicked;
         }
 
         private void OnCancelClicked(object sender, RoutedEventArgs e)
         {
             _cancellationTokenSource.Cancel();
+            _cancellationTokenSource = new CancellationTokenSource();
         }
 
-        private async Task Upload(string fileName)
+        private async void OnDownloadClicked(object sender, RoutedEventArgs e)
         {
-            using (var input = File.OpenRead(fileName))
-            using (var qdb = new QdbCluster(clusterUri.Text))
-            using (var output = qdb.Stream(entryAlias.Text).Open(QdbStreamMode.Append))
+            var dlg = new SaveFileDialog();
+            dlg.FileName = entryAlias.Text;
+            var ok = dlg.ShowDialog(this);
+            if (!ok.Value) return;
+
+            try
             {
-                await StreamHelper.Copy(input, output, this, _cancellationTokenSource.Token);
+                SwitchToRunningMode();
+                await Download(dlg.FileName);
+                SwitchToReadyMode();
+            }
+            catch (Exception ex)
+            {
+                SwitchToErrorMode();
+                statusLabel.Content = ex.Message;
             }
         }
 
@@ -84,18 +58,83 @@ namespace StreamDemo
             using (var qdb = new QdbCluster(clusterUri.Text))
             using (var input = qdb.Stream(entryAlias.Text).Open(QdbStreamMode.Read))
             {
-                await StreamHelper.Copy(input, output, this, _cancellationTokenSource.Token);
+                await StreamHelper.Copy(input, output, OnProgress, _cancellationTokenSource.Token);
             }
         }
 
-        void IStreamCopyObserver.Progress(double percent)
+        private async void OnUploadClicked(object sender, RoutedEventArgs e)
         {
-            progressBar.Value = percent;
+            var dlg = new OpenFileDialog();
+            var ok = dlg.ShowDialog(this);
+            if (!ok.Value) return;
+
+            try
+            {
+                SwitchToRunningMode();
+                await Upload(dlg.FileName);
+                SwitchToReadyMode();
+            }
+            catch (Exception ex)
+            {
+                SwitchToErrorMode();
+                statusLabel.Content = ex.Message;
+            }
         }
 
-        void IStreamCopyObserver.Thoughtput(double kbps)
+        private async Task Upload(string fileName)
         {
-            errorLabel.Content = string.Format("{0:0.0} MB/s", kbps/1000);
+            using (var input = File.OpenRead(fileName))
+            using (var qdb = new QdbCluster(clusterUri.Text))
+            using (var output = qdb.Stream(entryAlias.Text).Open(QdbStreamMode.Append))
+            {
+                await StreamHelper.Copy(input, output, OnProgress, _cancellationTokenSource.Token);
+            }
+        }
+
+        private void OnProgress(StreamHelper.CopyStatus progress)
+        {
+            progressBar.Value = 100.0 * progress.BytesCopied / progress.TotalBytes;
+
+            if (progress.BytesCopied == progress.TotalBytes)
+                statusLabel.Content = string.Format("{0} copied in {1}",
+                    ByteSize.FromBytes(progress.BytesCopied).Humanize("0.#"), progress.Elapsed.Humanize());
+            else
+                statusLabel.Content = string.Format("{0}/s",
+                    ByteSize.FromBytes(progress.BytesCopied/progress.Elapsed.TotalSeconds).Humanize("0.#"));
+        }
+
+        private void SwitchToReadyMode()
+        {
+            clusterUri.IsEnabled = true;
+            entryAlias.IsEnabled = true;
+            uploadButton.IsEnabled = true;
+            downloadButton.IsEnabled = true;
+            progressBar.Visibility = Visibility.Hidden;
+            cancelButton.Visibility = Visibility.Hidden;
+            statusLabel.Foreground = new SolidColorBrush(Colors.Black);
+        }
+
+        private void SwitchToRunningMode()
+        {
+            clusterUri.IsEnabled = false;
+            entryAlias.IsEnabled = false;
+            uploadButton.IsEnabled = false;
+            downloadButton.IsEnabled = false;
+            progressBar.Visibility = Visibility.Visible;
+            cancelButton.Visibility = Visibility.Visible;
+            statusLabel.Foreground = new SolidColorBrush(Colors.White);
+        }
+
+        private void SwitchToErrorMode()
+        {
+            clusterUri.IsEnabled = true;
+            entryAlias.IsEnabled = true;
+            uploadButton.IsEnabled = true;
+            downloadButton.IsEnabled = true;
+            progressBar.Visibility = Visibility.Hidden;
+            cancelButton.Visibility = Visibility.Hidden;
+            statusLabel.Visibility = Visibility.Visible;
+            statusLabel.Foreground = new SolidColorBrush(Colors.Red);
         }
     }
 }
