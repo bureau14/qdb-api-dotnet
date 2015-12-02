@@ -3,7 +3,9 @@ obj/
 *.user
 *.suo
 /TestResults/
+/packages/
 
 Quasardb/win32/qdb_api.dll
 Quasardb/win64/qdb_api.dll
 QuasardbTests/qdbd.exe
+/QuasardbTests/db

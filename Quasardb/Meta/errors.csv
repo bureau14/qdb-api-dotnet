@@ -25,7 +25,7 @@ qdb_e_outdated_topology;0xc0000014;QdbOutdatedTopologyException;The cluster topo
 qdb_e_overflow;0x20000027;QdbOverflowException;The operation provokes overflow.
 qdb_e_protocol_error;0xe0000013;QdbProtocolErrorException;A protocol error occurred.
 qdb_e_reserved_alias;0xe000001d;QdbReservedAliasException;The alias name or prefix is reserved.
-qdb_e_resource_locked;0xc000002d;QdbResourceLocked;The entry is currently lock by another client.
+qdb_e_resource_locked;0xc000002d;QdbResourceLockedException;The entry is currently lock by another client.
 qdb_e_skipped;0x20000021;QdbSkippedException;This operation has been skipped because of an error that occured in another operation.
 qdb_e_system;0xe0000001;QdbSystemException;A system error occurred.
 qdb_e_tag_already_set;0x20000029;QdbTagAlreadySetException;The entry is already marked with the provided tag.

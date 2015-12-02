@@ -336,7 +336,7 @@ namespace Quasardb.Exceptions
     /// <summary>
     /// Quasardb: The entry is currently lock by another client.
     /// </summary>
-	public sealed class QdbResourceLocked : QdbExceptionBase 
+	public sealed class QdbResourceLockedException : QdbExceptionBase 
 	{
 		/// <inheritdoc />
         public override string Message

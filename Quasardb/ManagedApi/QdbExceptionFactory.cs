@@ -92,7 +92,7 @@ namespace Quasardb.ManagedApi
 					return new QdbReservedAliasException();
 
 				case qdb_error.qdb_e_resource_locked:
-					return new QdbResourceLocked();
+					return new QdbResourceLockedException();
 
 				case qdb_error.qdb_e_skipped:
 					return new QdbSkippedException();

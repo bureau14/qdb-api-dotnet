@@ -6,16 +6,17 @@ using System.Runtime.InteropServices;
 
 namespace Quasardb.NativeApi
 {
-    sealed class qdb_handle : SafeHandle
+    sealed class qdb_stream_handle : SafeHandle
     {
-        public qdb_handle() : base(IntPtr.Zero, true)
+        public qdb_stream_handle()
+            : base(IntPtr.Zero, true)
         {
         }
 
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
         protected override bool ReleaseHandle()
         {
-            return qdb_api.qdb_close(handle) == qdb_error.qdb_e_ok;
+            return qdb_api.qdb_stream_close(handle) == qdb_error.qdb_e_ok;
         }
 
         public override bool IsInvalid

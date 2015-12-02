@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Remoting.Messaging;
 using Quasardb.ManagedApi;
 
 namespace Quasardb
@@ -29,11 +30,11 @@ namespace Quasardb
         }
 
         /// <summary>
-        /// Returns a <see cref="QdbBlob" /> with the specified alias.
+        /// Returns a <see cref="QdbBlob" /> attached to the specified alias.
         /// </summary>
         /// <remarks>No operation is performed in the database.</remarks>
-        /// <param name="alias">The alias of the blob in the database.</param>
-        /// <returns>A blob associated with the specified alias.</returns>
+        /// <param name="alias">The alias (i.e. key) of the blob in the database.</param>
+        /// <returns>A blob associated attached to the specified alias.</returns>
         /// <seealso cref="QdbBlob"/>
         public QdbBlob Blob(string alias)
         {
@@ -42,11 +43,11 @@ namespace Quasardb
         }
 
         /// <summary>
-        /// Returns a <see cref="QdbDeque" /> with the specified alias.
+        /// Returns a <see cref="QdbDeque" /> attached to the specified alias.
         /// </summary>
         /// <remarks>No operation is performed in the database.</remarks>
-        /// <param name="alias">The alias of the queue in the database.</param>
-        /// <returns>A queue associated with the specified alias.</returns>
+        /// <param name="alias">The alias (i.e. key) of the queue in the database.</param>
+        /// <returns>A queue associated attached to the specified alias.</returns>
         /// <seealso cref="QdbDeque"/>
         public QdbDeque Deque(string alias)
         {
@@ -55,11 +56,11 @@ namespace Quasardb
         }
 
         /// <summary>
-        /// Returns a <see cref="QdbHashSet" /> with the specified alias.
+        /// Returns a <see cref="QdbHashSet" /> attached to the specified alias.
         /// </summary>
         /// <remarks>No operation is performed in the database.</remarks>
-        /// <param name="alias">The alias of the hash-set in the database.</param>
-        /// <returns>A hash-set associated with the specified alias.</returns>
+        /// <param name="alias">The alias (i.e. key) of the hash-set in the database.</param>
+        /// <returns>A hash-set associated attached to the specified alias.</returns>
         /// <seealso cref="QdbHashSet"/>
         public QdbHashSet HashSet(string alias)
         {
@@ -68,11 +69,11 @@ namespace Quasardb
         }
 
         /// <summary>
-        /// Returns a <see cref="QdbInteger" /> with the specified alias.
+        /// Returns a <see cref="QdbInteger" /> attached to the specified alias.
         /// </summary>
         /// <remarks>No operation is performed in the database.</remarks>
-        /// <param name="alias">The alias of the integer in the database.</param>
-        /// <returns>An integer associated with the specified alias.</returns>
+        /// <param name="alias">The alias (i.e. key) of the integer in the database.</param>
+        /// <returns>An integer associated attached to the specified alias.</returns>
         /// <seealso cref="QdbInteger"/>
         public QdbInteger Integer(string alias)
         {
@@ -81,11 +82,23 @@ namespace Quasardb
         }
 
         /// <summary>
-        /// Returns a <see cref="QdbTag" /> with the specified alias.
+        /// Returns a <see cref="QdbStream" /> attached to the specified alias.
+        /// </summary>
+        /// <param name="alias">The alias (i.e. key) of the stream in the database</param>
+        /// <returns>A stream attached to the specified alias.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public QdbStream Stream(string alias)
+        {
+            if (alias == null) throw new ArgumentNullException("alias");
+            return new QdbStream(_api, alias);
+        }
+
+        /// <summary>
+        /// Returns a <see cref="QdbTag" /> attached to the specified alias.
         /// </summary>
         /// <remarks>No operation is performed in the database.</remarks>
-        /// <param name="alias">The alias of the tag in the database.</param>
-        /// <returns>A tag associated with the specified alias.</returns>
+        /// <param name="alias">The alias (i.e. key) of the tag in the database.</param>
+        /// <returns>A tag associated attached to the specified alias.</returns>
         /// <seealso cref="QdbTag"/>
         public QdbTag Tag(string alias)
         {

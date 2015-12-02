@@ -7,7 +7,7 @@ namespace Quasardb.ManagedApi
     {
         public bool HashSetInsert(string alias, byte[] content)
         {
-            var error = qdb_api.qdb_hset_insert(_handle, alias, content, (IntPtr)content.LongLength);
+            var error = qdb_api.qdb_hset_insert(_handle, alias, content, (UIntPtr)content.LongLength);
 
             switch (error)
             {
@@ -24,7 +24,7 @@ namespace Quasardb.ManagedApi
 
         public bool HashSetErase(string alias, byte[] content)
         {
-            var error = qdb_api.qdb_hset_erase(_handle, alias, content, (IntPtr)content.LongLength);
+            var error = qdb_api.qdb_hset_erase(_handle, alias, content, (UIntPtr)content.LongLength);
 
             switch (error)
             {
@@ -41,7 +41,7 @@ namespace Quasardb.ManagedApi
 
         public bool HashSetContains(string alias, byte[] content)
         {
-            var error = qdb_api.qdb_hset_contains(_handle, alias, content, (IntPtr)content.LongLength);
+            var error = qdb_api.qdb_hset_contains(_handle, alias, content, (UIntPtr)content.LongLength);
 
             switch (error)
             {

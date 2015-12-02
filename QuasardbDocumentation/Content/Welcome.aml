@@ -125,6 +125,21 @@
         </code>
       </content>
     </section>
+
+    <section>
+      <title>Streams</title>
+      <content>
+        <para>
+          A stream is basically a scalable blob with inifinite size. It's recommended to use a stream above 10MB.
+        </para>
+        <code language="c#">
+          Stream myStream = cluster.Stream("Aline the stream").Open(QdbStreamMode.Append);
+          // now you have a regular C# stream:
+          myStream.Write(data, 0, data.Length);
+          await myStream.WriteAsync(data, 0, data.Length);
+        </code>
+      </content>
+    </section>
     
     <section>
       <title>Tags</title>
@@ -153,6 +168,7 @@
       <codeEntityReference>T:Quasardb.QdbDeque</codeEntityReference>
       <codeEntityReference>T:Quasardb.QdbHashSet</codeEntityReference>
       <codeEntityReference>T:Quasardb.QdbInteger</codeEntityReference>
+      <codeEntityReference>T:Quasardb.QdbStream</codeEntityReference>
       <codeEntityReference>T:Quasardb.QdbTag</codeEntityReference>
 		</relatedTopics>
 	</developerConceptualDocument>

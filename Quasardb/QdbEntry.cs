@@ -30,7 +30,7 @@ namespace Quasardb
         /// Removes the entry from the database.
         /// </summary>
         /// <exception cref="QdbAliasNotFoundException">The entry doesn't exists in the database.</exception>
-        public void Remove()
+        public virtual void Remove()
         {
             Api.Remove(Alias);
         }

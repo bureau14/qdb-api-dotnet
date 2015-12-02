@@ -1,15 +1,18 @@
 ﻿using System;
+using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
+using System.Security;
 
 // ReSharper disable InconsistentNaming
 
 using qdb_int = System.Int64;
 using qdb_time_t = System.Int64;
-using size_t = System.IntPtr;
+using size_t = System.UIntPtr;
 
 namespace Quasardb.NativeApi
 {
-    static class qdb_api
+    [SuppressUnmanagedCodeSecurity]
+    static unsafe class qdb_api
     {
         const string DLL_NAME = "qdb_api.dll";
         const UnmanagedType ALIAS_TYPE = UnmanagedType.LPStr;
@@ -26,6 +29,7 @@ namespace Quasardb.NativeApi
         private static extern IntPtr LoadLibrary(string dllToLoad);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
         public static extern qdb_error qdb_close(
             [In] IntPtr handle);
 
@@ -41,7 +45,6 @@ namespace Quasardb.NativeApi
         public static extern void qdb_free_buffer(
             [In] qdb_handle handle,
             [In] IntPtr buffer);
-
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error qdb_get_type(
@@ -274,7 +277,7 @@ namespace Quasardb.NativeApi
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias, 
             [Out] out IntPtr pointer,
-            [Out] out IntPtr size);
+            [Out] out size_t size);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern void qdb_free_results(
@@ -282,6 +285,54 @@ namespace Quasardb.NativeApi
             [In] IntPtr results,
             [In] size_t results_count
         );
+
+        #endregion
+
+        #region Functions specific to streams
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_stream_open(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In] qdb_stream_mode mode,
+            [Out] out qdb_stream_handle stream);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
+        public static extern qdb_error qdb_stream_close(
+            [In] IntPtr stream);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_stream_size(
+            [In] qdb_stream_handle handle,
+            [Out] out ulong size);
+        
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_stream_write(
+            [In] qdb_stream_handle handle,
+            [In] byte* buffer,
+            [In] size_t count);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_stream_read(
+            [In] qdb_stream_handle handle,
+            [In] byte* buffer,
+            [In,Out] ref size_t size);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_stream_getpos(
+            [In] qdb_stream_handle handle,
+            [Out] out ulong position);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_stream_setpos(
+            [In] qdb_stream_handle handle,
+            [In] ref ulong position);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_stream_remove(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias);
 
         #endregion
     }

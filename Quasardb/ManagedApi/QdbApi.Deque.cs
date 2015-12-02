@@ -47,13 +47,13 @@ namespace Quasardb.ManagedApi
 
         public void DequePushBack(string alias, byte[] content)
         {
-            var error = qdb_api.qdb_deque_push_back(_handle, alias, content, (IntPtr)content.LongLength);
+            var error = qdb_api.qdb_deque_push_back(_handle, alias, content, (UIntPtr)content.LongLength);
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
 
         public void DequePushFront(string alias, byte[] content)
         {
-            var error = qdb_api.qdb_deque_push_front(_handle, alias, content, (IntPtr)content.LongLength);
+            var error = qdb_api.qdb_deque_push_front(_handle, alias, content, (UIntPtr)content.LongLength);
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
     }
