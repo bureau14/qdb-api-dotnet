@@ -49,8 +49,11 @@ namespace Quasardb.ManagedApi
 				case qdb_error.qdb_e_incompatible_type:
 					return new QdbIncompatibleTypeException();
 
-				case qdb_error.qdb_e_internal:
-					return new QdbInternalException();
+				case qdb_error.qdb_e_internal_local:
+					return new QdbInternalLocalException();
+
+                case qdb_error.qdb_e_internal_remote:
+                    return new QdbInternalRemoteException();
 
 				case qdb_error.qdb_e_invalid_argument:
 					return new QdbInvalidArgumentException();
@@ -67,8 +70,11 @@ namespace Quasardb.ManagedApi
 				case qdb_error.qdb_e_invalid_version:
 					return new QdbInvalidVersionException();
 
-				case qdb_error.qdb_e_no_memory:
-					return new QdbNoMemoryException();
+				case qdb_error.qdb_e_no_memory_local:
+					return new QdbNoMemoryLocalException();
+
+                case qdb_error.qdb_e_no_memory_remote:
+                    return new QdbNoMemoryRemoteException();
 
 				case qdb_error.qdb_e_not_connected:
 					return new QdbNotConnectedException();
@@ -97,8 +103,11 @@ namespace Quasardb.ManagedApi
 				case qdb_error.qdb_e_skipped:
 					return new QdbSkippedException();
 
-				case qdb_error.qdb_e_system:
-					return new QdbSystemException();
+				case qdb_error.qdb_e_system_local:
+					return new QdbSystemLocalException();
+
+                case qdb_error.qdb_e_system_remote:
+                    return new QdbSystemRemoteException();
 
 				case qdb_error.qdb_e_tag_already_set:
 					return new QdbTagAlreadySetException();

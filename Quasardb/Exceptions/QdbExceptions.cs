@@ -166,14 +166,26 @@ namespace Quasardb.Exceptions
 	}
 
     /// <summary>
-    /// Quasardb: An internal error occurred.
+    /// Quasardb: A local internal error occurred.
     /// </summary>
-	public sealed class QdbInternalException : QdbExceptionBase 
+	public sealed class QdbInternalLocalException : QdbExceptionBase 
 	{
 		/// <inheritdoc />
         public override string Message
         {
-            get { return "Quasardb: An internal error occurred."; }
+            get { return "Quasardb: A local internal error occurred."; }
+        }
+	}
+
+    /// <summary>
+    /// Quasardb: A remote internal error occurred.
+    /// </summary>
+	public sealed class QdbInternalRemoteException : QdbExceptionBase 
+	{
+		/// <inheritdoc />
+        public override string Message
+        {
+            get { return "Quasardb: A remote internal error occurred."; }
         }
 	}
 
@@ -238,14 +250,26 @@ namespace Quasardb.Exceptions
 	}
 
     /// <summary>
-    /// Quasardb: Insufficient memory is available to complete the operation.
+    /// Quasardb: Insufficient memory is available to complete the operation on the local machine.
     /// </summary>
-	public sealed class QdbNoMemoryException : QdbExceptionBase 
+	public sealed class QdbNoMemoryLocalException : QdbExceptionBase 
 	{
 		/// <inheritdoc />
         public override string Message
         {
-            get { return "Quasardb: Insufficient memory is available to complete the operation."; }
+            get { return "Quasardb: Insufficient memory is available to complete the operation on the local machine."; }
+        }
+	}
+
+    /// <summary>
+    /// Quasardb: Insufficient memory is available to complete the operation on the remote machine.
+    /// </summary>
+	public sealed class QdbNoMemoryRemoteException : QdbExceptionBase 
+	{
+		/// <inheritdoc />
+        public override string Message
+        {
+            get { return "Quasardb: Insufficient memory is available to complete the operation on the remote machine."; }
         }
 	}
 
@@ -358,14 +382,26 @@ namespace Quasardb.Exceptions
 	}
 
     /// <summary>
-    /// Quasardb: A system error occurred.
+    /// Quasardb: A local system error occurred.
     /// </summary>
-	public sealed class QdbSystemException : QdbExceptionBase 
+	public sealed class QdbSystemLocalException : QdbExceptionBase 
 	{
 		/// <inheritdoc />
         public override string Message
         {
-            get { return "Quasardb: A system error occurred."; }
+            get { return "Quasardb: A local system error occurred."; }
+        }
+	}
+
+    /// <summary>
+    /// Quasardb: A remote system error occurred.
+    /// </summary>
+	public sealed class QdbSystemRemoteException : QdbExceptionBase 
+	{
+		/// <inheritdoc />
+        public override string Message
+        {
+            get { return "Quasardb: A remote system error occurred."; }
         }
 	}
 
