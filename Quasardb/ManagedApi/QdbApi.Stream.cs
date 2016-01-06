@@ -19,11 +19,5 @@ namespace Quasardb.ManagedApi
             QdbExceptionThrower.ThrowIfNeeded(error);
             return new QdbStreamAdapter(handle, mode == QdbStreamMode.Append);
         }
-
-        public void StreamRemove(string alias)
-        {
-            var error = qdb_api.qdb_stream_remove(_handle, alias);
-            QdbExceptionThrower.ThrowIfNeeded(error);
-        }
     }
 }

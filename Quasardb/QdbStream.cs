@@ -48,7 +48,7 @@ namespace Quasardb
         internal QdbStream(QdbApi api, string alias) : base(api, alias)
         {
         }
-        
+
         /// <summary>
         /// Opens the quasardb stream. 
         /// </summary>
@@ -59,12 +59,6 @@ namespace Quasardb
         public Stream Open(QdbStreamMode mode)
         {
             return Api.StreamOpen(Alias, (ManagedApi.QdbStreamMode) mode);
-        }
-        
-        /// <inheritdoc />
-        public override void Remove()
-        {
-            Api.StreamRemove(Alias);
         }
     }
 }
