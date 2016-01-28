@@ -15,7 +15,7 @@ namespace Quasardb
             Alias = alias;
             Api = api;
         }
-        
+
         /// <summary>
         /// The alias of the entry in the database.
         /// </summary>
@@ -82,8 +82,7 @@ namespace Quasardb
         /// Checks if the entry has the specified tag.
         /// </summary>
         /// <param name="tag">The tag.</param>
-        /// <returns><c>true</c> if the entry has this tag, <c>false</c> if not.</returns>
-        /// <exception cref="QdbAliasNotFoundException">The entry doesn't exists in the database.</exception>
+        /// <returns><c>true</c> if the entry has this tag, <c>false</c> otherwise.</returns>
         /// <seealso cref="QdbTag"/>
         public bool HasTag(QdbTag tag)
         {
@@ -96,8 +95,7 @@ namespace Quasardb
         /// Checks if the entry has the specified tag.
         /// </summary>
         /// <param name="tag">The alias of the tag.</param>
-        /// <returns><c>true</c> if the entry has this tag, <c>false</c> if not.</returns>
-        /// <exception cref="QdbAliasNotFoundException">The entry doesn't exists in the database.</exception>
+        /// <returns><c>true</c> if the entry has this tag, <c>false</c> otherwise.</returns>
         /// <seealso cref="QdbTag"/>
         public bool HasTag(string tag)
         {

@@ -42,7 +42,7 @@ namespace QuasardbTests
         {
             _entry.AddTag(_tag1);
             var tag2 = _entry.GetTags().Single();
-            
+
             Assert.AreEqual(_tag1.Alias, tag2.Alias);
         }
 
@@ -117,7 +117,7 @@ namespace QuasardbTests
             Assert.IsFalse(tags.Any());
         }
 
-        [TestMethod]        
+        [TestMethod]
         public void HasTag()
         {
             Assert.IsFalse(_entry.HasTag(_tag1));
@@ -135,13 +135,6 @@ namespace QuasardbTests
         public void HasTag_String_Null()
         {
             _entry.HasTag((string)null);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(QdbIncompatibleTypeException))]
-        public void HasTag_Incompatible()
-        {
-            _entry.HasTag(QdbTestCluster.CreateBlob().Alias);
         }
 
         [TestMethod]

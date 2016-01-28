@@ -11,7 +11,7 @@ namespace QuasardbTests
     public class QdbTagTests
     {
         QdbTag _tag;
-        
+
         [TestInitialize]
         public void Initialize()
         {
@@ -216,14 +216,6 @@ namespace QuasardbTests
         public void HasEntry_NotFound()
         {
             _tag.HasEntry(RandomGenerator.CreateUniqueAlias());
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(QdbIncompatibleTypeException))]
-        public void HasEntry_Incompatible()
-        {
-            QdbTestCluster.CreateBlob(_tag.Alias);
-            _tag.HasEntry(QdbTestCluster.CreateBlob());
         }
     }
 }

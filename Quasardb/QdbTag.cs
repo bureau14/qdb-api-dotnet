@@ -86,8 +86,7 @@ namespace Quasardb
         /// Checks if an entry has this tag.
         /// </summary>
         /// <param name="entry">The entry to check.</param>
-        /// <returns><c>true</c> if the entry has this tag, <c>false</c> if not.</returns>
-        /// <exception cref="QdbAliasNotFoundException">The entry doesn't exists in the database.</exception>
+        /// <returns><c>true</c> if the entry has this tag, <c>false</c> otherwise.</returns>
         public bool HasEntry(QdbEntry entry)
         {
             if (entry == null) throw new ArgumentNullException("entry");
@@ -99,8 +98,7 @@ namespace Quasardb
         /// Checks if an entry has this tag.
         /// </summary>
         /// <param name="entry">The alias of the entry to check.</param>
-        /// <returns><c>true</c> if the entry has this tag, <c>false</c> if not.</returns>
-        /// <exception cref="QdbAliasNotFoundException">The entry doesn't exists in the database.</exception>
+        /// <returns><c>true</c> if the entry has this tag, <c>false</c> otherwise.</returns>
         public bool HasEntry(string entry)
         {
             if (entry == null) throw new ArgumentNullException("entry");
