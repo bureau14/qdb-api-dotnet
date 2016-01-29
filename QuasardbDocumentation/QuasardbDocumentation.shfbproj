@@ -58,7 +58,7 @@
 </Filter>
     </ApiFilter>
     <FeedbackEMailAddress>contact%40quasardb.net</FeedbackEMailAddress>
-    <CopyrightText>Copyright 2015 quasardb SAS</CopyrightText>
+    <CopyrightText>Copyright &#169; 2016 quasardb SAS</CopyrightText>
     <MissingTags>Summary, Parameter, Returns, AutoDocumentCtors, TypeParameter, AutoDocumentDispose</MissingTags>
     <NamespaceSummaries>
       <NamespaceSummaryItem name="(global)" isDocumented="True" />
