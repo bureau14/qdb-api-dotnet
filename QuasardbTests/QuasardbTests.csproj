@@ -55,8 +55,18 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="QdbBlobTests\Put.cs" />
+    <Compile Include="QdbBlobTests\Get.cs" />
+    <Compile Include="QdbBlobTests\GetExpiryTime.cs" />
+    <Compile Include="QdbBlobTests\GetAndRemove.cs" />
+    <Compile Include="QdbBlobTests\GetAndUpdate.cs" />
+    <Compile Include="QdbBlobTests\CompareAndSwap.cs" />
+    <Compile Include="QdbBlobTests\ExpiresAt.cs" />
+    <Compile Include="QdbBlobTests\RemoveIf.cs" />
+    <Compile Include="QdbBlobTests\Remove.cs" />
+    <Compile Include="QdbBlobTests\Update.cs" />
     <Compile Include="QdbEntryTests.cs" />
-    <Compile Include="QdbBlobTests.cs" />
+    <Compile Include="QdbBlobTests\ExpiresFromNow.cs" />
     <Compile Include="QdbClusterTests.cs" />
     <Compile Include="DaemonRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -90,6 +100,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

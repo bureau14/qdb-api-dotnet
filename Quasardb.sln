@@ -54,7 +54,6 @@ Global
 		{2139D0F2-ED04-49F4-BA98-D8DEE9A0E4B4}..NET Framework 4.5|Any CPU.ActiveCfg = .NET Framework 4.5|Any CPU
 		{2139D0F2-ED04-49F4-BA98-D8DEE9A0E4B4}..NET Framework 4|Any CPU.ActiveCfg = .NET Framework 4|Any CPU
 		{2139D0F2-ED04-49F4-BA98-D8DEE9A0E4B4}.Debug|Any CPU.ActiveCfg = .NET Framework 4|Any CPU
-		{2139D0F2-ED04-49F4-BA98-D8DEE9A0E4B4}.Debug|Any CPU.Build.0 = .NET Framework 4|Any CPU
 		{2139D0F2-ED04-49F4-BA98-D8DEE9A0E4B4}.Documentation|Any CPU.ActiveCfg = .NET Framework 4.5|Any CPU
 		{2139D0F2-ED04-49F4-BA98-D8DEE9A0E4B4}.Documentation|Any CPU.Build.0 = .NET Framework 4.5|Any CPU
 		{2139D0F2-ED04-49F4-BA98-D8DEE9A0E4B4}.Release|Any CPU.ActiveCfg = .NET Framework 4|Any CPU
