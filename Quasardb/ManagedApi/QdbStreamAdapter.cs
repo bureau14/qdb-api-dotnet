@@ -68,8 +68,17 @@ namespace Quasardb.ManagedApi
         public override void SetLength(long value)
         {
             ThrowIfClosed();
-                
-            throw new NotSupportedException();
+            
+            if (value < 0)
+                throw new ArgumentOutOfRangeException("value", "Stream length must be non-negative");
+
+            var upos = unchecked((ulong)value);
+            var error = qdb_api.qdb_stream_truncate(_handle, ref upos);
+
+            if (error == qdb_error.qdb_e_out_of_bounds)
+                throw new NotSupportedException("Size of stream cannot be increased by SetLength().");
+
+            QdbExceptionThrower.ThrowIfNeeded(error);
         }
 
         public override int Read(byte[] buffer, int offset, int count)

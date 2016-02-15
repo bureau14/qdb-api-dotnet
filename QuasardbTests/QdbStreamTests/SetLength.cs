@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Quasardb.Exceptions;
 using QuasardbTests.Helpers;
 
 namespace QuasardbTests.QdbStreamTests
@@ -23,14 +24,39 @@ namespace QuasardbTests.QdbStreamTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(NotSupportedException))]
-        public void ThrowNotSupportedException()
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void ThrowsArgumentOutOfRangeException_WhenLengthIsNegative()
         {
-            _stream.SetLength(0);
+            _stream.SetLength(-1);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ObjectDisposedException), "Cannot access a closed Stream.")]
+        public void NoError_WhenNewLengthIsEqual()
+        {
+            _stream.Write(new byte[]{1,2}, 0, 2);
+
+            _stream.SetLength(2);
+        }
+
+        [TestMethod]
+        public void NoError_WhenNewLengthIsSmaller()
+        {
+            _stream.Write(new byte[] { 1, 2 }, 0, 2);
+
+            _stream.SetLength(1);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(NotSupportedException))]
+        public void ThrowsNotSupportedException_WhenNewLengthIsBigger()
+        {
+            _stream.Write(new byte[] { 1, 2 }, 0, 2);
+
+            _stream.SetLength(3);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ObjectDisposedException))]
         public void ThrowObjectDisposedException()
         {
             _stream.Close();

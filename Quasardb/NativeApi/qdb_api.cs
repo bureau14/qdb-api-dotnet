@@ -329,6 +329,11 @@ namespace Quasardb.NativeApi
             [In] qdb_stream_handle handle,
             [In] ref ulong position);
 
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_stream_truncate(
+            [In] qdb_stream_handle handle,
+            [In] ref ulong position);
+
         #endregion
     }
 }
