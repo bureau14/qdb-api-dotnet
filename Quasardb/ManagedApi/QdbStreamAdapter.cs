@@ -59,7 +59,7 @@ namespace Quasardb.ManagedApi
                 pos = Math.Min(pos, Length);
 
             var upos = checked((ulong) pos);
-            var error = qdb_api.qdb_stream_setpos(_handle, ref upos);
+            var error = qdb_api.qdb_stream_setpos(_handle, upos);
             QdbExceptionThrower.ThrowIfNeeded(error);
          
             return pos;
@@ -73,7 +73,7 @@ namespace Quasardb.ManagedApi
                 throw new ArgumentOutOfRangeException("value", "Stream length must be non-negative");
 
             var upos = unchecked((ulong)value);
-            var error = qdb_api.qdb_stream_truncate(_handle, ref upos);
+            var error = qdb_api.qdb_stream_truncate(_handle, upos);
 
             if (error == qdb_error.qdb_e_out_of_bounds)
                 throw new NotSupportedException("Size of stream cannot be increased by SetLength().");
@@ -176,7 +176,7 @@ namespace Quasardb.ManagedApi
                 var pos = Math.Max(0, Math.Min(value, Length));
 
                 var upos = checked((ulong)pos);
-                var error = qdb_api.qdb_stream_setpos(_handle, ref upos);
+                var error = qdb_api.qdb_stream_setpos(_handle, upos);
                 QdbExceptionThrower.ThrowIfNeeded(error);
             }
         }
