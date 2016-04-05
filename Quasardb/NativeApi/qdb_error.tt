@@ -9,7 +9,7 @@ namespace Quasardb.NativeApi
         qdb_e_ok = 0,
 <#
 foreach(var error in ReadErrors("../Meta/errors.csv"))
-{ 
+{
 #>
 		<#=error.ErrorName#> = <#=error.ErrorCode#>,
 <#

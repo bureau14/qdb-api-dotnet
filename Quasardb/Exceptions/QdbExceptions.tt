@@ -11,14 +11,14 @@ namespace Quasardb.Exceptions
     {
     }
 <#
-foreach(var error in ReadErrors("../Meta/errors.csv"))  
-{   
+foreach(var error in ReadErrors("../Meta/errors.csv"))
+{
 #>
 
     /// <summary>
     /// Quasardb: <#=error.Message#>
     /// </summary>
-	public sealed class <#=error.ExceptionName#> : QdbExceptionBase 
+	public sealed class <#=error.ExceptionName#> : QdbExceptionBase
 	{
 		/// <inheritdoc />
         public override string Message
@@ -26,7 +26,7 @@ foreach(var error in ReadErrors("../Meta/errors.csv"))
             get { return "Quasardb: <#=error.Message#>"; }
         }
 	}
-<# 
+<#
 }
 #>
 }
