@@ -1,4 +1,5 @@
 ﻿using System;
+using Quasardb.Exceptions;
 using Quasardb.NativeApi;
 
 namespace Quasardb.ManagedApi
@@ -17,10 +18,10 @@ namespace Quasardb.ManagedApi
 
                 switch (error)
                 {
-                    case qdb_error.qdb_e_ok:
+                    case qdb_error_t.qdb_e_ok:
                         return null;
 
-                    case qdb_error.qdb_e_unmatched_content:
+                    case qdb_error_t.qdb_e_unmatched_content:
                         return oldContent.GetBytes();
 
                     default:
@@ -78,10 +79,10 @@ namespace Quasardb.ManagedApi
 
             switch (error)
             {
-                case qdb_error.qdb_e_unmatched_content:
+                case qdb_error_t.qdb_e_unmatched_content:
                     return false;
 
-                case qdb_error.qdb_e_ok:
+                case qdb_error_t.qdb_e_ok:
                     return true;
 
                 default:

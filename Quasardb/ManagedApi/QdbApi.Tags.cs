@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Quasardb.Exceptions;
 using Quasardb.NativeApi;
 
 namespace Quasardb.ManagedApi
@@ -11,10 +12,10 @@ namespace Quasardb.ManagedApi
 
             switch (error)
             {
-                case qdb_error.qdb_e_tag_already_set:
+                case qdb_error_t.qdb_e_tag_already_set:
                     return false;
 
-                case qdb_error.qdb_e_ok:
+                case qdb_error_t.qdb_e_ok:
                     return true;
 
                 default:
@@ -48,10 +49,10 @@ namespace Quasardb.ManagedApi
 
             switch (error)
             {
-                case qdb_error.qdb_e_tag_not_set:
+                case qdb_error_t.qdb_e_tag_not_set:
                     return false;
 
-                case qdb_error.qdb_e_ok:
+                case qdb_error_t.qdb_e_ok:
                     return true;
 
                 default:
@@ -65,10 +66,10 @@ namespace Quasardb.ManagedApi
 
             switch (error)
             {
-                case qdb_error.qdb_e_tag_not_set:
+                case qdb_error_t.qdb_e_tag_not_set:
                     return false;
 
-                case qdb_error.qdb_e_ok:
+                case qdb_error_t.qdb_e_ok:
                     return true;
 
                 default:

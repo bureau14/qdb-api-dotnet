@@ -16,7 +16,7 @@ namespace Quasardb.NativeApi
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
         protected override bool ReleaseHandle()
         {
-            return qdb_api.qdb_stream_close(handle) == qdb_error.qdb_e_ok;
+            return qdb_api.qdb_stream_close(handle) == qdb_error_t.qdb_e_ok;
         }
 
         public override bool IsInvalid

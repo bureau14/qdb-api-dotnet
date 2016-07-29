@@ -48,18 +48,27 @@
     </DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>bin\.NET Framework 4.5\Quasardb.xml</DocumentationFile>
+    <Optimize>false</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+  </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Exceptions\QdbExceptions.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>QdbExceptions.tt</DependentUpon>
-    </Compile>
+    <Compile Include="Exceptions\QdbAliasAlreadyExistsException.cs" />
+    <Compile Include="Exceptions\QdbAliasNotFoundException.cs" />
+    <Compile Include="Exceptions\QdbEmptyContainerException.cs" />
+    <Compile Include="Exceptions\QdbException.cs" />
+    <Compile Include="Exceptions\QdbExceptionFactory.cs" />
+    <Compile Include="Exceptions\QdbIncompatibleTypeException.cs" />
+    <Compile Include="Exceptions\QdbInvalidArgumentException.cs" />
+    <Compile Include="Exceptions\QdbResourceLockedException.cs" />
     <Compile Include="ManagedApi\QdbApi.Stream.cs" />
-    <Compile Include="ManagedApi\QdbExceptionFactory.cs">
-      <DependentUpon>QdbExceptionFactory.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <Compile Include="ManagedApi\QdbExceptionThrower.cs" />
     <Compile Include="ManagedApi\QdbApi.Blob.cs" />
     <Compile Include="ManagedApi\QdbApi.Integer.cs" />
@@ -70,20 +79,13 @@
     <Compile Include="ManagedApi\QdbApi.cs" />
     <Compile Include="ManagedApi\QdbEntryType.cs" />
     <Compile Include="ManagedApi\QdbStreamAdapter.cs" />
+    <Compile Include="NativeApi\ConstCharPtrMarshaler.cs" />
     <Compile Include="NativeApi\qdb_buffer.cs" />
+    <Compile Include="NativeApi\qdb_error_t.cs" />
     <Compile Include="NativeApi\qdb_stream_handle.cs" />
     <Compile Include="NativeApi\qdb_stream_mode.cs" />
     <Compile Include="NativeApi\qdb_entry_type.cs" />
-    <None Include="NativeApi\qdb_error.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>qdb_error.cs</LastGenOutput>
-    </None>
     <Compile Include="NativeApi\qdb_api.cs" />
-    <Compile Include="NativeApi\qdb_error.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>qdb_error.tt</DependentUpon>
-    </Compile>
     <Compile Include="NativeApi\qdb_handle.cs" />
     <Compile Include="NativeApi\qdb_time.cs" />
     <Compile Include="QdbBlob.cs" />
@@ -100,21 +102,9 @@
     <Compile Include="QdbTag.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Exceptions\QdbExceptions.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>QdbExceptions.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ManagedApi\QdbExceptionFactory.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>QdbExceptionFactory.cs</LastGenOutput>
-    </None>
-    <None Include="Meta\errors.csv" />
-    <None Include="Meta\errors.t4" />
     <None Include="win64\qdb_api.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
