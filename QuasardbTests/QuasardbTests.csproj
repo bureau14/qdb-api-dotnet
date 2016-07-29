@@ -79,6 +79,7 @@
     <Compile Include="QdbClusterTests.cs" />
     <Compile Include="DaemonRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QdbExceptionFactoryTests.cs" />
     <Compile Include="QdbIntegerTests.cs" />
     <Compile Include="QdbHashSetTests.cs" />
     <Compile Include="QdbDequeTests.cs" />

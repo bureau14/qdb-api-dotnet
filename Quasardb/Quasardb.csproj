@@ -60,14 +60,21 @@
     <DefineConstants>TRACE;DEBUG</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Exceptions\QdbAliasAlreadyExistsException.cs" />
-    <Compile Include="Exceptions\QdbAliasNotFoundException.cs" />
-    <Compile Include="Exceptions\QdbEmptyContainerException.cs" />
+    <Compile Include="Exceptions\Connection\QdbConnectionException.cs" />
+    <Compile Include="Exceptions\Input\QdbInputException.cs" />
+    <Compile Include="Exceptions\Operation\QdbAliasAlreadyExistsException.cs" />
+    <Compile Include="Exceptions\Operation\QdbAliasNotFoundException.cs" />
+    <Compile Include="Exceptions\Operation\QdbEmptyContainerException.cs" />
+    <Compile Include="Exceptions\Operation\QdbOperationException.cs" />
+    <Compile Include="Exceptions\Protocol\QdbProtocolException.cs" />
     <Compile Include="Exceptions\QdbException.cs" />
     <Compile Include="Exceptions\QdbExceptionFactory.cs" />
-    <Compile Include="Exceptions\QdbIncompatibleTypeException.cs" />
-    <Compile Include="Exceptions\QdbInvalidArgumentException.cs" />
-    <Compile Include="Exceptions\QdbResourceLockedException.cs" />
+    <Compile Include="Exceptions\Operation\QdbIncompatibleTypeException.cs" />
+    <Compile Include="Exceptions\Input\QdbInvalidArgumentException.cs" />
+    <Compile Include="Exceptions\Operation\QdbResourceLockedException.cs" />
+    <Compile Include="Exceptions\System\QdbRemoteSystemException.cs" />
+    <Compile Include="Exceptions\System\QdbLocalSystemException.cs" />
+    <Compile Include="Exceptions\System\QdbSystemException.cs" />
     <Compile Include="ManagedApi\QdbApi.Stream.cs" />
     <Compile Include="ManagedApi\QdbExceptionThrower.cs" />
     <Compile Include="ManagedApi\QdbApi.Blob.cs" />
@@ -82,6 +89,7 @@
     <Compile Include="NativeApi\ConstCharPtrMarshaler.cs" />
     <Compile Include="NativeApi\qdb_buffer.cs" />
     <Compile Include="NativeApi\qdb_error_t.cs" />
+    <Compile Include="NativeApi\qdb_err_origin_t.cs" />
     <Compile Include="NativeApi\qdb_stream_handle.cs" />
     <Compile Include="NativeApi\qdb_stream_mode.cs" />
     <Compile Include="NativeApi\qdb_entry_type.cs" />

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 [assembly: AssemblyTitle("quasardb")]
 [assembly: AssemblyDescription("quasardb API for .NET")]
@@ -9,3 +10,4 @@ using System.Reflection;
 [assembly: AssemblyVersion("2.0.0.0")]
 [assembly: AssemblyFileVersion("2.0.0.0")]
 [assembly: CLSCompliant(true)]
+[assembly: InternalsVisibleTo("QuasardbTests")]
