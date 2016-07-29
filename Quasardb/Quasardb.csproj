@@ -64,7 +64,6 @@
     <Compile Include="Exceptions\Input\QdbInputException.cs" />
     <Compile Include="Exceptions\Operation\QdbAliasAlreadyExistsException.cs" />
     <Compile Include="Exceptions\Operation\QdbAliasNotFoundException.cs" />
-    <Compile Include="Exceptions\Operation\QdbEmptyContainerException.cs" />
     <Compile Include="Exceptions\Operation\QdbOperationException.cs" />
     <Compile Include="Exceptions\Protocol\QdbProtocolException.cs" />
     <Compile Include="Exceptions\QdbException.cs" />

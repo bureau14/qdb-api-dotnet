@@ -10,6 +10,7 @@ namespace Quasardb.ManagedApi
             using (var content = new qdb_buffer(_handle))
             {
                 var error = qdb_api.qdb_deque_back(_handle, alias, out content.Pointer, out content.Size);
+                if (error == qdb_error_t.qdb_e_container_empty) return null;
                 QdbExceptionThrower.ThrowIfNeeded(error);
                 return content.GetBytes();
             }
@@ -20,6 +21,7 @@ namespace Quasardb.ManagedApi
             using (var content = new qdb_buffer(_handle))
             {
                 var error = qdb_api.qdb_deque_front(_handle, alias, out content.Pointer, out content.Size);
+                if (error == qdb_error_t.qdb_e_container_empty) return null;
                 QdbExceptionThrower.ThrowIfNeeded(error);
                 return content.GetBytes();
             }
@@ -30,6 +32,7 @@ namespace Quasardb.ManagedApi
             using (var content = new qdb_buffer(_handle))
             {
                 var error = qdb_api.qdb_deque_pop_back(_handle, alias, out content.Pointer, out content.Size);
+                if (error == qdb_error_t.qdb_e_container_empty) return null;
                 QdbExceptionThrower.ThrowIfNeeded(error);
                 return content.GetBytes();
             }
@@ -40,6 +43,7 @@ namespace Quasardb.ManagedApi
             using (var content = new qdb_buffer(_handle))
             {
                 var error = qdb_api.qdb_deque_pop_front(_handle, alias, out content.Pointer, out content.Size);
+                if (error == qdb_error_t.qdb_e_container_empty) return null;
                 QdbExceptionThrower.ThrowIfNeeded(error);
                 return content.GetBytes();
             }

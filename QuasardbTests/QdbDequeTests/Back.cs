@@ -8,17 +8,6 @@ namespace QuasardbTests.QdbDequeTests
     public class Back
     {
         [TestMethod]
-        [ExpectedException(typeof(QdbEmptyContainerException))]
-        public void ThrowsEmptyContainer()
-        {
-            var deque = QdbTestCluster.CreateEmptyQueue();
-            deque.PushBack(RandomGenerator.CreateRandomContent());
-            deque.PopBack();
-
-            deque.Back();
-        }
-
-        [TestMethod]
         [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void ThrowsAliasNotFound()
         {
@@ -36,6 +25,16 @@ namespace QuasardbTests.QdbDequeTests
 
             var deque = QdbTestCluster.CreateEmptyQueue(alias);
             deque.Back();
+        }
+
+        [TestMethod]
+        public void ReturnsNull_WhenEmpty()
+        {
+            var deque = QdbTestCluster.CreateEmptyQueue();
+            deque.PushBack(RandomGenerator.CreateRandomContent());
+            deque.PopBack();
+
+            Assert.IsNull(deque.Back());
         }
 
         [TestMethod]

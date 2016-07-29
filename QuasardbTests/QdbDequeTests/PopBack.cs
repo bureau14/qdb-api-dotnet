@@ -8,17 +8,6 @@ namespace QuasardbTests.QdbDequeTests
     public class PopBack
     {
         [TestMethod]
-        [ExpectedException(typeof(QdbEmptyContainerException))]
-        public void ThrowsEmptyContainer()
-        {
-            var deque = QdbTestCluster.CreateEmptyQueue();
-            deque.PushBack(RandomGenerator.CreateRandomContent());
-            deque.PopBack();
-
-            deque.PopBack();
-        }
-
-        [TestMethod]
         [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void ThrowsAliasNotFound()
         {
@@ -36,6 +25,16 @@ namespace QuasardbTests.QdbDequeTests
 
             var deque = QdbTestCluster.CreateEmptyQueue(alias);
             deque.PopBack();
+        }
+
+        [TestMethod]
+        public void ReturnsNull_WhenEmpty()
+        {
+            var deque = QdbTestCluster.CreateEmptyQueue();
+            deque.PushBack(RandomGenerator.CreateRandomContent());
+            deque.PopBack();
+
+            Assert.IsNull(deque.PopBack());
         }
 
         [TestMethod]

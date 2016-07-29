@@ -27,13 +27,12 @@ namespace Quasardb
         internal QdbDeque(QdbApi api, string alias) : base(api, alias)
         {
         }
-        
+
         /// <summary>
         /// Gets the value at the end of the queue.
         /// </summary>
-        /// <returns>The value at the end of the queue.</returns>
+        /// <returns>The value at the end of the queue, or null if the queue is empty.</returns>
         /// <exception cref="QdbAliasNotFoundException">The queue doesn't exists in the database.</exception>
-        /// <exception cref="QdbEmptyContainerException">The queue is empty.</exception>
         /// <exception cref="QdbIncompatibleTypeException">The matching entry in the database is not a queue.</exception>
         public byte[] Back()
         {
@@ -43,9 +42,8 @@ namespace Quasardb
         /// <summary>
         /// Gets the value at the beginning of the queue.
         /// </summary>
-        /// <returns>The value at the beginning of the queue.</returns>
+        /// <returns>The value at the beginning of the queue, or null if the queue is empty.</returns>
         /// <exception cref="QdbAliasNotFoundException">The queue doesn't exists in the database.</exception>
-        /// <exception cref="QdbEmptyContainerException">The queue is empty.</exception>
         /// <exception cref="QdbIncompatibleTypeException">The matching entry in the database is not a queue.</exception>
         public byte[] Front()
         {
@@ -55,9 +53,8 @@ namespace Quasardb
         /// <summary>
         /// Dequeues a value from the end of the queue.
         /// </summary>
-        /// <returns>The value from the end of the queue.</returns>
+        /// <returns>The value from the end of the queue, or null if the queue is empty.</returns>
         /// <exception cref="QdbAliasNotFoundException">The queue doesn't exists in the database.</exception>
-        /// <exception cref="QdbEmptyContainerException">The queue is empty.</exception>
         /// <exception cref="QdbIncompatibleTypeException">The matching entry in the database is not a queue.</exception>
         public byte[] PopBack()
         {
@@ -67,9 +64,8 @@ namespace Quasardb
         /// <summary>
         /// Dequeues a value from the beginning of the queue.
         /// </summary>
-        /// <returns>The value from the beginning of the queue.</returns>
+        /// <returns>The value from the beginning of the queue, or null if the queue is empty.</returns>
         /// <exception cref="QdbAliasNotFoundException">The queue doesn't exists in the database.</exception>
-        /// <exception cref="QdbEmptyContainerException">The queue is empty.</exception>
         /// <exception cref="QdbIncompatibleTypeException">The matching entry in the database is not a queue.</exception>
         public byte[] PopFront()
         {

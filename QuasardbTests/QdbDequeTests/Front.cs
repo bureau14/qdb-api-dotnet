@@ -8,17 +8,6 @@ namespace QuasardbTests.QdbDequeTests
     public class Front
     {
         [TestMethod]
-        [ExpectedException(typeof(QdbEmptyContainerException))]
-        public void ThrowsEmptyContainer()
-        {
-            var deque = QdbTestCluster.CreateEmptyQueue();
-            deque.PushFront(RandomGenerator.CreateRandomContent());
-            deque.PopFront();
-
-            deque.Front();
-        }
-
-        [TestMethod]
         [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void ThrowsAliasNotFound()
         {
@@ -36,6 +25,16 @@ namespace QuasardbTests.QdbDequeTests
 
             var deque = QdbTestCluster.CreateEmptyQueue(alias);
             deque.Front();
+        }
+
+        [TestMethod]
+        public void ReturnsNull_WhenEmpty()
+        {
+            var deque = QdbTestCluster.CreateEmptyQueue();
+            deque.PushFront(RandomGenerator.CreateRandomContent());
+            deque.PopFront();
+
+            Assert.IsNull(deque.Front());
         }
 
         [TestMethod]

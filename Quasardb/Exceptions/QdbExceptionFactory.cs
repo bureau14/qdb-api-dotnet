@@ -63,9 +63,6 @@ namespace Quasardb.Exceptions
                 case qdb_error_t.qdb_e_incompatible_type:
                     return new QdbIncompatibleTypeException();
 
-                case qdb_error_t.qdb_e_container_empty:
-                    return new QdbEmptyContainerException();
-
                 case qdb_error_t.qdb_e_resource_locked:
                     return new QdbResourceLockedException();
 
