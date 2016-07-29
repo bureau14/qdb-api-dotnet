@@ -80,11 +80,14 @@
     <Compile Include="QdbDequeTests\PopFront.cs" />
     <Compile Include="QdbDequeTests\PushBack.cs" />
     <Compile Include="QdbDequeTests\PushFront.cs" />
-    <Compile Include="QdbEntryTests.cs" />
+    <Compile Include="QdbEntryTests\RemoveTag.cs" />
     <Compile Include="QdbBlobTests\ExpiresFromNow.cs" />
     <Compile Include="QdbClusterTests.cs" />
     <Compile Include="DaemonRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QdbEntryTests\AddTag.cs" />
+    <Compile Include="QdbEntryTests\GetTags.cs" />
+    <Compile Include="QdbEntryTests\HasTag.cs" />
     <Compile Include="QdbExceptionFactoryTests.cs" />
     <Compile Include="QdbIntegerTests.cs" />
     <Compile Include="QdbHashSetTests.cs" />
