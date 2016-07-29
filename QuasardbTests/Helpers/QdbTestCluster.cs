@@ -60,9 +60,9 @@ namespace QuasardbTests.Helpers
 
         #region Deque
 
-        public static QdbDeque CreateEmptyQueue()
+        public static QdbDeque CreateEmptyQueue(string alias=null)
         {
-            return Instance.Deque(RandomGenerator.CreateUniqueAlias());
+            return Instance.Deque(alias ?? RandomGenerator.CreateUniqueAlias());
         }
 
         public static QdbDeque CreateQueue()
