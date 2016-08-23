@@ -49,13 +49,6 @@
     <ContentPlacement>AboveNamespaces</ContentPlacement>
     <VisibleItems>Attributes, InheritedMembers, ProtectedInternalAsProtected</VisibleItems>
     <ApiFilter>
-      <Filter entryType="Namespace" fullName="Quasardb.Exceptions" isExposed="False">
-        <Filter entryType="Class" fullName="Quasardb.Exceptions.QdbAliasAlreadyExistsException" filterName="QdbAliasAlreadyExistsException" isExposed="True" />
-        <Filter entryType="Class" fullName="Quasardb.Exceptions.QdbAliasNotFoundException" filterName="QdbAliasNotFoundException" isExposed="True" />
-        <Filter entryType="Class" fullName="Quasardb.Exceptions.QdbEmptyContainerException" filterName="QdbEmptyContainerException" isExposed="True" />
-        <Filter entryType="Class" fullName="Quasardb.Exceptions.QdbExceptionBase" filterName="QdbExceptionBase" isExposed="True" />
-        <Filter entryType="Class" fullName="Quasardb.Exceptions.QdbIncompatibleTypeException" filterName="QdbIncompatibleTypeException" isExposed="True" />
-      </Filter>
     </ApiFilter>
     <FeedbackEMailAddress>contact%40quasardb.net</FeedbackEMailAddress>
     <CopyrightText>Copyright © 2016 quasardb SAS</CopyrightText>

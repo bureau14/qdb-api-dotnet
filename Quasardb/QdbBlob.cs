@@ -118,7 +118,7 @@ namespace Quasardb
         /// </summary>
         /// <param name="content">The new content of the blob.</param>
         /// <param name="expiryTime">The expiry time to set.</param>
-        /// <returns><c>true</c> if remove, <c>false</c> if not.</returns>
+        /// <returns><c>true</c> if the blob has been created, or <c>false</c> if it has been replaced.</returns>
         /// <exception cref="QdbAliasNotFoundException">The blob is not present in the database.</exception>
         /// <exception cref="QdbIncompatibleTypeException">The database entry is not a blob.</exception>
         public bool Update(byte[] content, DateTime? expiryTime = null)

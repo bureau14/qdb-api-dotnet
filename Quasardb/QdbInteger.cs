@@ -65,6 +65,7 @@ namespace Quasardb
         /// </summary>
         /// <param name="value">The new value of the integer.</param>
         /// <param name="expiryTime">The expiry time of the integer.</param>
+        /// <returns><c>true</c> if the integer has been created, or <c>false</c> if it has been replaced.</returns>
         /// <exception cref="QdbIncompatibleTypeException">The entry in the database is not an integer.</exception>
         public bool Update(long value, DateTime? expiryTime = null)
         {
