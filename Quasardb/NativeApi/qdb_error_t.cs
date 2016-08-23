@@ -38,9 +38,7 @@ namespace Quasardb.NativeApi
         qdb_e_invalid_protocol = 0xa3000004,
         qdb_e_host_not_found = 0xd2000005,
         qdb_e_buffer_too_small = 0xc100000b,
-        qdb_e_unexpected_reply = 0xa3000010,
         qdb_e_not_implemented = 0xf3000011,
-        qdb_e_protocol_error = 0xa3000013,
         qdb_e_invalid_version = 0xa3000016,
         qdb_e_invalid_argument = 0xc2000018,
         qdb_e_invalid_handle = 0xc200001c,
@@ -51,6 +49,8 @@ namespace Quasardb.NativeApi
         qdb_e_transaction_partial_failure = 0xb200002c,
         qdb_e_operation_disabled = 0xb200002e,
         qdb_e_operation_not_permitted = 0xb200002f,
-        qdb_e_iterator_end = 0xb0000030
+        qdb_e_iterator_end = 0xb0000030,
+        qdb_e_invalid_reply = 0xa3000031,
+        qdb_e_ok_created    = 0xb0000032
     }
 }

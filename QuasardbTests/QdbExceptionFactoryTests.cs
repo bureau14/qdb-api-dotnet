@@ -61,9 +61,9 @@ namespace QuasardbTests
         }
 
         [TestMethod]
-        public void qdb_e_unexpected_reply()
+        public void qdb_e_invalid_reply()
         {
-            var exception = QdbExceptionFactory.Create(qdb_error_t.qdb_e_unexpected_reply);
+            var exception = QdbExceptionFactory.Create(qdb_error_t.qdb_e_invalid_reply);
 
             Assert.IsInstanceOfType(exception, typeof(QdbProtocolException));
         }

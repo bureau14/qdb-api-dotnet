@@ -90,13 +90,23 @@ namespace Quasardb.ManagedApi
             }
         }
 
-        public void BlobUpdate(string alias, byte[] content, DateTime? expiryTime)
+        public bool BlobUpdate(string alias, byte[] content, DateTime? expiryTime)
         {
             var error = qdb_api.qdb_blob_update(_handle, alias,
                 content, (UIntPtr)content.Length,
                 qdb_time.FromOptionalDateTime(expiryTime));
+            
+            switch (error)
+            {
+                case qdb_error_t.qdb_e_ok:
+                    return false;
 
-            QdbExceptionThrower.ThrowIfNeeded(error);
+                case qdb_error_t.qdb_e_ok_created:
+                    return true;
+
+                default:
+                    throw QdbExceptionFactory.Create(error);
+            }
         }
     }
 }

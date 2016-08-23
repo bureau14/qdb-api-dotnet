@@ -17,22 +17,26 @@ namespace QuasardbTests.QdbBlobTests
         }
 
         [TestMethod]
-        public void NoError_WithNewAlias()
+        public void ReturnsTrue_WithNewAlias()
         {
             var content = RandomGenerator.CreateRandomContent();
             var blob = QdbTestCluster.CreateEmptyBlob();
 
-            blob.Update(content);
+            var created = blob.Update(content);
+
+            Assert.IsTrue(created);
         }
 
         [TestMethod]
-        public void NoError_WhenCalledTwice()
+        public void ReturnsFalse_WhenCalledTwice()
         {
             var content = RandomGenerator.CreateRandomContent();
             var blob = QdbTestCluster.CreateEmptyBlob();
 
             blob.Update(content);
-            blob.Update(content);
+            var created = blob.Update(content);
+
+            Assert.IsFalse(created);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using Quasardb.Exceptions;
 using Quasardb.ManagedApi;
+using Quasardb.NativeApi;
 
 namespace Quasardb
 {
@@ -120,11 +121,11 @@ namespace Quasardb
         /// <returns><c>true</c> if remove, <c>false</c> if not.</returns>
         /// <exception cref="QdbAliasNotFoundException">The blob is not present in the database.</exception>
         /// <exception cref="QdbIncompatibleTypeException">The database entry is not a blob.</exception>
-        public void Update(byte[] content, DateTime? expiryTime = null)
+        public bool Update(byte[] content, DateTime? expiryTime = null)
         {
             if (content == null) throw new ArgumentNullException("content");
 
-            Api.BlobUpdate(Alias, content, expiryTime);
+            return Api.BlobUpdate(Alias, content, expiryTime);
         }
     }
 }
