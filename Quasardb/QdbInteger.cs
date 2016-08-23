@@ -66,9 +66,9 @@ namespace Quasardb
         /// <param name="value">The new value of the integer.</param>
         /// <param name="expiryTime">The expiry time of the integer.</param>
         /// <exception cref="QdbIncompatibleTypeException">The entry in the database is not an integer.</exception>
-        public void Update(long value, DateTime? expiryTime = null)
+        public bool Update(long value, DateTime? expiryTime = null)
         {
-            Api.IntegerUpdate(Alias, value, expiryTime);
+            return Api.IntegerUpdate(Alias, value, expiryTime);
         }
     }
 }

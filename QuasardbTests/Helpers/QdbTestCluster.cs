@@ -83,9 +83,9 @@ namespace QuasardbTests.Helpers
 
         #region Integer
 
-        public static QdbInteger CreateEmptyInteger()
+        public static QdbInteger CreateEmptyInteger(string alias=null)
         {
-            return Instance.Integer(RandomGenerator.CreateUniqueAlias());
+            return Instance.Integer(alias ?? RandomGenerator.CreateUniqueAlias());
         }
 
         public static QdbInteger CreateInteger()

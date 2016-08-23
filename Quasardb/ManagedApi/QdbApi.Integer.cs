@@ -1,4 +1,5 @@
 ﻿using System;
+using Quasardb.Exceptions;
 using Quasardb.NativeApi;
 
 namespace Quasardb.ManagedApi
@@ -27,10 +28,21 @@ namespace Quasardb.ManagedApi
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
 
-        public void IntegerUpdate(string alias, long value, DateTime? expiryTime = null)
+        public bool IntegerUpdate(string alias, long value, DateTime? expiryTime = null)
         {
             var error = qdb_api.qdb_int_update(_handle, alias, value, qdb_time.FromOptionalDateTime(expiryTime));
-            QdbExceptionThrower.ThrowIfNeeded(error);
+
+            switch (error)
+            {
+                case qdb_error_t.qdb_e_ok:
+                    return false;
+
+                case qdb_error_t.qdb_e_ok_created:
+                    return true;
+
+                default:
+                    throw QdbExceptionFactory.Create(error);
+            }
         }
     }
 }
