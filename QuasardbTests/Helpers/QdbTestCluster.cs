@@ -106,15 +106,15 @@ namespace QuasardbTests.Helpers
 
         #region Tag
 
-        public static QdbTag CreateEmptyTag()
+        public static QdbTag CreateEmptyTag(string alias = null)
         {
-            return Instance.Tag(RandomGenerator.CreateUniqueAlias());
+            return Instance.Tag(alias ?? RandomGenerator.CreateUniqueAlias());
         }
 
         public static QdbTag CreateTag()
         {
             var tag = CreateEmptyTag();
-            tag.AddEntry(CreateBlob());
+            tag.AttachEntry(CreateBlob());
             return tag;
         }
 

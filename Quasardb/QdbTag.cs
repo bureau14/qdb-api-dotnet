@@ -61,7 +61,7 @@ namespace Quasardb
         /// <returns><c>true</c> if the tag was added, <c>false</c> if the entry already had this tag.</returns>
         /// <exception cref="QdbAliasNotFoundException">The entry doesn't exists in the database.</exception>
         /// <exception cref="QdbIncompatibleTypeException">The tag's alias conflicts with an existing entry.</exception>
-        public bool AddEntry(QdbEntry entry)
+        public bool AttachEntry(QdbEntry entry)
         {
             if (entry == null) throw new ArgumentNullException("entry");
 
@@ -75,7 +75,7 @@ namespace Quasardb
         /// <returns><c>true</c> if the tag was added, <c>false</c> if the entry already had this tag.</returns>
         /// <exception cref="QdbAliasNotFoundException">The entry doesn't exists in the database.</exception>
         /// <exception cref="QdbIncompatibleTypeException">The tag's alias conflicts with an existing entry.</exception>
-        public bool AddEntry(string entry)
+        public bool AttachEntry(string entry)
         {
             if (entry == null) throw new ArgumentNullException("entry");
 
@@ -112,7 +112,7 @@ namespace Quasardb
         /// <param name="entry">The entry to remove the tag from.</param>
         /// <returns><c>true</c> if the tag was removed, <c>false</c> if the entry didn't have this tag.</returns>
         /// <exception cref="QdbAliasNotFoundException">The entry doesn't exists in the database.</exception>
-        public bool RemoveEntry(QdbEntry entry)
+        public bool DetachEntry(QdbEntry entry)
         {
             if (entry == null) throw new ArgumentNullException("entry");
 
@@ -125,7 +125,7 @@ namespace Quasardb
         /// <param name="entry">The alias of the entry to remove the tag from.</param>
         /// <returns><c>true</c> if the tag was removed, <c>false</c> if the entry didn't have this tag.</returns>
         /// <exception cref="QdbAliasNotFoundException">The entry doesn't exists in the database.</exception>
-        public bool RemoveEntry(string entry)
+        public bool DetachEntry(string entry)
         {
             if (entry == null) throw new ArgumentNullException("entry");
 

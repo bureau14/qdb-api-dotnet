@@ -106,9 +106,12 @@
     <Compile Include="QdbStreamTests\Position.cs" />
     <Compile Include="QdbStreamTests\SetLength.cs" />
     <Compile Include="QdbStreamTests\Write.cs" />
-    <Compile Include="QdbTagTests.cs" />
+    <Compile Include="QdbTagTests\HasEntry.cs" />
     <Compile Include="Helpers\QdbTestCluster.cs" />
     <Compile Include="Helpers\RandomGenerator.cs" />
+    <Compile Include="QdbTagTests\GetEntries.cs" />
+    <Compile Include="QdbTagTests\AttachEntry.cs" />
+    <Compile Include="QdbTagTests\DetachEntry.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Quasardb\Quasardb.csproj">
