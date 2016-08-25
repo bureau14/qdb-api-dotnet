@@ -9,7 +9,7 @@ namespace QuasardbTests.Helpers
         {
             Instance = new QdbCluster(DaemonRunner.ClusterUrl);
         }
-        
+
         public static QdbCluster Instance { get; private set; }
 
         #region Blob
@@ -29,7 +29,7 @@ namespace QuasardbTests.Helpers
         public static QdbBlob CreateTaggedBlob(QdbTag tag)
         {
             var blob = CreateBlob();
-            blob.AddTag(tag);
+            blob.AttachTag(tag);
             return blob;
         }
 
@@ -52,7 +52,7 @@ namespace QuasardbTests.Helpers
         public static QdbHashSet CreateTaggedHashSet(QdbTag tag)
         {
             var hashSet = CreateHashSet();
-            hashSet.AddTag(tag);
+            hashSet.AttachTag(tag);
             return hashSet;
         }
 
@@ -75,7 +75,7 @@ namespace QuasardbTests.Helpers
         public static QdbDeque CreateTaggedQueue(QdbTag tag)
         {
             var queue = CreateQueue();
-            queue.AddTag(tag);
+            queue.AttachTag(tag);
             return queue;
         }
 
@@ -98,7 +98,7 @@ namespace QuasardbTests.Helpers
         public static QdbInteger CreateTaggedInteger(QdbTag tag)
         {
             var integer = CreateInteger();
-            integer.AddTag(tag);
+            integer.AttachTag(tag);
             return integer;
         }
 
@@ -121,7 +121,7 @@ namespace QuasardbTests.Helpers
         public static QdbTag CreateTaggedTag(QdbTag tag)
         {
             var newTag = CreateTag();
-            newTag.AddTag(tag);
+            newTag.AttachTag(tag);
             return newTag;
         }
 

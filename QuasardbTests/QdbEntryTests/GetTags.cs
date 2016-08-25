@@ -21,12 +21,12 @@ namespace QuasardbTests.QdbEntryTests
         }
 
         [TestMethod]
-        public void ReturnsOneTag_AfterAddTag()
+        public void ReturnsOneTag_AfterAttachTag()
         {
             var entry = QdbTestCluster.CreateBlob();
             var tag1 = QdbTestCluster.CreateEmptyTag();
 
-            entry.AddTag(tag1);
+            entry.AttachTag(tag1);
             var tag2 = entry.GetTags().Single();
 
             Assert.AreEqual(tag1.Alias, tag2.Alias);

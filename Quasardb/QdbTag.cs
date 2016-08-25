@@ -15,11 +15,11 @@ namespace Quasardb
     /// How to tag a blob:
     /// <code language="c#">
     /// var cluster = new QdbCluster("qdb://127.0.0.1:2836");
-    /// cluster.Blob("some name").AddTag("some tag");
+    /// cluster.Blob("some name").AttachTag("some tag");
     /// </code>
     /// <code language="vb">
     /// Dim cluster = New QdbCluster("qdb://127.0.0.1:2836")
-    /// cluster.Blob("some name").AddTag("some tag")
+    /// cluster.Blob("some name").AttachTag("some tag")
     /// </code>
     /// How to get tagged entries:
     /// <code language="c#">
@@ -65,7 +65,7 @@ namespace Quasardb
         {
             if (entry == null) throw new ArgumentNullException("entry");
 
-            return Api.AddTag(entry.Alias, Alias);
+            return Api.AttachTag(entry.Alias, Alias);
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace Quasardb
         {
             if (entry == null) throw new ArgumentNullException("entry");
 
-            return Api.AddTag(entry, Alias);
+            return Api.AttachTag(entry, Alias);
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace Quasardb
         {
             if (entry == null) throw new ArgumentNullException("entry");
 
-            return Api.RemoveTag(entry.Alias, Alias);
+            return Api.DetachTag(entry.Alias, Alias);
         }
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace Quasardb
         {
             if (entry == null) throw new ArgumentNullException("entry");
 
-            return Api.RemoveTag(entry, Alias);
+            return Api.DetachTag(entry, Alias);
         }
     }
 }

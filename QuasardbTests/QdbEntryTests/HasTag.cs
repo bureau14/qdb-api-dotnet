@@ -46,34 +46,34 @@ namespace QuasardbTests.QdbEntryTests
         }
 
         [TestMethod]
-        public void ReturnsFalse_AfterRemoveTag()
+        public void ReturnsFalse_AfterDetachTag()
         {
             var entry = QdbTestCluster.CreateBlob();
             var tag = QdbTestCluster.CreateEmptyTag();
 
-            entry.AddTag(tag);
-            entry.RemoveTag(tag);
+            entry.AttachTag(tag);
+            entry.DetachTag(tag);
 
             Assert.IsFalse(entry.HasTag(tag));
         }
 
         [TestMethod]
-        public void ReturnsTrue_AfterAddTag_WithQdbTagArg()
+        public void ReturnsTrue_AfterAttachTag_WithQdbTagArg()
         {
             var entry = QdbTestCluster.CreateBlob();
             var tag = QdbTestCluster.CreateEmptyTag();
 
-            entry.AddTag(tag);
+            entry.AttachTag(tag);
             Assert.IsTrue(entry.HasTag(tag));
         }
 
         [TestMethod]
-        public void ReturnsTrue_AfterAddTag_WithStringArg()
+        public void ReturnsTrue_AfterAttachTag_WithStringArg()
         {
             var entry = QdbTestCluster.CreateBlob();
             var tag = QdbTestCluster.CreateEmptyTag();
 
-            entry.AddTag(tag.Alias);
+            entry.AttachTag(tag.Alias);
             Assert.IsTrue(entry.HasTag(tag.Alias));
         }
     }

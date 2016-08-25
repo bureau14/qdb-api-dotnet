@@ -41,7 +41,7 @@ namespace Quasardb.NativeApi
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error_t qdb_connect(
-            [In] qdb_handle handle, 
+            [In] qdb_handle handle,
             [In] [MarshalAs(UnmanagedType.LPStr)] string uri);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
@@ -74,8 +74,8 @@ namespace Quasardb.NativeApi
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error_t qdb_get_expiry_time(
-            [In] qdb_handle handle, 
-            [In] [MarshalAs(ALIAS_TYPE)] string alias, 
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [Out] out long expiryTime);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
@@ -133,7 +133,7 @@ namespace Quasardb.NativeApi
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error_t qdb_blob_update(
-            [In] qdb_handle handle, 
+            [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] byte[] content,
             [In] size_t content_length,
@@ -165,7 +165,7 @@ namespace Quasardb.NativeApi
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error_t qdb_int_put(
-            [In] qdb_handle handle, 
+            [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] qdb_int value,
             [In] qdb_time_t expiry_time);
@@ -253,13 +253,13 @@ namespace Quasardb.NativeApi
         #region Functions specific to tags
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error_t qdb_add_tag(
+        public static extern qdb_error_t qdb_attach_tag(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] [MarshalAs(ALIAS_TYPE)] string tag);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error_t qdb_remove_tag(
+        public static extern qdb_error_t qdb_detach_tag(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] [MarshalAs(ALIAS_TYPE)] string tag);
@@ -270,7 +270,7 @@ namespace Quasardb.NativeApi
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] [MarshalAs(ALIAS_TYPE)] string tag);
 
-        
+
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error_t qdb_get_tagged(
             [In] qdb_handle handle,
@@ -281,7 +281,7 @@ namespace Quasardb.NativeApi
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error_t qdb_get_tags(
             [In] qdb_handle handle,
-            [In] [MarshalAs(ALIAS_TYPE)] string alias, 
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [Out] out IntPtr pointer,
             [Out] out size_t size);
 
@@ -312,7 +312,7 @@ namespace Quasardb.NativeApi
         public static extern qdb_error_t qdb_stream_size(
             [In] qdb_stream_handle handle,
             [Out] out ulong size);
-        
+
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error_t qdb_stream_write(
             [In] qdb_stream_handle handle,

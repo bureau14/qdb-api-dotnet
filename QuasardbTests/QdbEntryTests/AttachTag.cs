@@ -7,7 +7,7 @@ using QuasardbTests.Helpers;
 namespace QuasardbTests.QdbEntryTests
 {
     [TestClass]
-    public class AddTag
+    public class AttachTag
     {
         [TestMethod]
         public void ReturnsTrue_WhenCalledOnce()
@@ -15,7 +15,7 @@ namespace QuasardbTests.QdbEntryTests
             var entry = QdbTestCluster.CreateBlob();
             var tag = QdbTestCluster.CreateEmptyTag();
 
-            var result = entry.AddTag(tag);
+            var result = entry.AttachTag(tag);
 
             Assert.IsTrue(result);
         }
@@ -26,8 +26,8 @@ namespace QuasardbTests.QdbEntryTests
             var entry = QdbTestCluster.CreateBlob();
             var tag = QdbTestCluster.CreateEmptyTag();
 
-            entry.AddTag(tag);
-            var result = entry.AddTag(tag);
+            entry.AttachTag(tag);
+            var result = entry.AttachTag(tag);
 
             Assert.IsFalse(result);
         }
@@ -38,7 +38,7 @@ namespace QuasardbTests.QdbEntryTests
         {
             var entry = QdbTestCluster.CreateBlob();
 
-            entry.AddTag(entry.Alias);
+            entry.AttachTag(entry.Alias);
         }
 
         [TestMethod]
@@ -47,7 +47,7 @@ namespace QuasardbTests.QdbEntryTests
         {
             var entry = QdbTestCluster.CreateBlob();
 
-            entry.AddTag((QdbTag)null);
+            entry.AttachTag((QdbTag)null);
         }
 
         [TestMethod]
@@ -56,7 +56,7 @@ namespace QuasardbTests.QdbEntryTests
         {
             var entry = QdbTestCluster.CreateBlob();
 
-            entry.AddTag((string)null);
+            entry.AttachTag((string)null);
         }
 
         [TestMethod]
@@ -65,7 +65,7 @@ namespace QuasardbTests.QdbEntryTests
         {
             var tag = QdbTestCluster.CreateEmptyTag();
 
-            QdbTestCluster.CreateEmptyBlob().AddTag(tag);
+            QdbTestCluster.CreateEmptyBlob().AttachTag(tag);
         }
     }
 }

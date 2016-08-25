@@ -72,7 +72,7 @@
           c = myQueue.PopFront()
         </code>
       </content>
-    </section>  
+    </section>
 
     <section>
       <title>Hash sets</title>
@@ -100,7 +100,7 @@
         </code>
       </content>
     </section>
-    
+
     <section>
       <title>Integers</title>
       <content>
@@ -140,7 +140,7 @@
         </code>
       </content>
     </section>
-    
+
     <section>
       <title>Tags</title>
       <content>
@@ -148,20 +148,20 @@
           Here's how you can easily find your data, using tags:
         </para>
         <code language="c#">
-          cluster.Blob("Bob the blob").AddTag("Male");
-          cluster.Integer("Roger the integer").AddTag("Male");
-          
+          cluster.Blob("Bob the blob").AttachTag("Male");
+          cluster.Integer("Roger the integer").AttachTag("Male");
+
           IEnumerable&lt;QdbEntry&gt; males = cluster.Tag("Male").GetEntries();
         </code>
         <code language="vb">
-          cluster.Blob("Bob the blob").AddTag("Male");
-          cluster.Integer("Roger the integer").AddTag("Male");
-          
+          cluster.Blob("Bob the blob").AttachTag("Male");
+          cluster.Integer("Roger the integer").AttachTag("Male");
+
           Dim males = cluster.Tag("Males").GetEntries()
         </code>
       </content>
     </section>
-   
+
 		<relatedTopics>
       <codeEntityReference>T:Quasardb.QdbCluster</codeEntityReference>
       <codeEntityReference>T:Quasardb.QdbBlob</codeEntityReference>

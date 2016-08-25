@@ -43,11 +43,11 @@ namespace Quasardb
         /// <exception cref="QdbAliasNotFoundException">The entry doesn't exists in the database.</exception>
         /// <exception cref="QdbIncompatibleTypeException">The tag's alias conflicts with another entry.</exception>
         /// <seealso cref="QdbTag"/>
-        public bool AddTag(QdbTag tag)
+        public bool AttachTag(QdbTag tag)
         {
             if (tag == null) throw new ArgumentNullException("tag");
 
-            return Api.AddTag(Alias, tag.Alias);
+            return Api.AttachTag(Alias, tag.Alias);
         }
 
         /// <summary>
@@ -58,11 +58,11 @@ namespace Quasardb
         /// <exception cref="QdbAliasNotFoundException">The entry doesn't exists in the database.</exception>
         /// <exception cref="QdbIncompatibleTypeException">The tag's alias conflicts with another entry.</exception>
         /// <seealso cref="QdbTag"/>
-        public bool AddTag(string tag)
+        public bool AttachTag(string tag)
         {
             if (tag == null) throw new ArgumentNullException("tag");
 
-            return Api.AddTag(Alias, tag);
+            return Api.AttachTag(Alias, tag);
         }
 
         /// <summary>
@@ -111,11 +111,11 @@ namespace Quasardb
         /// <returns><c>true</c> if the entry had this tag, <c>false</c> if not.</returns>
         /// <exception cref="QdbAliasNotFoundException">The entry doesn't exists in the database.</exception>
         /// <seealso cref="QdbTag"/>
-        public bool RemoveTag(QdbTag tag)
+        public bool DetachTag(QdbTag tag)
         {
             if (tag == null) throw new ArgumentNullException("tag");
 
-            return Api.RemoveTag(Alias, tag.Alias);
+            return Api.DetachTag(Alias, tag.Alias);
         }
 
         /// <summary>
@@ -125,11 +125,11 @@ namespace Quasardb
         /// <returns><c>true</c> if the entry had this tag, <c>false</c> if not.</returns>
         /// <exception cref="QdbAliasNotFoundException">The entry doesn't exists in the database.</exception>
         /// <seealso cref="QdbTag"/>
-        public bool RemoveTag(string tag)
+        public bool DetachTag(string tag)
         {
             if (tag == null) throw new ArgumentNullException("tag");
 
-            return Api.RemoveTag(Alias, tag);
+            return Api.DetachTag(Alias, tag);
         }
     }
 }

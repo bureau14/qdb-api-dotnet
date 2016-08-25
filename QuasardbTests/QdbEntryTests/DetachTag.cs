@@ -7,35 +7,35 @@ using QuasardbTests.Helpers;
 namespace QuasardbTests.QdbEntryTests
 {
     [TestClass]
-    public class RemoveTag
+    public class DetachTag
     {
         [TestMethod]
-        public void ReturnsTrue_AfterAddTag_WithQdbTagArg()
+        public void ReturnsTrue_AfterAttachTag_WithQdbTagArg()
         {
             var entry = QdbTestCluster.CreateBlob();
             var tag = QdbTestCluster.CreateEmptyTag();
 
-            entry.AddTag(tag);
-            Assert.IsTrue(entry.RemoveTag(tag));
+            entry.AttachTag(tag);
+            Assert.IsTrue(entry.DetachTag(tag));
         }
 
         [TestMethod]
-        public void ReturnsTrue_AfterAddTag_WithStringArg()
+        public void ReturnsTrue_AfterAttachTag_WithStringArg()
         {
             var entry = QdbTestCluster.CreateBlob();
             var tag = QdbTestCluster.CreateEmptyTag();
 
-            entry.AddTag(tag.Alias);
-            Assert.IsTrue(entry.RemoveTag(tag.Alias));
+            entry.AttachTag(tag.Alias);
+            Assert.IsTrue(entry.DetachTag(tag.Alias));
         }
-        
+
         [TestMethod]
         public void ReturnsFalse_WithQdbTagArg()
         {
             var entry = QdbTestCluster.CreateBlob();
             var tag = QdbTestCluster.CreateEmptyTag();
 
-            Assert.IsFalse(entry.RemoveTag(tag));
+            Assert.IsFalse(entry.DetachTag(tag));
         }
 
         [TestMethod]
@@ -45,7 +45,7 @@ namespace QuasardbTests.QdbEntryTests
             var entry = QdbTestCluster.CreateBlob();
             var tag = QdbTestCluster.CreateEmptyTag();
 
-            entry.RemoveTag((QdbTag)null);
+            entry.DetachTag((QdbTag)null);
         }
 
         [TestMethod]
@@ -55,7 +55,7 @@ namespace QuasardbTests.QdbEntryTests
             var entry = QdbTestCluster.CreateBlob();
             var tag = QdbTestCluster.CreateEmptyTag();
 
-            entry.RemoveTag((string)null);
+            entry.DetachTag((string)null);
         }
 
         [TestMethod]
@@ -65,7 +65,7 @@ namespace QuasardbTests.QdbEntryTests
             var entry = QdbTestCluster.CreateBlob();
             var tag = QdbTestCluster.CreateEmptyTag();
 
-            entry.RemoveTag(QdbTestCluster.CreateBlob().Alias);
+            entry.DetachTag(QdbTestCluster.CreateBlob().Alias);
         }
 
         [TestMethod]
@@ -75,7 +75,7 @@ namespace QuasardbTests.QdbEntryTests
             var entry = QdbTestCluster.CreateBlob();
             var tag = QdbTestCluster.CreateEmptyTag();
 
-            QdbTestCluster.CreateEmptyBlob().RemoveTag(tag);
+            QdbTestCluster.CreateEmptyBlob().DetachTag(tag);
         }
     }
 }

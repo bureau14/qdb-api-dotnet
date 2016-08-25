@@ -80,12 +80,12 @@
     <Compile Include="QdbDequeTests\PopFront.cs" />
     <Compile Include="QdbDequeTests\PushBack.cs" />
     <Compile Include="QdbDequeTests\PushFront.cs" />
-    <Compile Include="QdbEntryTests\RemoveTag.cs" />
+    <Compile Include="QdbEntryTests\DetachTag.cs" />
     <Compile Include="QdbBlobTests\ExpiresFromNow.cs" />
     <Compile Include="QdbClusterTests.cs" />
     <Compile Include="DaemonRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QdbEntryTests\AddTag.cs" />
+    <Compile Include="QdbEntryTests\AttachTag.cs" />
     <Compile Include="QdbEntryTests\GetTags.cs" />
     <Compile Include="QdbEntryTests\HasTag.cs" />
     <Compile Include="QdbExceptionFactoryTests.cs" />
@@ -142,7 +142,7 @@
   </Choose>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

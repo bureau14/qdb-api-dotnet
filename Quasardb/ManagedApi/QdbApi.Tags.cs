@@ -6,9 +6,9 @@ namespace Quasardb.ManagedApi
 {
     partial class QdbApi
     {
-        public bool AddTag(string alias, string tag)
+        public bool AttachTag(string alias, string tag)
         {
-            var error = qdb_api.qdb_add_tag(_handle, alias, tag);
+            var error = qdb_api.qdb_attach_tag(_handle, alias, tag);
 
             switch (error)
             {
@@ -60,9 +60,9 @@ namespace Quasardb.ManagedApi
             }
         }
 
-        public bool RemoveTag(string alias, string tag)
+        public bool DetachTag(string alias, string tag)
         {
-            var error = qdb_api.qdb_remove_tag(_handle, alias, tag);
+            var error = qdb_api.qdb_detach_tag(_handle, alias, tag);
 
             switch (error)
             {
