@@ -17,12 +17,12 @@ namespace Quasardb.NativeApi
 
         public static qdb_time_t FromDateTime(DateTime expiryTime)
         {
-            return (qdb_time_t) expiryTime.Subtract(_utcEpoch).TotalSeconds;
+            return (qdb_time_t) expiryTime.Subtract(_utcEpoch).TotalMilliseconds;
         }
 
         public static qdb_time_t FromTimeSpan(TimeSpan delay)
         {
-            return (qdb_time_t) delay.TotalSeconds;
+            return (qdb_time_t) delay.TotalMilliseconds;
         }
 
         public static DateTime? ToOptionalDateTime(qdb_time_t expiryTime)
@@ -32,7 +32,7 @@ namespace Quasardb.NativeApi
 
         private static DateTime ToDateTime(qdb_time_t expiryTime)
         {
-            return _utcEpoch.AddSeconds(expiryTime);
+            return _utcEpoch.AddMilliseconds(expiryTime);
         }
     }
 }
