@@ -23,8 +23,6 @@ namespace Quasardb.NativeApi
         qdb_e_connection_refused = 0xd300000e,
         qdb_e_connection_reset = 0xd200000f,
         qdb_e_unstable_cluster = 0xd2000012,
-        qdb_e_outdated_topology = 0xd2000014,
-        qdb_e_wrong_peer = 0xd2000015,
         qdb_e_try_again = 0xd2000017,
         qdb_e_conflict = 0xb200001a,
         qdb_e_not_connected = 0xd200001b,
@@ -51,6 +49,9 @@ namespace Quasardb.NativeApi
         qdb_e_operation_not_permitted = 0xb200002f,
         qdb_e_iterator_end = 0xb0000030,
         qdb_e_invalid_reply = 0xa3000031,
-        qdb_e_ok_created    = 0xb0000032
+        qdb_e_ok_created    = 0xb0000032,
+        qdb_e_no_space_left = 0xf3000033,
+        qdb_e_quota_exceeded = 0xf2000034,
+        qdb_e_alias_too_long = 0xc2000035
     }
 }

@@ -32,7 +32,7 @@ namespace Quasardb
         {
             Api.ExpiresFromNow(Alias, ttl);
         }
-        
+
         /// <summary>
         /// Gets the expiry time.
         /// </summary>

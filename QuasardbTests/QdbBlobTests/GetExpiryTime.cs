@@ -22,7 +22,7 @@ namespace QuasardbTests.QdbBlobTests
         {
             var blob = QdbTestCluster.CreateEmptyBlob();
             var content = RandomGenerator.CreateRandomContent();
-            var expiry = new DateTime(3000, 12, 25);
+            var expiry = new DateTime(2200, 12, 25);
 
             blob.Put(content, expiry);
             var result = blob.GetExpiryTime();
@@ -35,8 +35,8 @@ namespace QuasardbTests.QdbBlobTests
         {
             var blob = QdbTestCluster.CreateEmptyBlob();
             var content = RandomGenerator.CreateRandomContent();
-            var expiry1 = new DateTime(3000, 12, 25);
-            var expiry2 = new DateTime(4000, 12, 25);
+            var expiry1 = new DateTime(2200, 12, 25);
+            var expiry2 = new DateTime(2250, 12, 25);
 
             blob.Put(content, expiry1);
             blob.GetAndUpdate(content, expiry2);
@@ -50,8 +50,8 @@ namespace QuasardbTests.QdbBlobTests
         {
             var blob = QdbTestCluster.CreateEmptyBlob();
             var content = RandomGenerator.CreateRandomContent();
-            var expiry1 = new DateTime(3000, 12, 25);
-            var expiry2 = new DateTime(4000, 12, 25);
+            var expiry1 = new DateTime(2200, 12, 25);
+            var expiry2 = new DateTime(2250, 12, 25);
 
             blob.Put(content, expiry1);
             blob.Update(content, expiry2);
@@ -66,8 +66,8 @@ namespace QuasardbTests.QdbBlobTests
             var blob = QdbTestCluster.CreateEmptyBlob();
             var content1 = RandomGenerator.CreateRandomContent();
             var content2 = RandomGenerator.CreateRandomContent();
-            var expiry1 = new DateTime(3000, 12, 25);
-            var expiry2 = new DateTime(4000, 12, 25);
+            var expiry1 = new DateTime(2200, 12, 25);
+            var expiry2 = new DateTime(2250, 12, 25);
 
             blob.Put(content1, expiry1);
             blob.CompareAndSwap(content2, content1, expiry2);
@@ -82,8 +82,8 @@ namespace QuasardbTests.QdbBlobTests
             var blob = QdbTestCluster.CreateEmptyBlob();
             var content1 = RandomGenerator.CreateRandomContent();
             var content2 = RandomGenerator.CreateRandomContent();
-            var expiry1 = new DateTime(3000, 12, 25);
-            var expiry2 = new DateTime(4000, 12, 25);
+            var expiry1 = new DateTime(2200, 12, 25);
+            var expiry2 = new DateTime(2250, 12, 25);
 
             blob.Put(content1, expiry1);
             blob.CompareAndSwap(content2, content2, expiry2);
@@ -97,7 +97,7 @@ namespace QuasardbTests.QdbBlobTests
         {
             var blob = QdbTestCluster.CreateEmptyBlob();
             var content = RandomGenerator.CreateRandomContent();
-            var expiry = new DateTime(3000, 12, 25);
+            var expiry = new DateTime(2200, 12, 25);
 
             blob.Put(content);
             blob.ExpiresAt(expiry);
