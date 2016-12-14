@@ -89,8 +89,10 @@
     <Compile Include="QdbEntryTests\GetTags.cs" />
     <Compile Include="QdbEntryTests\HasTag.cs" />
     <Compile Include="QdbExceptionFactoryTests.cs" />
+    <Compile Include="QdbHashSetTests\Contains.cs" />
+    <Compile Include="QdbHashSetTests\Insert.cs" />
+    <Compile Include="QdbHashSetTests\Erase.cs" />
     <Compile Include="QdbIntegerTests\Update.cs" />
-    <Compile Include="QdbHashSetTests.cs" />
     <Compile Include="QdbIntegerTests\Add.cs" />
     <Compile Include="QdbIntegerTests\Get.cs" />
     <Compile Include="QdbIntegerTests\Put.cs" />

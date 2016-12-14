@@ -37,9 +37,9 @@ namespace QuasardbTests.Helpers
 
         #region HashSet
 
-        public static QdbHashSet CreateEmptyHashSet()
+        public static QdbHashSet CreateEmptyHashSet(string alias = null)
         {
-            return Instance.HashSet(RandomGenerator.CreateUniqueAlias());
+            return Instance.HashSet(alias ?? RandomGenerator.CreateUniqueAlias());
         }
 
         public static QdbHashSet CreateHashSet()
