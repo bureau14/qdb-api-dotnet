@@ -95,5 +95,16 @@ namespace Quasardb
 
             Api.DequePushFront(Alias, content);
         }
+
+        /// <summary>
+        /// Gets the number of elements in the queue.
+        /// </summary>
+        /// <returns>The length of the queue</returns>
+        /// <exception cref="QdbAliasNotFoundException">The queue doesn't exists in the database.</exception>
+        /// <exception cref="QdbIncompatibleTypeException">The matching entry in the database is not a queue.</exception>
+        public long Size()
+        {
+            return Api.DequeSize(Alias);
+        }
     }
 }

@@ -4,10 +4,12 @@ using System.Runtime.InteropServices;
 using System.Security;
 
 // ReSharper disable InconsistentNaming
+// ReSharper disable BuiltInTypeReferenceStyle
 
 using qdb_int = System.Int64;
 using qdb_time_t = System.Int64;
 using size_t = System.UIntPtr;
+using qdb_size_t = System.UInt64;
 
 namespace Quasardb.NativeApi
 {
@@ -180,6 +182,12 @@ namespace Quasardb.NativeApi
         #endregion
 
         #region Functions specific to deques
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error_t qdb_deque_size(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [Out] out qdb_size_t size);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error_t qdb_deque_back(

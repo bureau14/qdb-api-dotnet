@@ -60,5 +60,13 @@ namespace Quasardb.ManagedApi
             var error = qdb_api.qdb_deque_push_front(_handle, alias, content, (UIntPtr)content.LongLength);
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
+
+        public long DequeSize(string alias)
+        {
+            UInt64 size;
+            var error = qdb_api.qdb_deque_size(_handle, alias, out size);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+            return (long)size;
+        }
     }
 }
