@@ -25,7 +25,7 @@ namespace Quasardb.ManagedApi
 
         public void Connect(string uri)
         {
-            if (uri == null) throw new ArgumentNullException("uri");
+            if (uri == null) throw new ArgumentNullException(nameof(uri));
 
             var error = qdb_api.qdb_connect(_handle, uri);
             QdbExceptionThrower.ThrowIfNeeded(error);

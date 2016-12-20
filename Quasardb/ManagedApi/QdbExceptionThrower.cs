@@ -7,9 +7,15 @@ namespace Quasardb.ManagedApi
     {
         public static void ThrowIfNeeded(qdb_error_t error)
         {
-            if (error == qdb_error_t.qdb_e_ok) return;
+            var severity = (qdb_err_severity)((uint)error & (uint)qdb_err_severity.mask);
 
-            throw QdbExceptionFactory.Create(error);
+            switch (severity)
+            {
+                case qdb_err_severity.warning:
+                case qdb_err_severity.error:
+                case qdb_err_severity.unrecoverable:
+                    throw QdbExceptionFactory.Create(error);
+            }
         }
     }
 }

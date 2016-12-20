@@ -10,7 +10,7 @@ namespace Quasardb.NativeApi
             return Marshal.PtrToStringAnsi(pNativeData);
         }
 
-        public IntPtr MarshalManagedToNative(object ManagedObj)
+        public IntPtr MarshalManagedToNative(object managedObj)
         {
             return IntPtr.Zero;
         }
@@ -19,7 +19,7 @@ namespace Quasardb.NativeApi
         {
         }
 
-        public void CleanUpManagedData(object ManagedObj)
+        public void CleanUpManagedData(object managedObj)
         {
         }
 
@@ -28,12 +28,11 @@ namespace Quasardb.NativeApi
             return IntPtr.Size;
         }
 
-        static readonly ConstCharPtrMarshaler instance = new ConstCharPtrMarshaler();
-
+        static readonly ConstCharPtrMarshaler _instance = new ConstCharPtrMarshaler();
 
         public static ICustomMarshaler GetInstance(string cookie)
         {
-            return instance;
+            return _instance;
         }
     }
 }

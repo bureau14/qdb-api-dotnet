@@ -38,7 +38,7 @@ namespace Quasardb
         /// <seealso cref="QdbBlob"/>
         public QdbBlob Blob(string alias)
         {
-            if (alias == null) throw new ArgumentNullException("alias");
+            if (alias == null) throw new ArgumentNullException(nameof(alias));
             return new QdbBlob(_api, alias);
         }
 
@@ -51,7 +51,7 @@ namespace Quasardb
         /// <seealso cref="QdbDeque"/>
         public QdbDeque Deque(string alias)
         {
-            if (alias == null) throw new ArgumentNullException("alias");
+            if (alias == null) throw new ArgumentNullException(nameof(alias));
             return new QdbDeque(_api, alias);
         }
 
@@ -64,7 +64,7 @@ namespace Quasardb
         /// <seealso cref="QdbHashSet"/>
         public QdbHashSet HashSet(string alias)
         {
-            if (alias == null) throw new ArgumentNullException("alias");
+            if (alias == null) throw new ArgumentNullException(nameof(alias));
             return new QdbHashSet(_api, alias);
         }
 
@@ -77,7 +77,7 @@ namespace Quasardb
         /// <seealso cref="QdbInteger"/>
         public QdbInteger Integer(string alias)
         {
-            if (alias == null) throw new ArgumentNullException("alias");
+            if (alias == null) throw new ArgumentNullException(nameof(alias));
             return new QdbInteger(_api, alias);
         }
 
@@ -89,7 +89,7 @@ namespace Quasardb
         /// <exception cref="ArgumentNullException"></exception>
         public QdbStream Stream(string alias)
         {
-            if (alias == null) throw new ArgumentNullException("alias");
+            if (alias == null) throw new ArgumentNullException(nameof(alias));
             return new QdbStream(_api, alias);
         }
 
@@ -102,8 +102,17 @@ namespace Quasardb
         /// <seealso cref="QdbTag"/>
         public QdbTag Tag(string alias)
         {
-            if (alias == null) throw new ArgumentNullException("alias");
+            if (alias == null) throw new ArgumentNullException(nameof(alias));
             return new QdbTag(_api, alias);
+        }
+
+        /// <summary>
+        /// Executes the operations contained in the batch.
+        /// </summary>
+        /// <param name="batch">The collection of operation to execute.</param>
+        public void RunBatch(QdbBatch batch)
+        {
+            _api.RunBatch(batch.Operations);
         }
     }
 }

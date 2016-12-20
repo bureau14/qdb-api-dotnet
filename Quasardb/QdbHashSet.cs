@@ -24,7 +24,7 @@ namespace Quasardb
         /// <exception cref="QdbIncompatibleTypeException">The entry in the database is not a hash-set.</exception>
         public bool Insert(byte[] content)
         {
-            if (content == null) throw new ArgumentNullException("content");
+            if (content == null) throw new ArgumentNullException(nameof(content));
 
             return Api.HashSetInsert(Alias, content);
         }
@@ -38,7 +38,7 @@ namespace Quasardb
         /// <exception cref="QdbIncompatibleTypeException">The entry in the database is not a hash-set.</exception>
         public bool Erase(byte[] content)
         {
-            if (content == null) throw new ArgumentNullException("content");
+            if (content == null) throw new ArgumentNullException(nameof(content));
 
             return Api.HashSetErase(Alias, content);
         }
@@ -52,7 +52,7 @@ namespace Quasardb
         /// <exception cref="QdbIncompatibleTypeException">The entry in the database is not a hash-set.</exception>
         public bool Contains(byte[] content)
         {
-            if (content == null) throw new ArgumentNullException("content");
+            if (content == null) throw new ArgumentNullException(nameof(content));
 
             return Api.HashSetContains(Alias, content);
         }

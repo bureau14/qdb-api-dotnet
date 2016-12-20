@@ -43,8 +43,8 @@ namespace Quasardb
         /// <exception cref="QdbIncompatibleTypeException">The database entry is not a blob.</exception>
         public byte[] CompareAndSwap(byte[] content, byte[] comparand, DateTime? expiryTime = null)
         {
-            if (content == null) throw new ArgumentNullException("content");
-            if (comparand == null) throw new ArgumentNullException("comparand");
+            if (content == null) throw new ArgumentNullException(nameof(content));
+            if (comparand == null) throw new ArgumentNullException(nameof(comparand));
 
             return Api.BlobCompareAndSwap(Alias, content, comparand, expiryTime);
         }
@@ -81,7 +81,7 @@ namespace Quasardb
         /// <exception cref="QdbIncompatibleTypeException">The database entry is not a blob.</exception>
         public byte[] GetAndUpdate(byte[] content, DateTime? expiryTime = null)
         {
-            if (content == null) throw new ArgumentNullException("content");
+            if (content == null) throw new ArgumentNullException(nameof(content));
 
             return Api.BlobGetAndUpdate(Alias, content, expiryTime);
         }
@@ -94,7 +94,7 @@ namespace Quasardb
         /// <exception cref="QdbAliasAlreadyExistsException">The entry already exists.</exception>
         public void Put(byte[] content, DateTime? expiryTime=null)
         {
-            if (content == null) throw new ArgumentNullException("content");
+            if (content == null) throw new ArgumentNullException(nameof(content));
 
             Api.BlobPut(Alias, content, expiryTime);
         }
@@ -108,7 +108,7 @@ namespace Quasardb
         /// <exception cref="QdbIncompatibleTypeException">The database entry is not a blob.</exception>
         public bool RemoveIf(byte[] comparand)
         {
-            if (comparand == null) throw new ArgumentNullException("comparand");
+            if (comparand == null) throw new ArgumentNullException(nameof(comparand));
 
             return Api.BlobRemoveIf(Alias, comparand);
         }
@@ -123,7 +123,7 @@ namespace Quasardb
         /// <exception cref="QdbIncompatibleTypeException">The database entry is not a blob.</exception>
         public bool Update(byte[] content, DateTime? expiryTime = null)
         {
-            if (content == null) throw new ArgumentNullException("content");
+            if (content == null) throw new ArgumentNullException(nameof(content));
 
             return Api.BlobUpdate(Alias, content, expiryTime);
         }

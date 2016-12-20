@@ -19,12 +19,12 @@ namespace Quasardb
         /// <summary>
         /// The alias of the entry in the database.
         /// </summary>
-        public string Alias { get; private set; }
+        public string Alias { get; }
 
         /// <summary>
         /// The Managed API wrapper.
         /// </summary>
-        internal QdbApi Api { get; private set; }
+        internal QdbApi Api { get; }
 
         /// <summary>
         /// Removes the entry from the database.
@@ -45,7 +45,7 @@ namespace Quasardb
         /// <seealso cref="QdbTag"/>
         public bool AttachTag(QdbTag tag)
         {
-            if (tag == null) throw new ArgumentNullException("tag");
+            if (tag == null) throw new ArgumentNullException(nameof(tag));
 
             return Api.AttachTag(Alias, tag.Alias);
         }
@@ -60,7 +60,7 @@ namespace Quasardb
         /// <seealso cref="QdbTag"/>
         public bool AttachTag(string tag)
         {
-            if (tag == null) throw new ArgumentNullException("tag");
+            if (tag == null) throw new ArgumentNullException(nameof(tag));
 
             return Api.AttachTag(Alias, tag);
         }
@@ -86,7 +86,7 @@ namespace Quasardb
         /// <seealso cref="QdbTag"/>
         public bool HasTag(QdbTag tag)
         {
-            if (tag == null) throw new ArgumentNullException("tag");
+            if (tag == null) throw new ArgumentNullException(nameof(tag));
 
             return Api.HasTag(Alias, tag.Alias);
         }
@@ -99,7 +99,7 @@ namespace Quasardb
         /// <seealso cref="QdbTag"/>
         public bool HasTag(string tag)
         {
-            if (tag == null) throw new ArgumentNullException("tag");
+            if (tag == null) throw new ArgumentNullException(nameof(tag));
 
             return Api.HasTag(Alias, tag);
         }
@@ -113,7 +113,7 @@ namespace Quasardb
         /// <seealso cref="QdbTag"/>
         public bool DetachTag(QdbTag tag)
         {
-            if (tag == null) throw new ArgumentNullException("tag");
+            if (tag == null) throw new ArgumentNullException(nameof(tag));
 
             return Api.DetachTag(Alias, tag.Alias);
         }
@@ -127,7 +127,7 @@ namespace Quasardb
         /// <seealso cref="QdbTag"/>
         public bool DetachTag(string tag)
         {
-            if (tag == null) throw new ArgumentNullException("tag");
+            if (tag == null) throw new ArgumentNullException(nameof(tag));
 
             return Api.DetachTag(Alias, tag);
         }

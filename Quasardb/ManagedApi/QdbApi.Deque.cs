@@ -63,7 +63,7 @@ namespace Quasardb.ManagedApi
 
         public long DequeSize(string alias)
         {
-            UInt64 size;
+            UIntPtr size;
             var error = qdb_api.qdb_deque_size(_handle, alias, out size);
             QdbExceptionThrower.ThrowIfNeeded(error);
             return (long)size;

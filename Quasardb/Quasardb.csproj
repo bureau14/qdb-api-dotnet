@@ -58,6 +58,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Exceptions\Connection\QdbConnectionException.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="Exceptions\System\QdbRemoteSystemException.cs" />
     <Compile Include="Exceptions\System\QdbLocalSystemException.cs" />
     <Compile Include="Exceptions\System\QdbSystemException.cs" />
+    <Compile Include="ManagedApi\QdbApi.Batch.cs" />
     <Compile Include="ManagedApi\QdbApi.Stream.cs" />
     <Compile Include="ManagedApi\QdbExceptionThrower.cs" />
     <Compile Include="ManagedApi\QdbApi.Blob.cs" />
@@ -88,13 +90,21 @@
     <Compile Include="NativeApi\ConstCharPtrMarshaler.cs" />
     <Compile Include="NativeApi\qdb_buffer.cs" />
     <Compile Include="NativeApi\qdb_error_t.cs" />
-    <Compile Include="NativeApi\qdb_err_origin_t.cs" />
+    <Compile Include="NativeApi\qdb_err_severity.cs" />
+    <Compile Include="NativeApi\qdb_err_origin.cs" />
+    <Compile Include="NativeApi\qdb_operation.cs" />
+    <Compile Include="NativeApi\qdb_operation_type.cs" />
     <Compile Include="NativeApi\qdb_stream_handle.cs" />
     <Compile Include="NativeApi\qdb_stream_mode.cs" />
     <Compile Include="NativeApi\qdb_entry_type.cs" />
     <Compile Include="NativeApi\qdb_api.cs" />
     <Compile Include="NativeApi\qdb_handle.cs" />
     <Compile Include="NativeApi\qdb_time.cs" />
+    <Compile Include="QdbBatch.cs" />
+    <Compile Include="QdbBatchEntry.cs" />
+    <Compile Include="QdbBatchInteger.cs" />
+    <Compile Include="QdbBatchBlob.cs" />
+    <Compile Include="QdbBatchOperation.cs" />
     <Compile Include="QdbBlob.cs" />
     <Compile Include="QdbCluster.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -125,7 +135,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

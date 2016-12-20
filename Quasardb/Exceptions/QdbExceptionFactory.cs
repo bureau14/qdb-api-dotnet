@@ -6,26 +6,26 @@ namespace Quasardb.Exceptions
     {
         public static QdbException Create(qdb_error_t error)
         {
-            var origin = (qdb_err_origin_t) ((uint) error & (uint) qdb_err_origin_t.qdb_e_origin_mask);
+            var origin = (qdb_err_origin) ((uint) error & (uint) qdb_err_origin.mask);
 
             switch (origin)
             {
-                case qdb_err_origin_t.qdb_e_origin_connection:
+                case qdb_err_origin.connection:
                     return CreateConnectionException(error);
 
-                case qdb_err_origin_t.qdb_e_origin_input:
+                case qdb_err_origin.input:
                     return CreateInputException(error);
 
-                case qdb_err_origin_t.qdb_e_origin_operation:
+                case qdb_err_origin.operation:
                     return CreateOperationException(error);
 
-                case qdb_err_origin_t.qdb_e_origin_protocol:
+                case qdb_err_origin.protocol:
                     return CreateProtocolException(error);
 
-                case qdb_err_origin_t.qdb_e_origin_system_local:
+                case qdb_err_origin.system_local:
                     return CreateLocalSystemException(error);
 
-                case qdb_err_origin_t.qdb_e_origin_system_remote:
+                case qdb_err_origin.system_remote:
                     return CreateRemoteSystemException(error);
 
                 default:

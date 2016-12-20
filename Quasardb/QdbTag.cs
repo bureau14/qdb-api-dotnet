@@ -63,7 +63,7 @@ namespace Quasardb
         /// <exception cref="QdbIncompatibleTypeException">The tag's alias conflicts with an existing entry.</exception>
         public bool AttachEntry(QdbEntry entry)
         {
-            if (entry == null) throw new ArgumentNullException("entry");
+            if (entry == null) throw new ArgumentNullException(nameof(entry));
 
             return Api.AttachTag(entry.Alias, Alias);
         }
@@ -77,7 +77,7 @@ namespace Quasardb
         /// <exception cref="QdbIncompatibleTypeException">The tag's alias conflicts with an existing entry.</exception>
         public bool AttachEntry(string entry)
         {
-            if (entry == null) throw new ArgumentNullException("entry");
+            if (entry == null) throw new ArgumentNullException(nameof(entry));
 
             return Api.AttachTag(entry, Alias);
         }
@@ -89,7 +89,7 @@ namespace Quasardb
         /// <returns><c>true</c> if the entry has this tag, <c>false</c> otherwise.</returns>
         public bool HasEntry(QdbEntry entry)
         {
-            if (entry == null) throw new ArgumentNullException("entry");
+            if (entry == null) throw new ArgumentNullException(nameof(entry));
 
             return Api.HasTag(entry.Alias, Alias);
         }
@@ -101,7 +101,7 @@ namespace Quasardb
         /// <returns><c>true</c> if the entry has this tag, <c>false</c> otherwise.</returns>
         public bool HasEntry(string entry)
         {
-            if (entry == null) throw new ArgumentNullException("entry");
+            if (entry == null) throw new ArgumentNullException(nameof(entry));
 
             return Api.HasTag(entry, Alias);
         }
@@ -114,7 +114,7 @@ namespace Quasardb
         /// <exception cref="QdbAliasNotFoundException">The entry doesn't exists in the database.</exception>
         public bool DetachEntry(QdbEntry entry)
         {
-            if (entry == null) throw new ArgumentNullException("entry");
+            if (entry == null) throw new ArgumentNullException(nameof(entry));
 
             return Api.DetachTag(entry.Alias, Alias);
         }
@@ -127,7 +127,7 @@ namespace Quasardb
         /// <exception cref="QdbAliasNotFoundException">The entry doesn't exists in the database.</exception>
         public bool DetachEntry(string entry)
         {
-            if (entry == null) throw new ArgumentNullException("entry");
+            if (entry == null) throw new ArgumentNullException(nameof(entry));
 
             return Api.DetachTag(entry, Alias);
         }

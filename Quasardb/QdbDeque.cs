@@ -79,7 +79,7 @@ namespace Quasardb
         /// <exception cref="QdbIncompatibleTypeException">The matching entry in the database is not a queue.</exception>
         public void PushBack(byte[] content)
         {
-            if (content == null) throw new ArgumentNullException("content");
+            if (content == null) throw new ArgumentNullException(nameof(content));
 
             Api.DequePushBack(Alias, content);
         }
@@ -91,7 +91,7 @@ namespace Quasardb
         /// <exception cref="QdbIncompatibleTypeException">The matching entry in the database is not a queue.</exception>
         public void PushFront(byte[] content)
         {
-            if (content == null) throw new ArgumentNullException("content");
+            if (content == null) throw new ArgumentNullException(nameof(content));
 
             Api.DequePushFront(Alias, content);
         }

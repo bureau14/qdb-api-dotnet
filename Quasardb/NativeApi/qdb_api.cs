@@ -9,7 +9,7 @@ using System.Security;
 using qdb_int = System.Int64;
 using qdb_time_t = System.Int64;
 using size_t = System.UIntPtr;
-using qdb_size_t = System.UInt64;
+using qdb_size_t = System.UIntPtr;
 
 namespace Quasardb.NativeApi
 {
@@ -347,6 +347,26 @@ namespace Quasardb.NativeApi
         public static extern qdb_error_t qdb_stream_truncate(
             [In] qdb_stream_handle handle,
             [In] ulong position);
+
+        #endregion
+
+        #region Functions specific to batches/transactions
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error_t qdb_init_operations(
+            [In, Out] qdb_operation[] operations,
+            [In] size_t operation_count);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_size_t qdb_run_batch(
+            [In] qdb_handle handle,
+            [In, Out] qdb_operation[] operations,
+            [In] size_t operation_count);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error_t qdb_free_operations(qdb_handle handle,
+            [In] [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] qdb_operation[] operations,
+            [In] size_t operation_count);
 
         #endregion
     }

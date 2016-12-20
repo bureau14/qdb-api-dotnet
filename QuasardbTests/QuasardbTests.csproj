@@ -64,6 +64,17 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="QdbBatchBlobTests\GetAndUpdate.cs" />
+    <Compile Include="QdbBatchBlobTests\CompareAndSwap.cs" />
+    <Compile Include="QdbBatchBlobTests\Update.cs" />
+    <Compile Include="QdbBatchIntegerTests\Add.cs" />
+    <Compile Include="QdbBatchIntegerTests\Get.cs" />
+    <Compile Include="QdbBatchIntegerTests\Put.cs" />
+    <Compile Include="QdbBatchIntegerTests\HasTag.cs" />
+    <Compile Include="QdbBatchIntegerTests\Update.cs" />
+    <Compile Include="QdbBatchTests.cs" />
+    <Compile Include="QdbBatchBlobTests\Put.cs" />
+    <Compile Include="QdbBatchBlobTests\Get.cs" />
     <Compile Include="QdbBlobTests\Put.cs" />
     <Compile Include="QdbBlobTests\Get.cs" />
     <Compile Include="QdbBlobTests\GetExpiryTime.cs" />

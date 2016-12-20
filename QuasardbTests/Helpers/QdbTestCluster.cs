@@ -10,7 +10,7 @@ namespace QuasardbTests.Helpers
             Instance = new QdbCluster(DaemonRunner.ClusterUrl);
         }
 
-        public static QdbCluster Instance { get; private set; }
+        public static QdbCluster Instance { get; }
 
         #region Blob
 
