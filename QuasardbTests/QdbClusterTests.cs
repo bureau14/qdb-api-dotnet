@@ -83,7 +83,7 @@ namespace QuasardbTests
             foreach (var alias in aliases)
                 QdbTestCluster.CreateBlob(alias);
 
-            var results = QdbTestCluster.Instance.Search(prefix, 10, QdbSearchMode.Prefix);
+            var results = QdbTestCluster.Instance.Entries(new QdbPrefixSelector(prefix, 10));
 
             CollectionAssert.AreEqual(aliases, results.Select(x => x.Alias).ToArray());
         }
@@ -96,7 +96,7 @@ namespace QuasardbTests
             foreach (var alias in aliases)
                 QdbTestCluster.CreateBlob(alias);
 
-            var results = QdbTestCluster.Instance.Search(suffix, 10, QdbSearchMode.Suffix);
+            var results = QdbTestCluster.Instance.Entries(new QdbSuffixSelector(suffix, 10));
 
             CollectionAssert.AreEqual(aliases, results.Select(x => x.Alias).ToArray());
         }
@@ -105,14 +105,14 @@ namespace QuasardbTests
         public void SearchTag()
         {
             var tag = RandomGenerator.CreateUniqueAlias();
-            var prefix = RandomGenerator.CreateUniqueAlias();
-            var aliases = new[] { prefix + "AAAA", prefix + "BBBB" };
+            var suffix = RandomGenerator.CreateUniqueAlias();
+            var aliases = new[] { "AAAA" + suffix, "AAAB" + suffix };
             foreach (var alias in aliases)
                 QdbTestCluster.CreateBlob(alias).AttachTag(tag);
 
-            var results = QdbTestCluster.Instance.Search(tag, 10, QdbSearchMode.Tag);
+            var results = QdbTestCluster.Instance.Entries(new QdbTagSelector(tag));
 
-            CollectionAssert.AreEqual(aliases, results.Select(x => x.Alias).ToArray());
+            CollectionAssert.AreEquivalent(aliases, results.Select(x => x.Alias).ToArray());
         }
     }
 }

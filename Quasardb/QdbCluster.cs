@@ -58,6 +58,18 @@ namespace Quasardb
         }
 
         /// <summary>
+        /// Returns a collection of <see cref="QdbEntry" /> matching the given criteria.
+        /// </summary>
+        /// <returns>A collection of entry.</returns>
+        public IEnumerable<QdbEntry> Entries(IQdbEntrySelector selector)
+        {
+            var factory = new QdbEntryFactory(_api);
+
+            foreach (var alias in selector.Accept(_api))
+                yield return factory.Create(alias);
+        }
+        
+        /// <summary>
         /// Returns a <see cref="QdbHashSet" /> attached to the specified alias.
         /// </summary>
         /// <remarks>No operation is performed in the database.</remarks>
@@ -115,34 +127,6 @@ namespace Quasardb
         public void RunBatch(QdbBatch batch)
         {
             _api.RunBatch(batch.Operations);
-        }
-
-        public IEnumerable<QdbEntry> Search(string searchTerm, long max, QdbSearchMode mode)
-        {
-            var factory = new QdbEntryFactory(_api);
-
-            IEnumerable<string> aliases;
-
-            switch (mode)
-            {
-                case QdbSearchMode.Prefix:
-                    aliases = _api.PrefixGet(searchTerm, max);
-                    break;
-
-                case QdbSearchMode.Suffix:
-                    aliases = _api.SuffixGet(searchTerm, max);
-                    break;
-
-                case QdbSearchMode.Tag:
-                    aliases = _api.GetTagged(searchTerm);
-                    break;
-
-                default:
-                    throw new NotImplementedException();
-            }
-
-            foreach (var alias in aliases)
-                yield return factory.Create(alias);
         }
     }
 }
