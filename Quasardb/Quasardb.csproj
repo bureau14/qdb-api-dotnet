@@ -77,6 +77,7 @@
     <Compile Include="Exceptions\System\QdbSystemException.cs" />
     <Compile Include="ManagedApi\QdbApi.Batch.cs" />
     <Compile Include="ManagedApi\QdbApi.Stream.cs" />
+    <Compile Include="ManagedApi\QdbApi.Affix.cs" />
     <Compile Include="ManagedApi\QdbExceptionThrower.cs" />
     <Compile Include="ManagedApi\QdbApi.Blob.cs" />
     <Compile Include="ManagedApi\QdbApi.Integer.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="QdbHashSet.cs" />
     <Compile Include="QdbInteger.cs" />
     <Compile Include="QdbDeque.cs" />
+    <Compile Include="QdbSearchMode.cs" />
     <Compile Include="QdbStream.cs" />
     <Compile Include="QdbTag.cs" />
   </ItemGroup>

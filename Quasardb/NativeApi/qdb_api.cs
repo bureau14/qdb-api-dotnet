@@ -60,6 +60,22 @@ namespace Quasardb.NativeApi
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [Out] out qdb_entry_type entry_type);
 
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error_t qdb_prefix_get(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string prefix,
+            [In] qdb_int max_count,
+            [Out] out IntPtr aliases,
+            [Out] out size_t aliases_count);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error_t qdb_suffix_get(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string prefix,
+            [In] qdb_int max_count,
+            [Out] out IntPtr aliases,
+            [Out] out size_t aliases_count);
+
         #region Functions common to all entries
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]

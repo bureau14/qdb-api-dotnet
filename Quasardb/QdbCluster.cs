@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.Remoting.Messaging;
 using Quasardb.ManagedApi;
 
@@ -113,6 +115,34 @@ namespace Quasardb
         public void RunBatch(QdbBatch batch)
         {
             _api.RunBatch(batch.Operations);
+        }
+
+        public IEnumerable<QdbEntry> Search(string searchTerm, long max, QdbSearchMode mode)
+        {
+            var factory = new QdbEntryFactory(_api);
+
+            IEnumerable<string> aliases;
+
+            switch (mode)
+            {
+                case QdbSearchMode.Prefix:
+                    aliases = _api.PrefixGet(searchTerm, max);
+                    break;
+
+                case QdbSearchMode.Suffix:
+                    aliases = _api.SuffixGet(searchTerm, max);
+                    break;
+
+                case QdbSearchMode.Tag:
+                    aliases = _api.GetTagged(searchTerm);
+                    break;
+
+                default:
+                    throw new NotImplementedException();
+            }
+
+            foreach (var alias in aliases)
+                yield return factory.Create(alias);
         }
     }
 }
