@@ -9,32 +9,46 @@ namespace QuasardbTests.QdbClusterTests
     [TestClass]
     public class Blobs
     {
+        private readonly QdbCluster _cluster = QdbTestCluster.Instance;
+
         [TestMethod]
-        public void SearchByPattern()
+        public void GivenPattern_ReturnsMatchingBlobs()
         {
-            var cluster = QdbTestCluster.Instance;
             var aliases = new[] { RandomGenerator.CreateUniqueAlias(), RandomGenerator.CreateUniqueAlias() };
             var content = Encoding.UTF8.GetBytes("Hello world!!!!");
             foreach (var alias in aliases)
-                cluster.Blob(alias).Put(content);
+                _cluster.Blob(alias).Put(content);
 
-            var results = cluster.Blobs(new QdbPatternSelector("world", 100));
+            var results = _cluster.Blobs(new QdbPatternSelector("world", 100));
 
             CollectionAssert.AreEquivalent(aliases, results.Select(x => x.Alias).ToArray());
         }
 
         [TestMethod]
-        public void SearchByRegex()
+        public void GivenPattern_ReturnsEmptyCollection()
         {
-            var cluster = QdbTestCluster.Instance;
+            var results = _cluster.Blobs(new QdbPatternSelector("gros zizi", 100));
+            Assert.AreEqual(0, results.Count());
+        }
+
+        [TestMethod]
+        public void GivenRegex_ReturnsMatchingBlobs()
+        {
             var aliases = new[] { RandomGenerator.CreateUniqueAlias(), RandomGenerator.CreateUniqueAlias() };
             var content = Encoding.UTF8.GetBytes("Pipi Caca Prout");
             foreach (var alias in aliases)
-                cluster.Blob(alias).Put(content);
+                _cluster.Blob(alias).Put(content);
 
-            var results = cluster.Blobs(new QdbRegexSelector(".* Caca .*", 100));
+            var results = _cluster.Blobs(new QdbRegexSelector(".* Caca .*", 100));
 
             CollectionAssert.AreEquivalent(aliases, results.Select(x => x.Alias).ToArray());
+        }
+
+        [TestMethod]
+        public void GivenRegex_ReturnsEmptyCollection()
+        {
+            var results = _cluster.Blobs(new QdbRegexSelector("gros zizi", 100));
+            Assert.AreEqual(0, results.Count());
         }
     }
 }

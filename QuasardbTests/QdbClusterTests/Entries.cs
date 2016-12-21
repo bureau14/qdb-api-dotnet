@@ -9,7 +9,7 @@ namespace QuasardbTests.QdbClusterTests
     public class Entries
     {
         [TestMethod]
-        public void SearchByPrefix()
+        public void GivenExistingPrefix_ReturnsMatchingEntries()
         {
             var prefix = RandomGenerator.CreateUniqueAlias();
             var aliases = new [] {prefix + "AAAA", prefix + "BBBB"};
@@ -22,7 +22,16 @@ namespace QuasardbTests.QdbClusterTests
         }
 
         [TestMethod]
-        public void SearchBySuffix()
+        public void GivenRandomPrefix_ReturnsEmptyCollection()
+        {
+            var prefix = RandomGenerator.CreateUniqueAlias();
+            var results = QdbTestCluster.Instance.Entries(new QdbPrefixSelector(prefix, 10));
+
+            Assert.AreEqual(0, results.Count());
+        }
+
+        [TestMethod]
+        public void GivenExistingSuffix_ReturnsMatchingEntries()
         {
             var suffix = RandomGenerator.CreateUniqueAlias();
             var aliases = new[] { "AAAA" + suffix, "BBBB" + suffix };
@@ -35,7 +44,16 @@ namespace QuasardbTests.QdbClusterTests
         }
 
         [TestMethod]
-        public void SearchByTag()
+        public void GivenRandomSuffix_ReturnsEmptyCollection()
+        {
+            var suffix = RandomGenerator.CreateUniqueAlias();
+            var results = QdbTestCluster.Instance.Entries(new QdbSuffixSelector(suffix, 10));
+
+            Assert.AreEqual(0, results.Count());
+        }
+
+        [TestMethod]
+        public void GivenExistingTag_ReturnsAttachedEntries()
         {
             var tag = RandomGenerator.CreateUniqueAlias();
             var suffix = RandomGenerator.CreateUniqueAlias();
@@ -46,6 +64,15 @@ namespace QuasardbTests.QdbClusterTests
             var results = QdbTestCluster.Instance.Entries(new QdbTagSelector(tag));
 
             CollectionAssert.AreEquivalent(aliases, results.Select(x => x.Alias).ToArray());
+        }
+
+        [TestMethod]
+        public void GivenRandomTag_ReturnsEmptyCollection()
+        {
+            var tag = RandomGenerator.CreateUniqueAlias();
+            var results = QdbTestCluster.Instance.Entries(new QdbTagSelector(tag));
+
+            Assert.AreEqual(0, results.Count());
         }
     }
 }

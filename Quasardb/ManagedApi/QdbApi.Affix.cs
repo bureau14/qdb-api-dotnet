@@ -11,9 +11,16 @@ namespace Quasardb.ManagedApi
             var result = new QdbAliasCollection(_handle);
 
             var error = qdb_api.qdb_prefix_get(_handle, prefix, max, out result.Pointer, out result.Size);
-            QdbExceptionThrower.ThrowIfNeeded(error);
 
-            return result;
+            switch (error)
+            {
+                case qdb_error_t.qdb_e_ok:
+                case qdb_error_t.qdb_e_alias_not_found:
+                    return result;
+
+                default:
+                    throw QdbExceptionFactory.Create(error);
+            }
         }
 
         public IEnumerable<string> SuffixGet(string suffix, long max)
@@ -21,9 +28,16 @@ namespace Quasardb.ManagedApi
             var result = new QdbAliasCollection(_handle);
 
             var error = qdb_api.qdb_suffix_get(_handle, suffix, max, out result.Pointer, out result.Size);
-            QdbExceptionThrower.ThrowIfNeeded(error);
 
-            return result;
+            switch (error)
+            {
+                case qdb_error_t.qdb_e_ok:
+                case qdb_error_t.qdb_e_alias_not_found:
+                    return result;
+
+                default:
+                    throw QdbExceptionFactory.Create(error);
+            }
         }
     }
 }
