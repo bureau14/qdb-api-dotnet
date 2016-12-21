@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Quasardb.ManagedApi;
+﻿using Quasardb.ManagedApi;
 
 namespace Quasardb
 {
@@ -16,7 +13,7 @@ namespace Quasardb
     /// <summary>
     /// Selects entries by the beginning (ie prefix) of their alias.
     /// </summary>
-    public class QdbPrefixSelector : IQdbEntrySelector
+    public sealed class QdbPrefixSelector : IQdbEntrySelector
     {
         private readonly string _prefix;
         private readonly long _maxCount;
@@ -41,7 +38,7 @@ namespace Quasardb
     /// <summary>
     /// Selects entries by the end (ie suffix) of their alias.
     /// </summary>
-    public struct QdbSuffixSelector : IQdbEntrySelector
+    public sealed class QdbSuffixSelector : IQdbEntrySelector
     {
         private readonly string _suffix;
         private readonly long _maxCount;
@@ -66,7 +63,7 @@ namespace Quasardb
     /// <summary>
     /// Selects entries attached to a tag.
     /// </summary>
-    public struct QdbTagSelector : IQdbEntrySelector
+    public sealed class QdbTagSelector : IQdbEntrySelector
     {
         private readonly string _tag;
 

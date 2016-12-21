@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.Remoting.Messaging;
 using Quasardb.Exceptions;
 using Quasardb.ManagedApi;
 
@@ -54,10 +52,11 @@ namespace Quasardb
         /// <returns>A collection of blob matching the criteria.</returns>
         public IEnumerable<QdbBlob> Blobs(IQdbBlobSelector selector)
         {
-            var aliases = (IEnumerable<string>)selector.Accept(_api);
-
-            foreach (var alias in aliases)
-                yield return new QdbBlob(_api, alias);
+            using (var aliases = (QdbAliasCollection)selector.Accept(_api))
+            {
+                foreach (var alias in aliases)
+                    yield return new QdbBlob(_api, alias);
+            }
         }
 
         /// <summary>
@@ -92,10 +91,11 @@ namespace Quasardb
         /// <returns>A collection of entry.</returns>
         public IEnumerable<QdbEntry> Entries(IQdbEntrySelector selector)
         {
-            var aliases = (IEnumerable<string>) selector.Accept(_api);
-
-            foreach (var alias in aliases)
-                yield return _factory.Create(alias);
+            using (var aliases = (QdbAliasCollection)selector.Accept(_api))
+            {
+                foreach (var alias in aliases)
+                    yield return _factory.Create(alias);
+            }
         }
         
         /// <summary>

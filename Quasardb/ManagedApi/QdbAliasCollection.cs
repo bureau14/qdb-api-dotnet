@@ -6,7 +6,7 @@ using Quasardb.NativeApi;
 
 namespace Quasardb.ManagedApi
 {
-    sealed class QdbAliasCollection : IEnumerable<string>
+    sealed class QdbAliasCollection : IEnumerable<string>, IDisposable
     {
         readonly qdb_handle _handle;
         internal IntPtr Pointer;
@@ -17,7 +17,7 @@ namespace Quasardb.ManagedApi
             _handle = handle;
         }
 
-        ~QdbAliasCollection()
+        public void Dispose()
         {
             qdb_api.qdb_free_results(_handle, Pointer, Size);
         }

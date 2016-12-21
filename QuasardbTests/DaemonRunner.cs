@@ -8,7 +8,8 @@ namespace QuasardbTests
     [TestClass]
     public class DaemonRunner
     {
-        public const string ClusterUrl = "qdb://127.0.0.1:2836";
+        public const string EndPoint = "127.0.0.1:28360";
+        public const string ClusterUrl = "qdb://" + EndPoint;
 
         static Process _daemon;
 
@@ -19,7 +20,7 @@ namespace QuasardbTests
             _daemon = Process.Start(new ProcessStartInfo
             {
                 FileName = "qdbd.exe",
-                Arguments = "--transient",
+                Arguments = $"--transient -a {EndPoint}",
                 WindowStyle = ProcessWindowStyle.Hidden,
                 UseShellExecute = false,
                 RedirectStandardOutput = true

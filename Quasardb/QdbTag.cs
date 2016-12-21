@@ -47,11 +47,14 @@ namespace Quasardb
         public IEnumerable<QdbEntry> GetEntries()
         {
             var factory = new QdbEntryFactory(Api);
-
-            // ReSharper disable once LoopCanBeConvertedToQuery
-            // To stay compatible with .NET Framework 2.0
-            foreach (var alias in Api.GetTagged(Alias))
-                yield return factory.Create(alias);
+            
+            using (var aliases = Api.GetTagged(Alias))
+            {            
+                // ReSharper disable once LoopCanBeConvertedToQuery
+                // To stay compatible with .NET Framework 2.0
+                foreach (var alias in aliases)
+                    yield return factory.Create(alias);
+            }
         }
 
         /// <summary>

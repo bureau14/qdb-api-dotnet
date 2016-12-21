@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 using Quasardb.ManagedApi;
 
 namespace Quasardb
@@ -15,7 +13,7 @@ namespace Quasardb
     /// <summary>
     /// Selects the blobs containing the given pattern.
     /// </summary>
-    public class QdbPatternSelector : IQdbBlobSelector
+    public sealed class QdbPatternSelector : IQdbBlobSelector
     {
         private readonly byte[] _pattern;
         private readonly long _maxCount;
@@ -51,7 +49,7 @@ namespace Quasardb
     /// <summary>
     /// Selects the blobs whose content match the given regular expression.
     /// </summary>
-    public class QdbRegexSelector : IQdbBlobSelector
+    public sealed class QdbRegexSelector : IQdbBlobSelector
     {
         private readonly string _pattern;
         private readonly long _maxCount;

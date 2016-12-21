@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Quasardb.Exceptions;
+﻿using Quasardb.Exceptions;
 using Quasardb.NativeApi;
 
 namespace Quasardb.ManagedApi
@@ -23,7 +22,7 @@ namespace Quasardb.ManagedApi
             }
         }
 
-        public IEnumerable<string> GetTagged(string tag)
+        public QdbAliasCollection GetTagged(string tag)
         {
             var result = new QdbAliasCollection(_handle);
 
@@ -33,7 +32,7 @@ namespace Quasardb.ManagedApi
             return result;
         }
 
-        public IEnumerable<string> GetTags(string alias)
+        public QdbAliasCollection GetTags(string alias)
         {
             var result = new QdbAliasCollection(_handle);
 

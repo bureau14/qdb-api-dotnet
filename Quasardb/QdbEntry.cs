@@ -73,9 +73,12 @@ namespace Quasardb
         /// <seealso cref="QdbTag"/>
         public IEnumerable<QdbTag> GetTags()
         {
-            // ReSharper disable once LoopCanBeConvertedToQuery (compatibility with .NET Framework 2.0)
-            foreach (var tag in Api.GetTags(Alias))
-                yield return new QdbTag(Api, tag);
+            using (var aliases = Api.GetTags(Alias))
+            {
+                // ReSharper disable once LoopCanBeConvertedToQuery (compatibility with .NET Framework 2.0)
+                foreach (var tag in aliases)
+                    yield return new QdbTag(Api, tag);
+            }
         }
 
         /// <summary>

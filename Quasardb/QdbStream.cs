@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Quasardb.Exceptions;
 using Quasardb.ManagedApi;
 

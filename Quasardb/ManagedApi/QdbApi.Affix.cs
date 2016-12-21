@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using Quasardb.Exceptions;
+﻿using Quasardb.Exceptions;
 using Quasardb.NativeApi;
 
 namespace Quasardb.ManagedApi
 {
     partial class QdbApi
     {
-        public IEnumerable<string> PrefixGet(string prefix, long max)
+        public QdbAliasCollection PrefixGet(string prefix, long max)
         {
             var result = new QdbAliasCollection(_handle);
 
@@ -23,7 +22,7 @@ namespace Quasardb.ManagedApi
             }
         }
 
-        public IEnumerable<string> SuffixGet(string suffix, long max)
+        public QdbAliasCollection SuffixGet(string suffix, long max)
         {
             var result = new QdbAliasCollection(_handle);
 
