@@ -28,7 +28,9 @@ namespace Quasardb.ManagedApi
             for (var i = 0; i < (int) Size; i++)
             {
                 var aliasPointer = Marshal.ReadIntPtr(Pointer,  i*IntPtr.Size);
-                var alias = Marshal.PtrToStringAnsi(aliasPointer);
+
+                // TODO: should be UTF8, not ANSI
+                var alias = Marshal.PtrToStringAnsi(aliasPointer); 
 
                 yield return alias;
             }

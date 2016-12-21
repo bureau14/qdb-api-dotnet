@@ -9,14 +9,8 @@ namespace Quasardb
     /// A way to select entries.
     /// </summary>
     /// <seealso cref="QdbCluster.Entries"/>
-    public interface IQdbEntrySelector
+    public interface IQdbEntrySelector : IVisitable
     {
-        /// <summary>
-        /// Internal use only. Please ignore.
-        /// </summary>
-        /// <param name="visitor">The handle of the managed API.</param>
-        /// <returns>A collection of matchin alias</returns>
-        IEnumerable<string> Accept(object visitor);
     }
 
     /// <summary>
@@ -38,7 +32,7 @@ namespace Quasardb
             _maxCount = maxCount;
         }
 
-        IEnumerable<string> IQdbEntrySelector.Accept(object visitor)
+        object IVisitable.Accept(object visitor)
         {
             return ((QdbApi)visitor).PrefixGet(_prefix, _maxCount);
         }
@@ -63,7 +57,7 @@ namespace Quasardb
             _maxCount = maxCount;
         }
 
-        IEnumerable<string> IQdbEntrySelector.Accept(object visitor)
+        object IVisitable.Accept(object visitor)
         {
             return ((QdbApi)visitor).SuffixGet(_suffix, _maxCount);
         }
@@ -85,7 +79,7 @@ namespace Quasardb
             _tag = tag;
         }
 
-        IEnumerable<string> IQdbEntrySelector.Accept(object visitor)
+        object IVisitable.Accept(object visitor)
         {
             return ((QdbApi)visitor).GetTagged(_tag);
         }

@@ -45,6 +45,19 @@ namespace Quasardb
         }
 
         /// <summary>
+        /// Returns a collection of <see cref="QdbBlob" />  matching the given criteria.
+        /// </summary>
+        /// <param name="selector">The criteria to filter the blobs.</param>
+        /// <returns>A collection of blob matching the criteria.</returns>
+        public IEnumerable<QdbBlob> Blobs(IQdbBlobSelector selector)
+        {
+            var aliases = (IEnumerable<string>)selector.Accept(_api);
+
+            foreach (var alias in aliases)
+                yield return new QdbBlob(_api, alias);
+        }
+
+        /// <summary>
         /// Returns a <see cref="QdbDeque" /> attached to the specified alias.
         /// </summary>
         /// <remarks>No operation is performed in the database.</remarks>
@@ -64,8 +77,9 @@ namespace Quasardb
         public IEnumerable<QdbEntry> Entries(IQdbEntrySelector selector)
         {
             var factory = new QdbEntryFactory(_api);
+            var aliases = (IEnumerable<string>) selector.Accept(_api);
 
-            foreach (var alias in selector.Accept(_api))
+            foreach (var alias in aliases)
                 yield return factory.Create(alias);
         }
         

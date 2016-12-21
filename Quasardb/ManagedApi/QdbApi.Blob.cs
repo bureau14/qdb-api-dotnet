@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using Quasardb.Exceptions;
 using Quasardb.NativeApi;
 
@@ -103,6 +105,38 @@ namespace Quasardb.ManagedApi
 
                 case qdb_error_t.qdb_e_ok_created:
                     return true;
+
+                default:
+                    throw QdbExceptionFactory.Create(error);
+            }
+        }
+
+        public IEnumerable<string> BlobScan(byte[] pattern, long max)
+        {
+            var result = new QdbAliasCollection(_handle);
+            var error = qdb_api.qdb_blob_scan(_handle, pattern, (UIntPtr)pattern.Length, max, out result.Pointer, out result.Size);
+
+            switch (error)
+            {
+                case qdb_error_t.qdb_e_ok:
+                case qdb_error_t.qdb_e_alias_not_found:
+                    return result;
+
+                default:
+                    throw QdbExceptionFactory.Create(error);
+            }
+        }
+
+        public IEnumerable<string> BlobScanRegex(string pattern, long max)
+        {
+            var result = new QdbAliasCollection(_handle);
+            var error = qdb_api.qdb_blob_scan_regex(_handle, pattern, max, out result.Pointer, out result.Size);
+
+            switch (error)
+            {
+                case qdb_error_t.qdb_e_ok:
+                case qdb_error_t.qdb_e_alias_not_found:
+                    return result;
 
                 default:
                     throw QdbExceptionFactory.Create(error);

@@ -75,6 +75,7 @@
     <Compile Include="Exceptions\System\QdbRemoteSystemException.cs" />
     <Compile Include="Exceptions\System\QdbLocalSystemException.cs" />
     <Compile Include="Exceptions\System\QdbSystemException.cs" />
+    <Compile Include="IVisitable.cs" />
     <Compile Include="ManagedApi\QdbApi.Batch.cs" />
     <Compile Include="ManagedApi\QdbApi.Stream.cs" />
     <Compile Include="ManagedApi\QdbApi.Affix.cs" />
@@ -107,6 +108,7 @@
     <Compile Include="QdbBatchBlob.cs" />
     <Compile Include="QdbBatchOperation.cs" />
     <Compile Include="QdbBlob.cs" />
+    <Compile Include="QdbBlobSelector.cs" />
     <Compile Include="QdbCluster.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QdbEntry.cs" />

@@ -6,7 +6,7 @@ using System.Security;
 // ReSharper disable InconsistentNaming
 // ReSharper disable BuiltInTypeReferenceStyle
 
-using qdb_int = System.Int64;
+using qdb_int_t = System.Int64;
 using qdb_time_t = System.Int64;
 using size_t = System.UIntPtr;
 using qdb_size_t = System.UIntPtr;
@@ -64,7 +64,7 @@ namespace Quasardb.NativeApi
         public static extern qdb_error_t qdb_prefix_get(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string prefix,
-            [In] qdb_int max_count,
+            [In] qdb_int_t max_count,
             [Out] out IntPtr aliases,
             [Out] out size_t aliases_count);
 
@@ -72,7 +72,7 @@ namespace Quasardb.NativeApi
         public static extern qdb_error_t qdb_suffix_get(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string prefix,
-            [In] qdb_int max_count,
+            [In] qdb_int_t max_count,
             [Out] out IntPtr aliases,
             [Out] out size_t aliases_count);
 
@@ -103,7 +103,7 @@ namespace Quasardb.NativeApi
 
         #endregion
 
-        #region Functions specific to blob entries
+        #region Functions specific to blob
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error_t qdb_blob_compare_and_swap(
@@ -164,6 +164,23 @@ namespace Quasardb.NativeApi
             [In] byte[] comparand,
             [In] size_t comparand_length);
 
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error_t qdb_blob_scan(
+            [In] qdb_handle handle,
+            [In] byte[] pattern,
+            [In] qdb_size_t pattern_length,
+            [In] qdb_int_t max_count,
+            [Out] out IntPtr aliases,
+            [Out] out size_t aliases_count);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error_t qdb_blob_scan_regex(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string pattern,
+            [In] qdb_int_t max_count,
+            [Out] out IntPtr aliases,
+            [Out] out size_t aliases_count);
+
         #endregion
 
         #region Functions specific to integers
@@ -172,27 +189,27 @@ namespace Quasardb.NativeApi
         public static extern qdb_error_t qdb_int_add(
             [In] qdb_handle handle,
             [In, MarshalAs(ALIAS_TYPE)] string alias,
-            [In] qdb_int value,
-            [Out] out qdb_int result);
+            [In] qdb_int_t value,
+            [Out] out qdb_int_t result);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error_t qdb_int_get(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
-            [Out] out qdb_int value);
+            [Out] out qdb_int_t value);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error_t qdb_int_put(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
-            [In] qdb_int value,
+            [In] qdb_int_t value,
             [In] qdb_time_t expiry_time);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error_t qdb_int_update(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
-            [In] qdb_int value,
+            [In] qdb_int_t value,
             [In] qdb_time_t expiry_time);
 
         #endregion
