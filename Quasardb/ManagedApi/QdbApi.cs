@@ -13,7 +13,8 @@ namespace Quasardb.ManagedApi
             {qdb_entry_type.qdb_entry_hset, QdbEntryType.HashSet},
             {qdb_entry_type.qdb_entry_integer, QdbEntryType.Integer},
             {qdb_entry_type.qdb_entry_deque, QdbEntryType.Deque},
-            {qdb_entry_type.qdb_entry_tag, QdbEntryType.Tag}
+            {qdb_entry_type.qdb_entry_tag, QdbEntryType.Tag},
+            {qdb_entry_type.qdb_entry_stream, QdbEntryType.Stream}
         };
 
         readonly qdb_handle _handle;

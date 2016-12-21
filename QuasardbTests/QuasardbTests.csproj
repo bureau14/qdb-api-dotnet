@@ -85,6 +85,7 @@
     <Compile Include="QdbBlobTests\RemoveIf.cs" />
     <Compile Include="QdbBlobTests\Remove.cs" />
     <Compile Include="QdbBlobTests\Update.cs" />
+    <Compile Include="QdbClusterTests\Entry.cs" />
     <Compile Include="QdbClusterTests\Misc.cs" />
     <Compile Include="QdbClusterTests\Blobs.cs" />
     <Compile Include="QdbDequeTests\Size.cs" />

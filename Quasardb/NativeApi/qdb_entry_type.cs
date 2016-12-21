@@ -9,6 +9,7 @@ namespace Quasardb.NativeApi
         qdb_entry_integer = 1,
         qdb_entry_hset = 2,
         qdb_entry_tag = 3,
-        qdb_entry_deque = 4
+        qdb_entry_deque = 4,
+        qdb_entry_stream = 5
     }
 }

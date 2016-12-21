@@ -36,8 +36,11 @@ namespace Quasardb
                 case QdbEntryType.Tag:
                     return new QdbTag(_handle, alias);
 
+                case QdbEntryType.Stream:
+                    return new QdbStream(_handle, alias);
+
                 default:
-                    throw new NotImplementedException("Please contact quasardb support.");
+                    throw new NotImplementedException($"Entry type \"{type}\" not supported in {nameof(QdbEntryFactory)}. Please contact quasardb support.");
             }
         }
     }

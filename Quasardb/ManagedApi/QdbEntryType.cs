@@ -6,6 +6,7 @@
         Deque,
         HashSet,
         Integer,
-        Tag
+        Tag,
+        Stream
     }
 }

@@ -42,9 +42,9 @@ namespace QuasardbTests.Helpers
             return Instance.HashSet(alias ?? RandomGenerator.CreateUniqueAlias());
         }
 
-        public static QdbHashSet CreateHashSet()
+        public static QdbHashSet CreateHashSet(string alias = null)
         {
-            var hashSet = CreateEmptyHashSet();
+            var hashSet = CreateEmptyHashSet(alias);
             hashSet.Insert(RandomGenerator.CreateRandomContent());
             return hashSet;
         }
@@ -65,9 +65,9 @@ namespace QuasardbTests.Helpers
             return Instance.Deque(alias ?? RandomGenerator.CreateUniqueAlias());
         }
 
-        public static QdbDeque CreateQueue()
+        public static QdbDeque CreateQueue(string alias = null)
         {
-            var queue = CreateEmptyQueue();
+            var queue = CreateEmptyQueue(alias);
             queue.PushBack(RandomGenerator.CreateRandomContent());
             return queue;
         }
@@ -88,9 +88,9 @@ namespace QuasardbTests.Helpers
             return Instance.Integer(alias ?? RandomGenerator.CreateUniqueAlias());
         }
 
-        public static QdbInteger CreateInteger()
+        public static QdbInteger CreateInteger(string alias = null)
         {
-            var integer = CreateEmptyInteger();
+            var integer = CreateEmptyInteger(alias);
             integer.Put(42);
             return integer;
         }
@@ -111,9 +111,9 @@ namespace QuasardbTests.Helpers
             return Instance.Tag(alias ?? RandomGenerator.CreateUniqueAlias());
         }
 
-        public static QdbTag CreateTag()
+        public static QdbTag CreateTag(string alias = null)
         {
-            var tag = CreateEmptyTag();
+            var tag = CreateEmptyTag(alias);
             tag.AttachEntry(CreateBlob());
             return tag;
         }
@@ -132,14 +132,14 @@ namespace QuasardbTests.Helpers
             return CreateEmptyStream().Open(QdbStreamMode.Append);
         }
 
-        public static QdbStream CreateEmptyStream()
+        public static QdbStream CreateEmptyStream(string alias = null)
         {
-            return Instance.Stream(RandomGenerator.CreateUniqueAlias());
+            return Instance.Stream(alias ?? RandomGenerator.CreateUniqueAlias());
         }
 
-        public static QdbStream CreateStream()
+        public static QdbStream CreateStream(string alias = null)
         {
-            var qdbStream = CreateEmptyStream();
+            var qdbStream = CreateEmptyStream(alias);
             using (var stream = qdbStream.Open(QdbStreamMode.Append))
             {
                 stream.WriteByte(1);

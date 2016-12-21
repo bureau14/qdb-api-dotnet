@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Remoting.Messaging;
+using Quasardb.Exceptions;
 using Quasardb.ManagedApi;
 
 namespace Quasardb
@@ -11,7 +12,8 @@ namespace Quasardb
     /// </summary>
     public sealed class QdbCluster : IDisposable
     {
-        readonly QdbApi _api;
+        private readonly QdbApi _api;
+        private readonly QdbEntryFactory _factory;
 
         /// <summary>
         /// Connects to a quasardb database.
@@ -21,6 +23,7 @@ namespace Quasardb
         {
             _api = new QdbApi();
             _api.Connect(uri);
+            _factory = new QdbEntryFactory(_api);
         }
 
         /// <summary>
@@ -71,16 +74,28 @@ namespace Quasardb
         }
 
         /// <summary>
+        /// Returns a <see cref="QdbEntry" /> attached to the specified alias.
+        /// The actual type of the return value depends on the type of the entry in the database.
+        /// </summary>
+        /// <param name="alias"></param>
+        /// <returns></returns>
+        /// <exception cref="QdbAliasNotFoundException">If the entry doesn't exists.</exception>
+        public QdbEntry Entry(string alias)
+        {
+            if (alias == null) throw new ArgumentNullException(nameof(alias));
+            return _factory.Create(alias);
+        }
+
+        /// <summary>
         /// Returns a collection of <see cref="QdbEntry" /> matching the given criteria.
         /// </summary>
         /// <returns>A collection of entry.</returns>
         public IEnumerable<QdbEntry> Entries(IQdbEntrySelector selector)
         {
-            var factory = new QdbEntryFactory(_api);
             var aliases = (IEnumerable<string>) selector.Accept(_api);
 
             foreach (var alias in aliases)
-                yield return factory.Create(alias);
+                yield return _factory.Create(alias);
         }
         
         /// <summary>
