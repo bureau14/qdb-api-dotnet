@@ -85,6 +85,8 @@
     <Compile Include="QdbBlobTests\RemoveIf.cs" />
     <Compile Include="QdbBlobTests\Remove.cs" />
     <Compile Include="QdbBlobTests\Update.cs" />
+    <Compile Include="QdbClusterTests\Misc.cs" />
+    <Compile Include="QdbClusterTests\Blobs.cs" />
     <Compile Include="QdbDequeTests\Size.cs" />
     <Compile Include="QdbDequeTests\Back.cs" />
     <Compile Include="QdbDequeTests\Front.cs" />
@@ -94,7 +96,7 @@
     <Compile Include="QdbDequeTests\PushFront.cs" />
     <Compile Include="QdbEntryTests\DetachTag.cs" />
     <Compile Include="QdbBlobTests\ExpiresFromNow.cs" />
-    <Compile Include="QdbClusterTests.cs" />
+    <Compile Include="QdbClusterTests\Entries.cs" />
     <Compile Include="DaemonRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QdbEntryTests\AttachTag.cs" />
