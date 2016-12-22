@@ -12,13 +12,13 @@ namespace Quasardb
     /// <code language="c#">
     /// byte[] myData;
     /// var cluster = new QdbCluster("qdb://127.0.0.1:2836");
-    /// 
+    ///
     /// cluster.Deque("some name").PushBack(myData);
     /// </code>
     /// <code language="vb">
     /// Dim myData As Byte()
     /// Dim cluster = New QdbCluster("qdb://127.0.0.1:2836")
-    /// 
+    ///
     /// cluster.Deque("some name").PushBack(myData)
     /// </code>
     /// </example>
@@ -105,6 +105,28 @@ namespace Quasardb
         public long Size()
         {
             return Api.DequeSize(Alias);
+        }
+
+        /// <summary>
+        /// Gets the value at the specified index.
+        /// </summary>
+        /// <param name="index">The zero-based index of the element</param>
+        /// <exception cref="QdbAliasNotFoundException">The queue doesn't exists in the database.</exception>
+        /// <exception cref="QdbIncompatibleTypeException">The matching entry in the database is not a queue.</exception>
+        public byte[] GetAt(long index)
+        {
+            return Api.DequeGetAt(Alias, index);
+        }
+
+        /// <summary>
+        /// Gets or sets the value at the specified index.
+        /// </summary>
+        /// <param name="index">The zero-based index of the element</param>
+        /// <exception cref="QdbAliasNotFoundException">The queue doesn't exists in the database.</exception>
+        /// <exception cref="QdbIncompatibleTypeException">The matching entry in the database is not a queue.</exception>
+        public byte[] this[long index]
+        {
+            get { return GetAt(index); }
         }
     }
 }

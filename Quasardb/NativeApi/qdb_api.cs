@@ -264,6 +264,14 @@ namespace Quasardb.NativeApi
             [In] byte[] content,
             [Out] size_t content_length);
 
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error_t qdb_deque_get_at(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In] qdb_int_t index,
+            [Out] out IntPtr content,
+            [Out] out size_t contentLength);
+
         #endregion
 
         #region Functions specific to sets

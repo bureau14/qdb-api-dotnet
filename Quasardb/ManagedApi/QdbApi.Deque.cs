@@ -68,5 +68,15 @@ namespace Quasardb.ManagedApi
             QdbExceptionThrower.ThrowIfNeeded(error);
             return (long)size;
         }
+
+        public byte[] DequeGetAt(string alias, long index)
+        {
+            using (var content = new qdb_buffer(_handle))
+            {
+                var error = qdb_api.qdb_deque_get_at(_handle, alias, index, out content.Pointer, out content.Size);
+                QdbExceptionThrower.ThrowIfNeeded(error);
+                return content.GetBytes();
+            }
+        }
     }
 }
