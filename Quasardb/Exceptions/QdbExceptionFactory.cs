@@ -45,6 +45,9 @@ namespace Quasardb.Exceptions
                 case qdb_error_t.qdb_e_invalid_argument:
                     return new QdbInvalidArgumentException();
 
+                case qdb_error_t.qdb_e_out_of_bounds:
+                    return new QdbOutOfBoundsException();
+
                 default:
                     return new QdbInputException(qdb_api.qdb_error(error));
             }

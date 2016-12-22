@@ -108,7 +108,7 @@ namespace Quasardb
         }
 
         /// <summary>
-        /// Gets the value at the specified index.
+        /// Gets the element at the specified index.
         /// </summary>
         /// <param name="index">The zero-based index of the element</param>
         /// <exception cref="QdbAliasNotFoundException">The queue doesn't exists in the database.</exception>
@@ -116,6 +116,23 @@ namespace Quasardb
         public byte[] GetAt(long index)
         {
             return Api.DequeGetAt(Alias, index);
+        }
+
+        /// <summary>
+        /// Sets the element at the specified index.
+        /// </summary>
+        /// <remarks>
+        /// This methods cannot add new elements to the deque; it only replaces an existing one.
+        /// </remarks>
+        /// <param name="index">The zero-based index of the element</param>
+        /// <param name="content">The new content</param>
+        /// <exception cref="QdbAliasNotFoundException">The queue doesn't exists in the database.</exception>
+        /// <exception cref="QdbIncompatibleTypeException">The matching entry in the database is not a queue.</exception>
+        /// <exception cref="QdbOutOfBoundsException">The index is out of bounds.</exception>
+        public void SetAt(long index, byte[] content)
+        {
+            if (content == null) throw new ArgumentNullException(nameof(content));
+            Api.DequeSetAt(Alias, index, content);
         }
 
         /// <summary>
@@ -127,6 +144,7 @@ namespace Quasardb
         public byte[] this[long index]
         {
             get { return GetAt(index); }
+            set { SetAt(index, value); }
         }
     }
 }

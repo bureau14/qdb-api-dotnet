@@ -88,6 +88,7 @@
     <Compile Include="QdbClusterTests\Entry.cs" />
     <Compile Include="QdbClusterTests\Misc.cs" />
     <Compile Include="QdbClusterTests\Blobs.cs" />
+    <Compile Include="QdbDequeTests\SetAt.cs" />
     <Compile Include="QdbDequeTests\GetAt.cs" />
     <Compile Include="QdbDequeTests\Size.cs" />
     <Compile Include="QdbDequeTests\Back.cs" />

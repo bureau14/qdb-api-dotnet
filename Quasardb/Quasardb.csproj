@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="Exceptions\Connection\QdbConnectionException.cs" />
     <Compile Include="Exceptions\Input\QdbInputException.cs" />
+    <Compile Include="Exceptions\Input\QdbOutOfBoundsException.cs" />
     <Compile Include="Exceptions\Operation\QdbAliasAlreadyExistsException.cs" />
     <Compile Include="Exceptions\Operation\QdbAliasNotFoundException.cs" />
     <Compile Include="Exceptions\Operation\QdbOperationException.cs" />
