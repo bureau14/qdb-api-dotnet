@@ -9,19 +9,25 @@ namespace QuasardbTests.QdbStreamTests
     public class Remove
     {
         [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
-        public void ThrowsAliasNotFoundException_OnRandomAlias()
+        public void ReturnsFalse_WhenAliasDoesntExist()
         {
-            QdbTestCluster.Instance.Stream(RandomGenerator.CreateUniqueAlias()).Remove();
+            var stream = QdbTestCluster.Instance.Stream(RandomGenerator.CreateUniqueAlias());
+
+            var result = stream.Remove();
+
+            Assert.IsFalse(result);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
-        public void ThrowsAliasNotFoundException_WhenCalledTwice()
+        public void ReturnsFalse_WhenCalledTwice()
         {
             var stream = QdbTestCluster.CreateStream();
-            stream.Remove();
-            stream.Remove();
+
+            var result1 = stream.Remove();
+            var result2 = stream.Remove();
+
+            Assert.IsTrue(result1);
+            Assert.IsFalse(result2);
         }
 
         [TestMethod]

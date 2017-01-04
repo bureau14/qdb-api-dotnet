@@ -8,34 +8,38 @@ namespace QuasardbTests.QdbBlobTests
     public class Remove
     {
         [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
-        public void ThrowsAliasNotFound_OnNewAlias()
+        public void ReturnsFalse_WhenAliasDoesntExist()
         {
             var blob = QdbTestCluster.CreateEmptyBlob();
 
-            blob.Remove();
+            var result = blob.Remove();
+
+            Assert.IsFalse(result);
         }
 
         [TestMethod]
-        public void NoError_AfterPut()
+        public void ReturnsTrue_WhenAliasExists()
+        {
+            var blob = QdbTestCluster.CreateEmptyBlob();
+            var content = RandomGenerator.CreateRandomContent();
+
+            blob.Put(content);
+            var result = blob.Remove();
+
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void ReturnsFalse_WhenCalledTwice()
         {
             var blob = QdbTestCluster.CreateEmptyBlob();
             var content = RandomGenerator.CreateRandomContent();
 
             blob.Put(content);
             blob.Remove();
-        }
+            var result = blob.Remove();
 
-        [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
-        public void ThrowsAliasNotFound_WhenCalledTwice()
-        {
-            var blob = QdbTestCluster.CreateEmptyBlob();
-            var content = RandomGenerator.CreateRandomContent();
-
-            blob.Put(content);
-            blob.Remove();
-            blob.Remove();
+            Assert.IsFalse(result);
         }
     }
 }

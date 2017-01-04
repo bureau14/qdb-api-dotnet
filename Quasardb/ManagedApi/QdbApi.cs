@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Quasardb.Exceptions;
 using Quasardb.NativeApi;
 
 namespace Quasardb.ManagedApi
@@ -51,10 +52,21 @@ namespace Quasardb.ManagedApi
             return managedType;
         }
 
-        public void Remove(string alias)
+        public bool Remove(string alias)
         {
             var error = qdb_api.qdb_remove(_handle, alias);
-            QdbExceptionThrower.ThrowIfNeeded(error);
+
+            switch (error)
+            {
+                case qdb_error_t.qdb_e_ok:
+                    return true;
+                    
+                case qdb_error_t.qdb_e_alias_not_found:
+                    return false;
+
+                default:
+                    throw QdbExceptionFactory.Create(error);
+            }
         }
     }
 }
