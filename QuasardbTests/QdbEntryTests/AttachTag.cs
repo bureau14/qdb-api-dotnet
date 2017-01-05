@@ -33,12 +33,19 @@ namespace QuasardbTests.QdbEntryTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(QdbIncompatibleTypeException))]
         public void ThrowsIncompatibleType()
         {
             var entry = QdbTestCluster.CreateBlob();
-
-            entry.AttachTag(entry.Alias);
+            
+            try
+            {
+                entry.AttachTag(entry.Alias);
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbIncompatibleTypeException e)
+            {
+                Assert.AreEqual(entry.Alias, e.Alias);
+            }
         }
 
         [TestMethod]
@@ -60,12 +67,20 @@ namespace QuasardbTests.QdbEntryTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void ThrowsAliasNotFound()
         {
             var tag = QdbTestCluster.CreateEmptyTag();
-
-            QdbTestCluster.CreateEmptyBlob().AttachTag(tag);
+            var blob = QdbTestCluster.CreateEmptyBlob();
+            
+            try
+            {
+                blob.AttachTag(tag);
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbAliasNotFoundException e)
+            {
+                Assert.AreEqual(blob.Alias, e.Alias);
+            }
         }
     }
 }

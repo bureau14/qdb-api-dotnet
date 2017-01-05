@@ -5,7 +5,7 @@
     /// </summary>
     public sealed class QdbIncompatibleTypeException : QdbOperationException
     {
-        internal QdbIncompatibleTypeException() : base("The alias has a type incompatible for this operation.")
+        internal QdbIncompatibleTypeException(string alias) : base($"The alias \"{alias}\" has a type incompatible for this operation.", alias)
         {
         }
     }

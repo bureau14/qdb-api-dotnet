@@ -8,23 +8,38 @@ namespace QuasardbTests.QdbDequeTests
     public class Size
     {
         [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void ThrowsAliasNotFound()
         {
             var deque = QdbTestCluster.CreateEmptyQueue();
-
-            deque.Size(); // <- throws QdbAliasNotFoundException
+            
+            try
+            {
+                deque.Size();
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbAliasNotFoundException e)
+            {
+                Assert.AreEqual(deque.Alias, e.Alias);
+            }
         }
         
         [TestMethod]
-        [ExpectedException(typeof(QdbIncompatibleTypeException))]
         public void ThrowsIncompatibleType()
         {
             var alias = RandomGenerator.CreateUniqueAlias();
             var deque = QdbTestCluster.CreateEmptyQueue(alias);
 
             QdbTestCluster.CreateBlob(alias);
-            deque.Size(); // <- throws QdbIncompatibleTypeException
+
+            try
+            {
+                deque.Size();
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbIncompatibleTypeException e)
+            {
+                Assert.AreEqual(deque.Alias, e.Alias);
+            }
         }
         
         [TestMethod]

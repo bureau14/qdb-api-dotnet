@@ -9,23 +9,38 @@ namespace QuasardbTests.QdbIntegerTests
     public class Add
     {
         [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void ThrowsAliasNotFound()
         {
             var integer = QdbTestCluster.CreateEmptyInteger();
 
-            integer.Add(22); // <- throws
+            try
+            {
+                integer.Add(22);
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbAliasNotFoundException e)
+            {
+                Assert.AreEqual(integer.Alias, e.Alias);
+            }
         }
 
         [TestMethod]
-        [ExpectedException(typeof(QdbIncompatibleTypeException))]
         public void ThrowIncompatibleType()
         {
             var alias = RandomGenerator.CreateUniqueAlias();
             var integer = QdbTestCluster.CreateEmptyInteger(alias);
 
             QdbTestCluster.CreateBlob(alias);
-            integer.Add(22); // <- throws
+
+            try
+            {
+                integer.Add(22);
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbIncompatibleTypeException e)
+            {
+                Assert.AreEqual(integer.Alias, e.Alias);
+            }
         }
 
         [TestMethod]

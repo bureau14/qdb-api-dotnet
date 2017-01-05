@@ -18,17 +18,23 @@ namespace QuasardbTests.QdbHashSetTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void ThrowsAliasNotFound()
         {
             var hashSet = QdbTestCluster.CreateEmptyHashSet();
             var content = RandomGenerator.CreateRandomContent();
 
-            hashSet.Erase(content); // <- QdbAliasNotFoundException
+            try
+            {
+                hashSet.Erase(content);
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbAliasNotFoundException e)
+            {
+                Assert.AreEqual(hashSet.Alias, e.Alias);
+            }
         }
 
         [TestMethod]
-        [ExpectedException(typeof(QdbIncompatibleTypeException))]
         public void ThrowsIncompatibleType()
         {
             var alias = RandomGenerator.CreateUniqueAlias();
@@ -36,7 +42,16 @@ namespace QuasardbTests.QdbHashSetTests
             var content = RandomGenerator.CreateRandomContent();
 
             QdbTestCluster.CreateBlob(alias);
-            hashSet.Erase(content); // <- QdbIncompatibleTypeException
+
+            try
+            {
+                hashSet.Erase(content);
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbIncompatibleTypeException e)
+            {
+                Assert.AreEqual(hashSet.Alias, e.Alias);
+            }
         }
 
         [TestMethod]

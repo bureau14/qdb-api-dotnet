@@ -8,12 +8,19 @@ namespace QuasardbTests.QdbBlobTests
     public class Get
     {
         [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void ThrowAliasNotFound()
         {
             var blob = QdbTestCluster.CreateEmptyBlob();
-
-            blob.Get();
+           
+            try
+            {
+                blob.Get();
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbAliasNotFoundException e)
+            {
+                Assert.AreEqual(blob.Alias, e.Alias);
+            }
         }
 
         [TestMethod]

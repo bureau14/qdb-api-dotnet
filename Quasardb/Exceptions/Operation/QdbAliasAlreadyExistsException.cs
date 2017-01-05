@@ -5,7 +5,7 @@
     /// </summary>
     public sealed class QdbAliasAlreadyExistsException : QdbOperationException
     {
-        internal QdbAliasAlreadyExistsException() : base("An entry matching the provided alias already exists.")
+        internal QdbAliasAlreadyExistsException(string alias) : base($"An entry matching the alias \"{alias}\" already exists.", alias)
         {
         }
     }

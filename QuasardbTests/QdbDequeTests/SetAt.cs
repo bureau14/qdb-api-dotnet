@@ -19,17 +19,23 @@ namespace QuasardbTests.QdbDequeTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void ThrowsAliasNotFound()
         {
             var deque = QdbTestCluster.CreateEmptyQueue();
             var content = RandomGenerator.CreateRandomContent();
 
-            deque[0] = content; // <- throws QdbAliasNotFoundException
+            try
+            {
+                deque[0] = content;
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbAliasNotFoundException e)
+            {
+                Assert.AreEqual(deque.Alias, e.Alias);
+            }
         }
         
         [TestMethod]
-        [ExpectedException(typeof(QdbIncompatibleTypeException))]
         public void ThrowsIncompatibleType()
         {
             var alias = RandomGenerator.CreateUniqueAlias();
@@ -37,7 +43,16 @@ namespace QuasardbTests.QdbDequeTests
             var content = RandomGenerator.CreateRandomContent();
 
             QdbTestCluster.CreateBlob(alias);
-            deque.SetAt(0, content); // <- throws QdbIncompatibleTypeException
+
+            try
+            {
+                deque.SetAt(0, content);
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbIncompatibleTypeException e)
+            {
+                Assert.AreEqual(deque.Alias, e.Alias);
+            }
         }
 
         [TestMethod]

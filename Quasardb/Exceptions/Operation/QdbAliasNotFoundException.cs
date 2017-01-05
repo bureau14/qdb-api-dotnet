@@ -5,7 +5,7 @@ namespace Quasardb.Exceptions
     /// </summary>
     public sealed class QdbAliasNotFoundException : QdbOperationException
     {
-        internal QdbAliasNotFoundException() : base("An entry matching the provided alias cannot be found.")
+        internal QdbAliasNotFoundException(string alias) : base($"An entry matching the alias \"{alias}\" cannot be found.", alias)
         {
         }
     }

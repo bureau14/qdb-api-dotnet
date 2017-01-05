@@ -20,12 +20,19 @@ namespace QuasardbTests.QdbClusterTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void ThrowsAliasNotFound()
         {
             var alias = RandomGenerator.CreateUniqueAlias();
 
-            _cluster.Entry(alias); // <- throws QdbAliasNotFoundException
+            try
+            {
+                _cluster.Entry(alias);
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbAliasNotFoundException e)
+            {
+                Assert.AreEqual(alias, e.Alias);
+            }
         }
 
         [TestMethod]

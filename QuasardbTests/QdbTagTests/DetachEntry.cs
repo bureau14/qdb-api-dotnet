@@ -26,20 +26,37 @@ namespace QuasardbTests.QdbTagTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void ThrowsAliasNotFound()
         {
             var tag = QdbTestCluster.CreateEmptyTag();
-            tag.DetachEntry(RandomGenerator.CreateUniqueAlias()); // <- throws
+            var alias = RandomGenerator.CreateUniqueAlias();
+
+            try
+            {
+                tag.DetachEntry(alias);
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbAliasNotFoundException e)
+            {
+                Assert.AreEqual(alias, e.Alias);
+            }
         }
 
         [TestMethod]
-        [ExpectedException(typeof(QdbIncompatibleTypeException))]
         public void ThrowsIncompatibleType()
         {
             var tag = QdbTestCluster.CreateEmptyTag();
             QdbTestCluster.CreateBlob(tag.Alias);
-            tag.DetachEntry(QdbTestCluster.CreateBlob()); // <- throws
+
+            try
+            {
+                tag.DetachEntry(QdbTestCluster.CreateBlob());
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbIncompatibleTypeException e)
+            {
+                Assert.AreEqual(tag.Alias, e.Alias);
+            }
         }
 
         [TestMethod]

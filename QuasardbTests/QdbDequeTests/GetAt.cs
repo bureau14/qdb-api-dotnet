@@ -8,23 +8,38 @@ namespace QuasardbTests.QdbDequeTests
     public class GetAt
     {
         [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void ThrowsAliasNotFound()
         {
             var deque = QdbTestCluster.CreateEmptyQueue();
 
-            deque.GetAt(0); // <- throws QdbAliasNotFoundException
+            try
+            {
+                deque.GetAt(0);
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbAliasNotFoundException e)
+            {
+                Assert.AreEqual(deque.Alias, e.Alias);
+            }
         }
         
         [TestMethod]
-        [ExpectedException(typeof(QdbIncompatibleTypeException))]
         public void ThrowsIncompatibleType()
         {
             var alias = RandomGenerator.CreateUniqueAlias();
             var deque = QdbTestCluster.CreateEmptyQueue(alias);
 
             QdbTestCluster.CreateBlob(alias);
-            deque.GetAt(0); // <- throws QdbIncompatibleTypeException
+
+            try
+            {
+                deque.GetAt(0);
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbIncompatibleTypeException e)
+            {
+                Assert.AreEqual(deque.Alias, e.Alias);
+            }
         }
         
         [TestMethod]

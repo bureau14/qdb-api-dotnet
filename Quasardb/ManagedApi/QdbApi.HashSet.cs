@@ -19,7 +19,7 @@ namespace Quasardb.ManagedApi
                     return true;
 
                 default:
-                    throw QdbExceptionFactory.Create(error);
+                    throw QdbExceptionFactory.Create(error, alias: alias);
             }
         }
 
@@ -36,7 +36,7 @@ namespace Quasardb.ManagedApi
                     return true;
 
                 default:
-                    throw QdbExceptionFactory.Create(error);
+                    throw QdbExceptionFactory.Create(error, alias: alias);
             }
         }
 
@@ -53,7 +53,7 @@ namespace Quasardb.ManagedApi
                     return true;
 
                 default:
-                    throw QdbExceptionFactory.Create(error);
+                    throw QdbExceptionFactory.Create(error, alias: alias);
             }
         }
     }

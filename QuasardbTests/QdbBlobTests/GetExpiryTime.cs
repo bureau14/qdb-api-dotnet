@@ -9,12 +9,19 @@ namespace QuasardbTests.QdbBlobTests
     public class GetExpiryTime
     {
         [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void ThrowsAliasNotFound()
         {
             var blob = QdbTestCluster.CreateEmptyBlob();
-
-            blob.GetExpiryTime();
+            
+            try
+            {
+                blob.GetExpiryTime();
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbAliasNotFoundException e)
+            {
+                Assert.AreEqual(blob.Alias, e.Alias);
+            }
         }
 
         [TestMethod]

@@ -25,7 +25,7 @@ namespace Quasardb.ManagedApi
                         return oldContent.GetBytes();
 
                     default:
-                        throw QdbExceptionFactory.Create(error);
+                        throw QdbExceptionFactory.Create(error, alias: alias);
                 }
             }
         }
@@ -35,7 +35,7 @@ namespace Quasardb.ManagedApi
             using (var content = new qdb_buffer(_handle))
             {
                 var error = qdb_api.qdb_blob_get(_handle, alias, out content.Pointer, out content.Size);
-                QdbExceptionThrower.ThrowIfNeeded(error);
+                QdbExceptionThrower.ThrowIfNeeded(error, alias: alias);
                 return content.GetBytes();
             }
         }
@@ -45,7 +45,7 @@ namespace Quasardb.ManagedApi
             using (var content = new qdb_buffer(_handle))
             {
                 var error = qdb_api.qdb_blob_get_and_remove(_handle, alias, out content.Pointer, out content.Size);
-                QdbExceptionThrower.ThrowIfNeeded(error);
+                QdbExceptionThrower.ThrowIfNeeded(error, alias: alias);
                 return content.GetBytes();
             }
         }
@@ -59,7 +59,7 @@ namespace Quasardb.ManagedApi
                     qdb_time.FromOptionalDateTime(expiryTime),
                     out oldContent.Pointer, out oldContent.Size);
 
-                QdbExceptionThrower.ThrowIfNeeded(error);
+                QdbExceptionThrower.ThrowIfNeeded(error, alias: alias);
                 return oldContent.GetBytes();
             }
         }
@@ -70,7 +70,7 @@ namespace Quasardb.ManagedApi
                 content, (UIntPtr)content.LongLength,
                 qdb_time.FromOptionalDateTime(expiryTime));
 
-            QdbExceptionThrower.ThrowIfNeeded(error);
+            QdbExceptionThrower.ThrowIfNeeded(error, alias: alias);
         }
 
         public bool BlobRemoveIf(string alias, byte[] comparand)
@@ -86,7 +86,7 @@ namespace Quasardb.ManagedApi
                     return true;
 
                 default:
-                    throw QdbExceptionFactory.Create(error);
+                    throw QdbExceptionFactory.Create(error, alias: alias);
             }
         }
 
@@ -105,7 +105,7 @@ namespace Quasardb.ManagedApi
                     return true;
 
                 default:
-                    throw QdbExceptionFactory.Create(error);
+                    throw QdbExceptionFactory.Create(error, alias: alias);
             }
         }
 

@@ -8,23 +8,38 @@ namespace QuasardbTests.QdbDequeTests
     public class PopBack
     {
         [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void ThrowsAliasNotFound()
         {
             var deque = QdbTestCluster.CreateEmptyQueue();
-
-            deque.PopBack();
+            
+            try
+            {
+                deque.PopBack();
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbAliasNotFoundException e)
+            {
+                Assert.AreEqual(deque.Alias, e.Alias);
+            }
         }
 
         [TestMethod]
-        [ExpectedException(typeof(QdbIncompatibleTypeException))]
         public void ThrowsIncompatibleType()
         {
             var alias = RandomGenerator.CreateUniqueAlias();
             QdbTestCluster.CreateBlob(alias);
 
             var deque = QdbTestCluster.CreateEmptyQueue(alias);
-            deque.PopBack();
+            
+            try
+            {
+                deque.PopBack();
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbIncompatibleTypeException e)
+            {
+                Assert.AreEqual(deque.Alias, e.Alias);
+            }
         }
 
         [TestMethod]

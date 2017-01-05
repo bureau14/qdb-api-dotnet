@@ -5,7 +5,7 @@
     /// </summary>
     public sealed class QdbResourceLockedException : QdbOperationException
     {
-        internal QdbResourceLockedException() : base("The entry is currently locked by another client.")
+        internal QdbResourceLockedException(string alias) : base($"The entry \"{alias}\" is currently locked by another client.", alias)
         {
         }
     }

@@ -8,22 +8,37 @@ namespace QuasardbTests.QdbBlobTests
     public class GetAndRemove
     {
         [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void ThrowsAliasNotFound()
         {
             var blob = QdbTestCluster.CreateEmptyBlob();
 
-            blob.GetAndRemove();
+            try
+            {
+                blob.GetAndRemove();
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbAliasNotFoundException e)
+            {
+                Assert.AreEqual(blob.Alias, e.Alias);
+            }
         }
 
         [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void ThrowsAliasNotFound_WhenCalledTwice()
         {
-            var blob = QdbTestCluster.CreateEmptyBlob();
+            var blob = QdbTestCluster.CreateBlob();
+            
+            blob.GetAndRemove();
 
-            blob.GetAndRemove();
-            blob.GetAndRemove();
+            try
+            {
+                blob.GetAndRemove();
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbAliasNotFoundException e)
+            {
+                Assert.AreEqual(blob.Alias, e.Alias);
+            }
         }
     }
 }

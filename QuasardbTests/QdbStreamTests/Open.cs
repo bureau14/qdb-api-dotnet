@@ -9,36 +9,68 @@ namespace QuasardbTests.QdbStreamTests
     public class Open
     {
         [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void ThrowsAliasNotFoundException_OnRandomAlias()
         {
             var stream = QdbTestCluster.Instance.Stream(RandomGenerator.CreateUniqueAlias());
-            stream.Open(QdbStreamMode.Open);
+            
+            try
+            {
+                stream.Open(QdbStreamMode.Open);
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbAliasNotFoundException e)
+            {
+                Assert.AreEqual(stream.Alias, e.Alias);
+            }
         }
 
         [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void ThrowsAliasNotFoundException_AfterRemove()
         {
             var stream = QdbTestCluster.CreateStream();
             stream.Remove();
-            stream.Open(QdbStreamMode.Open);
+
+            try
+            {
+                stream.Open(QdbStreamMode.Open);
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbAliasNotFoundException e)
+            {
+                Assert.AreEqual(stream.Alias, e.Alias);
+            }
         }
         
         [TestMethod]
-        [ExpectedException(typeof(QdbIncompatibleTypeException))]
         public void ThrowsIncompatibleTypeException_OpenMode()
         {
             var blob = QdbTestCluster.CreateBlob();
-            QdbTestCluster.Instance.Stream(blob.Alias).Open(QdbStreamMode.Open);
+            
+            try
+            {
+                QdbTestCluster.Instance.Stream(blob.Alias).Open(QdbStreamMode.Open);
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbIncompatibleTypeException e)
+            {
+                Assert.AreEqual(blob.Alias, e.Alias);
+            }
         }
 
         [TestMethod]
-        [ExpectedException(typeof(QdbIncompatibleTypeException))]
         public void ThrowsIncompatibleTypeException_AppendMode()
         {
             var blob = QdbTestCluster.CreateBlob();
-            QdbTestCluster.Instance.Stream(blob.Alias).Open(QdbStreamMode.Append);
+
+            try
+            {
+                QdbTestCluster.Instance.Stream(blob.Alias).Open(QdbStreamMode.Append);
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbIncompatibleTypeException e)
+            {
+                Assert.AreEqual(blob.Alias, e.Alias);
+            }
         }
     }
 }

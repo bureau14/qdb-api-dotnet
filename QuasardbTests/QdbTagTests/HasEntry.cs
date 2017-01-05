@@ -48,11 +48,20 @@ namespace QuasardbTests.QdbTagTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void ThrowsAliasNotFound()
         {
             var tag = QdbTestCluster.CreateEmptyTag();
-            tag.HasEntry(RandomGenerator.CreateUniqueAlias());
+            var alias = RandomGenerator.CreateUniqueAlias();
+           
+            try
+            {
+                tag.HasEntry(alias);
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbAliasNotFoundException e)
+            {
+                Assert.AreEqual(alias, e.Alias);
+            }
         }
     }
 }

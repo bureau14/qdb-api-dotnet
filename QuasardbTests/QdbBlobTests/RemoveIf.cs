@@ -18,13 +18,20 @@ namespace QuasardbTests.QdbBlobTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void ThrowsAliasNotFound()
         {
             var blob = QdbTestCluster.CreateEmptyBlob();
             var content = RandomGenerator.CreateRandomContent();
-
-            blob.RemoveIf(content);
+            
+            try
+            {
+                blob.RemoveIf(content);
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbAliasNotFoundException e)
+            {
+                Assert.AreEqual(blob.Alias, e.Alias);
+            }
         }
 
         [TestMethod]
@@ -53,7 +60,6 @@ namespace QuasardbTests.QdbBlobTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void ThrowsAliasNotFound_WhenCalledTwice()
         {
             var blob = QdbTestCluster.CreateEmptyBlob();
@@ -61,7 +67,16 @@ namespace QuasardbTests.QdbBlobTests
 
             blob.Put(content);
             blob.RemoveIf(content);
-            blob.RemoveIf(content);
+
+            try
+            {
+                blob.RemoveIf(content);
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbAliasNotFoundException e)
+            {
+                Assert.AreEqual(blob.Alias, e.Alias);
+            }
         }
     }
 }

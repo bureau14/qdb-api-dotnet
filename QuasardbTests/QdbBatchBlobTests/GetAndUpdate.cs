@@ -12,7 +12,6 @@ namespace QuasardbTests.QdbBatchBlobTests
         private readonly QdbCluster _cluster = QdbTestCluster.Instance;
 
         [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void ThrowsAliasNotFound()
         {
             var batch = new QdbBatch();
@@ -23,7 +22,16 @@ namespace QuasardbTests.QdbBatchBlobTests
             _cluster.RunBatch(batch);
 
             Assert.IsInstanceOfType(future.Exception, typeof(QdbAliasNotFoundException));
-            var dummy = future.Result; // <- throws QdbAliasNotFoundException
+
+            try
+            {
+                var dummy = future.Result;
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbAliasNotFoundException e)
+            {
+                Assert.AreEqual(alias, e.Alias);
+            }
         }
 
         [TestMethod]

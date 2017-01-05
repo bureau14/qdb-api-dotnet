@@ -4,7 +4,7 @@ namespace Quasardb.Exceptions
 {
     static class QdbExceptionFactory
     {
-        public static QdbException Create(qdb_error_t error)
+        public static QdbException Create(qdb_error_t error, string alias = null)
         {
             var origin = (qdb_err_origin) ((uint) error & (uint) qdb_err_origin.mask);
 
@@ -17,7 +17,7 @@ namespace Quasardb.Exceptions
                     return CreateInputException(error);
 
                 case qdb_err_origin.operation:
-                    return CreateOperationException(error);
+                    return CreateOperationException(error, alias);
 
                 case qdb_err_origin.protocol:
                     return CreateProtocolException(error);
@@ -53,24 +53,24 @@ namespace Quasardb.Exceptions
             }
         }
 
-        private static QdbOperationException CreateOperationException(qdb_error_t error)
+        private static QdbOperationException CreateOperationException(qdb_error_t error, string alias)
         {
             switch (error)
             {
                 case qdb_error_t.qdb_e_alias_already_exists:
-                    return new QdbAliasAlreadyExistsException();
+                    return new QdbAliasAlreadyExistsException(alias);
 
                 case qdb_error_t.qdb_e_alias_not_found:
-                    return new QdbAliasNotFoundException();
+                    return new QdbAliasNotFoundException(alias);
 
                 case qdb_error_t.qdb_e_incompatible_type:
-                    return new QdbIncompatibleTypeException();
+                    return new QdbIncompatibleTypeException(alias);
 
                 case qdb_error_t.qdb_e_resource_locked:
-                    return new QdbResourceLockedException();
+                    return new QdbResourceLockedException(alias);
 
                 default:
-                    return new QdbOperationException(qdb_api.qdb_error(error));
+                    return new QdbOperationException(qdb_api.qdb_error(error), alias);
             }
         }
 

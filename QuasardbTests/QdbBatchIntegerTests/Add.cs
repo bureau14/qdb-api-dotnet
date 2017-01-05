@@ -24,7 +24,6 @@ namespace QuasardbTests.QdbBatchIntegerTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void ThrowsAliasNotFound()
         {
             var batch = new QdbBatch();
@@ -33,7 +32,15 @@ namespace QuasardbTests.QdbBatchIntegerTests
             var future = batch.Integer(alias).Add(123);
             _cluster.RunBatch(batch);
 
-            var dummy = future.Result; // <- QdbAliasNotFoundException
+            try
+            {
+                var dummy = future.Result;
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbAliasNotFoundException e)
+            {
+                Assert.AreEqual(alias, e.Alias);
+            }
         }
     }
 }

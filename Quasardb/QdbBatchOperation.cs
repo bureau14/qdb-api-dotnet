@@ -10,9 +10,10 @@ namespace Quasardb
 
     class DelegateOperation : IOperation, IQdbFuture
     {
-        private qdb_error_t _error;
-        private readonly MarshalFunc _marshal;
-        private readonly UnmarshalFunc _unmarshal;
+        qdb_error_t _error;
+        string _alias;
+        readonly MarshalFunc _marshal;
+        readonly UnmarshalFunc _unmarshal;
 
         public DelegateOperation(MarshalFunc marshal, UnmarshalFunc unmarshal)
         {
@@ -29,17 +30,19 @@ namespace Quasardb
         {
             _unmarshal?.Invoke(ref op);
             _error = op.error;
+            _alias = op.alias;
         }
 
-        public QdbException Exception => QdbExceptionFactory.Create(_error);
+        public QdbException Exception => QdbExceptionFactory.Create(_error, alias: _alias);
     }
 
     class DelegateOperation<T> : IOperation, IQdbFuture<T>
     {
-        private qdb_error_t _error;
-        private T _result;
-        private readonly MarshalFunc _marshal;
-        private readonly UnmarshalFunc<T> _unmarshal;
+        qdb_error_t _error;
+        string _alias;
+        T _result;
+        readonly MarshalFunc _marshal;
+        readonly UnmarshalFunc<T> _unmarshal;
 
         public DelegateOperation(MarshalFunc marshal, UnmarshalFunc<T> unmarshal)
         {
@@ -56,15 +59,16 @@ namespace Quasardb
         {
             _result = _unmarshal(ref op);
             _error = op.error;
+            _alias = op.alias;
         }
 
-        public QdbException Exception => QdbExceptionFactory.Create(_error);
+        public QdbException Exception => QdbExceptionFactory.Create(_error, alias: _alias);
 
         public T Result
         {
             get
             {
-                QdbExceptionThrower.ThrowIfNeeded(_error);
+                QdbExceptionThrower.ThrowIfNeeded(_error, alias: _alias);
                 return _result;
             }
         }

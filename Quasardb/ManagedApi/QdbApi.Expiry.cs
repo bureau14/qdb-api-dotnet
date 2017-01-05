@@ -8,20 +8,20 @@ namespace Quasardb.ManagedApi
         public void ExpiresAt(string alias, DateTime expiryTime)
         {
             var error = qdb_api.qdb_expires_at(_handle, alias, qdb_time.FromDateTime(expiryTime));
-            QdbExceptionThrower.ThrowIfNeeded(error);
+            QdbExceptionThrower.ThrowIfNeeded(error, alias: alias);
         }
 
         public void ExpiresFromNow(string alias, TimeSpan ttl)
         {
             var error = qdb_api.qdb_expires_from_now(_handle, alias, qdb_time.FromTimeSpan(ttl));
-            QdbExceptionThrower.ThrowIfNeeded(error);
+            QdbExceptionThrower.ThrowIfNeeded(error, alias: alias);
         }
 
         public DateTime? GetExpiryTime(string alias)
         {
             long expiryTime;
             var error = qdb_api.qdb_get_expiry_time(_handle, alias, out expiryTime);
-            QdbExceptionThrower.ThrowIfNeeded(error);
+            QdbExceptionThrower.ThrowIfNeeded(error, alias: alias);
             return qdb_time.ToOptionalDateTime(expiryTime);
         }
     }

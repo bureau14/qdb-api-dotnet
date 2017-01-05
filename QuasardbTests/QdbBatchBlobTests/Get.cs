@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb;
 using Quasardb.Exceptions;
 using QuasardbTests.Helpers;
@@ -26,7 +27,6 @@ namespace QuasardbTests.QdbBatchBlobTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void ThrowsAliasNotFound()
         {
             var batch = new QdbBatch();
@@ -35,7 +35,15 @@ namespace QuasardbTests.QdbBatchBlobTests
             var future = batch.Blob(alias).Get();
             _cluster.RunBatch(batch);
 
-            var dummy = future.Result; // <- QdbAliasNotFoundException
+            try
+            {
+                var dummy = future.Result;
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbAliasNotFoundException e)
+            {
+                Assert.AreEqual(alias, e.Alias);
+            }
         }
     }
 }

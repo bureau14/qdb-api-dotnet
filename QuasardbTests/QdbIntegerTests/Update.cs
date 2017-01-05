@@ -8,14 +8,22 @@ namespace QuasardbTests.QdbIntegerTests
     public class Update
     {
         [TestMethod]
-        [ExpectedException(typeof(QdbIncompatibleTypeException))]
         public void ThrowsIncompatible()
         {
             var alias = RandomGenerator.CreateUniqueAlias();
             var integer = QdbTestCluster.CreateEmptyInteger(alias);
 
             QdbTestCluster.CreateBlob(alias);
-            integer.Update(1956);
+            
+            try
+            {
+                integer.Update(1956);
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbIncompatibleTypeException e)
+            {
+                Assert.AreEqual(integer.Alias, e.Alias);
+            }
         }
 
         [TestMethod]

@@ -28,14 +28,22 @@ namespace QuasardbTests.QdbBlobTests
 
 
         [TestMethod]
-        [ExpectedException(typeof(QdbAliasAlreadyExistsException))]
         public void ThrowsAliasAlreadyExists_WhenCalledTwice()
         {
             var blob = QdbTestCluster.CreateEmptyBlob();
             var content = RandomGenerator.CreateRandomContent();
 
             blob.Put(content);
-            blob.Put(content);
+        
+            try
+            {
+                blob.Put(content);
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbAliasAlreadyExistsException e)
+            {
+                Assert.AreEqual(blob.Alias, e.Alias);
+            }
         }
 
         [TestMethod]

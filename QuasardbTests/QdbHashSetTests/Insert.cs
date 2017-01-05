@@ -18,7 +18,6 @@ namespace QuasardbTests.QdbHashSetTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(QdbIncompatibleTypeException))]
         public void ThrowsIncompatibleType()
         {
             var alias = RandomGenerator.CreateUniqueAlias();
@@ -26,7 +25,16 @@ namespace QuasardbTests.QdbHashSetTests
             var content = RandomGenerator.CreateRandomContent();
 
             QdbTestCluster.CreateBlob(alias);
-            hashSet.Insert(content); // <- QdbIncompatibleTypeException
+
+            try
+            {
+                hashSet.Insert(content);
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbIncompatibleTypeException e)
+            {
+                Assert.AreEqual(hashSet.Alias, e.Alias);
+            }
         }
 
         [TestMethod]

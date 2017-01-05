@@ -17,6 +17,12 @@ namespace Quasardb.ManagedApi
                 case qdb_error_t.qdb_e_ok:
                     return true;
 
+                case qdb_error_t.qdb_e_alias_not_found:
+                    throw new QdbAliasNotFoundException(alias);
+
+                case qdb_error_t.qdb_e_incompatible_type:
+                    throw new QdbIncompatibleTypeException(tag);
+
                 default:
                     throw QdbExceptionFactory.Create(error);
             }
@@ -27,7 +33,7 @@ namespace Quasardb.ManagedApi
             var result = new QdbAliasCollection(_handle);
 
             var error = qdb_api.qdb_get_tagged(_handle, tag, out result.Pointer, out result.Size);
-            QdbExceptionThrower.ThrowIfNeeded(error);
+            QdbExceptionThrower.ThrowIfNeeded(error, alias: tag);
 
             return result;
         }
@@ -37,7 +43,7 @@ namespace Quasardb.ManagedApi
             var result = new QdbAliasCollection(_handle);
 
             var error = qdb_api.qdb_get_tags(_handle, alias, out result.Pointer, out result.Size);
-            QdbExceptionThrower.ThrowIfNeeded(error);
+            QdbExceptionThrower.ThrowIfNeeded(error, alias: alias);
 
             return result;
         }
@@ -53,6 +59,12 @@ namespace Quasardb.ManagedApi
 
                 case qdb_error_t.qdb_e_ok:
                     return true;
+
+                case qdb_error_t.qdb_e_alias_not_found:
+                    throw new QdbAliasNotFoundException(alias);
+
+                case qdb_error_t.qdb_e_incompatible_type:
+                    throw new QdbIncompatibleTypeException(tag);
 
                 default:
                     throw QdbExceptionFactory.Create(error);
@@ -70,6 +82,12 @@ namespace Quasardb.ManagedApi
 
                 case qdb_error_t.qdb_e_ok:
                     return true;
+
+                case qdb_error_t.qdb_e_alias_not_found:
+                    throw new QdbAliasNotFoundException(alias);
+
+                case qdb_error_t.qdb_e_incompatible_type:
+                    throw new QdbIncompatibleTypeException(tag);
 
                 default:
                     throw QdbExceptionFactory.Create(error);

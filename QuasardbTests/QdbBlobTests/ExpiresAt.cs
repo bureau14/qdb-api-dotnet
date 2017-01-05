@@ -9,13 +9,20 @@ namespace QuasardbTests.QdbBlobTests
     public class ExpiresAt
     {
         [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void ThrowsAliasNotFound_OnNewAlias()
         {
             var blob = QdbTestCluster.CreateEmptyBlob();
             var expiry = new DateTime(3000, 12, 25);
 
-            blob.ExpiresAt(expiry);
+            try
+            {
+                blob.ExpiresAt(expiry);
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbAliasNotFoundException e)
+            {
+                Assert.AreEqual(blob.Alias, e.Alias);
+            }
         }
 
         [TestMethod]

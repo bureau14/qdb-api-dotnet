@@ -33,11 +33,20 @@ namespace QuasardbTests.QdbEntryTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void ThrowsAliasNotFound()
         {
-            // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-            QdbTestCluster.CreateEmptyBlob().GetTags().Any();
+            var blob = QdbTestCluster.CreateEmptyBlob();
+            
+            try
+            {
+                // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+                blob.GetTags().Any();
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbAliasNotFoundException e)
+            {
+                Assert.AreEqual(blob.Alias, e.Alias);
+            }
         }
     }
 }

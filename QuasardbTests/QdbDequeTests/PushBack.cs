@@ -18,14 +18,22 @@ namespace QuasardbTests.QdbDequeTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(QdbIncompatibleTypeException))]
         public void ThrowsIncompatibleType()
         {
             var alias = RandomGenerator.CreateUniqueAlias();
             QdbTestCluster.CreateBlob(alias);
 
             var deque = QdbTestCluster.CreateEmptyQueue(alias);
-            deque.PushBack(RandomGenerator.CreateRandomContent());
+            
+            try
+            {
+                deque.PushBack(RandomGenerator.CreateRandomContent());
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbIncompatibleTypeException e)
+            {
+                Assert.AreEqual(deque.Alias, e.Alias);
+            }
         }
     }
 }

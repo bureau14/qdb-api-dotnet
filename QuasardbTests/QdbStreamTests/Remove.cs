@@ -31,12 +31,20 @@ namespace QuasardbTests.QdbStreamTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(QdbResourceLockedException))]
         public void ThrowsQdbResourceLocked()
         {
             var stream = QdbTestCluster.CreateEmptyStream();
             stream.Open(QdbStreamMode.Append);
-            stream.Remove();
+
+            try
+            {
+                stream.Remove();
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbResourceLockedException e)
+            {
+                Assert.AreEqual(stream.Alias, e.Alias);
+            }
         }
     }
 }

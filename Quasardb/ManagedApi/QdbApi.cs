@@ -42,7 +42,7 @@ namespace Quasardb.ManagedApi
         {
             qdb_entry_type nativeType;
             var error = qdb_api.qdb_get_type(_handle, alias, out nativeType);
-            QdbExceptionThrower.ThrowIfNeeded(error);
+            QdbExceptionThrower.ThrowIfNeeded(error, alias: alias);
 
             QdbEntryType managedType;
             if (!_typeMap.TryGetValue(nativeType, out managedType))
@@ -65,7 +65,7 @@ namespace Quasardb.ManagedApi
                     return false;
 
                 default:
-                    throw QdbExceptionFactory.Create(error);
+                    throw QdbExceptionFactory.Create(error, alias: alias);
             }
         }
     }

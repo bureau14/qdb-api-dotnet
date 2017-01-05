@@ -10,12 +10,20 @@ namespace QuasardbTests.QdbEntryTests
     public class HasTag
     {
         [TestMethod]
-        [ExpectedException(typeof(QdbAliasNotFoundException))]
         public void ThrowsAliasNotFound()
         {
             var tag = QdbTestCluster.CreateEmptyTag();
-
-            QdbTestCluster.CreateEmptyBlob().HasTag(tag);
+            var blob = QdbTestCluster.CreateEmptyBlob();
+            
+            try
+            {
+                blob.HasTag(tag);
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbAliasNotFoundException e)
+            {
+                Assert.AreEqual(blob.Alias, e.Alias);
+            }
         }
 
         [TestMethod]
