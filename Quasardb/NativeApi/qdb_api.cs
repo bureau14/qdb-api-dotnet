@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Reflection;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Security;
@@ -23,8 +25,10 @@ namespace Quasardb.NativeApi
         static qdb_api()
         {
             var is64 = IntPtr.Size == 8;
-            var dllFolder = is64 ? "win64/" : "win32/";
-            LoadLibrary(dllFolder + DLL_NAME);
+            var myLocation = new Uri(typeof(qdb_api).Assembly.Location).LocalPath;
+            var folder = Path.GetDirectoryName(myLocation);
+            var subfolder = is64 ? "\\win64\\" : "\\win32\\";
+            LoadLibrary(folder + subfolder + DLL_NAME);
         }
 
         [DllImport("kernel32.dll")]
