@@ -25,7 +25,7 @@ namespace Quasardb.NativeApi
         static qdb_api()
         {
             var is64 = IntPtr.Size == 8;
-            var myLocation = new Uri(typeof(qdb_api).Assembly.Location).LocalPath;
+            var myLocation = new Uri(typeof(qdb_api).Assembly.CodeBase).LocalPath;
             var folder = Path.GetDirectoryName(myLocation);
             var subfolder = is64 ? "\\win64\\" : "\\win32\\";
             LoadLibrary(folder + subfolder + DLL_NAME);
