@@ -20,7 +20,7 @@ namespace QuasardbTests.QdbClusterTests
 
         [TestMethod]
         [ExpectedException(typeof(QdbInvalidArgumentException))]
-        public void ConnectToAnInvalidAddress()
+        public void Constructor_ThrowsInvalidArgument()
         {
             // ReSharper disable once ObjectCreationAsStatement
             new QdbCluster("clearly this is not a uri");
@@ -28,7 +28,7 @@ namespace QuasardbTests.QdbClusterTests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void ConnectToNull()
+        public void Constructor_ThrowsArgumentNull()
         {
             // ReSharper disable once ObjectCreationAsStatement
             new QdbCluster(null);
@@ -36,44 +36,51 @@ namespace QuasardbTests.QdbClusterTests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void BlobNull()
+        public void Blob_ThrowsArgumentNull()
         {
             QdbTestCluster.Instance.Blob(null);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void IntegerNull()
+        public void Integer_ThrowsArgumentNull()
         {
             QdbTestCluster.Instance.Integer(null);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void QueueNull()
+        public void Queue_ThrowsArgumentNull()
         {
             QdbTestCluster.Instance.Deque(null);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void HashSetNull()
+        public void HashSet_ThrowsArgumentNull()
         {
             QdbTestCluster.Instance.HashSet(null);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void StreamNull()
+        public void Stream_ThrowsArgumentNull()
         {
             QdbTestCluster.Instance.Stream(null);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void TagNull()
+        public void Tag_ThrowsArgumentNull()
         {
             QdbTestCluster.Instance.Tag(null);
+        }
+        
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void TimeSeries_ThrowsArgumentNull()
+        {
+            QdbTestCluster.Instance.TimeSeries(null);
         }
     }
 }

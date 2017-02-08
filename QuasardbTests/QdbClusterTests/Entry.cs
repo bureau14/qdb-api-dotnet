@@ -106,5 +106,18 @@ namespace QuasardbTests.QdbClusterTests
             Assert.IsInstanceOfType(result, typeof(QdbTag));
             Assert.AreEqual(alias, result.Alias);
         }
+
+
+        [TestMethod]
+        public void ReturnsTimeSeries()
+        {
+            var alias = RandomGenerator.CreateUniqueAlias();
+
+            QdbTestCluster.CreateTimeSeries(alias);
+            var result = _cluster.Entry(alias);
+
+            Assert.IsInstanceOfType(result, typeof(QdbTimeSeries));
+            Assert.AreEqual(alias, result.Alias);
+        }
     }
 }

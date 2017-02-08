@@ -157,5 +157,18 @@ namespace Quasardb
         {
             _api.RunBatch(batch.Operations);
         }
+
+        /// <summary>
+        /// Returns a <see cref="QdbTimeSeries" /> attached to the specified alias.
+        /// </summary>
+        /// <remarks>No operation is performed in the database.</remarks>
+        /// <param name="alias">The alias (i.e. key) of the time series in the database.</param>
+        /// <returns>A time series associated attached to the specified alias.</returns>
+        /// <seealso cref="QdbTimeSeries"/>
+        public QdbTimeSeries TimeSeries(string alias)
+        {
+            if (alias == null) throw new ArgumentNullException(nameof(alias));
+            return new QdbTimeSeries(_api, alias);
+        }
     }
 }

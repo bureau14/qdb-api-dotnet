@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Quasardb;
 
 namespace QuasardbTests.Helpers
@@ -127,6 +128,8 @@ namespace QuasardbTests.Helpers
 
         #endregion
 
+        #region Stream
+
         public static Stream CreateAndOpenStream()
         {
             return CreateEmptyStream().Open(QdbStreamMode.Append);
@@ -146,5 +149,23 @@ namespace QuasardbTests.Helpers
             }
             return qdbStream;
         }
+
+        #endregion
+        
+        #region TimeSeries
+
+        public static QdbTimeSeries CreateEmptyTimeSeries(string alias = null)
+        {
+            return Instance.TimeSeries(alias ?? RandomGenerator.CreateUniqueAlias());
+        }
+
+        public static QdbTimeSeries CreateTimeSeries(string alias = null)
+        {
+            var ts = CreateEmptyTimeSeries(alias);
+            ts.Insert(new QdbTimeSeries.PointCollection { {DateTime.Now, 666}});
+            return ts;
+        }
+
+        #endregion
     }
 }

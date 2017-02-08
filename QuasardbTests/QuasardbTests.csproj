@@ -52,7 +52,9 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <Choose>
@@ -131,6 +133,14 @@
     <Compile Include="QdbTagTests\GetEntries.cs" />
     <Compile Include="QdbTagTests\AttachEntry.cs" />
     <Compile Include="QdbTagTests\DetachEntry.cs" />
+    <Compile Include="QdbTimeSeriesTests\Count.cs" />
+    <Compile Include="QdbTimeSeriesTests\Average.cs" />
+    <Compile Include="QdbTimeSeriesTests\Sum.cs" />
+    <Compile Include="QdbTimeSeriesTests\Max.cs" />
+    <Compile Include="QdbTimeSeriesTests\Min.cs" />
+    <Compile Include="QdbTimeSeriesTests\Last.cs" />
+    <Compile Include="QdbTimeSeriesTests\First.cs" />
+    <Compile Include="QdbTimeSeriesTests\Insert.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Quasardb\Quasardb.csproj">

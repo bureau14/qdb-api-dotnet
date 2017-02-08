@@ -7,17 +7,6 @@ namespace Quasardb.ManagedApi
 {
     partial class QdbApi : IDisposable
     {
-        static readonly Dictionary<qdb_entry_type, QdbEntryType> _typeMap = 
-            new Dictionary <qdb_entry_type, QdbEntryType>
-        {
-            {qdb_entry_type.qdb_entry_blob, QdbEntryType.Blob},
-            {qdb_entry_type.qdb_entry_hset, QdbEntryType.HashSet},
-            {qdb_entry_type.qdb_entry_integer, QdbEntryType.Integer},
-            {qdb_entry_type.qdb_entry_deque, QdbEntryType.Deque},
-            {qdb_entry_type.qdb_entry_tag, QdbEntryType.Tag},
-            {qdb_entry_type.qdb_entry_stream, QdbEntryType.Stream}
-        };
-
         readonly qdb_handle _handle;
 
         public QdbApi()
@@ -38,18 +27,12 @@ namespace Quasardb.ManagedApi
             _handle.Dispose();
         }
 
-        public QdbEntryType GetEntryType(string alias)
+        public qdb_entry_type GetEntryType(string alias)
         {
-            qdb_entry_type nativeType;
-            var error = qdb_api.qdb_get_type(_handle, alias, out nativeType);
+            qdb_entry_type type;
+            var error = qdb_api.qdb_get_type(_handle, alias, out type);
             QdbExceptionThrower.ThrowIfNeeded(error, alias: alias);
-
-            QdbEntryType managedType;
-            if (!_typeMap.TryGetValue(nativeType, out managedType))
-                throw new NotSupportedException("Unknown entry type " + nativeType +
-                                                ", please upgrade Quasardb .NET API");
-
-            return managedType;
+            return type;
         }
 
         public bool Remove(string alias)

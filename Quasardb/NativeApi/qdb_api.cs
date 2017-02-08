@@ -422,5 +422,25 @@ namespace Quasardb.NativeApi
             [In] size_t operation_count);
 
         #endregion
+
+        #region Functions specific to tags
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error_t qdb_ts_insert(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In] qdb_ts_double_point[] points,
+            [In] qdb_size_t count);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error_t qdb_ts_aggregate(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In] ref qdb_timespec begin,
+            [In] ref qdb_timespec end,
+            [In] qdb_ts_aggregation type,
+            [Out] out qdb_ts_double_point result);
+
+        #endregion
     }
 }
