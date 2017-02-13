@@ -1,13 +1,18 @@
-﻿namespace Quasardb.NativeApi
+﻿using System;
+using System.Runtime.InteropServices;
+
+// ReSharper disable BuiltInTypeReferenceStyle
+// ReSharper disable InconsistentNaming
+
+namespace Quasardb.NativeApi
 {
-    enum qdb_ts_aggregation
+    [StructLayout(LayoutKind.Sequential)]
+    struct qdb_ts_aggregation
     {
-        First = 0,
-        Last = 1,
-        Min = 2,
-        Max = 3,
-        Average = 4,
-        Count = 5,
-        Sum = 6
-    }
+        public qdb_timespec begin;
+        public qdb_timespec end;
+
+        public qdb_timespec result_timestamp;
+        public double result_value;
+    };
 }

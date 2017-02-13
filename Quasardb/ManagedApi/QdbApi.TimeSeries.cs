@@ -12,12 +12,10 @@ namespace Quasardb.ManagedApi
             QdbExceptionThrower.ThrowIfNeeded(error, alias: alias);
         }
 
-        public qdb_ts_double_point TimeSeriesAggregate(string alias, qdb_timespec begin, qdb_timespec end, qdb_ts_aggregation aggregation)
+        public void TimeSeriesAggregate(string alias, qdb_ts_aggregation_type aggregationType, qdb_ts_aggregation[] aggregations)
         {
-            qdb_ts_double_point result;
-            var error = qdb_api.qdb_ts_aggregate(_handle, alias, ref begin, ref end, aggregation, out result);
+            var error = qdb_api.qdb_ts_aggregate(_handle, alias, aggregationType, aggregations, (UIntPtr) aggregations.Length);
             QdbExceptionThrower.ThrowIfNeeded(error, alias: alias);
-            return result;
         }
     }
 }

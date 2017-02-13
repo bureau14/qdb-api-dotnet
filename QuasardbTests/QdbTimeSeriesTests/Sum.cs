@@ -62,7 +62,7 @@ namespace QuasardbTests.QdbTimeSeriesTests
 
             var result = ts.Sum(new DateTime(3000,1,1), new DateTime(4000, 1, 1));
 
-            Assert.AreEqual(0, result);
+            Assert.IsTrue(double.IsNaN(result));
         }
     }
 }

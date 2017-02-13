@@ -33,7 +33,7 @@ namespace Quasardb
         /// <returns>The average of the timeseries</returns>
         public double Average()
         {
-            return AggregateValue(qdb_timespec.MinValue, qdb_timespec.MaxValue, qdb_ts_aggregation.Average);
+            return AggregateValue(qdb_timespec.MinValue, qdb_timespec.MaxValue, qdb_ts_aggregation_type.Average);
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Quasardb
         /// <returns>The average of the interval</returns>
         public double Average(DateTime begin, DateTime end)
         {
-            return AggregateValue(TimeConverter.ToTimespec(begin), TimeConverter.ToTimespec(end), qdb_ts_aggregation.Average);
+            return AggregateValue(TimeConverter.ToTimespec(begin), TimeConverter.ToTimespec(end), qdb_ts_aggregation_type.Average);
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Quasardb
         /// <returns>The number of points in the time series</returns>
         public long Count()
         {
-            return (long)AggregateValue(qdb_timespec.MinValue, qdb_timespec.MaxValue, qdb_ts_aggregation.Count);
+            return (long)AggregateValue(qdb_timespec.MinValue, qdb_timespec.MaxValue, qdb_ts_aggregation_type.Count);
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace Quasardb
         /// <returns>The number of points the interval</returns>
         public long Count(DateTime begin, DateTime end)
         {
-            var res = AggregateValue(TimeConverter.ToTimespec(begin), TimeConverter.ToTimespec(end), qdb_ts_aggregation.Count);
+            var res = AggregateValue(TimeConverter.ToTimespec(begin), TimeConverter.ToTimespec(end), qdb_ts_aggregation_type.Count);
             return double.IsNaN(res) ? 0 : (long) res;
         }
 
@@ -70,7 +70,7 @@ namespace Quasardb
         /// <returns>The first point of the time series</returns>
         public Point First()
         {
-            return AggregatePoint(qdb_timespec.MinValue, qdb_timespec.MaxValue, qdb_ts_aggregation.First);
+            return AggregatePoint(qdb_timespec.MinValue, qdb_timespec.MaxValue, qdb_ts_aggregation_type.First);
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace Quasardb
         /// <returns>The first point of the interval</returns>
         public Point First(DateTime begin, DateTime end)
         {
-            return AggregatePoint(TimeConverter.ToTimespec(begin), TimeConverter.ToTimespec(end), qdb_ts_aggregation.First);
+            return AggregatePoint(TimeConverter.ToTimespec(begin), TimeConverter.ToTimespec(end), qdb_ts_aggregation_type.First);
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace Quasardb
         /// <returns>The last point of the time series</returns>
         public Point Last()
         {
-            return AggregatePoint(qdb_timespec.MinValue, qdb_timespec.MaxValue, qdb_ts_aggregation.Last);
+            return AggregatePoint(qdb_timespec.MinValue, qdb_timespec.MaxValue, qdb_ts_aggregation_type.Last);
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace Quasardb
         /// <returns>The last point of the interval</returns>
         public Point Last(DateTime begin, DateTime end)
         {
-            return AggregatePoint(TimeConverter.ToTimespec(begin), TimeConverter.ToTimespec(end), qdb_ts_aggregation.Last);
+            return AggregatePoint(TimeConverter.ToTimespec(begin), TimeConverter.ToTimespec(end), qdb_ts_aggregation_type.Last);
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace Quasardb
         /// <returns>The max point of the time series</returns>
         public Point Max()
         {
-            return AggregatePoint(qdb_timespec.MinValue, qdb_timespec.MaxValue, qdb_ts_aggregation.Max);
+            return AggregatePoint(qdb_timespec.MinValue, qdb_timespec.MaxValue, qdb_ts_aggregation_type.Max);
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace Quasardb
         /// <returns>The max point of the interval</returns>
         public Point Max(DateTime begin, DateTime end)
         {
-            return AggregatePoint(TimeConverter.ToTimespec(begin), TimeConverter.ToTimespec(end), qdb_ts_aggregation.Max);
+            return AggregatePoint(TimeConverter.ToTimespec(begin), TimeConverter.ToTimespec(end), qdb_ts_aggregation_type.Max);
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace Quasardb
         /// <returns>The min point of the time series</returns>
         public Point Min()
         {
-            return AggregatePoint(qdb_timespec.MinValue, qdb_timespec.MaxValue, qdb_ts_aggregation.Min);
+            return AggregatePoint(qdb_timespec.MinValue, qdb_timespec.MaxValue, qdb_ts_aggregation_type.Min);
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace Quasardb
         /// <returns>The min point of the interval</returns>
         public Point Min(DateTime begin, DateTime end)
         {
-            return AggregatePoint(TimeConverter.ToTimespec(begin), TimeConverter.ToTimespec(end), qdb_ts_aggregation.Min);
+            return AggregatePoint(TimeConverter.ToTimespec(begin), TimeConverter.ToTimespec(end), qdb_ts_aggregation_type.Min);
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace Quasardb
         /// <returns>The sum of the timeseries</returns>
         public double Sum()
         {
-            return AggregateValue(qdb_timespec.MinValue, qdb_timespec.MaxValue, qdb_ts_aggregation.Sum);
+            return AggregateValue(qdb_timespec.MinValue, qdb_timespec.MaxValue, qdb_ts_aggregation_type.Sum);
         }
 
         /// <summary>
@@ -151,18 +151,32 @@ namespace Quasardb
         /// <returns>The sum of the interval</returns>
         public double Sum(DateTime begin, DateTime end)
         {
-            return AggregateValue(TimeConverter.ToTimespec(begin), TimeConverter.ToTimespec(end), qdb_ts_aggregation.Sum);
+            return AggregateValue(TimeConverter.ToTimespec(begin), TimeConverter.ToTimespec(end), qdb_ts_aggregation_type.Sum);
         }
 
-        Point AggregatePoint(qdb_timespec begin, qdb_timespec end, qdb_ts_aggregation mode)
+        Point AggregatePoint(qdb_timespec begin, qdb_timespec end, qdb_ts_aggregation_type mode)
         {
-            var pt = Api.TimeSeriesAggregate(Alias, begin, end, mode);
-            return double.IsNaN(pt.value) ? null : new Point(TimeConverter.ToDateTime(pt.timestamp), pt.value);
+            var aggregations = new qdb_ts_aggregation[1];
+            aggregations[0].begin = begin;
+            aggregations[0].end = end;
+            Api.TimeSeriesAggregate(Alias, mode, aggregations);
+            return MakePoint(aggregations[0]);
         }
 
-        double AggregateValue(qdb_timespec begin, qdb_timespec end, qdb_ts_aggregation mode)
+        double AggregateValue(qdb_timespec begin, qdb_timespec end, qdb_ts_aggregation_type mode)
         {
-            return Api.TimeSeriesAggregate(Alias, begin, end, mode).value;
+            var aggregations = new qdb_ts_aggregation[1];
+            aggregations[0].begin = begin;
+            aggregations[0].end = end;
+            Api.TimeSeriesAggregate(Alias, mode, aggregations);
+            return aggregations[0].result_value;
+        }
+
+        static Point MakePoint(qdb_ts_aggregation aggregation)
+        {
+            return double.IsNaN(aggregation.result_value)
+                ? null
+                : new Point(TimeConverter.ToDateTime(aggregation.result_timestamp), aggregation.result_value);
         }
 }
 }

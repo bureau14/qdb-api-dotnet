@@ -436,10 +436,9 @@ namespace Quasardb.NativeApi
         public static extern qdb_error_t qdb_ts_aggregate(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
-            [In] ref qdb_timespec begin,
-            [In] ref qdb_timespec end,
-            [In] qdb_ts_aggregation type,
-            [Out] out qdb_ts_double_point result);
+            [In] qdb_ts_aggregation_type type,
+            [In,Out] qdb_ts_aggregation[] aggregations,
+            [In] qdb_size_t aggregation_count);
 
         #endregion
     }
