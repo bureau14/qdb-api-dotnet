@@ -15,8 +15,8 @@ namespace Quasardb
     /// </summary>
     public sealed class QdbPrefixSelector : IQdbEntrySelector
     {
-        private readonly string _prefix;
-        private readonly long _maxCount;
+        readonly string _prefix;
+        readonly long _maxCount;
 
         /// <summary>
         /// Creates a selector with the specified prefix.
@@ -40,8 +40,8 @@ namespace Quasardb
     /// </summary>
     public sealed class QdbSuffixSelector : IQdbEntrySelector
     {
-        private readonly string _suffix;
-        private readonly long _maxCount;
+        readonly string _suffix;
+        readonly long _maxCount;
 
         /// <summary>
         /// Creates a selector with the specified suffix.
@@ -65,12 +65,12 @@ namespace Quasardb
     /// </summary>
     public sealed class QdbTagSelector : IQdbEntrySelector
     {
-        private readonly string _tag;
+        readonly string _tag;
 
         /// <summary>
         /// Creates a selector for the specified tag.
         /// </summary>
-        /// <param name="tag"></param>
+        /// <param name="tag">The tag to which entries are attached.</param>
         public QdbTagSelector(string tag)
         {
             _tag = tag;

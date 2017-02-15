@@ -10,8 +10,8 @@ namespace Quasardb
     /// </summary>
     public sealed class QdbCluster : IDisposable
     {
-        private readonly QdbApi _api;
-        private readonly QdbEntryFactory _factory;
+        readonly QdbApi _api;
+        readonly QdbEntryFactory _factory;
 
         /// <summary>
         /// Connects to a quasardb database.
@@ -37,7 +37,7 @@ namespace Quasardb
         /// </summary>
         /// <remarks>No operation is performed in the database.</remarks>
         /// <param name="alias">The alias (i.e. key) of the blob in the database.</param>
-        /// <returns>A blob associated attached to the specified alias.</returns>
+        /// <returns>A blob associated to the specified alias.</returns>
         /// <seealso cref="QdbBlob"/>
         public QdbBlob Blob(string alias)
         {
@@ -64,7 +64,7 @@ namespace Quasardb
         /// </summary>
         /// <remarks>No operation is performed in the database.</remarks>
         /// <param name="alias">The alias (i.e. key) of the queue in the database.</param>
-        /// <returns>A queue associated attached to the specified alias.</returns>
+        /// <returns>A queue associated to the specified alias.</returns>
         /// <seealso cref="QdbDeque"/>
         public QdbDeque Deque(string alias)
         {
@@ -77,7 +77,7 @@ namespace Quasardb
         /// The actual type of the return value depends on the type of the entry in the database.
         /// </summary>
         /// <param name="alias"></param>
-        /// <returns></returns>
+        /// <returns>An entry associated to the specified alias.</returns>
         /// <exception cref="QdbAliasNotFoundException">If the entry doesn't exists.</exception>
         public QdbEntry Entry(string alias)
         {
@@ -88,6 +88,7 @@ namespace Quasardb
         /// <summary>
         /// Returns a collection of <see cref="QdbEntry" /> matching the given criteria.
         /// </summary>
+        /// <param name="selector">The criteria to filter the entries</param>
         /// <returns>A collection of entry.</returns>
         public IEnumerable<QdbEntry> Entries(IQdbEntrySelector selector)
         {
@@ -103,7 +104,7 @@ namespace Quasardb
         /// </summary>
         /// <remarks>No operation is performed in the database.</remarks>
         /// <param name="alias">The alias (i.e. key) of the hash-set in the database.</param>
-        /// <returns>A hash-set associated attached to the specified alias.</returns>
+        /// <returns>A hash-set associated to the specified alias.</returns>
         /// <seealso cref="QdbHashSet"/>
         public QdbHashSet HashSet(string alias)
         {
@@ -116,7 +117,7 @@ namespace Quasardb
         /// </summary>
         /// <remarks>No operation is performed in the database.</remarks>
         /// <param name="alias">The alias (i.e. key) of the integer in the database.</param>
-        /// <returns>An integer associated attached to the specified alias.</returns>
+        /// <returns>An integer associated to the specified alias.</returns>
         /// <seealso cref="QdbInteger"/>
         public QdbInteger Integer(string alias)
         {
@@ -141,7 +142,7 @@ namespace Quasardb
         /// </summary>
         /// <remarks>No operation is performed in the database.</remarks>
         /// <param name="alias">The alias (i.e. key) of the tag in the database.</param>
-        /// <returns>A tag associated attached to the specified alias.</returns>
+        /// <returns>A tag associated to the specified alias.</returns>
         /// <seealso cref="QdbTag"/>
         public QdbTag Tag(string alias)
         {
@@ -163,7 +164,7 @@ namespace Quasardb
         /// </summary>
         /// <remarks>No operation is performed in the database.</remarks>
         /// <param name="alias">The alias (i.e. key) of the time series in the database.</param>
-        /// <returns>A time series associated attached to the specified alias.</returns>
+        /// <returns>A time series associated to the specified alias.</returns>
         /// <seealso cref="QdbTimeSeries"/>
         public QdbTimeSeries TimeSeries(string alias)
         {

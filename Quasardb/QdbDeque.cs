@@ -111,6 +111,7 @@ namespace Quasardb
         /// Gets the element at the specified index.
         /// </summary>
         /// <param name="index">The zero-based index of the element</param>
+        /// <returns>The content of the element.</returns>
         /// <exception cref="QdbAliasNotFoundException">The queue doesn't exists in the database.</exception>
         /// <exception cref="QdbIncompatibleTypeException">The matching entry in the database is not a queue.</exception>
         public byte[] GetAt(long index)

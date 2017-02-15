@@ -126,6 +126,7 @@
     <Compile Include="QdbDeque.cs" />
     <Compile Include="QdbStream.cs" />
     <Compile Include="QdbTag.cs" />
+    <Compile Include="QdbTimeInterval.cs" />
     <Compile Include="QdbTimeSeries.PointCollection.cs" />
     <Compile Include="QdbTimeSeries.Point.cs" />
     <Compile Include="QdbTimeSeries.cs" />

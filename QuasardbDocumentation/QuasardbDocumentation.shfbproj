@@ -112,6 +112,13 @@
       <AlternateText>Toc Expanded</AlternateText>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Quasardb\Quasardb.csproj">
+      <Name>Quasardb</Name>
+      <Project>{d8232795-82c5-405e-a081-0f03f158b036}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
   <!-- Import the SHFB build targets -->
   <Import Project="$(SHFBROOT)\SandcastleHelpFileBuilder.targets" />
 </Project>

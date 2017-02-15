@@ -34,6 +34,7 @@ namespace Quasardb
         /// <summary>
         /// Adds a "Add" operation to the batch: "Atomically adds the given value to the current value."
         /// </summary>
+        /// <param name="addend">The value to add</param>
         /// <returns>A future that will contain the result of the operation after the batch is run.</returns>
         /// <seealso cref="QdbInteger.Add"/>
         public IQdbFuture<long> Add(long addend)
@@ -54,6 +55,8 @@ namespace Quasardb
         /// <summary>
         /// Adds a "Put" operation to the batch: "Creates a new integer. Errors if the integer already exists."
         /// </summary>
+        /// <param name="value">The initial value of the integer</param>
+        /// <param name="expiry">The optional expirt time for the integer</param>
         /// <returns>A future that will contain the result of the operation after the batch is run.</returns>
         /// <seealso cref="QdbInteger.Put"/>
         public IQdbFuture Put(long value, DateTime? expiry = null)
@@ -71,6 +74,8 @@ namespace Quasardb
         /// <summary>
         /// Adds a "Update" operation to the batch: "Updates an existing integer or creates one if it does not exist."
         /// </summary>
+        /// <param name="value">The new value of the integer</param>
+        /// <param name="expiry">The optional expiry time of the integer</param>
         /// <returns>A future that will contain the result of the operation after the batch is run.</returns>
         /// <seealso cref="QdbInteger.Update"/>
         public IQdbFuture Update(long value, DateTime? expiry = null)
