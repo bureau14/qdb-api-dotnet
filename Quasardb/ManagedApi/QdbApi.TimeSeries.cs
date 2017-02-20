@@ -42,7 +42,7 @@ namespace Quasardb.ManagedApi
 
         public void TimeSeriesInsert(string alias, qdb_ts_double_point[] points)
         {
-            var error = qdb_api.qdb_ts_insert(_handle, alias, points, (UIntPtr) points.Length);
+            var error = qdb_api.qdb_ts_double_insert(_handle, alias, points, (UIntPtr) points.Length);
             QdbExceptionThrower.ThrowIfNeeded(error, alias: alias);
         }
 

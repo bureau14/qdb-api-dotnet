@@ -426,7 +426,7 @@ namespace Quasardb.NativeApi
         #region Functions specific to tags
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error_t qdb_ts_insert(
+        public static extern qdb_error_t qdb_ts_double_insert(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] qdb_ts_double_point[] points,
