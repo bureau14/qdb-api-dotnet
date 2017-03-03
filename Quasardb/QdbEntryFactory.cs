@@ -44,8 +44,15 @@ namespace Quasardb
                     return new QdbTimeSeries(_handle, alias);
 
                 default:
-                    throw new NotImplementedException($"Entry type \"{type}\" not supported in {nameof(QdbEntryFactory)}. Please contact quasardb support.");
+                    return new QdbUnknownEntry(_handle, alias);
             }
+        }
+    }
+
+    class QdbUnknownEntry : QdbEntry
+    {
+        public QdbUnknownEntry(QdbApi api, string alias) : base(api, alias)
+        {
         }
     }
 }
