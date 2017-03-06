@@ -141,6 +141,7 @@
     <Compile Include="QdbTimeSeriesTests\Last.cs" />
     <Compile Include="QdbTimeSeriesTests\First.cs" />
     <Compile Include="QdbTimeSeriesTests\Insert.cs" />
+    <Compile Include="UnitTest1.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Quasardb\Quasardb.csproj">
