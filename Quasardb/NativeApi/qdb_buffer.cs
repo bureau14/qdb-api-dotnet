@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 
 namespace Quasardb.NativeApi
 {
-    sealed class qdb_buffer : CriticalFinalizerObject, IDisposable
+    sealed unsafe class qdb_buffer : CriticalFinalizerObject, IDisposable
     {
         readonly qdb_handle _handle;
 
-        internal IntPtr Pointer;
+        internal byte* Pointer;
         internal UIntPtr Size;
 
         public qdb_buffer(qdb_handle handle)
@@ -27,7 +27,7 @@ namespace Quasardb.NativeApi
         {
             qdb_api.qdb_free_buffer(_handle, Pointer);
             GC.SuppressFinalize(this);
-            Pointer = IntPtr.Zero;
+            Pointer = null;
             Size = UIntPtr.Zero;
         }
 
@@ -36,7 +36,7 @@ namespace Quasardb.NativeApi
             // CAUTION: limited to 32 bits!!!
             int size = (int)Size;
             var buffer = new byte[size];
-            Marshal.Copy(Pointer, buffer, 0, size);
+            Marshal.Copy(new IntPtr(Pointer), buffer, 0, size);
             return buffer;
         }
     }

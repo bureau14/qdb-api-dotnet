@@ -18,7 +18,7 @@ namespace Quasardb.ManagedApi
 
         public void Dispose()
         {
-            qdb_api.qdb_free_results(_handle, new IntPtr(Pointer), Size);
+            qdb_api.qdb_free_buffer(_handle, Pointer);
         }
         
         public IEnumerator<qdb_ts_double_point> GetEnumerator()

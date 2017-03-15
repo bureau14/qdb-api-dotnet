@@ -28,7 +28,7 @@ namespace Quasardb.ManagedApi
             }
         }
 
-        public QdbAliasCollection GetTagged(string tag)
+        public unsafe QdbAliasCollection GetTagged(string tag)
         {
             var result = new QdbAliasCollection(_handle);
 
@@ -38,7 +38,7 @@ namespace Quasardb.ManagedApi
             return result;
         }
 
-        public QdbAliasCollection GetTags(string alias)
+        public unsafe QdbAliasCollection GetTags(string alias)
         {
             var result = new QdbAliasCollection(_handle);
 

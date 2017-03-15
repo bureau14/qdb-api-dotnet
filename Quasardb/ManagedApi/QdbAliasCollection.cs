@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using Quasardb.NativeApi;
 
 namespace Quasardb.ManagedApi
 {
-    sealed class QdbAliasCollection : IEnumerable<string>, IDisposable
+    sealed unsafe class QdbAliasCollection : IEnumerable<qdb_string>, IDisposable
     {
         readonly qdb_handle _handle;
-        internal IntPtr Pointer;
+        internal qdb_string* Pointer;
         internal UIntPtr Size;
         
         internal QdbAliasCollection(qdb_handle handle)
@@ -22,17 +21,13 @@ namespace Quasardb.ManagedApi
             qdb_api.qdb_free_results(_handle, Pointer, Size);
         }
 
-        public IEnumerator<string> GetEnumerator()
+        public qdb_string this[ulong index] => Pointer[index];
+
+        public IEnumerator<qdb_string> GetEnumerator()
         {
-            // CAUTION: limited to 32 bits!!!
-            for (var i = 0; i < (int) Size; i++)
+            for (var i = 0UL; i < Size.ToUInt64(); i++)
             {
-                var aliasPointer = Marshal.ReadIntPtr(Pointer,  i*IntPtr.Size);
-
-                // TODO: should be UTF8, not ANSI
-                var alias = Marshal.PtrToStringAnsi(aliasPointer); 
-
-                yield return alias;
+                yield return this[i];
             }
         }
 

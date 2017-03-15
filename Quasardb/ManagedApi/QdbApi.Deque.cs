@@ -5,7 +5,7 @@ namespace Quasardb.ManagedApi
 {
     partial class QdbApi
     {
-        public byte[] DequeBack(string alias)
+        public unsafe byte[] DequeBack(string alias)
         {
             using (var content = new qdb_buffer(_handle))
             {
@@ -16,7 +16,7 @@ namespace Quasardb.ManagedApi
             }
         }
 
-        public byte[] DequeFront(string alias)
+        public unsafe byte[] DequeFront(string alias)
         {
             using (var content = new qdb_buffer(_handle))
             {
@@ -27,7 +27,7 @@ namespace Quasardb.ManagedApi
             }
         }
 
-        public byte[] DequePopBack(string alias)
+        public unsafe byte[] DequePopBack(string alias)
         {
             using (var content = new qdb_buffer(_handle))
             {
@@ -38,7 +38,7 @@ namespace Quasardb.ManagedApi
             }
         }
 
-        public byte[] DequePopFront(string alias)
+        public unsafe byte[] DequePopFront(string alias)
         {
             using (var content = new qdb_buffer(_handle))
             {
@@ -69,7 +69,7 @@ namespace Quasardb.ManagedApi
             return (long)size;
         }
 
-        public byte[] DequeGetAt(string alias, long index)
+        public unsafe byte[] DequeGetAt(string alias, long index)
         {
             using (var content = new qdb_buffer(_handle))
             {

@@ -53,7 +53,7 @@ namespace Quasardb
                 // ReSharper disable once LoopCanBeConvertedToQuery
                 // To stay compatible with .NET Framework 2.0
                 foreach (var alias in aliases)
-                    yield return factory.Create(alias);
+                    yield return factory.Create(alias.ToString());
             }
         }
 
