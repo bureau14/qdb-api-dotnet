@@ -133,15 +133,17 @@
     <Compile Include="QdbTagTests\GetEntries.cs" />
     <Compile Include="QdbTagTests\AttachEntry.cs" />
     <Compile Include="QdbTagTests\DetachEntry.cs" />
+    <Compile Include="QdbTimeConverterTests\ToDateTime.cs" />
     <Compile Include="QdbTimeSeriesTests\Count.cs" />
     <Compile Include="QdbTimeSeriesTests\Average.cs" />
+    <Compile Include="QdbTimeSeriesTests\Points.cs" />
     <Compile Include="QdbTimeSeriesTests\Sum.cs" />
     <Compile Include="QdbTimeSeriesTests\Max.cs" />
     <Compile Include="QdbTimeSeriesTests\Min.cs" />
     <Compile Include="QdbTimeSeriesTests\Last.cs" />
     <Compile Include="QdbTimeSeriesTests\First.cs" />
     <Compile Include="QdbTimeSeriesTests\Insert.cs" />
-    <Compile Include="TimeConverterTests.cs" />
+    <Compile Include="QdbTimeConverterTests\ToTimeSpec.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Quasardb\Quasardb.csproj">

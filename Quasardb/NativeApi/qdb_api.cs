@@ -440,6 +440,15 @@ namespace Quasardb.NativeApi
             [In,Out] qdb_ts_aggregation[] aggregations,
             [In] qdb_size_t aggregation_count);
 
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error_t qdb_ts_double_get_range(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In, Out] qdb_ts_range[] ranges,
+            [In] qdb_size_t ranges_count,
+            [Out] out qdb_ts_double_point* points,
+            [Out] out size_t points_count);
+
         #endregion
     }
 }

@@ -16,5 +16,13 @@ namespace Quasardb.ManagedApi
             var error = qdb_api.qdb_ts_aggregate(_handle, alias, aggregationType, aggregations.Buffer, aggregations.Count);
             QdbExceptionThrower.ThrowIfNeeded(error, alias: alias);
         }
+
+        public unsafe QdbDoublePointCollection TimeSeriesGetPoints(string alias, InteropableList<qdb_ts_range> ranges)
+        {
+            var points = new QdbDoublePointCollection(_handle);
+            var error = qdb_api.qdb_ts_double_get_range(_handle, alias, ranges.Buffer, ranges.Count, out points.Pointer, out points.Size);
+            QdbExceptionThrower.ThrowIfNeeded(error, alias: alias);
+            return points;
+        }
     }
 }

@@ -105,7 +105,7 @@ namespace Quasardb
         /// <returns>The first point of the time series</returns>
         public Point First()
         {
-            return AggregatePoint(qdb_timespec.MinValue, qdb_timespec.MaxValue, qdb_ts_aggregation_type.First);
+            return First(QdbTimeInterval.Everything);
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace Quasardb
         /// <returns>The first point in the interval or <c>null</c> if there is no point in the interval</returns>
         public Point First(QdbTimeInterval interval)
         {
-            return AggregatePoint(TimeConverter.ToTimespec(interval.Begin), TimeConverter.ToTimespec(interval.End), qdb_ts_aggregation_type.First);
+            return AggregatePoint(interval, qdb_ts_aggregation_type.First);
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace Quasardb
         /// <returns>The last point of the time series</returns>
         public Point Last()
         {
-            return AggregatePoint(qdb_timespec.MinValue, qdb_timespec.MaxValue, qdb_ts_aggregation_type.Last);
+            return Last(QdbTimeInterval.Everything);
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace Quasardb
         /// <returns>The last point in the interval or <c>null</c> if there is no point in the interval</returns>
         public Point Last(QdbTimeInterval interval)
         {
-            return AggregatePoint(TimeConverter.ToTimespec(interval.Begin), TimeConverter.ToTimespec(interval.End), qdb_ts_aggregation_type.Last);
+            return AggregatePoint(interval, qdb_ts_aggregation_type.Last);
         }
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace Quasardb
         /// <returns>The max point of the time series</returns>
         public Point Max()
         {
-            return AggregatePoint(qdb_timespec.MinValue, qdb_timespec.MaxValue, qdb_ts_aggregation_type.Max);
+            return Max(QdbTimeInterval.Everything);
         }
 
         /// <summary>
@@ -181,7 +181,7 @@ namespace Quasardb
         /// <returns>The max point of the interval or <c>null</c> if there is no point in the interval</returns>
         public Point Max(QdbTimeInterval interval)
         {
-            return AggregatePoint(TimeConverter.ToTimespec(interval.Begin), TimeConverter.ToTimespec(interval.End), qdb_ts_aggregation_type.Max);
+            return AggregatePoint(interval, qdb_ts_aggregation_type.Max);
         }
 
         /// <summary>
@@ -204,7 +204,7 @@ namespace Quasardb
         /// <returns>The min point of the time series</returns>
         public Point Min()
         {
-            return AggregatePoint(qdb_timespec.MinValue, qdb_timespec.MaxValue, qdb_ts_aggregation_type.Min);
+            return Min(QdbTimeInterval.Everything);
         }
 
         /// <summary>
@@ -214,7 +214,7 @@ namespace Quasardb
         /// <returns>The min point in the interval or <c>null</c> if there is no point in the interval</returns>
         public Point Min(QdbTimeInterval interval)
         {
-            return AggregatePoint(TimeConverter.ToTimespec(interval.Begin), TimeConverter.ToTimespec(interval.End), qdb_ts_aggregation_type.Min);
+            return AggregatePoint(interval, qdb_ts_aggregation_type.Min);
         }
 
         /// <summary>
@@ -225,6 +225,43 @@ namespace Quasardb
         public IEnumerable<Point> Min(IEnumerable<QdbTimeInterval> intervals)
         {
             return AggregatePoints(intervals, qdb_ts_aggregation_type.Min);
+        }
+
+        #endregion
+
+        #region Points
+
+        /// <summary>
+        /// Gets all the points in the time series
+        /// </summary>
+        /// <returns>All the points in the time series</returns>
+        public IEnumerable<Point> Points()
+        {
+            return Points(QdbTimeInterval.Everything);
+        }
+
+        /// <summary>
+        /// Gets all the points in an interval
+        /// </summary>
+        /// <param name="interval">The time interval to scan</param>
+        /// <returns>All the points in the interval</returns>
+        public IEnumerable<Point> Points(QdbTimeInterval interval)
+        {
+            return Points(new [] { interval });
+        }
+
+        /// <summary>
+        /// Gets all the points in each interval
+        /// </summary>
+        /// <param name="intervals">The time intervals to scan</param>
+        /// <returns>All the points in each interval</returns>
+        public IEnumerable<Point> Points(IEnumerable<QdbTimeInterval> intervals)
+        {
+            var ranges = new InteropableList<qdb_ts_range>(GetCountOrDefault(intervals));
+            foreach (var interval in intervals)
+                ranges.Add(MakeRange(interval));
+            foreach (var pt in Api.TimeSeriesGetPoints(Alias, ranges))
+                yield return MakePoint(pt);
         }
 
         #endregion
@@ -264,18 +301,19 @@ namespace Quasardb
 
         #region Private methods
 
-        Point AggregatePoint(qdb_timespec begin, qdb_timespec end, qdb_ts_aggregation_type mode)
+        Point AggregatePoint(QdbTimeInterval interval, qdb_ts_aggregation_type mode)
         {
-            var aggregations = new InteropableList<qdb_ts_aggregation>(1) { MakeAggregation(begin, end) };
+            var aggregations = new InteropableList<qdb_ts_aggregation>(1) { MakeAggregation(interval) };
             Api.TimeSeriesAggregate(Alias, mode, aggregations);
             return MakePoint(aggregations[0]);
         }
 
         IEnumerable<Point> AggregatePoints(IEnumerable<QdbTimeInterval> intervals, qdb_ts_aggregation_type mode)
         {
-            var aggregations = new InteropableList<qdb_ts_aggregation>();
+            var aggregations = new InteropableList<qdb_ts_aggregation>(GetCountOrDefault(intervals));
             foreach (var interval in intervals)
                 aggregations.Add(MakeAggregation(interval));
+
             Api.TimeSeriesAggregate(Alias, mode, aggregations);
 
             foreach (var aggregation in aggregations)
@@ -291,7 +329,7 @@ namespace Quasardb
 
         IEnumerable<double> AggregateValues(IEnumerable<QdbTimeInterval> intervals, qdb_ts_aggregation_type mode)
         {
-            var aggregations = new InteropableList<qdb_ts_aggregation>();
+            var aggregations = new InteropableList<qdb_ts_aggregation>(GetCountOrDefault(intervals));
             foreach (var interval in intervals)
                 aggregations.Add(MakeAggregation(interval));
 
@@ -308,6 +346,11 @@ namespace Quasardb
                 : new Point(TimeConverter.ToDateTime(aggregation.result_timestamp), aggregation.result_value);
         }
 
+        static Point MakePoint(qdb_ts_double_point point)
+        {
+            return new Point(TimeConverter.ToDateTime(point.timestamp), point.value);
+        }
+
         static qdb_ts_aggregation MakeAggregation(QdbTimeInterval interval)
         {
             var begin = TimeConverter.ToTimespec(interval.Begin);
@@ -321,6 +364,20 @@ namespace Quasardb
             {
                 begin = begin,
                 end = end
+            };
+        }
+
+        static int GetCountOrDefault<T>(IEnumerable<T> source, int defaultCount = 128)
+        {
+            return (source as ICollection<T>)?.Count ?? defaultCount;
+        }
+
+        static qdb_ts_range MakeRange(QdbTimeInterval interval)
+        {
+            return new qdb_ts_range
+            {
+                begin = TimeConverter.ToTimespec(interval.Begin),
+                end = TimeConverter.ToTimespec(interval.End)
             };
         }
 

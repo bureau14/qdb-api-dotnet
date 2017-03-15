@@ -32,5 +32,10 @@ namespace Quasardb
         /// The duration of the interval
         /// </summary>
         public TimeSpan Duration => End - Begin;
+
+        /// <summary>
+        /// A instance of QdbTimeInterval that include everything
+        /// </summary>
+        public static readonly QdbTimeInterval Everything = new QdbTimeInterval(DateTime.MinValue, DateTime.MaxValue);
     }
 }

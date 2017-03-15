@@ -9,7 +9,7 @@ namespace Quasardb.ManagedApi
         T[] _buffer;
         int _count;
 
-        public InteropableList(int initialCapacity = 128)
+        public InteropableList(int initialCapacity)
         {
             _buffer = new T[initialCapacity];
             _count = 0;
