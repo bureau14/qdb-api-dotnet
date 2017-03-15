@@ -1,0 +1,185 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BE25CD87-9FB3-4CBA-87C5-5928F3CCB5C9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Quasardb.Tests</RootNamespace>
+    <AssemblyName>Quasardb.Tests</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
+    <IsCodedUITest>False</IsCodedUITest>
+    <TestProjectType>UnitTest</TestProjectType>
+    <TargetFrameworkProfile />
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <Prefer32Bit>false</Prefer32Bit>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '.NET Framework 2.0|AnyCPU'">
+    <OutputPath>bin\.NET Framework 2.0\</OutputPath>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '.NET Framework 3.5|AnyCPU'">
+    <OutputPath>bin\.NET Framework 3.5\</OutputPath>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '.NET Framework 4|AnyCPU'">
+    <OutputPath>bin\.NET Framework 4\</OutputPath>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '.NET Framework 4.5|AnyCPU'">
+    <OutputPath>bin\.NET Framework 4.5\</OutputPath>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <OutputPath>bin\Debug\</OutputPath>
+    <Optimize>false</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+  </ItemGroup>
+  <Choose>
+    <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+      </ItemGroup>
+    </When>
+    <Otherwise />
+  </Choose>
+  <ItemGroup>
+    <Compile Include="QdbBatchBlobTests\GetAndUpdate.cs" />
+    <Compile Include="QdbBatchBlobTests\CompareAndSwap.cs" />
+    <Compile Include="QdbBatchBlobTests\Update.cs" />
+    <Compile Include="QdbBatchIntegerTests\Add.cs" />
+    <Compile Include="QdbBatchIntegerTests\Get.cs" />
+    <Compile Include="QdbBatchIntegerTests\Put.cs" />
+    <Compile Include="QdbBatchIntegerTests\HasTag.cs" />
+    <Compile Include="QdbBatchIntegerTests\Update.cs" />
+    <Compile Include="QdbBatchTests.cs" />
+    <Compile Include="QdbBatchBlobTests\Put.cs" />
+    <Compile Include="QdbBatchBlobTests\Get.cs" />
+    <Compile Include="QdbBlobTests\Put.cs" />
+    <Compile Include="QdbBlobTests\Get.cs" />
+    <Compile Include="QdbBlobTests\GetExpiryTime.cs" />
+    <Compile Include="QdbBlobTests\GetAndRemove.cs" />
+    <Compile Include="QdbBlobTests\GetAndUpdate.cs" />
+    <Compile Include="QdbBlobTests\CompareAndSwap.cs" />
+    <Compile Include="QdbBlobTests\ExpiresAt.cs" />
+    <Compile Include="QdbBlobTests\RemoveIf.cs" />
+    <Compile Include="QdbBlobTests\Remove.cs" />
+    <Compile Include="QdbBlobTests\Update.cs" />
+    <Compile Include="QdbClusterTests\Entry.cs" />
+    <Compile Include="QdbClusterTests\Misc.cs" />
+    <Compile Include="QdbClusterTests\Blobs.cs" />
+    <Compile Include="QdbDequeTests\SetAt.cs" />
+    <Compile Include="QdbDequeTests\GetAt.cs" />
+    <Compile Include="QdbDequeTests\Size.cs" />
+    <Compile Include="QdbDequeTests\Back.cs" />
+    <Compile Include="QdbDequeTests\Front.cs" />
+    <Compile Include="QdbDequeTests\PopBack.cs" />
+    <Compile Include="QdbDequeTests\PopFront.cs" />
+    <Compile Include="QdbDequeTests\PushBack.cs" />
+    <Compile Include="QdbDequeTests\PushFront.cs" />
+    <Compile Include="QdbEntryTests\DetachTag.cs" />
+    <Compile Include="QdbBlobTests\ExpiresFromNow.cs" />
+    <Compile Include="QdbClusterTests\Entries.cs" />
+    <Compile Include="DaemonRunner.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QdbEntryTests\AttachTag.cs" />
+    <Compile Include="QdbEntryTests\GetTags.cs" />
+    <Compile Include="QdbEntryTests\HasTag.cs" />
+    <Compile Include="QdbExceptionFactoryTests.cs" />
+    <Compile Include="QdbHashSetTests\Contains.cs" />
+    <Compile Include="QdbHashSetTests\Insert.cs" />
+    <Compile Include="QdbHashSetTests\Erase.cs" />
+    <Compile Include="QdbIntegerTests\Update.cs" />
+    <Compile Include="QdbIntegerTests\Add.cs" />
+    <Compile Include="QdbIntegerTests\Get.cs" />
+    <Compile Include="QdbIntegerTests\Put.cs" />
+    <Compile Include="QdbStreamTests\Remove.cs" />
+    <Compile Include="QdbStreamTests\Seek.cs" />
+    <Compile Include="QdbStreamTests\Flush.cs" />
+    <Compile Include="QdbStreamTests\CanSeek.cs" />
+    <Compile Include="QdbStreamTests\CanRead.cs" />
+    <Compile Include="QdbStreamTests\CanWrite.cs" />
+    <Compile Include="QdbStreamTests\Open.cs" />
+    <Compile Include="QdbStreamTests\Length.cs" />
+    <Compile Include="QdbStreamTests\Read.cs" />
+    <Compile Include="QdbStreamTests\Position.cs" />
+    <Compile Include="QdbStreamTests\SetLength.cs" />
+    <Compile Include="QdbStreamTests\Write.cs" />
+    <Compile Include="QdbTagTests\HasEntry.cs" />
+    <Compile Include="Helpers\QdbTestCluster.cs" />
+    <Compile Include="Helpers\RandomGenerator.cs" />
+    <Compile Include="QdbTagTests\GetEntries.cs" />
+    <Compile Include="QdbTagTests\AttachEntry.cs" />
+    <Compile Include="QdbTagTests\DetachEntry.cs" />
+    <Compile Include="QdbTimeSeriesTests\Count.cs" />
+    <Compile Include="QdbTimeSeriesTests\Average.cs" />
+    <Compile Include="QdbTimeSeriesTests\Sum.cs" />
+    <Compile Include="QdbTimeSeriesTests\Max.cs" />
+    <Compile Include="QdbTimeSeriesTests\Min.cs" />
+    <Compile Include="QdbTimeSeriesTests\Last.cs" />
+    <Compile Include="QdbTimeSeriesTests\First.cs" />
+    <Compile Include="QdbTimeSeriesTests\Insert.cs" />
+    <Compile Include="TimeConverterTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Quasardb\Quasardb.csproj">
+      <Project>{D8232795-82C5-405E-A081-0F03F158B036}</Project>
+      <Name>Quasardb</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="qdbd.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup />
+  <Choose>
+    <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.CodedUITestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Extension, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITesting, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
