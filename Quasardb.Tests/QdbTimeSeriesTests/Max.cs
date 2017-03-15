@@ -33,7 +33,7 @@ namespace Quasardb.Tests.QdbTimeSeriesTests
         }
 
         [TestMethod]
-        public void GivenNoArgument_ReturnsMinPointOfTimeSeries()
+        public void GivenNoArgument_ReturnsMaxPointOfTimeSeries()
         {
             var ts = QdbTestCluster.CreateEmptyTimeSeries();
             ts.Insert(_points);
