@@ -266,16 +266,16 @@ namespace Quasardb
 
         Point AggregatePoint(qdb_timespec begin, qdb_timespec end, qdb_ts_aggregation_type mode)
         {
-            var aggregations = new QdbApi.AggregationCollection(1) {{begin, end}};
+            var aggregations = new InteropableList<qdb_ts_aggregation>(1) { MakeAggregation(begin, end) };
             Api.TimeSeriesAggregate(Alias, mode, aggregations);
             return MakePoint(aggregations[0]);
         }
 
         IEnumerable<Point> AggregatePoints(IEnumerable<QdbTimeInterval> intervals, qdb_ts_aggregation_type mode)
         {
-            var aggregations = new QdbApi.AggregationCollection();
+            var aggregations = new InteropableList<qdb_ts_aggregation>();
             foreach (var interval in intervals)
-                aggregations.Add(TimeConverter.ToTimespec(interval.Begin), TimeConverter.ToTimespec(interval.End));
+                aggregations.Add(MakeAggregation(interval));
             Api.TimeSeriesAggregate(Alias, mode, aggregations);
 
             foreach (var aggregation in aggregations)
@@ -284,16 +284,16 @@ namespace Quasardb
 
         double AggregateValue(qdb_timespec begin, qdb_timespec end, qdb_ts_aggregation_type mode)
         {
-            var aggregations = new QdbApi.AggregationCollection(1) { { begin, end } };
+            var aggregations = new InteropableList<qdb_ts_aggregation>(1) { MakeAggregation(begin, end) };
             Api.TimeSeriesAggregate(Alias, mode, aggregations);
             return aggregations[0].result_value;
         }
 
         IEnumerable<double> AggregateValues(IEnumerable<QdbTimeInterval> intervals, qdb_ts_aggregation_type mode)
         {
-            var aggregations = new QdbApi.AggregationCollection();
+            var aggregations = new InteropableList<qdb_ts_aggregation>();
             foreach (var interval in intervals)
-                aggregations.Add(TimeConverter.ToTimespec(interval.Begin), TimeConverter.ToTimespec(interval.End));
+                aggregations.Add(MakeAggregation(interval));
 
             Api.TimeSeriesAggregate(Alias, mode, aggregations);
 
@@ -306,6 +306,22 @@ namespace Quasardb
             return double.IsNaN(aggregation.result_value)
                 ? null
                 : new Point(TimeConverter.ToDateTime(aggregation.result_timestamp), aggregation.result_value);
+        }
+
+        static qdb_ts_aggregation MakeAggregation(QdbTimeInterval interval)
+        {
+            var begin = TimeConverter.ToTimespec(interval.Begin);
+            var end = TimeConverter.ToTimespec(interval.End);
+            return MakeAggregation(begin, end);
+        }
+
+        static qdb_ts_aggregation MakeAggregation(qdb_timespec begin, qdb_timespec end)
+        {
+            return new qdb_ts_aggregation
+            {
+                begin = begin,
+                end = end
+            };
         }
 
         #endregion

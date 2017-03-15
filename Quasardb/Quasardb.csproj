@@ -77,6 +77,7 @@
     <Compile Include="Exceptions\System\QdbLocalSystemException.cs" />
     <Compile Include="Exceptions\System\QdbSystemException.cs" />
     <Compile Include="IVisitable.cs" />
+    <Compile Include="ManagedApi\InteropableList.cs" />
     <Compile Include="ManagedApi\QdbApi.Batch.cs" />
     <Compile Include="ManagedApi\QdbApi.Stream.cs" />
     <Compile Include="ManagedApi\QdbApi.Affix.cs" />
