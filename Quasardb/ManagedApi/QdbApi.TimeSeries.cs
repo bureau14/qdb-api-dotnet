@@ -1,13 +1,12 @@
-﻿using System;
-using Quasardb.NativeApi;
+﻿using Quasardb.NativeApi;
 
 namespace Quasardb.ManagedApi
 {
     partial class QdbApi
     {
-        public void TimeSeriesInsert(string alias, qdb_ts_double_point[] points)
+        public void TimeSeriesInsert(string alias, InteropableList<qdb_ts_double_point> points)
         {
-            var error = qdb_api.qdb_ts_double_insert(_handle, alias, points, (UIntPtr) points.Length);
+            var error = qdb_api.qdb_ts_double_insert(_handle, alias, points.Buffer, points.Count);
             QdbExceptionThrower.ThrowIfNeeded(error, alias: alias);
         }
 

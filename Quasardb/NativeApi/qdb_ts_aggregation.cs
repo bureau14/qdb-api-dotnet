@@ -9,10 +9,7 @@ namespace Quasardb.NativeApi
     [StructLayout(LayoutKind.Sequential)]
     struct qdb_ts_aggregation
     {
-        public qdb_timespec begin;
-        public qdb_timespec end;
-
-        public qdb_timespec result_timestamp;
-        public double result_value;
+        public qdb_ts_range range;
+        public qdb_ts_double_point result;
     };
 }

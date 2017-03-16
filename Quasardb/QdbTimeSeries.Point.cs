@@ -54,14 +54,20 @@ namespace Quasardb
             {
                 return $"{{{Time}, {Value}}}";
             }
-        }
-    }
 
-    static class PointConverter
-    {
-        public static QdbTimeSeries.Point ToManaged(qdb_ts_double_point point)
-        {
-            return new QdbTimeSeries.Point(TimeConverter.ToDateTime(point.timestamp), point.value);
+            internal qdb_ts_double_point ToNative()
+            {
+                return new qdb_ts_double_point
+                {
+                    timestamp = TimeConverter.ToTimespec(Time),
+                    value = Value
+                };
+            }
+
+            internal static Point FromNative(qdb_ts_double_point pt)
+            {
+                return new Point(TimeConverter.ToDateTime(pt.timestamp), pt.value);
+            }
         }
     }
 }

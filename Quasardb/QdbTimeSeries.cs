@@ -23,7 +23,7 @@ namespace Quasardb
         /// <param name="points">The points to insert</param>
         public void Insert(PointCollection points)
         {
-            Api.TimeSeriesInsert(Alias, points.GetPoints());
+            Api.TimeSeriesInsert(Alias, points.Points);
         }
 
         #region Average()
@@ -34,7 +34,7 @@ namespace Quasardb
         /// <returns>The average value of the timeseries</returns>
         public double Average()
         {
-            return AggregateValue(qdb_timespec.MinValue, qdb_timespec.MaxValue, qdb_ts_aggregation_type.Average);
+            return Average(QdbTimeInterval.Everything);
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Quasardb
         /// <returns>The average value or <c>NaN</c> if there is no point in the interval</returns>
         public double Average(QdbTimeInterval interval)
         {
-            return AggregateValue(TimeConverter.ToTimespec(interval.Begin), TimeConverter.ToTimespec(interval.End), qdb_ts_aggregation_type.Average);
+            return AggregateValue(interval, qdb_ts_aggregation_type.Average);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Quasardb
         /// <returns>The number of points in the time series</returns>
         public long Count()
         {
-            return (long)AggregateValue(qdb_timespec.MinValue, qdb_timespec.MaxValue, qdb_ts_aggregation_type.Count);
+            return Count(QdbTimeInterval.Everything);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Quasardb
         /// <returns>The number of points in the interval</returns>
         public long Count(QdbTimeInterval interval)
         {
-            var res = AggregateValue(TimeConverter.ToTimespec(interval.Begin), TimeConverter.ToTimespec(interval.End), qdb_ts_aggregation_type.Count);
+            var res = AggregateValue(interval, qdb_ts_aggregation_type.Count);
             return double.IsNaN(res) ? 0 : (long) res;
         }
         
@@ -259,9 +259,9 @@ namespace Quasardb
         {
             var ranges = new InteropableList<qdb_ts_range>(GetCountOrDefault(intervals));
             foreach (var interval in intervals)
-                ranges.Add(MakeRange(interval));
+                ranges.Add(interval.ToNative());
             foreach (var pt in Api.TimeSeriesGetPoints(Alias, ranges))
-                yield return MakePoint(pt);
+                yield return Point.FromNative(pt);
         }
 
         #endregion
@@ -274,7 +274,7 @@ namespace Quasardb
         /// <returns>The sum of the timeseries</returns>
         public double Sum()
         {
-            return AggregateValue(qdb_timespec.MinValue, qdb_timespec.MaxValue, qdb_ts_aggregation_type.Sum);
+            return Sum(QdbTimeInterval.Everything);
         }
 
         /// <summary>
@@ -282,9 +282,9 @@ namespace Quasardb
         /// </summary>
         /// <param name="interval">The time interval to scan</param>
         /// <returns>The sum of the interval or <c>NaN</c> if there is no point in the interval</returns>
-        public double Sum(QdbTimeInterval interval)
+            public double Sum(QdbTimeInterval interval)
         {
-            return AggregateValue(TimeConverter.ToTimespec(interval.Begin), TimeConverter.ToTimespec(interval.End), qdb_ts_aggregation_type.Sum);
+            return AggregateValue(interval, qdb_ts_aggregation_type.Sum);
         }
 
         /// <summary>
@@ -320,11 +320,11 @@ namespace Quasardb
                 yield return MakePoint(aggregation);
         }
 
-        double AggregateValue(qdb_timespec begin, qdb_timespec end, qdb_ts_aggregation_type mode)
+        double AggregateValue(QdbTimeInterval interval, qdb_ts_aggregation_type mode)
         {
-            var aggregations = new InteropableList<qdb_ts_aggregation>(1) { MakeAggregation(begin, end) };
+            var aggregations = new InteropableList<qdb_ts_aggregation>(1) { MakeAggregation(interval) };
             Api.TimeSeriesAggregate(Alias, mode, aggregations);
-            return aggregations[0].result_value;
+            return aggregations[0].result.value;
         }
 
         IEnumerable<double> AggregateValues(IEnumerable<QdbTimeInterval> intervals, qdb_ts_aggregation_type mode)
@@ -336,49 +336,25 @@ namespace Quasardb
             Api.TimeSeriesAggregate(Alias, mode, aggregations);
 
             foreach (var aggregation in aggregations)
-                yield return aggregation.result_value;
+                yield return aggregation.result.value;
         }
 
-        static Point MakePoint(qdb_ts_aggregation aggregation)
+        static Point MakePoint(qdb_ts_aggregation agg)
         {
-            return double.IsNaN(aggregation.result_value)
-                ? null
-                : new Point(TimeConverter.ToDateTime(aggregation.result_timestamp), aggregation.result_value);
-        }
-
-        static Point MakePoint(qdb_ts_double_point point)
-        {
-            return new Point(TimeConverter.ToDateTime(point.timestamp), point.value);
+            return double.IsNaN(agg.result.value) ? null : Point.FromNative(agg.result);
         }
 
         static qdb_ts_aggregation MakeAggregation(QdbTimeInterval interval)
         {
-            var begin = TimeConverter.ToTimespec(interval.Begin);
-            var end = TimeConverter.ToTimespec(interval.End);
-            return MakeAggregation(begin, end);
-        }
-
-        static qdb_ts_aggregation MakeAggregation(qdb_timespec begin, qdb_timespec end)
-        {
             return new qdb_ts_aggregation
             {
-                begin = begin,
-                end = end
+                range = interval.ToNative()
             };
         }
 
         static int GetCountOrDefault<T>(IEnumerable<T> source, int defaultCount = 128)
         {
             return (source as ICollection<T>)?.Count ?? defaultCount;
-        }
-
-        static qdb_ts_range MakeRange(QdbTimeInterval interval)
-        {
-            return new qdb_ts_range
-            {
-                begin = TimeConverter.ToTimespec(interval.Begin),
-                end = TimeConverter.ToTimespec(interval.End)
-            };
         }
 
         #endregion

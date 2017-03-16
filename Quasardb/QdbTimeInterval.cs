@@ -1,4 +1,5 @@
 ﻿using System;
+using Quasardb.NativeApi;
 
 namespace Quasardb
 {
@@ -37,5 +38,14 @@ namespace Quasardb
         /// A instance of QdbTimeInterval that include everything
         /// </summary>
         public static readonly QdbTimeInterval Everything = new QdbTimeInterval(DateTime.MinValue, DateTime.MaxValue);
+
+        internal qdb_ts_range ToNative()
+        {
+            return new qdb_ts_range
+            {
+                begin = TimeConverter.ToTimespec(Begin),
+                end = TimeConverter.ToTimespec(End)
+            };
+        }
     }
 }

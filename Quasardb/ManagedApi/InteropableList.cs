@@ -23,6 +23,11 @@ namespace Quasardb.ManagedApi
             _buffer[_count++] = value;
         }
 
+        public void Clear()
+        {
+            _count = 0;
+        }
+
         public IEnumerator<T> GetEnumerator()
         {
             for (var i = 0; i < _count; i++)
@@ -30,8 +35,11 @@ namespace Quasardb.ManagedApi
         }
 
         public T this[int index] => _buffer[index];
+
         public T[] Buffer => _buffer;
+
         public UIntPtr Count => (UIntPtr) _count;
+
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }
