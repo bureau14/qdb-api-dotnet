@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb.Exceptions;
 using Quasardb.Tests.Helpers;
+using Quasardb.TimeSeries;
 
 namespace Quasardb.Tests.QdbTimeSeriesTests
 {
@@ -9,9 +10,10 @@ namespace Quasardb.Tests.QdbTimeSeriesTests
     public class Insert
     {
         [TestMethod]
+        [Ignore] // Requires support for columns in qdb_api.dll
         public void ThrowsIncompatibleType()
         {
-            var points = new QdbTimeSeries.PointCollection
+            var points = new QdbDoublePointCollection
             {
                 {new DateTime(2000, 01, 01), 1},
                 {new DateTime(2000, 01, 02), 2},
@@ -27,7 +29,7 @@ namespace Quasardb.Tests.QdbTimeSeriesTests
             }
             catch (QdbIncompatibleTypeException e)
             {
-                Assert.AreEqual(ts.Alias, e.Alias);
+                Assert.AreEqual(ts.Series.Alias, e.Alias);
             }
         }
     }

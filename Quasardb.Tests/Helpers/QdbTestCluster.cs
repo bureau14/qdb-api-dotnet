@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Quasardb.TimeSeries;
 
 namespace Quasardb.Tests.Helpers
 {
@@ -153,15 +154,15 @@ namespace Quasardb.Tests.Helpers
         
         #region TimeSeries
 
-        public static QdbTimeSeries CreateEmptyTimeSeries(string alias = null)
+        public static QdbDoubleColumn CreateEmptyTimeSeries(string alias = null)
         {
-            return Instance.TimeSeries(alias ?? RandomGenerator.CreateUniqueAlias());
+            return Instance.TimeSeries(alias ?? RandomGenerator.CreateUniqueAlias()).Columns[RandomGenerator.CreateUniqueAlias()];
         }
 
-        public static QdbTimeSeries CreateTimeSeries(string alias = null)
+        public static QdbDoubleColumn CreateTimeSeries(string alias = null)
         {
             var ts = CreateEmptyTimeSeries(alias);
-            ts.Insert(new QdbTimeSeries.PointCollection { {DateTime.Now, 666}});
+            ts.Insert(new QdbDoublePointCollection { {DateTime.Now, 666}});
             return ts;
         }
 

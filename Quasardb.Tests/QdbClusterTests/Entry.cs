@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb.Exceptions;
 using Quasardb.Tests.Helpers;
+using Quasardb.TimeSeries;
 
 namespace Quasardb.Tests.QdbClusterTests
 {
@@ -107,6 +108,7 @@ namespace Quasardb.Tests.QdbClusterTests
 
 
         [TestMethod]
+        [Ignore] // Requires support for columns in qdb_api.dll
         public void ReturnsTimeSeries()
         {
             var alias = RandomGenerator.CreateUniqueAlias();

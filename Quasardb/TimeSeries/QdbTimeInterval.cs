@@ -1,7 +1,7 @@
 ﻿using System;
 using Quasardb.NativeApi;
 
-namespace Quasardb
+namespace Quasardb.TimeSeries
 {
     /// <summary>
     /// A time interval [begin, end[

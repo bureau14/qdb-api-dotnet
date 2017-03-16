@@ -3,13 +3,14 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb.Exceptions;
 using Quasardb.Tests.Helpers;
+using Quasardb.TimeSeries;
 
 namespace Quasardb.Tests.QdbTimeSeriesTests
 {
     [TestClass]
     public class Count
     {
-        readonly QdbTimeSeries.PointCollection _points = new QdbTimeSeries.PointCollection
+        readonly QdbDoublePointCollection _points = new QdbDoublePointCollection
         {
             {new DateTime(2012, 11, 02), 666},
             {new DateTime(2014, 06, 30), 42 },
@@ -28,7 +29,7 @@ namespace Quasardb.Tests.QdbTimeSeriesTests
             }
             catch (QdbAliasNotFoundException e)
             {
-                Assert.AreEqual(ts.Alias, e.Alias);
+                Assert.AreEqual(ts.Series.Alias, e.Alias);
             }
         }
 
