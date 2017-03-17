@@ -2,9 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Quasardb.ManagedApi
+namespace Quasardb.Native
 {
-    class InteropableList<T> : IEnumerable<T> where T : struct
+    public class InteropableList<T> : IEnumerable<T> where T : struct
     {
         T[] _buffer;
         int _count;

@@ -67,6 +67,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="InteropableList.cs" />
+    <Compile Include="qdb_results.cs" />
     <Compile Include="qdb_string.cs" />
     <Compile Include="qdb_ts_range.cs" />
     <Compile Include="qdb_ts_aggregation_type.cs" />

@@ -1,4 +1,5 @@
 ﻿using Quasardb.Native;
+using Quasardb.TimeSeries;
 
 namespace Quasardb.ManagedApi
 {
@@ -21,9 +22,9 @@ namespace Quasardb.ManagedApi
             QdbExceptionThrower.ThrowIfNeeded(error, alias: alias);
         }
 
-        public unsafe QdbDoublePointCollection TimeSeriesGetPoints(string alias, string column, InteropableList<qdb_ts_range> ranges)
+        public unsafe QdbDoublePointResponse TimeSeriesGetPoints(string alias, string column, InteropableList<qdb_ts_range> ranges)
         {
-            var points = new QdbDoublePointCollection(_handle);
+            var points = new QdbDoublePointResponse(_handle);
             var error = qdb_api.qdb_ts_double_get_range(_handle, MakeTsAlias(alias, column), ranges.Buffer, ranges.Count, out points.Pointer, out points.Size);
             QdbExceptionThrower.ThrowIfNeeded(error, alias: alias);
             return points;

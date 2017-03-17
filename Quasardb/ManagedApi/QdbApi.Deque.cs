@@ -7,7 +7,7 @@ namespace Quasardb.ManagedApi
     {
         public unsafe byte[] DequeBack(string alias)
         {
-            using (var content = new qdb_buffer(_handle))
+            using (var content = new QdbBlobBuffer(_handle))
             {
                 var error = qdb_api.qdb_deque_back(_handle, alias, out content.Pointer, out content.Size);
                 if (error == qdb_error_t.qdb_e_container_empty) return null;
@@ -18,7 +18,7 @@ namespace Quasardb.ManagedApi
 
         public unsafe byte[] DequeFront(string alias)
         {
-            using (var content = new qdb_buffer(_handle))
+            using (var content = new QdbBlobBuffer(_handle))
             {
                 var error = qdb_api.qdb_deque_front(_handle, alias, out content.Pointer, out content.Size);
                 if (error == qdb_error_t.qdb_e_container_empty) return null;
@@ -29,7 +29,7 @@ namespace Quasardb.ManagedApi
 
         public unsafe byte[] DequePopBack(string alias)
         {
-            using (var content = new qdb_buffer(_handle))
+            using (var content = new QdbBlobBuffer(_handle))
             {
                 var error = qdb_api.qdb_deque_pop_back(_handle, alias, out content.Pointer, out content.Size);
                 if (error == qdb_error_t.qdb_e_container_empty) return null;
@@ -40,7 +40,7 @@ namespace Quasardb.ManagedApi
 
         public unsafe byte[] DequePopFront(string alias)
         {
-            using (var content = new qdb_buffer(_handle))
+            using (var content = new QdbBlobBuffer(_handle))
             {
                 var error = qdb_api.qdb_deque_pop_front(_handle, alias, out content.Pointer, out content.Size);
                 if (error == qdb_error_t.qdb_e_container_empty) return null;
@@ -71,7 +71,7 @@ namespace Quasardb.ManagedApi
 
         public unsafe byte[] DequeGetAt(string alias, long index)
         {
-            using (var content = new qdb_buffer(_handle))
+            using (var content = new QdbBlobBuffer(_handle))
             {
                 var error = qdb_api.qdb_deque_get_at(_handle, alias, index, out content.Pointer, out content.Size);
                 QdbExceptionThrower.ThrowIfNeeded(error, alias: alias);

@@ -5,9 +5,9 @@ namespace Quasardb.ManagedApi
 {
     partial class QdbApi
     {
-        public unsafe QdbAliasCollection PrefixGet(string prefix, long max)
+        public unsafe QdbStringCollection PrefixGet(string prefix, long max)
         {
-            var result = new QdbAliasCollection(_handle);
+            var result = new QdbStringCollection(_handle);
 
             var error = qdb_api.qdb_prefix_get(_handle, prefix, max, out result.Pointer, out result.Size);
 
@@ -22,9 +22,9 @@ namespace Quasardb.ManagedApi
             }
         }
 
-        public unsafe QdbAliasCollection SuffixGet(string suffix, long max)
+        public unsafe QdbStringCollection SuffixGet(string suffix, long max)
         {
-            var result = new QdbAliasCollection(_handle);
+            var result = new QdbStringCollection(_handle);
 
             var error = qdb_api.qdb_suffix_get(_handle, suffix, max, out result.Pointer, out result.Size);
 

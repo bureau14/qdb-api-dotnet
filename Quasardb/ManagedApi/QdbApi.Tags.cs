@@ -28,9 +28,9 @@ namespace Quasardb.ManagedApi
             }
         }
 
-        public unsafe QdbAliasCollection GetTagged(string tag)
+        public unsafe QdbStringCollection GetTagged(string tag)
         {
-            var result = new QdbAliasCollection(_handle);
+            var result = new QdbStringCollection(_handle);
 
             var error = qdb_api.qdb_get_tagged(_handle, tag, out result.Pointer, out result.Size);
             QdbExceptionThrower.ThrowIfNeeded(error, alias: tag);
@@ -38,9 +38,9 @@ namespace Quasardb.ManagedApi
             return result;
         }
 
-        public unsafe QdbAliasCollection GetTags(string alias)
+        public unsafe QdbStringCollection GetTags(string alias)
         {
-            var result = new QdbAliasCollection(_handle);
+            var result = new QdbStringCollection(_handle);
 
             var error = qdb_api.qdb_get_tags(_handle, alias, out result.Pointer, out result.Size);
             QdbExceptionThrower.ThrowIfNeeded(error, alias: alias);
