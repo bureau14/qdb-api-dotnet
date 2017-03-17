@@ -130,6 +130,9 @@
     <Compile Include="QdbDeque.cs" />
     <Compile Include="QdbStream.cs" />
     <Compile Include="QdbTag.cs" />
+    <Compile Include="TimeSeries\Helpers.cs" />
+    <Compile Include="TimeSeries\QdbColumn.cs" />
+    <Compile Include="TimeSeries\QdbColumnAggregator.cs" />
     <Compile Include="TimeSeries\QdbTimeInterval.cs" />
     <Compile Include="TimeSeries\QdbDoublePointCollection.cs" />
     <Compile Include="TimeSeries\QdbDoublePoint.cs" />

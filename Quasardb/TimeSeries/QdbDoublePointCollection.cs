@@ -14,12 +14,23 @@ namespace Quasardb.TimeSeries
         internal readonly InteropableList<qdb_ts_double_point> Points;
 
         /// <summary>
-        /// Create a empty collection
+        /// Creates an empty collection
         /// </summary>
         /// <param name="initialCapacity">The initial capacity of the collection</param>
         public QdbDoublePointCollection(int initialCapacity = 1024)
         {
             Points = new InteropableList<qdb_ts_double_point>(initialCapacity);
+        }
+
+        /// <summary>
+        /// Creates the collection from an existing one
+        /// </summary>
+        /// <param name="source">The collection of point to duplicate</param>
+        public QdbDoublePointCollection(IEnumerable<QdbDoublePoint> source)
+        {
+            Points = new InteropableList<qdb_ts_double_point>(Helpers.GetCountOrDefault(source, 1024));
+            foreach (var point in source)
+                Add(point);
         }
 
         /// <summary>
@@ -30,6 +41,15 @@ namespace Quasardb.TimeSeries
         public void Add(DateTime timespamp, double value)
         {
             Points.Add(new QdbDoublePoint(timespamp, value).ToNative());
+        }
+
+        /// <summary>
+        /// Adds a point to the collection
+        /// </summary>
+        /// <param name="point">The point to add</param>
+        public void Add(QdbDoublePoint point)
+        {
+            Points.Add(point.ToNative());
         }
 
         /// <summary>

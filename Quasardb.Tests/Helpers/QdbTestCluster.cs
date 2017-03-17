@@ -156,13 +156,13 @@ namespace Quasardb.Tests.Helpers
 
         public static QdbDoubleColumn CreateEmptyTimeSeries(string alias = null)
         {
-            return Instance.TimeSeries(alias ?? RandomGenerator.CreateUniqueAlias()).Columns[RandomGenerator.CreateUniqueAlias()];
+            return Instance.TimeSeries(alias ?? RandomGenerator.CreateUniqueAlias()).Columns[RandomGenerator.CreateUniqueAlias()] as QdbDoubleColumn;
         }
 
         public static QdbDoubleColumn CreateTimeSeries(string alias = null)
         {
             var ts = CreateEmptyTimeSeries(alias);
-            ts.Insert(new QdbDoublePointCollection { {DateTime.Now, 666}});
+            ts.Insert(DateTime.Now, 666);
             return ts;
         }
 

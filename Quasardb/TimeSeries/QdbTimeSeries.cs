@@ -18,7 +18,7 @@ namespace Quasardb.TimeSeries
         /// Gets the columns with the specified name
         /// </summary>
         /// <param name="name">The name of the column</param>
-        public QdbDoubleColumn this[string name]
+        public QdbColumn this[string name]
         {
             get { return new QdbDoubleColumn(_series, name);}
         }

@@ -10,11 +10,11 @@ namespace Quasardb.Tests.QdbTimeSeriesTests
     [TestClass]
     public class Points
     {
-        readonly QdbDoublePointCollection _points = new QdbDoublePointCollection
+        readonly QdbDoublePoint[] _points = new []
         {
-            {new DateTime(2012, 11, 02), 0},
-            {new DateTime(2014, 06, 30), 42 },
-            {new DateTime(2016, 02, 04), 666}
+            new QdbDoublePoint(new DateTime(2012, 11, 02), 0),
+            new QdbDoublePoint(new DateTime(2014, 06, 30), 42 ),
+            new QdbDoublePoint(new DateTime(2016, 02, 04), 666)
         };
 
         [TestMethod]
