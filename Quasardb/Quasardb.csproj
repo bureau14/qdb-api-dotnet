@@ -76,7 +76,11 @@
     <Compile Include="Exceptions\System\QdbRemoteSystemException.cs" />
     <Compile Include="Exceptions\System\QdbLocalSystemException.cs" />
     <Compile Include="Exceptions\System\QdbSystemException.cs" />
+    <Compile Include="ExtensionMethodWithFramework2.cs" />
     <Compile Include="IVisitable.cs" />
+    <Compile Include="TimeSeries\PointConverter.cs" />
+    <Compile Include="TimeSeries\QdbBlobPointCollection.cs" />
+    <Compile Include="TimeSeries\QdbBlobColumn.cs" />
     <Compile Include="TimeSeries\QdbDoublePointResponse.cs" />
     <Compile Include="ManagedApi\QdbApi.Batch.cs" />
     <Compile Include="ManagedApi\QdbApi.Stream.cs" />

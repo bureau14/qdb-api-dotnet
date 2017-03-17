@@ -10,7 +10,7 @@ namespace Quasardb.ManagedApi
             return series + "." + column;
         }
 
-        public void TimeSeriesInsert(string alias, string column, InteropableList<qdb_ts_double_point> points)
+        public void TsDoubleInsert(string alias, string column, InteropableList<qdb_ts_double_point> points)
         {
             var error = qdb_api.qdb_ts_double_insert(_handle, MakeTsAlias(alias, column), points.Buffer, points.Count);
             QdbExceptionThrower.ThrowIfNeeded(error, alias: alias);
@@ -28,6 +28,12 @@ namespace Quasardb.ManagedApi
             var error = qdb_api.qdb_ts_double_get_range(_handle, MakeTsAlias(alias, column), ranges.Buffer, ranges.Count, out points.Pointer, out points.Size);
             QdbExceptionThrower.ThrowIfNeeded(error, alias: alias);
             return points;
+        }
+
+        public void TsBlobInsert(string alias, string column, InteropableList<qdb_ts_blob_point> points)
+        {
+            var error = qdb_api.qdb_ts_blob_insert(_handle, MakeTsAlias(alias, column), points.Buffer, points.Count);
+            QdbExceptionThrower.ThrowIfNeeded(error, alias: alias);
         }
     }
 }

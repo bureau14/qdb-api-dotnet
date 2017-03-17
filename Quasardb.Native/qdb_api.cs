@@ -421,7 +421,7 @@ namespace Quasardb.Native
 
         #endregion
 
-        #region Functions specific to tags
+        #region Functions specific to time-series
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error_t qdb_ts_double_insert(
@@ -446,6 +446,13 @@ namespace Quasardb.Native
             [In] qdb_size_t ranges_count,
             [Out] out qdb_buffer.data* points,
             [Out] out size_t points_count);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error_t qdb_ts_blob_insert(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In] qdb_ts_blob_point[] values,
+            [In] qdb_size_t count);
 
         #endregion
     }

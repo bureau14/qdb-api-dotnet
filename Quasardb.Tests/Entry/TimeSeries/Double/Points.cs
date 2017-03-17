@@ -9,18 +9,18 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
     [TestClass]
     public class Points
     {
-        readonly QdbDoublePoint[] _points = new []
+        readonly QdbPoint<double>[] _points = new []
         {
-            new QdbDoublePoint(new DateTime(2012, 11, 02), 0),
-            new QdbDoublePoint(new DateTime(2014, 06, 30), 42 ),
-            new QdbDoublePoint(new DateTime(2016, 02, 04), 666)
+            new QdbPoint<double>(new DateTime(2012, 11, 02), 0),
+            new QdbPoint<double>(new DateTime(2014, 06, 30), 42 ),
+            new QdbPoint<double>(new DateTime(2016, 02, 04), 666)
         };
 
         [TestMethod]
         [Ignore] // Seems to be a bug in qdb_ts_double_get_range()
         public void ThrowsAliasNotFound()
         {
-            var ts = QdbTestCluster.CreateEmptyTimeSeries();
+            var ts = QdbTestCluster.CreateEmptyDoubleColumn();
 
             try
             {
@@ -38,7 +38,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
         [TestMethod]
         public void GivenNoArgument_ReturnsPointsOfTimeSeries()
         {
-            var ts = QdbTestCluster.CreateEmptyTimeSeries();
+            var ts = QdbTestCluster.CreateEmptyDoubleColumn();
             ts.Insert(_points);
 
             var result = ts.Points();
@@ -50,7 +50,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
         [TestMethod]
         public void GivenInRangeInterval_ReturnsPointsOfInterval()
         {
-            var ts = QdbTestCluster.CreateEmptyTimeSeries();
+            var ts = QdbTestCluster.CreateEmptyDoubleColumn();
             ts.Insert(_points);
 
             var interval = new QdbTimeInterval(_points[0].Time,_points[2].Time);
@@ -62,7 +62,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
         [TestMethod]
         public void GivenOutOfRangeInterval_ReturnsEmptyCollection()
         {
-            var ts = QdbTestCluster.CreateEmptyTimeSeries();
+            var ts = QdbTestCluster.CreateEmptyDoubleColumn();
             ts.Insert(_points);
 
             var interval = new QdbTimeInterval(new DateTime(3000,1,1),new DateTime(4000, 1, 1));
@@ -74,7 +74,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
         [TestMethod]
         public void GivenSeveralIntervals_ReturnsPointsOfEach()
         {
-            var ts = QdbTestCluster.CreateEmptyTimeSeries();
+            var ts = QdbTestCluster.CreateEmptyDoubleColumn();
             ts.Insert(_points);
 
             var intervals = new[]

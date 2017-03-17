@@ -18,7 +18,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
                 {new DateTime(2000, 01, 02), 2},
             };
             var alias = RandomGenerator.CreateUniqueAlias();
-            var ts = QdbTestCluster.CreateEmptyTimeSeries(alias);
+            var ts = QdbTestCluster.CreateEmptyDoubleColumn(alias);
             QdbTestCluster.CreateBlob(alias);
 
             try

@@ -26,9 +26,9 @@ namespace Quasardb.TimeSeries
                 return _aggregation.result.value;
             }
 
-            public QdbDoublePoint ToDoublePoint()
+            public QdbPoint<double> ToDoublePoint()
             {
-                return double.IsNaN(_aggregation.result.value) ? null : QdbDoublePoint.FromNative(_aggregation.result);
+                return double.IsNaN(_aggregation.result.value) ? null : _aggregation.result.ToManaged();
             }
         }
 
@@ -53,10 +53,10 @@ namespace Quasardb.TimeSeries
                     yield return agg.result.value;
             }
 
-            public IEnumerable<QdbDoublePoint> ToDoublePoint()
+            public IEnumerable<QdbPoint<double>> ToDoublePoint()
             {
                 foreach (var agg in _aggregations)
-                    yield return double.IsNaN(agg.result.value) ? null : QdbDoublePoint.FromNative(agg.result);
+                    yield return double.IsNaN(agg.result.value) ? null : agg.result.ToManaged();
             }
         }
 

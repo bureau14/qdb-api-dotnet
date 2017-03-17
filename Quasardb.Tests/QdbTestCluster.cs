@@ -154,16 +154,21 @@ namespace Quasardb.Tests
         
         #region TimeSeries
 
-        public static QdbDoubleColumn CreateEmptyTimeSeries(string alias = null)
+        public static QdbDoubleColumn CreateEmptyDoubleColumn(string alias = null)
         {
-            return Instance.TimeSeries(alias ?? RandomGenerator.CreateUniqueAlias()).Columns[RandomGenerator.CreateUniqueAlias()] as QdbDoubleColumn;
+            return Instance.TimeSeries(alias ?? RandomGenerator.CreateUniqueAlias()).DoubleColumns[RandomGenerator.CreateUniqueAlias()];
         }
 
-        public static QdbDoubleColumn CreateTimeSeries(string alias = null)
+        public static QdbDoubleColumn CreateDoubleColumn(string alias = null)
         {
-            var ts = CreateEmptyTimeSeries(alias);
+            var ts = CreateEmptyDoubleColumn(alias);
             ts.Insert(DateTime.Now, 666);
             return ts;
+        }
+
+        public static QdbBlobColumn CreateEmptyBlobColumn(string alias = null)
+        {
+            return Instance.TimeSeries(alias ?? RandomGenerator.CreateUniqueAlias()).BlobColumns[RandomGenerator.CreateUniqueAlias()];
         }
 
         #endregion

@@ -5,11 +5,11 @@ namespace Quasardb.TimeSeries
     /// <summary>
     /// A collection of columns
     /// </summary>
-    public class QdbColumnCollection
+    public class QdbDoubleColumnCollection
     {
         readonly QdbTimeSeries _series;
 
-        internal QdbColumnCollection(QdbTimeSeries series)
+        internal QdbDoubleColumnCollection(QdbTimeSeries series)
         {
             _series = series;
         }
@@ -18,9 +18,31 @@ namespace Quasardb.TimeSeries
         /// Gets the columns with the specified name
         /// </summary>
         /// <param name="name">The name of the column</param>
-        public QdbColumn this[string name]
+        public QdbDoubleColumn this[string name]
         {
             get { return new QdbDoubleColumn(_series, name);}
+        }
+    }
+
+    /// <summary>
+    /// A collection of columns of blobs
+    /// </summary>
+    public class QdbBlobColumnCollection
+    {
+        readonly QdbTimeSeries _series;
+
+        internal QdbBlobColumnCollection(QdbTimeSeries series)
+        {
+            _series = series;
+        }
+
+        /// <summary>
+        /// Gets the columns with the specified name
+        /// </summary>
+        /// <param name="name">The name of the column</param>
+        public QdbBlobColumn this[string name]
+        {
+            get { return new QdbBlobColumn(_series, name); }
         }
     }
 
@@ -31,12 +53,18 @@ namespace Quasardb.TimeSeries
     {
         internal QdbTimeSeries(QdbApi api, string alias) : base(api, alias)
         {
-            Columns = new QdbColumnCollection(this);
+            DoubleColumns = new QdbDoubleColumnCollection(this);
+            BlobColumns = new QdbBlobColumnCollection(this);
         }
 
         /// <summary>
         /// The columns of the time series
         /// </summary>
-        public QdbColumnCollection Columns { get; }
+        public QdbDoubleColumnCollection DoubleColumns { get; }
+
+        /// <summary>
+        /// The columns of the time series that contains blobs
+        /// </summary>
+        public QdbBlobColumnCollection BlobColumns { get; }
     }
 }

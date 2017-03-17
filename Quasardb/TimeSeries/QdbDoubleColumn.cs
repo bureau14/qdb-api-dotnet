@@ -14,20 +14,22 @@ namespace Quasardb.TimeSeries
         {
         }
 
+        #region Insert()
+
         /// <summary>
         /// Inserts one or more points in the time series
         /// </summary>
         /// <param name="points">The points to insert</param>
         public void Insert(QdbDoublePointCollection points)
         {
-            Series.Api.TimeSeriesInsert(Series.Alias, Name, points.Points);
+            Series.Api.TsDoubleInsert(Series.Alias, Name, points.Points);
         }
 
         /// <summary>
         /// Inserts one or more points in the time series
         /// </summary>
         /// <param name="points">The points to insert</param>
-        public void Insert(IEnumerable<QdbDoublePoint> points)
+        public void Insert(IEnumerable<QdbPoint<double>> points)
         {
             Insert(new QdbDoublePointCollection(points));
         }
@@ -36,9 +38,9 @@ namespace Quasardb.TimeSeries
         /// Inserts one or more points in the time series
         /// </summary>
         /// <param name="points">The points to insert</param>
-        public void Insert(params QdbDoublePoint[] points)
+        public void Insert(params QdbPoint<double>[] points)
         {
-            Insert((IEnumerable<QdbDoublePoint>)points);
+            Insert((IEnumerable<QdbPoint<double>>)points);
         }
 
         /// <summary>
@@ -46,11 +48,12 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="time">The timestamp of the point to insert</param>
         /// <param name="value">The value of the point to insert</param>
-        internal void Insert(DateTime time, int value)
+        public void Insert(DateTime time, double value)
         {
-            Insert(new QdbDoublePoint(time, value));
+            Insert(new QdbPoint<double>(time, value));
         }
 
+        #endregion
 
         #region Average()
 
@@ -91,7 +94,7 @@ namespace Quasardb.TimeSeries
         /// Gets the first point (ie the one with the oldest timestamp) of the timeseries 
         /// </summary>
         /// <returns>The first point of the time series</returns>
-        public QdbDoublePoint First()
+        public QdbPoint<double> First()
         {
             return First(QdbTimeInterval.Everything);
         }
@@ -101,7 +104,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="interval">The time interval to scan</param>
         /// <returns>The first point in the interval or <c>null</c> if there is no point in the interval</returns>
-        public QdbDoublePoint First(QdbTimeInterval interval)
+        public QdbPoint<double> First(QdbTimeInterval interval)
         {
             return _aggregator.Aggregate(interval, qdb_ts_aggregation_type.First).ToDoublePoint();
         }
@@ -111,7 +114,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="intervals">The time intervals to scan</param>
         /// <returns>The first point in each interval (<c>null</c> when there is no point in an interval)</returns>
-        public IEnumerable<QdbDoublePoint> First(IEnumerable<QdbTimeInterval> intervals)
+        public IEnumerable<QdbPoint<double>> First(IEnumerable<QdbTimeInterval> intervals)
         {
             return _aggregator.Aggregate(intervals, qdb_ts_aggregation_type.First).ToDoublePoint();
         }
@@ -124,7 +127,7 @@ namespace Quasardb.TimeSeries
         /// Gets the last point (ie the one with the newest timestamp) of the time series
         /// </summary>
         /// <returns>The last point of the time series</returns>
-        public QdbDoublePoint Last()
+        public QdbPoint<double> Last()
         {
             return Last(QdbTimeInterval.Everything);
         }
@@ -134,7 +137,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="interval">The time interval to scan</param>
         /// <returns>The last point in the interval or <c>null</c> if there is no point in the interval</returns>
-        public QdbDoublePoint Last(QdbTimeInterval interval)
+        public QdbPoint<double> Last(QdbTimeInterval interval)
         {
             return _aggregator.Aggregate(interval, qdb_ts_aggregation_type.Last).ToDoublePoint();
         }
@@ -144,7 +147,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="intervals">The time intervals to scan</param>
         /// <returns>The last point in each interval (<c>null</c> when there is no point in an interval)</returns>
-        public IEnumerable<QdbDoublePoint> Last(IEnumerable<QdbTimeInterval> intervals)
+        public IEnumerable<QdbPoint<double>> Last(IEnumerable<QdbTimeInterval> intervals)
         {
             return _aggregator.Aggregate(intervals, qdb_ts_aggregation_type.Last).ToDoublePoint();
         }
@@ -157,7 +160,7 @@ namespace Quasardb.TimeSeries
         /// Gets the max point (ie the one with the highest value) of the timeseries
         /// </summary>
         /// <returns>The max point of the time series</returns>
-        public QdbDoublePoint Max()
+        public QdbPoint<double> Max()
         {
             return Max(QdbTimeInterval.Everything);
         }
@@ -167,7 +170,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="interval">The time interval to scan</param>
         /// <returns>The max point of the interval or <c>null</c> if there is no point in the interval</returns>
-        public QdbDoublePoint Max(QdbTimeInterval interval)
+        public QdbPoint<double> Max(QdbTimeInterval interval)
         {
             return _aggregator.Aggregate(interval, qdb_ts_aggregation_type.Max).ToDoublePoint();
         }
@@ -177,7 +180,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="intervals">The time intervals to scan</param>
         /// <returns>The max point in each interval (<c>null</c> when there is no point in an interval)</returns>
-        public IEnumerable<QdbDoublePoint> Max(IEnumerable<QdbTimeInterval> intervals)
+        public IEnumerable<QdbPoint<double>> Max(IEnumerable<QdbTimeInterval> intervals)
         {
             return _aggregator.Aggregate(intervals, qdb_ts_aggregation_type.Max).ToDoublePoint();
         }
@@ -190,7 +193,7 @@ namespace Quasardb.TimeSeries
         /// Gets the min point (ie the one with the lowest value) of the timeseries
         /// </summary>
         /// <returns>The min point of the time series</returns>
-        public QdbDoublePoint Min()
+        public QdbPoint<double> Min()
         {
             return Min(QdbTimeInterval.Everything);
         }
@@ -200,7 +203,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="interval">The time interval to scan</param>
         /// <returns>The min point in the interval or <c>null</c> if there is no point in the interval</returns>
-        public QdbDoublePoint Min(QdbTimeInterval interval)
+        public QdbPoint<double> Min(QdbTimeInterval interval)
         {
             return _aggregator.Aggregate(interval, qdb_ts_aggregation_type.Min).ToDoublePoint();
         }
@@ -210,7 +213,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="intervals">The time intervals to scan</param>
         /// <returns>The min point of each interval (<c>null</c> when there is no point in an interval)</returns>
-        public IEnumerable<QdbDoublePoint> Min(IEnumerable<QdbTimeInterval> intervals)
+        public IEnumerable<QdbPoint<double>> Min(IEnumerable<QdbTimeInterval> intervals)
         {
             return _aggregator.Aggregate(intervals, qdb_ts_aggregation_type.Min).ToDoublePoint();
         }
@@ -223,7 +226,7 @@ namespace Quasardb.TimeSeries
         /// Gets all the points in the time series
         /// </summary>
         /// <returns>All the points in the time series</returns>
-        public IEnumerable<QdbDoublePoint> Points()
+        public IEnumerable<QdbPoint<double>> Points()
         {
             return Points(QdbTimeInterval.Everything);
         }
@@ -233,7 +236,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="interval">The time interval to scan</param>
         /// <returns>All the points in the interval</returns>
-        public IEnumerable<QdbDoublePoint> Points(QdbTimeInterval interval)
+        public IEnumerable<QdbPoint<double>> Points(QdbTimeInterval interval)
         {
             return Points(new [] { interval });
         }
@@ -243,13 +246,13 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="intervals">The time intervals to scan</param>
         /// <returns>All the points in each interval</returns>
-        public IEnumerable<QdbDoublePoint> Points(IEnumerable<QdbTimeInterval> intervals)
+        public IEnumerable<QdbPoint<double>> Points(IEnumerable<QdbTimeInterval> intervals)
         {
             var ranges = new InteropableList<qdb_ts_range>(Helpers.GetCountOrDefault(intervals));
             foreach (var interval in intervals)
                 ranges.Add(interval.ToNative());
             foreach (var pt in Series.Api.TimeSeriesGetPoints(Series.Alias, Name, ranges))
-                yield return QdbDoublePoint.FromNative(pt);
+                yield return PointConverter.ToManaged(pt);
         }
 
         #endregion

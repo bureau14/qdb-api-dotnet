@@ -70,6 +70,7 @@
     <Compile Include="InteropableList.cs" />
     <Compile Include="qdb_results.cs" />
     <Compile Include="qdb_string.cs" />
+    <Compile Include="qdb_ts_blob_point.cs" />
     <Compile Include="qdb_ts_range.cs" />
     <Compile Include="qdb_ts_aggregation_type.cs" />
     <Compile Include="ConstCharPtrMarshaler.cs" />

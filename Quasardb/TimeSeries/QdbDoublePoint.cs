@@ -6,7 +6,7 @@ namespace Quasardb.TimeSeries
     /// <summary>
     /// A Time/Value pair.
     /// </summary>
-    public sealed class QdbDoublePoint : IEquatable<QdbDoublePoint>
+    public class QdbPoint<T> : IEquatable<QdbPoint<T>>
     {
         /// <summary>
         /// The timestamp of the point
@@ -16,29 +16,29 @@ namespace Quasardb.TimeSeries
         /// <summary>
         /// The value of the point
         /// </summary>
-        public readonly double Value;
+        public readonly T Value;
 
         /// <summary>
         /// Creates a point with the specified time and value
         /// </summary>
         /// <param name="time">The timestamp of the point</param>
         /// <param name="value">The value of the point</param>
-        public QdbDoublePoint(DateTime time, double value)
+        public QdbPoint(DateTime time, T value)
         {
             Time = time;
             Value = value;
         }
 
         /// <inheritdoc />
-        public bool Equals(QdbDoublePoint other)
+        public bool Equals(QdbPoint<T> other)
         {
-            return other != null && other.Time == Time && other.Value == Value;
+            return other != null && Equals(other.Time, Time) && Equals(other.Value, Value);
         }
 
         /// <inheritdoc />
         public override bool Equals(object obj)
         {
-            return Equals(obj as QdbDoublePoint);
+            return Equals(obj as QdbPoint<T>);
         }
 
         /// <inheritdoc />
@@ -51,20 +51,6 @@ namespace Quasardb.TimeSeries
         public override string ToString()
         {
             return $"{{{Time}, {Value}}}";
-        }
-
-        internal qdb_ts_double_point ToNative()
-        {
-            return new qdb_ts_double_point
-            {
-                timestamp = TimeConverter.ToTimespec(Time),
-                value = Value
-            };
-        }
-
-        internal static QdbDoublePoint FromNative(qdb_ts_double_point pt)
-        {
-            return new QdbDoublePoint(TimeConverter.ToDateTime(pt.timestamp), pt.value);
         }
     }
 }

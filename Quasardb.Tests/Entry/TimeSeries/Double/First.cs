@@ -19,7 +19,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
         [TestMethod]
         public void ThrowsAliasNotFound()
         {
-            var ts = QdbTestCluster.CreateEmptyTimeSeries();
+            var ts = QdbTestCluster.CreateEmptyDoubleColumn();
 
             try
             {
@@ -35,7 +35,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
         [TestMethod]
         public void GivenNoArgument_ReturnsFirstPointOfTimeSeries()
         {
-            var ts = QdbTestCluster.CreateEmptyTimeSeries();
+            var ts = QdbTestCluster.CreateEmptyDoubleColumn();
             ts.Insert(_points);
 
             var result = ts.First();
@@ -46,7 +46,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
         [TestMethod]
         public void GivenInRangeInterval_ReturnsFirstPointOfInterval()
         {
-            var ts = QdbTestCluster.CreateEmptyTimeSeries();
+            var ts = QdbTestCluster.CreateEmptyDoubleColumn();
             ts.Insert(_points);
 
             var interval = new QdbTimeInterval(_points[0].Time.AddHours(1), _points[2].Time);
@@ -58,7 +58,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
         [TestMethod]
         public void GivenOutOfRangeInterval_ReturnsNull()
         {
-            var ts = QdbTestCluster.CreateEmptyTimeSeries();
+            var ts = QdbTestCluster.CreateEmptyDoubleColumn();
             ts.Insert(_points);
 
             var interval = new QdbTimeInterval(new DateTime(3000, 1, 1), new DateTime(4000, 1, 1));
@@ -70,7 +70,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
         [TestMethod]
         public void GivenSeveralIntervals_ReturnsFirstOfEach()
         {
-            var ts = QdbTestCluster.CreateEmptyTimeSeries();
+            var ts = QdbTestCluster.CreateEmptyDoubleColumn();
             ts.Insert(_points);
 
             var intervals = new []

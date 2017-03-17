@@ -112,7 +112,7 @@ namespace Quasardb.Tests.Cluster
         {
             var alias = RandomGenerator.CreateUniqueAlias();
 
-            QdbTestCluster.CreateTimeSeries(alias);
+            QdbTestCluster.CreateDoubleColumn(alias);
             var result = _cluster.Entry(alias);
 
             Assert.IsInstanceOfType(result, typeof(QdbTimeSeries));
