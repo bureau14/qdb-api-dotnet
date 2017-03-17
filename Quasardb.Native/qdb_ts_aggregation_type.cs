@@ -1,6 +1,6 @@
-﻿namespace Quasardb.NativeApi
+﻿namespace Quasardb.Native
 {
-    enum qdb_ts_aggregation_type
+    public enum qdb_ts_aggregation_type
     {
         First = 0,
         Last = 1,

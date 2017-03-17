@@ -3,9 +3,9 @@ using System.Runtime.InteropServices;
 
 // ReSharper disable InconsistentNaming
 
-namespace Quasardb.NativeApi
+namespace Quasardb.Native
 {
-    unsafe struct qdb_string
+    public unsafe struct qdb_string
     {
         public byte* Chars;
         

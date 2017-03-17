@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Quasardb.NativeApi;
+using Quasardb.Native;
 
 namespace Quasardb.Tests.Misc.TimeConverter
 {

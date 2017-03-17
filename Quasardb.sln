@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quasardb", "Quasardb\Quasardb.csproj", "{D8232795-82C5-405E-A081-0F03F158B036}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quasardb.Native", "Quasardb.Native\Quasardb.Native.csproj", "{2655DE6C-82A8-4ACF-A9C1-15DCC49094A0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quasardb.Tests", "Quasardb.Tests\Quasardb.Tests.csproj", "{BE25CD87-9FB3-4CBA-87C5-5928F3CCB5C9}"
 EndProject
@@ -36,6 +38,20 @@ Global
 		{D8232795-82C5-405E-A081-0F03F158B036}.Documentation|Any CPU.Build.0 = .NET Framework 4.5|Any CPU
 		{D8232795-82C5-405E-A081-0F03F158B036}.Release|Any CPU.ActiveCfg = .NET Framework 4|Any CPU
 		{D8232795-82C5-405E-A081-0F03F158B036}.Release|Any CPU.Build.0 = .NET Framework 4|Any CPU
+		{2655DE6C-82A8-4ACF-A9C1-15DCC49094A0}..NET Framework 2.0|Any CPU.ActiveCfg = .NET Framework 2.0|Any CPU
+		{2655DE6C-82A8-4ACF-A9C1-15DCC49094A0}..NET Framework 2.0|Any CPU.Build.0 = .NET Framework 2.0|Any CPU
+		{2655DE6C-82A8-4ACF-A9C1-15DCC49094A0}..NET Framework 3.5|Any CPU.ActiveCfg = .NET Framework 3.5|Any CPU
+		{2655DE6C-82A8-4ACF-A9C1-15DCC49094A0}..NET Framework 3.5|Any CPU.Build.0 = .NET Framework 3.5|Any CPU
+		{2655DE6C-82A8-4ACF-A9C1-15DCC49094A0}..NET Framework 4.5|Any CPU.ActiveCfg = .NET Framework 4.5|Any CPU
+		{2655DE6C-82A8-4ACF-A9C1-15DCC49094A0}..NET Framework 4.5|Any CPU.Build.0 = .NET Framework 4.5|Any CPU
+		{2655DE6C-82A8-4ACF-A9C1-15DCC49094A0}..NET Framework 4|Any CPU.ActiveCfg = .NET Framework 4|Any CPU
+		{2655DE6C-82A8-4ACF-A9C1-15DCC49094A0}..NET Framework 4|Any CPU.Build.0 = .NET Framework 4|Any CPU
+		{2655DE6C-82A8-4ACF-A9C1-15DCC49094A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2655DE6C-82A8-4ACF-A9C1-15DCC49094A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2655DE6C-82A8-4ACF-A9C1-15DCC49094A0}.Documentation|Any CPU.ActiveCfg = Debug|Any CPU
+		{2655DE6C-82A8-4ACF-A9C1-15DCC49094A0}.Documentation|Any CPU.Build.0 = Debug|Any CPU
+		{2655DE6C-82A8-4ACF-A9C1-15DCC49094A0}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{2655DE6C-82A8-4ACF-A9C1-15DCC49094A0}.Release|Any CPU.Build.0 = Debug|Any CPU
 		{BE25CD87-9FB3-4CBA-87C5-5928F3CCB5C9}..NET Framework 2.0|Any CPU.ActiveCfg = .NET Framework 2.0|Any CPU
 		{BE25CD87-9FB3-4CBA-87C5-5928F3CCB5C9}..NET Framework 2.0|Any CPU.Build.0 = .NET Framework 2.0|Any CPU
 		{BE25CD87-9FB3-4CBA-87C5-5928F3CCB5C9}..NET Framework 3.5|Any CPU.ActiveCfg = .NET Framework 3.5|Any CPU

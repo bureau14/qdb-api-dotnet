@@ -1,5 +1,5 @@
 ﻿using System;
-using Quasardb.NativeApi;
+using Quasardb.Native;
 
 namespace Quasardb.ManagedApi
 {

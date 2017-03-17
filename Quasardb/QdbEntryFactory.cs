@@ -1,6 +1,6 @@
 ﻿using System;
 using Quasardb.ManagedApi;
-using Quasardb.NativeApi;
+using Quasardb.Native;
 using Quasardb.TimeSeries;
 
 namespace Quasardb

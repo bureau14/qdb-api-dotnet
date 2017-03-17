@@ -146,6 +146,10 @@
     <Compile Include="Misc\TimeConverter\ToTimeSpec.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Quasardb.Native\Quasardb.Native.csproj">
+      <Project>{2655de6c-82a8-4acf-a9c1-15dcc49094a0}</Project>
+      <Name>Quasardb.Native</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Quasardb\Quasardb.csproj">
       <Project>{D8232795-82C5-405E-A081-0F03F158B036}</Project>
       <Name>Quasardb</Name>

@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Quasardb.ManagedApi;
-using Quasardb.NativeApi;
+using Quasardb.Native;
 
 namespace Quasardb.TimeSeries
 {

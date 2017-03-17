@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb.Exceptions;
-using Quasardb.NativeApi;
+using Quasardb.Native;
 
 namespace Quasardb.Tests.Misc
 {
