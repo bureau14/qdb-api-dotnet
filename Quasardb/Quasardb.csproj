@@ -79,6 +79,7 @@
     <Compile Include="ExtensionMethodWithFramework2.cs" />
     <Compile Include="IVisitable.cs" />
     <Compile Include="Batch\IOperation.cs" />
+    <Compile Include="QdbUnknownEntry.cs" />
     <Compile Include="TimeSeries\PointConverter.cs" />
     <Compile Include="TimeSeries\QdbBlobPointCollection.cs" />
     <Compile Include="TimeSeries\QdbBlobColumn.cs" />

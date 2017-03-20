@@ -43,19 +43,9 @@ namespace Quasardb
                 case qdb_entry_type.qdb_entry_tag:
                     return new QdbTag(_handle, alias);
 
-                case qdb_entry_type.qdb_entry_ts:
-                    return new QdbTimeSeries(_handle, alias);
-
                 default:
-                    return new QdbUnknownEntry(_handle, alias);
+                    return new QdbUnknownEntry(_handle, alias, type);
             }
-        }
-    }
-
-    class QdbUnknownEntry : QdbEntry
-    {
-        public QdbUnknownEntry(qdb_handle handle, string alias) : base(handle, alias)
-        {
         }
     }
 }

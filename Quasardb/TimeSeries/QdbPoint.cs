@@ -5,6 +5,7 @@ namespace Quasardb.TimeSeries
     /// <summary>
     /// A Time/Value pair.
     /// </summary>
+    /// <typeparam name="T">The type of the point's value</typeparam>
     public abstract class QdbPoint<T> : IEquatable<QdbPoint<T>>
     {
         /// <summary>

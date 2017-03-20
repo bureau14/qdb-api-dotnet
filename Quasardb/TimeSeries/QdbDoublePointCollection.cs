@@ -37,11 +37,11 @@ namespace Quasardb.TimeSeries
         /// <summary>
         /// Adds a point to the collection
         /// </summary>
-        /// <param name="timespamp"></param>
-        /// <param name="value"></param>
-        public void Add(DateTime timespamp, double value)
+        /// <param name="timestamp">The timestamp of the new point</param>
+        /// <param name="value">The value of the new point</param>
+        public void Add(DateTime timestamp, double value)
         {
-            Add(new QdbDoublePoint(timespamp, value));
+            Add(new QdbDoublePoint(timestamp, value));
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Quasardb.TimeSeries
         /// <param name="point">The point to add</param>
         public void Add(Point point)
         {
-            Points.Add(PointConverter.ToNative(point));
+            Points.Add(point.ToNative());
         }
 
         /// <summary>
@@ -71,13 +71,13 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="index">The zero-based position in the collection</param>
         /// <exception cref="ArgumentOutOfRangeException">If index is negative or above Count</exception>
-        public Point this[int index] => PointConverter.ToManaged(Points[index]);
+        public Point this[int index] => Points[index].ToManaged();
 
         /// <inheritdoc />
         public IEnumerator<Point> GetEnumerator()
         {
             foreach (var point in Points)
-                yield return PointConverter.ToManaged(point);
+                yield return point.ToManaged();
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

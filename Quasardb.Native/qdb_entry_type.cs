@@ -10,7 +10,6 @@ namespace Quasardb.Native
         qdb_entry_hset = 2,
         qdb_entry_tag = 3,
         qdb_entry_deque = 4,
-        qdb_entry_stream = 5,
-        qdb_entry_ts = 6
+        qdb_entry_stream = 5
     }
 }

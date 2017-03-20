@@ -42,11 +42,11 @@ namespace Quasardb.TimeSeries
         /// <summary>
         /// Adds a point to the collection
         /// </summary>
-        /// <param name="timespamp"></param>
-        /// <param name="content"></param>
-        public void Add(DateTime timespamp, byte[] content)
+        /// <param name="timestamp">The timestamp of the new point</param>
+        /// <param name="content">The value of the new point</param>
+        public void Add(DateTime timestamp, byte[] content)
         {
-            Add(new Point(timespamp, content));
+            Add(new Point(timestamp, content));
         }
 
         /// <summary>

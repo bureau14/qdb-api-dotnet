@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Quasardb.Exceptions;
 using Quasardb.Native;
 
 namespace Quasardb.TimeSeries
@@ -28,6 +29,29 @@ namespace Quasardb.TimeSeries
         /// The name of the column
         /// </summary>
         public string Name { get; }
+
+        internal qdb_handle Handle => Series.Handle;
+
+        /// <summary>
+        /// Removes the column from the timeseries.
+        /// </summary>
+        /// <returns><c>true</c> if the entry was removed, or <c>false</c> if the entry didn't exist.</returns>
+        public virtual bool Remove()
+        {
+            var error = qdb_api.qdb_remove(Handle, _alias);
+
+            switch (error)
+            {
+                case qdb_error_t.qdb_e_ok:
+                    return true;
+
+                case qdb_error_t.qdb_e_alias_not_found:
+                    return false;
+
+                default:
+                    throw QdbExceptionFactory.Create(error, alias: Series.Alias);
+            }
+        }
 
         #region Count
 

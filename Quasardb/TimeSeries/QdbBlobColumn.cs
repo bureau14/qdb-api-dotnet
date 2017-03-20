@@ -24,7 +24,7 @@ namespace Quasardb.TimeSeries
         /// <param name="points">The points to insert</param>
         public void Insert(QdbBlobPointCollection points)
         {
-            var error = qdb_api.qdb_ts_blob_insert(Series.Handle, _alias, points.Points.Buffer, points.Points.Count);
+            var error = qdb_api.qdb_ts_blob_insert(Handle, _alias, points.Points.Buffer, points.Points.Count);
             QdbExceptionThrower.ThrowIfNeeded(error, alias: Series.Alias);
         }
 
@@ -92,9 +92,9 @@ namespace Quasardb.TimeSeries
             var ranges = new InteropableList<qdb_ts_range>(Helpers.GetCountOrDefault(intervals));
             foreach (var interval in intervals)
                 ranges.Add(interval.ToNative());
-            using (var points = new QdbBlobPointResponse(Series.Handle))
+            using (var points = new QdbBlobPointResponse(Handle))
             {
-                var error = qdb_api.qdb_ts_blob_get_range(Series.Handle, _alias, ranges.Buffer, ranges.Count, out points.Pointer, out points.Size);
+                var error = qdb_api.qdb_ts_blob_get_range(Handle, _alias, ranges.Buffer, ranges.Count, out points.Pointer, out points.Size);
                 QdbExceptionThrower.ThrowIfNeeded(error, alias: Series.Alias);
                 foreach (var pt in points)
                     yield return pt.ToManaged();

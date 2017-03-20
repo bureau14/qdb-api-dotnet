@@ -103,8 +103,10 @@
     <Compile Include="Entry\Blob\ExpiresFromNow.cs" />
     <Compile Include="Cluster\Entries.cs" />
     <Compile Include="DaemonRunner.cs" />
+    <Compile Include="Entry\TimeSeries\Blob\Remove.cs" />
     <Compile Include="Entry\TimeSeries\Blob\Count.cs" />
     <Compile Include="Entry\TimeSeries\Blob\Points.cs" />
+    <Compile Include="Entry\TimeSeries\Double\Remove.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Entry\AttachTag.cs" />
     <Compile Include="Entry\GetTags.cs" />
