@@ -81,6 +81,7 @@
     <Compile Include="TimeSeries\PointConverter.cs" />
     <Compile Include="TimeSeries\QdbBlobPointCollection.cs" />
     <Compile Include="TimeSeries\QdbBlobColumn.cs" />
+    <Compile Include="TimeSeries\QdbBlobPointResponse.cs" />
     <Compile Include="TimeSeries\QdbDoublePointResponse.cs" />
     <Compile Include="ManagedApi\QdbApi.Batch.cs" />
     <Compile Include="ManagedApi\QdbApi.Stream.cs" />
@@ -120,7 +121,7 @@
     <Compile Include="TimeSeries\QdbColumnAggregator.cs" />
     <Compile Include="TimeSeries\QdbTimeInterval.cs" />
     <Compile Include="TimeSeries\QdbDoublePointCollection.cs" />
-    <Compile Include="TimeSeries\QdbDoublePoint.cs" />
+    <Compile Include="TimeSeries\QdbPoint.cs" />
     <Compile Include="TimeSeries\QdbDoubleColumn.cs" />
     <Compile Include="TimeSeries\QdbTimeSeries.cs" />
     <Compile Include="TimeConverter.cs" />

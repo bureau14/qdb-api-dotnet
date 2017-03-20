@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb.Exceptions;
@@ -10,11 +9,11 @@ namespace Quasardb.Tests.Entry.TimeSeries.Blob
     [TestClass]
     public class Count
     {
-        readonly QdbPoint<byte[]>[] _points = new[]
+        readonly QdbBlobPoint[] _points =
         {
-            new QdbPoint<byte[]>(new DateTime(2012, 11, 02), RandomGenerator.CreateRandomContent()),
-            new QdbPoint<byte[]>(new DateTime(2014, 06, 30), RandomGenerator.CreateRandomContent()),
-            new QdbPoint<byte[]>(new DateTime(2016, 02, 04), RandomGenerator.CreateRandomContent())
+            new QdbBlobPoint(new DateTime(2012, 11, 02), RandomGenerator.CreateRandomContent()),
+            new QdbBlobPoint(new DateTime(2014, 06, 30), RandomGenerator.CreateRandomContent()),
+            new QdbBlobPoint(new DateTime(2016, 02, 04), RandomGenerator.CreateRandomContent())
         };
 
         [TestMethod]

@@ -17,9 +17,9 @@ namespace Quasardb.TimeSeries
             };
         }
 
-        public static QdbPoint<double> ToManaged(this qdb_ts_double_point pt)
+        public static QdbDoublePoint ToManaged(this qdb_ts_double_point pt)
         {
-            return new QdbPoint<double>(TimeConverter.ToDateTime(pt.timestamp), pt.value);
+            return new QdbDoublePoint(TimeConverter.ToDateTime(pt.timestamp), pt.value);
         }
 
         public static unsafe qdb_ts_blob_point ToNative(this QdbPoint<byte[]> pt, out GCHandle pin)
@@ -33,9 +33,12 @@ namespace Quasardb.TimeSeries
             };
         }
 
-        public static QdbPoint<byte[]> ToManaged(this qdb_ts_blob_point pt)
+        public static unsafe QdbBlobPoint ToManaged(this qdb_ts_blob_point pt)
         {
-            return new QdbPoint<byte[]>(TimeConverter.ToDateTime(pt.timestamp), null/*pt.value*/);
+            // TODO: limited to 32-bit
+            var content = new byte[(int)pt.content_size];
+            Marshal.Copy(new IntPtr(pt.content), content, 0, (int)pt.content_size);
+            return new QdbBlobPoint(TimeConverter.ToDateTime(pt.timestamp), content);
         }
     }
 }

@@ -8,9 +8,14 @@ namespace Quasardb.TimeSeries
         {
         }
 
-        protected override unsafe qdb_ts_double_point Dereference(void* p, ulong i)
+        protected override qdb_ts_double_point Dereference(void* p, ulong i)
         {
             return ((qdb_ts_double_point*)p)[i];
+        }
+
+        protected override void Free()
+        {
+            qdb_api.qdb_free_buffer(_handle, Pointer);
         }
     }
 }

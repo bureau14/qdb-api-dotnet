@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.ConstrainedExecution;
@@ -6,31 +7,31 @@ using System.Runtime.ConstrainedExecution;
 
 namespace Quasardb.Native
 {
-    public unsafe class qdb_buffer : CriticalFinalizerObject, IDisposable
+    public abstract unsafe class qdb_buffer : CriticalFinalizerObject, IDisposable
     {
-        public struct data {}
+        protected readonly qdb_handle _handle;
 
-        readonly qdb_handle _handle;
-
-        public data* Pointer;
+        public void* Pointer;
         public UIntPtr Size;
 
-        public qdb_buffer(qdb_handle handle)
+        protected qdb_buffer(qdb_handle handle)
         {
             _handle = handle;
         }
 
         ~qdb_buffer()
         {
-            qdb_api.qdb_free_buffer(_handle, Pointer);
+            Free();
         }
 
         public void Dispose()
         {
-            qdb_api.qdb_free_buffer(_handle, Pointer);
+            Free();
             GC.SuppressFinalize(this);
             Pointer = null;
         }
+
+        protected abstract void Free();
     }
 
     public abstract unsafe class qdb_buffer<T> : qdb_buffer, IEnumerable<T>

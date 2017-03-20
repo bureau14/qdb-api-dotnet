@@ -74,7 +74,7 @@ namespace Quasardb.Native
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string prefix,
             [In] qdb_int_t max_count,
-            [Out] out qdb_results.data* aliases,
+            [Out] out void* aliases,
             [Out] out size_t aliases_count);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
@@ -82,7 +82,7 @@ namespace Quasardb.Native
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string prefix,
             [In] qdb_int_t max_count,
-            [Out] out qdb_results.data* aliases,
+            [Out] out void* aliases,
             [Out] out size_t aliases_count);
 
         #region Functions common to all entries
@@ -123,21 +123,21 @@ namespace Quasardb.Native
             [In] byte[] comparand,
             [In] size_t comparand_length,
             [In] qdb_time_t expiry_time,
-            [Out] out qdb_buffer.data* original_content,
+            [Out] out void* original_content,
             [Out] out size_t original_content_length);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error_t qdb_blob_get(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
-            [Out] out qdb_buffer.data* content,
+            [Out] out void* content,
             [Out] out size_t content_length);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error_t qdb_blob_get_and_remove(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
-            [Out] out qdb_buffer.data* content,
+            [Out] out void* content,
             [Out] out size_t content_length);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
@@ -147,7 +147,7 @@ namespace Quasardb.Native
             [In] byte[] new_content,
             [In] size_t new_content_length,
             [In] qdb_time_t expiry_time,
-            [Out] out qdb_buffer.data* old_content,
+            [Out] out void* old_content,
             [Out] out size_t old_content_length);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
@@ -179,7 +179,7 @@ namespace Quasardb.Native
             [In] byte[] pattern,
             [In] qdb_size_t pattern_length,
             [In] qdb_int_t max_count,
-            [Out] out qdb_results.data* aliases,
+            [Out] out void* aliases,
             [Out] out size_t aliases_count);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
@@ -187,7 +187,7 @@ namespace Quasardb.Native
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string pattern,
             [In] qdb_int_t max_count,
-            [Out] out qdb_results.data* aliases,
+            [Out] out void* aliases,
             [Out] out size_t aliases_count);
 
         #endregion
@@ -235,28 +235,28 @@ namespace Quasardb.Native
         public static extern qdb_error_t qdb_deque_back(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
-            [Out] out qdb_buffer.data* buffer,
+            [Out] out void* buffer,
             [Out] out size_t contentLength);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error_t qdb_deque_front(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
-            [Out] out qdb_buffer.data* buffer,
+            [Out] out void* buffer,
             [Out] out size_t contentLength);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error_t qdb_deque_pop_back(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
-            [Out] out qdb_buffer.data* buffer,
+            [Out] out void* buffer,
             [Out] out size_t contentLength);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error_t qdb_deque_pop_front(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
-            [Out] out qdb_buffer.data* buffer,
+            [Out] out void* buffer,
             [Out] out size_t contentLength);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
@@ -278,7 +278,7 @@ namespace Quasardb.Native
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] qdb_int_t index,
-            [Out] out qdb_buffer.data* content,
+            [Out] out void* content,
             [Out] out size_t contentLength);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
@@ -341,14 +341,14 @@ namespace Quasardb.Native
         public static extern qdb_error_t qdb_get_tagged(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string tag,
-            [Out] out qdb_results.data* aliases,
+            [Out] out void* aliases,
             [Out] out size_t aliases_count);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error_t qdb_get_tags(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
-            [Out] out qdb_results.data* tags,
+            [Out] out void* tags,
             [Out] out size_t size);
 
         #endregion
@@ -444,7 +444,7 @@ namespace Quasardb.Native
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In, Out] qdb_ts_range[] ranges,
             [In] qdb_size_t ranges_count,
-            [Out] out qdb_buffer.data* points,
+            [Out] out void* points,
             [Out] out size_t points_count);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
@@ -453,6 +453,21 @@ namespace Quasardb.Native
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] qdb_ts_blob_point[] values,
             [In] qdb_size_t count);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error_t qdb_ts_blob_get_range(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In, Out] qdb_ts_range[] ranges,
+            [In] qdb_size_t ranges_count,
+            [Out] out void* points,
+            [Out] out size_t points_count);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error_t qdb_ts_free_blob_points(
+            [In] qdb_handle handle,
+            [In] void* points,
+            [In] size_t points_count);
 
         #endregion
     }

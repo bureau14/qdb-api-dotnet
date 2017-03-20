@@ -22,7 +22,7 @@ namespace Quasardb.ManagedApi
             QdbExceptionThrower.ThrowIfNeeded(error, alias: alias);
         }
 
-        public unsafe QdbDoublePointResponse TimeSeriesGetPoints(string alias, string column, InteropableList<qdb_ts_range> ranges)
+        public unsafe QdbDoublePointResponse TsDoubleGetPoints(string alias, string column, InteropableList<qdb_ts_range> ranges)
         {
             var points = new QdbDoublePointResponse(_handle);
             var error = qdb_api.qdb_ts_double_get_range(_handle, MakeTsAlias(alias, column), ranges.Buffer, ranges.Count, out points.Pointer, out points.Size);
@@ -34,6 +34,14 @@ namespace Quasardb.ManagedApi
         {
             var error = qdb_api.qdb_ts_blob_insert(_handle, MakeTsAlias(alias, column), points.Buffer, points.Count);
             QdbExceptionThrower.ThrowIfNeeded(error, alias: alias);
+        }
+
+        public unsafe QdbBlobPointResponse TsBlobGetPoints(string alias, string column, InteropableList<qdb_ts_range> ranges)
+        {
+            var points = new QdbBlobPointResponse(_handle);
+            var error = qdb_api.qdb_ts_blob_get_range(_handle, MakeTsAlias(alias, column), ranges.Buffer, ranges.Count, out points.Pointer, out points.Size);
+            QdbExceptionThrower.ThrowIfNeeded(error, alias: alias);
+            return points;
         }
     }
 }

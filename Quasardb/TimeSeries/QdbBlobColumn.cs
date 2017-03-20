@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Quasardb.ManagedApi;
 using Quasardb.Native;
 
-using Point = Quasardb.TimeSeries.QdbPoint<byte[]>;
+using Point = Quasardb.TimeSeries.QdbBlobPoint;
 
 namespace Quasardb.TimeSeries
 {
@@ -15,6 +14,8 @@ namespace Quasardb.TimeSeries
         internal QdbBlobColumn(QdbTimeSeries series, string name) : base(series, name)
         {
         }
+
+        #region Insert
 
         /// <summary>
         /// Inserts one or more points in the time series
@@ -55,5 +56,44 @@ namespace Quasardb.TimeSeries
         {
             Insert(new Point(time, value));
         }
+
+        #endregion
+
+        #region Points
+
+        /// <summary>
+        /// Gets all the points in the time series
+        /// </summary>
+        /// <returns>All the points in the time series</returns>
+        public IEnumerable<Point> Points()
+        {
+            return Points(QdbTimeInterval.Everything);
+        }
+
+        /// <summary>
+        /// Gets all the points in an interval
+        /// </summary>
+        /// <param name="interval">The time interval to scan</param>
+        /// <returns>All the points in the interval</returns>
+        public IEnumerable<Point> Points(QdbTimeInterval interval)
+        {
+            return Points(new[] { interval });
+        }
+
+        /// <summary>
+        /// Gets all the points in each interval
+        /// </summary>
+        /// <param name="intervals">The time intervals to scan</param>
+        /// <returns>All the points in each interval</returns>
+        public IEnumerable<Point> Points(IEnumerable<QdbTimeInterval> intervals)
+        {
+            var ranges = new InteropableList<qdb_ts_range>(Helpers.GetCountOrDefault(intervals));
+            foreach (var interval in intervals)
+                ranges.Add(interval.ToNative());
+            foreach (var pt in Series.Api.TsBlobGetPoints(Series.Alias, Name, ranges))
+                yield return PointConverter.ToManaged(pt);
+        }
+
+        #endregion
     }
 }

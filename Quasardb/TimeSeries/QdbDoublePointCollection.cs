@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using Quasardb.ManagedApi;
 using Quasardb.Native;
 
+using Point = Quasardb.TimeSeries.QdbDoublePoint;
+
 namespace Quasardb.TimeSeries
 {
     /// <summary>
     /// A collection of point
     /// </summary>
-    public sealed class QdbDoublePointCollection : IEnumerable<QdbPoint<double>>
+    public sealed class QdbDoublePointCollection : IEnumerable<Point>
     {
         internal readonly InteropableList<qdb_ts_double_point> Points;
 
@@ -26,7 +28,7 @@ namespace Quasardb.TimeSeries
         /// Creates the collection from an existing one
         /// </summary>
         /// <param name="source">The collection of point to duplicate</param>
-        public QdbDoublePointCollection(IEnumerable<QdbPoint<double>> source)
+        public QdbDoublePointCollection(IEnumerable<Point> source)
         {
             Points = new InteropableList<qdb_ts_double_point>(Helpers.GetCountOrDefault(source, 1024));
             foreach (var point in source)
@@ -40,14 +42,14 @@ namespace Quasardb.TimeSeries
         /// <param name="value"></param>
         public void Add(DateTime timespamp, double value)
         {
-            Add(new QdbPoint<double>(timespamp, value));
+            Add(new QdbDoublePoint(timespamp, value));
         }
 
         /// <summary>
         /// Adds a point to the collection
         /// </summary>
         /// <param name="point">The point to add</param>
-        public void Add(QdbPoint<double> point)
+        public void Add(Point point)
         {
             Points.Add(PointConverter.ToNative(point));
         }
@@ -70,10 +72,10 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="index">The zero-based position in the collection</param>
         /// <exception cref="ArgumentOutOfRangeException">If index is negative or above Count</exception>
-        public QdbPoint<double> this[int index] => PointConverter.ToManaged(Points[index]);
+        public Point this[int index] => PointConverter.ToManaged(Points[index]);
 
         /// <inheritdoc />
-        public IEnumerator<QdbPoint<double>> GetEnumerator()
+        public IEnumerator<Point> GetEnumerator()
         {
             foreach (var point in Points)
                 yield return PointConverter.ToManaged(point);

@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Quasardb.Native;
 
+using Point = Quasardb.TimeSeries.QdbBlobPoint;
+
 namespace Quasardb.TimeSeries
 {
     /// <summary>
     /// A collection of point
     /// </summary>
-    public sealed class QdbBlobPointCollection : IEnumerable<QdbPoint<byte[]>>, IDisposable
+    public sealed class QdbBlobPointCollection : IEnumerable<Point>, IDisposable
     {
         internal readonly InteropableList<qdb_ts_blob_point> Points;
         readonly List<GCHandle> _pins;
@@ -28,7 +30,7 @@ namespace Quasardb.TimeSeries
         /// Creates the collection from an existing one
         /// </summary>
         /// <param name="source">The collection of point to duplicate</param>
-        public QdbBlobPointCollection(IEnumerable<QdbPoint<byte[]>> source)
+        public QdbBlobPointCollection(IEnumerable<Point> source)
         {
             var initialCapacity = Helpers.GetCountOrDefault(source, 1024);
             _pins = new List<GCHandle>(initialCapacity);
@@ -44,14 +46,14 @@ namespace Quasardb.TimeSeries
         /// <param name="content"></param>
         public void Add(DateTime timespamp, byte[] content)
         {
-            Add(new QdbPoint<byte[]>(timespamp, content));
+            Add(new Point(timespamp, content));
         }
 
         /// <summary>
         /// Adds a point to the collection
         /// </summary>
         /// <param name="point">The point to add</param>
-        public void Add(QdbPoint<byte[]> point)
+        public void Add(Point point)
         {
             GCHandle pin;
             Points.Add(point.ToNative(out pin));
@@ -76,10 +78,10 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="index">The zero-based position in the collection</param>
         /// <exception cref="ArgumentOutOfRangeException">If index is negative or above Count</exception>
-        public QdbPoint<byte[]> this[int index] => Points[index].ToManaged();
+        public Point this[int index] => Points[index].ToManaged();
 
         /// <inheritdoc />
-        public IEnumerator<QdbPoint<byte[]>> GetEnumerator()
+        public IEnumerator<Point> GetEnumerator()
         {
             foreach (var point in Points)
                 yield return point.ToManaged();
@@ -87,23 +89,23 @@ namespace Quasardb.TimeSeries
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        void ReleaseUnmanagedResources()
+        void Free()
         {
             foreach (var pin in _pins)
-            {
                 pin.Free();
-            }
         }
 
+        /// <inheritdoc />
         public void Dispose()
         {
-            ReleaseUnmanagedResources();
+            Free();
             GC.SuppressFinalize(this);
         }
 
+        /// <inheritdoc />
         ~QdbBlobPointCollection()
         {
-            ReleaseUnmanagedResources();
+            Free();
         }
     }
 }
