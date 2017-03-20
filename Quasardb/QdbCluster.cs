@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Quasardb.Exceptions;
-using Quasardb.ManagedApi;
+using Quasardb.Native;
 using Quasardb.TimeSeries;
 
 namespace Quasardb
@@ -11,7 +11,7 @@ namespace Quasardb
     /// </summary>
     public sealed class QdbCluster : IDisposable
     {
-        readonly QdbApi _api;
+        readonly qdb_handle _api;
         readonly QdbEntryFactory _factory;
 
         /// <summary>
@@ -20,8 +20,12 @@ namespace Quasardb
         /// <param name="uri">The URI of the quasardb database.</param>
         public QdbCluster(string uri)
         {
-            _api = new QdbApi();
-            _api.Connect(uri);
+            if (uri == null) throw new ArgumentNullException(nameof(uri));
+
+            _api = qdb_api.qdb_open_tcp();
+
+            var error = qdb_api.qdb_connect(_api, uri);
+            QdbExceptionThrower.ThrowIfNeeded(error);
             _factory = new QdbEntryFactory(_api);
         }
 
@@ -157,7 +161,26 @@ namespace Quasardb
         /// <param name="batch">The collection of operation to execute.</param>
         public void RunBatch(QdbBatch batch)
         {
-            _api.RunBatch(batch.Operations);
+            var managedOps = batch.Operations;
+            if (managedOps.Count == 0) return;
+
+            var nativeOps = new qdb_operation[managedOps.Count];
+
+            var err = qdb_api.qdb_init_operations(nativeOps, (UIntPtr) nativeOps.Length);
+            QdbExceptionThrower.ThrowIfNeeded(err);
+            
+            for (var i = 0; i < managedOps.Count; i++)
+            {
+                managedOps[i].MarshalTo(ref nativeOps[i]);
+            }
+            qdb_api.qdb_run_batch(_api, nativeOps,  (UIntPtr) nativeOps.Length);
+            for (var i = 0; i < managedOps.Count; i++)
+            {
+                managedOps[i].UnmarshalFrom(ref nativeOps[i]);
+            }
+
+            err = qdb_api.qdb_free_operations(_api, nativeOps, (UIntPtr) nativeOps.Length);
+            QdbExceptionThrower.ThrowIfNeeded(err);
         }
 
         /// <summary>

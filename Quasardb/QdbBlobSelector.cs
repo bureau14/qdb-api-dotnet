@@ -1,5 +1,7 @@
-﻿using System.Text;
-using Quasardb.ManagedApi;
+﻿using System;
+using System.Text;
+using Quasardb.Exceptions;
+using Quasardb.Native;
 
 namespace Quasardb
 {
@@ -42,7 +44,19 @@ namespace Quasardb
 
         object IVisitable.Accept(object visitor)
         {
-            return ((QdbApi) visitor).BlobScan(_pattern, _maxCount);
+            var handle = (qdb_handle) visitor;
+            var result = new QdbStringCollection(handle);
+            var error = qdb_api.qdb_blob_scan(handle, _pattern, (UIntPtr)_pattern.Length, _maxCount, out result.Pointer, out result.Size);
+
+            switch (error)
+            {
+                case qdb_error_t.qdb_e_ok:
+                case qdb_error_t.qdb_e_alias_not_found:
+                    return result;
+
+                default:
+                    throw QdbExceptionFactory.Create(error);
+            }
         }
     }
 
@@ -67,7 +81,19 @@ namespace Quasardb
 
         object IVisitable.Accept(object visitor)
         {
-            return ((QdbApi)visitor).BlobScanRegex(_pattern, _maxCount);
+            var handle = (qdb_handle)visitor;
+            var result = new QdbStringCollection(handle);
+            var error = qdb_api.qdb_blob_scan_regex(handle, _pattern, _maxCount, out result.Pointer, out result.Size);
+
+            switch (error)
+            {
+                case qdb_error_t.qdb_e_ok:
+                case qdb_error_t.qdb_e_alias_not_found:
+                    return result;
+
+                default:
+                    throw QdbExceptionFactory.Create(error);
+            }
         }
     }
 }

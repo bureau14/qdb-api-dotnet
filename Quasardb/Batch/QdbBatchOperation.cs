@@ -1,5 +1,4 @@
 ﻿using Quasardb.Exceptions;
-using Quasardb.ManagedApi;
 using Quasardb.Native;
 
 namespace Quasardb

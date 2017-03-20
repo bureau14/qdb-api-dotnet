@@ -11,7 +11,7 @@ namespace Quasardb.Native
     {
         protected readonly qdb_handle _handle;
 
-        public void* Pointer;
+        public IntPtr Pointer;
         public UIntPtr Size;
 
         protected qdb_buffer(qdb_handle handle)
@@ -28,7 +28,7 @@ namespace Quasardb.Native
         {
             Free();
             GC.SuppressFinalize(this);
-            Pointer = null;
+            Pointer = IntPtr.Zero;
         }
 
         protected abstract void Free();
@@ -47,7 +47,7 @@ namespace Quasardb.Native
             get
             {
                 if (index >= Size.ToUInt64()) throw new IndexOutOfRangeException();
-                return Dereference(Pointer, index);
+                return Dereference(Pointer.ToPointer(), index);
             }
         }
 

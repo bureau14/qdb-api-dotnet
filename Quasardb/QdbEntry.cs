@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Quasardb.Exceptions;
-using Quasardb.ManagedApi;
+using Quasardb.Native;
 
 namespace Quasardb
 {
@@ -11,10 +10,10 @@ namespace Quasardb
     /// </summary>
     public abstract class QdbEntry
     {
-        internal QdbEntry(QdbApi api, string alias)
+        internal QdbEntry(qdb_handle handle, string alias)
         {
             Alias = alias;
-            Api = api;
+            Handle = handle;
         }
 
         /// <summary>
@@ -25,7 +24,7 @@ namespace Quasardb
         /// <summary>
         /// The Managed API wrapper.
         /// </summary>
-        internal QdbApi Api { get; }
+        internal qdb_handle Handle { get; }
 
         /// <summary>
         /// Removes the entry from the database.
@@ -33,7 +32,19 @@ namespace Quasardb
         /// <returns><c>true</c> if the entry was removed, or <c>false</c> if the entry didn't exist.</returns>
         public virtual bool Remove()
         {
-            return Api.Remove(Alias);
+            var error = qdb_api.qdb_remove(Handle, Alias);
+
+            switch (error)
+            {
+                case qdb_error_t.qdb_e_ok:
+                    return true;
+                    
+                case qdb_error_t.qdb_e_alias_not_found:
+                    return false;
+
+                default:
+                    throw QdbExceptionFactory.Create(error, alias: Alias);
+            }
         }
 
         /// <summary>
@@ -48,7 +59,7 @@ namespace Quasardb
         {
             if (tag == null) throw new ArgumentNullException(nameof(tag));
 
-            return Api.AttachTag(Alias, tag.Alias);
+            return AttachTag(Alias, tag.Alias);
         }
 
         /// <summary>
@@ -63,7 +74,30 @@ namespace Quasardb
         {
             if (tag == null) throw new ArgumentNullException(nameof(tag));
 
-            return Api.AttachTag(Alias, tag);
+            return AttachTag(Alias, tag);
+        }
+
+        internal bool AttachTag(string target, string tag)
+        {
+            var error = qdb_api.qdb_attach_tag(Handle, target, tag);
+
+            switch (error)
+            {
+                case qdb_error_t.qdb_e_tag_already_set:
+                    return false;
+
+                case qdb_error_t.qdb_e_ok:
+                    return true;
+
+                case qdb_error_t.qdb_e_alias_not_found:
+                    throw new QdbAliasNotFoundException(target);
+
+                case qdb_error_t.qdb_e_incompatible_type:
+                    throw new QdbIncompatibleTypeException(tag);
+
+                default:
+                    throw QdbExceptionFactory.Create(error);
+            }
         }
 
         /// <summary>
@@ -74,12 +108,16 @@ namespace Quasardb
         /// <seealso cref="QdbTag"/>
         public IEnumerable<QdbTag> GetTags()
         {
-            using (var aliases = Api.GetTags(Alias))
+            using (var result = new QdbStringCollection(Handle))
             {
+                var error = qdb_api.qdb_get_tags(Handle, Alias, out result.Pointer, out result.Size);
+                QdbExceptionThrower.ThrowIfNeeded(error, alias: Alias);
+
                 // ReSharper disable once LoopCanBeConvertedToQuery (compatibility with .NET Framework 2.0)
-                foreach (var tag in aliases)
-                    yield return new QdbTag(Api, tag);
+                foreach (var tag in result)
+                    yield return new QdbTag(Handle, tag);
             }
+            
         }
 
         /// <summary>
@@ -92,7 +130,7 @@ namespace Quasardb
         {
             if (tag == null) throw new ArgumentNullException(nameof(tag));
 
-            return Api.HasTag(Alias, tag.Alias);
+            return HasTag(Alias, tag.Alias);
         }
 
         /// <summary>
@@ -105,7 +143,30 @@ namespace Quasardb
         {
             if (tag == null) throw new ArgumentNullException(nameof(tag));
 
-            return Api.HasTag(Alias, tag);
+            return HasTag(Alias, tag);
+        }
+
+        internal bool HasTag(string target, string tag)
+        {
+            var error = qdb_api.qdb_has_tag(Handle, target, tag);
+
+            switch (error)
+            {
+                case qdb_error_t.qdb_e_tag_not_set:
+                    return false;
+
+                case qdb_error_t.qdb_e_ok:
+                    return true;
+
+                case qdb_error_t.qdb_e_alias_not_found:
+                    throw new QdbAliasNotFoundException(target);
+
+                case qdb_error_t.qdb_e_incompatible_type:
+                    throw new QdbIncompatibleTypeException(tag);
+
+                default:
+                    throw QdbExceptionFactory.Create(error);
+            }
         }
 
         /// <summary>
@@ -119,7 +180,7 @@ namespace Quasardb
         {
             if (tag == null) throw new ArgumentNullException(nameof(tag));
 
-            return Api.DetachTag(Alias, tag.Alias);
+            return DetachTag(Alias, tag.Alias);
         }
 
         /// <summary>
@@ -133,7 +194,30 @@ namespace Quasardb
         {
             if (tag == null) throw new ArgumentNullException(nameof(tag));
 
-            return Api.DetachTag(Alias, tag);
+            return DetachTag(Alias, tag);
+        }
+
+        internal bool DetachTag(string target, string tag)
+        {
+            var error = qdb_api.qdb_detach_tag(Handle, target, tag);
+
+            switch (error)
+            {
+                case qdb_error_t.qdb_e_tag_not_set:
+                    return false;
+
+                case qdb_error_t.qdb_e_ok:
+                    return true;
+
+                case qdb_error_t.qdb_e_alias_not_found:
+                    throw new QdbAliasNotFoundException(target);
+
+                case qdb_error_t.qdb_e_incompatible_type:
+                    throw new QdbIncompatibleTypeException(tag);
+
+                default:
+                    throw QdbExceptionFactory.Create(error);
+            }
         }
     }
 }

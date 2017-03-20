@@ -1,4 +1,4 @@
-﻿using Quasardb.ManagedApi;
+﻿using Quasardb.Native;
 
 namespace Quasardb.TimeSeries
 {
@@ -51,7 +51,7 @@ namespace Quasardb.TimeSeries
     /// </summary>
     public class QdbTimeSeries : QdbEntry
     {
-        internal QdbTimeSeries(QdbApi api, string alias) : base(api, alias)
+        internal QdbTimeSeries(qdb_handle handle, string alias) : base(handle, alias)
         {
             DoubleColumns = new QdbDoubleColumnCollection(this);
             BlobColumns = new QdbBlobColumnCollection(this);

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Quasardb.ManagedApi;
 using Quasardb.Native;
 
 using Point = Quasardb.TimeSeries.QdbDoublePoint;

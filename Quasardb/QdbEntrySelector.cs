@@ -1,4 +1,5 @@
-﻿using Quasardb.ManagedApi;
+﻿using Quasardb.Exceptions;
+using Quasardb.Native;
 
 namespace Quasardb
 {
@@ -31,7 +32,20 @@ namespace Quasardb
 
         object IVisitable.Accept(object visitor)
         {
-            return ((QdbApi)visitor).PrefixGet(_prefix, _maxCount);
+            var handle = (qdb_handle)visitor;
+            var result = new QdbStringCollection(handle);
+
+            var error = qdb_api.qdb_prefix_get(handle, _prefix, _maxCount, out result.Pointer, out result.Size);
+
+            switch (error)
+            {
+                case qdb_error_t.qdb_e_ok:
+                case qdb_error_t.qdb_e_alias_not_found:
+                    return result;
+
+                default:
+                    throw QdbExceptionFactory.Create(error);
+            }
         }
     }
 
@@ -56,7 +70,20 @@ namespace Quasardb
 
         object IVisitable.Accept(object visitor)
         {
-            return ((QdbApi)visitor).SuffixGet(_suffix, _maxCount);
+            var handle = (qdb_handle)visitor;
+            var result = new QdbStringCollection(handle);
+
+            var error = qdb_api.qdb_suffix_get(handle, _suffix, _maxCount, out result.Pointer, out result.Size);
+
+            switch (error)
+            {
+                case qdb_error_t.qdb_e_ok:
+                case qdb_error_t.qdb_e_alias_not_found:
+                    return result;
+
+                default:
+                    throw QdbExceptionFactory.Create(error);
+            }
         }
     }
 
@@ -78,7 +105,11 @@ namespace Quasardb
 
         object IVisitable.Accept(object visitor)
         {
-            return ((QdbApi)visitor).GetTagged(_tag);
+            var handle = (qdb_handle) visitor;
+            var result = new QdbStringCollection(handle);
+            var error = qdb_api.qdb_get_tagged(handle, _tag, out result.Pointer, out result.Size);
+            QdbExceptionThrower.ThrowIfNeeded(error, alias: _tag);
+            return result;
         }
     }
 }

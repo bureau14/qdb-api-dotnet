@@ -1,6 +1,6 @@
 ﻿using System;
 using Quasardb.Exceptions;
-using Quasardb.ManagedApi;
+using Quasardb.Native;
 
 namespace Quasardb
 {
@@ -22,7 +22,7 @@ namespace Quasardb
     /// </example>
     public sealed class QdbInteger : QdbExpirableEntry
     {
-        internal QdbInteger(QdbApi api, string alias) : base(api, alias)
+        internal QdbInteger(qdb_handle handle, string alias) : base(handle, alias)
         {
         }
         
@@ -35,7 +35,10 @@ namespace Quasardb
         /// <exception cref="QdbIncompatibleTypeException">The entry in the database is not an integer.</exception>
         public long Add(long addend)
         {
-            return Api.IntegerAdd(Alias, addend);
+            long result;
+            var error = qdb_api.qdb_int_add(Handle, Alias, addend, out result);
+            QdbExceptionThrower.ThrowIfNeeded(error, alias: Alias);
+            return result;
         }
 
         /// <summary>
@@ -46,7 +49,10 @@ namespace Quasardb
         /// <exception cref="QdbIncompatibleTypeException">The entry in the database is not an integer.</exception>
         public long Get()
         {
-            return Api.IntegerGet(Alias);
+            long value;
+            var error = qdb_api.qdb_int_get(Handle, Alias, out value);
+            QdbExceptionThrower.ThrowIfNeeded(error, alias: Alias);
+            return value;
         }
 
         /// <summary>
@@ -57,7 +63,8 @@ namespace Quasardb
         /// <exception cref="QdbAliasAlreadyExistsException">The entry already exists in the database./</exception>
         public void Put(long value, DateTime? expiryTime = null)
         {
-            Api.IntegerPut(Alias, value, expiryTime);
+            var error = qdb_api.qdb_int_put(Handle, Alias, value, qdb_time.FromOptionalDateTime(expiryTime));
+            QdbExceptionThrower.ThrowIfNeeded(error, alias: Alias);
         }
 
         /// <summary>
@@ -69,7 +76,19 @@ namespace Quasardb
         /// <exception cref="QdbIncompatibleTypeException">The entry in the database is not an integer.</exception>
         public bool Update(long value, DateTime? expiryTime = null)
         {
-            return Api.IntegerUpdate(Alias, value, expiryTime);
+            var error = qdb_api.qdb_int_update(Handle, Alias, value, qdb_time.FromOptionalDateTime(expiryTime));
+
+            switch (error)
+            {
+                case qdb_error_t.qdb_e_ok:
+                    return false;
+
+                case qdb_error_t.qdb_e_ok_created:
+                    return true;
+
+                default:
+                    throw QdbExceptionFactory.Create(error, alias: Alias);
+            }
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using Quasardb.Native;
 
 namespace Quasardb.TimeSeries
 {
@@ -69,6 +68,11 @@ namespace Quasardb.TimeSeries
     /// </summary>
     public class QdbDoublePoint : QdbPoint<double>
     {
+        /// <summary>
+        /// Creates a point.
+        /// </summary>
+        /// <param name="time">The point's time</param>
+        /// <param name="value">The point's value</param>
         public QdbDoublePoint(DateTime time, double value) : base(time, value)
         {
         }
@@ -79,6 +83,11 @@ namespace Quasardb.TimeSeries
     /// </summary>
     public class QdbBlobPoint : QdbPoint<byte[]>
     {
+        /// <summary>
+        /// Creates a point.
+        /// </summary>
+        /// <param name="time">The point's time</param>
+        /// <param name="value">The point's value</param>
         public QdbBlobPoint(DateTime time, byte[] value) : base(time, value)
         {
         }

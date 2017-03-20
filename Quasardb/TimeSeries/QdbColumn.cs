@@ -9,11 +9,13 @@ namespace Quasardb.TimeSeries
     public class QdbColumn
     {
         internal readonly QdbColumnAggregator _aggregator;
+        internal readonly string _alias; // TODO: remove once columns are supported in qdb_api.dll
 
         internal QdbColumn(QdbTimeSeries series, string name)
         {
             Series = series;
             Name = name;
+            _alias = series.Alias + "." + name;
             _aggregator = new QdbColumnAggregator(this);
         }
 

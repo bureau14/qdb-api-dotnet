@@ -1,6 +1,6 @@
 ﻿using System;
 using Quasardb.Exceptions;
-using Quasardb.ManagedApi;
+using Quasardb.Native;
 
 namespace Quasardb
 {
@@ -24,7 +24,7 @@ namespace Quasardb
     /// </example>
     public sealed class QdbDeque : QdbEntry
     {
-        internal QdbDeque(QdbApi api, string alias) : base(api, alias)
+        internal QdbDeque(qdb_handle handle, string alias) : base(handle, alias)
         {
         }
 
@@ -36,7 +36,13 @@ namespace Quasardb
         /// <exception cref="QdbIncompatibleTypeException">The matching entry in the database is not a queue.</exception>
         public byte[] Back()
         {
-            return Api.DequeBack(Alias);
+            using (var content = new QdbBlobBuffer(Handle))
+            {
+                var error = qdb_api.qdb_deque_back(Handle, Alias, out content.Pointer, out content.Size);
+                if (error == qdb_error_t.qdb_e_container_empty) return null;
+                QdbExceptionThrower.ThrowIfNeeded(error, alias: Alias);
+                return content.GetBytes();
+            }
         }
 
         /// <summary>
@@ -47,7 +53,13 @@ namespace Quasardb
         /// <exception cref="QdbIncompatibleTypeException">The matching entry in the database is not a queue.</exception>
         public byte[] Front()
         {
-            return Api.DequeFront(Alias);
+            using (var content = new QdbBlobBuffer(Handle))
+            {
+                var error = qdb_api.qdb_deque_front(Handle, Alias, out content.Pointer, out content.Size);
+                if (error == qdb_error_t.qdb_e_container_empty) return null;
+                QdbExceptionThrower.ThrowIfNeeded(error, alias: Alias);
+                return content.GetBytes();
+            }
         }
 
         /// <summary>
@@ -58,7 +70,13 @@ namespace Quasardb
         /// <exception cref="QdbIncompatibleTypeException">The matching entry in the database is not a queue.</exception>
         public byte[] PopBack()
         {
-            return Api.DequePopBack(Alias);
+            using (var content = new QdbBlobBuffer(Handle))
+            {
+                var error = qdb_api.qdb_deque_pop_back(Handle, Alias, out content.Pointer, out content.Size);
+                if (error == qdb_error_t.qdb_e_container_empty) return null;
+                QdbExceptionThrower.ThrowIfNeeded(error, alias: Alias);
+                return content.GetBytes();
+            }
         }
 
         /// <summary>
@@ -69,7 +87,13 @@ namespace Quasardb
         /// <exception cref="QdbIncompatibleTypeException">The matching entry in the database is not a queue.</exception>
         public byte[] PopFront()
         {
-            return Api.DequePopFront(Alias);
+            using (var content = new QdbBlobBuffer(Handle))
+            {
+                var error = qdb_api.qdb_deque_pop_front(Handle, Alias, out content.Pointer, out content.Size);
+                if (error == qdb_error_t.qdb_e_container_empty) return null;
+                QdbExceptionThrower.ThrowIfNeeded(error, alias: Alias);
+                return content.GetBytes();
+            }
         }
 
         /// <summary>
@@ -81,7 +105,8 @@ namespace Quasardb
         {
             if (content == null) throw new ArgumentNullException(nameof(content));
 
-            Api.DequePushBack(Alias, content);
+            var error = qdb_api.qdb_deque_push_back(Handle, Alias, content, (UIntPtr)content.LongLength);
+            QdbExceptionThrower.ThrowIfNeeded(error, alias: Alias);
         }
 
         /// <summary>
@@ -93,7 +118,8 @@ namespace Quasardb
         {
             if (content == null) throw new ArgumentNullException(nameof(content));
 
-            Api.DequePushFront(Alias, content);
+            var error = qdb_api.qdb_deque_push_front(Handle, Alias, content, (UIntPtr)content.LongLength);
+            QdbExceptionThrower.ThrowIfNeeded(error, alias: Alias);
         }
 
         /// <summary>
@@ -104,7 +130,10 @@ namespace Quasardb
         /// <exception cref="QdbIncompatibleTypeException">The matching entry in the database is not a queue.</exception>
         public long Size()
         {
-            return Api.DequeSize(Alias);
+            UIntPtr size;
+            var error = qdb_api.qdb_deque_size(Handle, Alias, out size);
+            QdbExceptionThrower.ThrowIfNeeded(error, alias: Alias);
+            return (long)size;
         }
 
         /// <summary>
@@ -116,7 +145,12 @@ namespace Quasardb
         /// <exception cref="QdbIncompatibleTypeException">The matching entry in the database is not a queue.</exception>
         public byte[] GetAt(long index)
         {
-            return Api.DequeGetAt(Alias, index);
+            using (var content = new QdbBlobBuffer(Handle))
+            {
+                var error = qdb_api.qdb_deque_get_at(Handle, Alias, index, out content.Pointer, out content.Size);
+                QdbExceptionThrower.ThrowIfNeeded(error, alias: Alias);
+                return content.GetBytes();
+            }
         }
 
         /// <summary>
@@ -133,7 +167,8 @@ namespace Quasardb
         public void SetAt(long index, byte[] content)
         {
             if (content == null) throw new ArgumentNullException(nameof(content));
-            Api.DequeSetAt(Alias, index, content);
+            var error = qdb_api.qdb_deque_set_at(Handle, Alias, index, content, (UIntPtr)content.LongLength);
+            QdbExceptionThrower.ThrowIfNeeded(error, alias: Alias);
         }
 
         /// <summary>

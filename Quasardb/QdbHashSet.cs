@@ -1,6 +1,6 @@
 ﻿using System;
 using Quasardb.Exceptions;
-using Quasardb.ManagedApi;
+using Quasardb.Native;
 
 namespace Quasardb
 {
@@ -12,7 +12,7 @@ namespace Quasardb
     /// </remarks>
     public sealed class QdbHashSet : QdbEntry
     {
-        internal QdbHashSet(QdbApi api, string alias) : base(api, alias)
+        internal QdbHashSet(qdb_handle handle, string alias) : base(handle, alias)
         {
         }
 
@@ -26,7 +26,19 @@ namespace Quasardb
         {
             if (content == null) throw new ArgumentNullException(nameof(content));
 
-            return Api.HashSetInsert(Alias, content);
+            var error = qdb_api.qdb_hset_insert(Handle, Alias, content, (UIntPtr)content.LongLength);
+
+            switch (error)
+            {
+                case qdb_error_t.qdb_e_element_already_exists:
+                    return false;
+
+                case qdb_error_t.qdb_e_ok:
+                    return true;
+
+                default:
+                    throw QdbExceptionFactory.Create(error, alias: Alias);
+            }
         }
         
         /// <summary>
@@ -40,7 +52,19 @@ namespace Quasardb
         {
             if (content == null) throw new ArgumentNullException(nameof(content));
 
-            return Api.HashSetErase(Alias, content);
+            var error = qdb_api.qdb_hset_erase(Handle, Alias, content, (UIntPtr)content.LongLength);
+
+            switch (error)
+            {
+                case qdb_error_t.qdb_e_element_not_found:
+                    return false;
+
+                case qdb_error_t.qdb_e_ok:
+                    return true;
+
+                default:
+                    throw QdbExceptionFactory.Create(error, alias: Alias);
+            }
         }
 
         /// <summary>
@@ -54,7 +78,19 @@ namespace Quasardb
         {
             if (content == null) throw new ArgumentNullException(nameof(content));
 
-            return Api.HashSetContains(Alias, content);
+            var error = qdb_api.qdb_hset_contains(Handle, Alias, content, (UIntPtr)content.LongLength);
+
+            switch (error)
+            {
+                case qdb_error_t.qdb_e_element_not_found:
+                    return false;
+
+                case qdb_error_t.qdb_e_ok:
+                    return true;
+
+                default:
+                    throw QdbExceptionFactory.Create(error, alias: Alias);
+            }
         }
     }
 }
