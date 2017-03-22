@@ -31,7 +31,10 @@ namespace Quasardb.Native
             Pointer = IntPtr.Zero;
         }
 
-        protected abstract void Free();
+        void Free()
+        {
+            qdb_api.qdb_release(_handle, Pointer);
+        }
     }
 
     public abstract unsafe class qdb_buffer<T> : qdb_buffer, IEnumerable<T>

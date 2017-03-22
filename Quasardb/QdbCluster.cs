@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Quasardb.Exceptions;
 using Quasardb.Native;
 using Quasardb.TimeSeries;
@@ -11,7 +12,7 @@ namespace Quasardb
     /// </summary>
     public sealed class QdbCluster : IDisposable
     {
-        readonly qdb_handle _api;
+        readonly qdb_handle _handle;
         readonly QdbEntryFactory _factory;
 
         /// <summary>
@@ -22,11 +23,11 @@ namespace Quasardb
         {
             if (uri == null) throw new ArgumentNullException(nameof(uri));
 
-            _api = qdb_api.qdb_open_tcp();
+            _handle = qdb_api.qdb_open_tcp();
 
-            var error = qdb_api.qdb_connect(_api, uri);
+            var error = qdb_api.qdb_connect(_handle, uri);
             QdbExceptionThrower.ThrowIfNeeded(error);
-            _factory = new QdbEntryFactory(_api);
+            _factory = new QdbEntryFactory(_handle);
         }
 
         /// <summary>
@@ -34,7 +35,7 @@ namespace Quasardb
         /// </summary>
         public void Dispose()
         {
-            _api.Dispose();
+            _handle.Dispose();
         }
 
         /// <summary>
@@ -47,7 +48,7 @@ namespace Quasardb
         public QdbBlob Blob(string alias)
         {
             if (alias == null) throw new ArgumentNullException(nameof(alias));
-            return new QdbBlob(_api, alias);
+            return new QdbBlob(_handle, alias);
         }
 
         /// <summary>
@@ -57,10 +58,10 @@ namespace Quasardb
         /// <returns>A collection of blob matching the criteria.</returns>
         public IEnumerable<QdbBlob> Blobs(IQdbBlobSelector selector)
         {
-            using (var aliases = (QdbStringCollection)selector.Accept(_api))
+            using (var aliases = (QdbStringCollection)selector.Accept(_handle))
             {
                 foreach (var alias in aliases)
-                    yield return new QdbBlob(_api, alias);
+                    yield return new QdbBlob(_handle, alias);
             }
         }
 
@@ -74,7 +75,7 @@ namespace Quasardb
         public QdbDeque Deque(string alias)
         {
             if (alias == null) throw new ArgumentNullException(nameof(alias));
-            return new QdbDeque(_api, alias);
+            return new QdbDeque(_handle, alias);
         }
 
         /// <summary>
@@ -97,7 +98,7 @@ namespace Quasardb
         /// <returns>A collection of entry.</returns>
         public IEnumerable<QdbEntry> Entries(IQdbEntrySelector selector)
         {
-            using (var aliases = (QdbStringCollection)selector.Accept(_api))
+            using (var aliases = (QdbStringCollection)selector.Accept(_handle))
             {
                 foreach (var alias in aliases)
                     yield return _factory.Create(alias);
@@ -114,7 +115,7 @@ namespace Quasardb
         public QdbHashSet HashSet(string alias)
         {
             if (alias == null) throw new ArgumentNullException(nameof(alias));
-            return new QdbHashSet(_api, alias);
+            return new QdbHashSet(_handle, alias);
         }
 
         /// <summary>
@@ -127,7 +128,7 @@ namespace Quasardb
         public QdbInteger Integer(string alias)
         {
             if (alias == null) throw new ArgumentNullException(nameof(alias));
-            return new QdbInteger(_api, alias);
+            return new QdbInteger(_handle, alias);
         }
 
         /// <summary>
@@ -139,7 +140,7 @@ namespace Quasardb
         public QdbStream Stream(string alias)
         {
             if (alias == null) throw new ArgumentNullException(nameof(alias));
-            return new QdbStream(_api, alias);
+            return new QdbStream(_handle, alias);
         }
 
         /// <summary>
@@ -152,7 +153,7 @@ namespace Quasardb
         public QdbTag Tag(string alias)
         {
             if (alias == null) throw new ArgumentNullException(nameof(alias));
-            return new QdbTag(_api, alias);
+            return new QdbTag(_handle, alias);
         }
 
         /// <summary>
@@ -161,26 +162,12 @@ namespace Quasardb
         /// <param name="batch">The collection of operation to execute.</param>
         public void RunBatch(QdbBatch batch)
         {
-            var managedOps = batch.Operations;
-            if (managedOps.Count == 0) return;
+            if (batch.Operations.Count == 0) return;
 
-            var nativeOps = new qdb_operation[managedOps.Count];
-
-            var err = qdb_api.qdb_init_operations(nativeOps, (UIntPtr) nativeOps.Length);
-            QdbExceptionThrower.ThrowIfNeeded(err);
-            
-            for (var i = 0; i < managedOps.Count; i++)
+            using (var nativeBatch = new QdbNativeBatch(_handle, batch.Operations))
             {
-                managedOps[i].MarshalTo(ref nativeOps[i]);
+                nativeBatch.Run();
             }
-            qdb_api.qdb_run_batch(_api, nativeOps,  (UIntPtr) nativeOps.Length);
-            for (var i = 0; i < managedOps.Count; i++)
-            {
-                managedOps[i].UnmarshalFrom(ref nativeOps[i]);
-            }
-
-            err = qdb_api.qdb_free_operations(_api, nativeOps, (UIntPtr) nativeOps.Length);
-            QdbExceptionThrower.ThrowIfNeeded(err);
         }
 
         /// <summary>
@@ -193,7 +180,7 @@ namespace Quasardb
         public QdbTimeSeries TimeSeries(string alias)
         {
             if (alias == null) throw new ArgumentNullException(nameof(alias));
-            return new QdbTimeSeries(_api, alias);
+            return new QdbTimeSeries(_handle, alias);
         }
     }
 }

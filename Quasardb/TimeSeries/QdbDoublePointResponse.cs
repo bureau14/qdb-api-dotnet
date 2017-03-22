@@ -12,10 +12,5 @@ namespace Quasardb.TimeSeries
         {
             return ((qdb_ts_double_point*)p)[i];
         }
-
-        protected override void Free()
-        {
-            qdb_api.qdb_free_buffer(_handle, Pointer);
-        }
     }
 }

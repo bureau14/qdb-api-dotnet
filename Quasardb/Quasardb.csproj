@@ -61,6 +61,7 @@
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Batch\QdbNativeBatch.cs" />
     <Compile Include="Exceptions\Connection\QdbConnectionException.cs" />
     <Compile Include="Exceptions\Input\QdbInputException.cs" />
     <Compile Include="Exceptions\Input\QdbOutOfBoundsException.cs" />

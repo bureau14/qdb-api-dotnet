@@ -12,10 +12,5 @@ namespace Quasardb.TimeSeries
         {
             return ((qdb_ts_blob_point*)p)[i];
         }
-
-        protected override void Free()
-        {
-            qdb_api.qdb_ts_free_blob_points(_handle, Pointer, Size);
-        }
     }
 }

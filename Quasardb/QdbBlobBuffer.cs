@@ -17,10 +17,5 @@ namespace Quasardb
             Marshal.Copy(Pointer, buffer, 0, size);
             return buffer;
         }
-
-        protected override void Free()
-        {
-            qdb_api.qdb_free_buffer(_handle, Pointer);
-        }
     }
 }

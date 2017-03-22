@@ -54,15 +54,9 @@ namespace Quasardb.Native
         public static extern qdb_handle qdb_open_tcp();
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern void qdb_free_buffer(
+        public static extern void qdb_release(
             [In] qdb_handle handle,
             [In] pointer_t buffer);
-
-        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern void qdb_free_results(
-            [In] qdb_handle handle,
-            [In] pointer_t results,
-            [In] size_t results_count);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error_t qdb_get_type(
@@ -416,9 +410,8 @@ namespace Quasardb.Native
             [In] size_t operation_count);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error_t qdb_free_operations(qdb_handle handle,
-            [In] [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] qdb_operation[] operations,
-            [In] size_t operation_count);
+        public static extern qdb_error_t qdb_release(qdb_handle handle,
+            [In] [MarshalAs(UnmanagedType.LPArray)] qdb_operation[] operations);
 
         #endregion
 
@@ -463,12 +456,6 @@ namespace Quasardb.Native
             [In] qdb_size_t ranges_count,
             [Out] out pointer_t points,
             [Out] out size_t points_count);
-
-        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error_t qdb_ts_free_blob_points(
-            [In] qdb_handle handle,
-            [In] pointer_t points,
-            [In] size_t points_count);
 
         #endregion
     }

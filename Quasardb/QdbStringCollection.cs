@@ -12,10 +12,5 @@ namespace Quasardb
         {
             return ((qdb_string*) p)[i];
         }
-
-        protected override void Free()
-        {
-            qdb_api.qdb_free_results(_handle, Pointer, Size);
-        }
     }
 }
