@@ -39,6 +39,7 @@ namespace Quasardb.Native
         public T[] Buffer => _buffer;
 
         public UIntPtr Count => (UIntPtr) _count;
+        public UIntPtr Capacity => (UIntPtr)_buffer.LongLength;
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }

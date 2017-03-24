@@ -59,6 +59,11 @@ namespace Quasardb.TimeSeries
         public int Count => (int) Points.Count;
 
         /// <summary>
+        /// Gets or sets the total number of elements the collection can hold without resizing.
+        /// </summary>
+        public int Capacity => (int) Points.Capacity;
+
+        /// <summary>
         /// Empties the collection
         /// </summary>
         public void Clear()
