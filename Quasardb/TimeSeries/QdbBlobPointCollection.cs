@@ -73,10 +73,7 @@ namespace Quasardb.TimeSeries
         /// <summary>
         /// Empties the collection
         /// </summary>
-        public void Clear()
-        {
-            Points.Clear();
-        }
+        public void Clear() => Points.Clear();
 
         /// <summary>
         /// Gets the point at the specified index.

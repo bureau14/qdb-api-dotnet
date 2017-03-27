@@ -66,6 +66,7 @@
     <Compile Include="Exceptions\Input\QdbInputException.cs" />
     <Compile Include="Exceptions\Input\QdbOutOfBoundsException.cs" />
     <Compile Include="Exceptions\Operation\QdbAliasAlreadyExistsException.cs" />
+    <Compile Include="Exceptions\Operation\QdbColumnNotFoundException.cs" />
     <Compile Include="Exceptions\Operation\QdbAliasNotFoundException.cs" />
     <Compile Include="Exceptions\Operation\QdbOperationException.cs" />
     <Compile Include="Exceptions\Protocol\QdbProtocolException.cs" />
@@ -80,11 +81,13 @@
     <Compile Include="ExtensionMethodWithFramework2.cs" />
     <Compile Include="IVisitable.cs" />
     <Compile Include="Batch\IOperation.cs" />
+    <Compile Include="TimeSeries\QdbColumnTypeCollection.cs" />
     <Compile Include="QdbUnknownEntry.cs" />
     <Compile Include="TimeSeries\PointConverter.cs" />
     <Compile Include="TimeSeries\QdbBlobPointCollection.cs" />
     <Compile Include="TimeSeries\QdbBlobColumn.cs" />
     <Compile Include="TimeSeries\QdbBlobPointResponse.cs" />
+    <Compile Include="TimeSeries\QdbColumnDefinition.cs" />
     <Compile Include="TimeSeries\QdbDoublePointResponse.cs" />
     <Compile Include="Exceptions\QdbExceptionThrower.cs" />
     <Compile Include="Stream\QdbStreamAdapter.cs" />

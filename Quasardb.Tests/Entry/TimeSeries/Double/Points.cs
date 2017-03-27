@@ -17,21 +17,20 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
         };
 
         [TestMethod]
-        [Ignore] // Seems to be a bug in qdb_ts_double_get_range()
-        public void ThrowsAliasNotFound()
+        public void ThrowsColumnNotFound()
         {
-            var ts = QdbTestCluster.CreateEmptyDoubleColumn();
+            var col = QdbTestCluster.GetNonExistingDoubleColumn();
 
             try
             {
                 
-                // ReSharper disable once IteratorMethodResultIsIgnored
-                ts.Points();
+                // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+                col.Points().ToArray();
                 Assert.Fail("No exception thrown");
             }
-            catch (QdbAliasNotFoundException e)
+            catch (QdbColumnNotFoundException e)
             {
-                Assert.AreEqual(ts.Series.Alias, e.Alias);
+                Assert.AreEqual(col.Series.Alias, e.Alias);
             }
         }
    

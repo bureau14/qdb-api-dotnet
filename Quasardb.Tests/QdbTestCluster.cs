@@ -156,7 +156,10 @@ namespace Quasardb.Tests
 
         public static QdbDoubleColumn CreateEmptyDoubleColumn(string alias = null)
         {
-            return Instance.TimeSeries(alias ?? RandomGenerator.CreateUniqueAlias()).DoubleColumns[RandomGenerator.CreateUniqueAlias()];
+            var ts = Instance.TimeSeries(alias ?? RandomGenerator.CreateUniqueAlias());
+            var colName = RandomGenerator.CreateUniqueAlias();
+            ts.Create(new QdbDoubleColumnDefinition(colName));
+            return ts.DoubleColumns[colName];
         }
 
         public static QdbDoubleColumn CreateDoubleColumn(string alias = null)
@@ -168,7 +171,10 @@ namespace Quasardb.Tests
 
         public static QdbBlobColumn CreateEmptyBlobColumn(string alias = null)
         {
-            return Instance.TimeSeries(alias ?? RandomGenerator.CreateUniqueAlias()).BlobColumns[RandomGenerator.CreateUniqueAlias()];
+            var ts = Instance.TimeSeries(alias ?? RandomGenerator.CreateUniqueAlias());
+            var colName = RandomGenerator.CreateUniqueAlias();
+            ts.Create(new QdbBlobColumnDefinition(colName));
+            return ts.BlobColumns[colName];
         }
 
         public static QdbBlobColumn CreateBlobColumn(string alias = null)
@@ -176,6 +182,22 @@ namespace Quasardb.Tests
             var column = CreateEmptyBlobColumn(alias);
             column.Insert(DateTime.Now, RandomGenerator.CreateRandomContent());
             return column;
+        }
+
+        public static QdbDoubleColumn GetNonExistingDoubleColumn()
+        {
+            var alias = RandomGenerator.CreateUniqueAlias();
+            var ts = Instance.TimeSeries(alias);
+            ts.Create(new QdbBlobColumnDefinition("existing"));
+            return ts.DoubleColumns["non-existing"];
+        }
+
+        public static QdbBlobColumn GetNonExistingBlobColumn()
+        {
+            var alias = RandomGenerator.CreateUniqueAlias();
+            var ts = Instance.TimeSeries(alias);
+            ts.Create(new QdbBlobColumnDefinition("existing"));
+            return ts.BlobColumns["non-existing"];
         }
 
         #endregion

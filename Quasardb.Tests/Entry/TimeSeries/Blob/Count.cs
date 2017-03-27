@@ -17,28 +17,29 @@ namespace Quasardb.Tests.Entry.TimeSeries.Blob
         };
 
         [TestMethod]
-        public void ThrowsAliasNotFound()
+        public void ThrowsColumnNotFound()
         {
-            var ts = QdbTestCluster.CreateEmptyBlobColumn();
+            var col = QdbTestCluster.GetNonExistingBlobColumn();
 
             try
             {
-                ts.Count();
+                col.Count();
                 Assert.Fail("No exception thrown");
             }
-            catch (QdbAliasNotFoundException e)
+            catch (QdbColumnNotFoundException e)
             {
-                Assert.AreEqual(ts.Series.Alias, e.Alias);
+                Assert.AreEqual(col.Series.Alias, e.Alias);
+                Assert.AreEqual(col.Name, e.Column);
             }
         }
 
         [TestMethod]
         public void GivenArgument_ReturnsNumberOfPointsInTimeSeries()
         {
-            var ts = QdbTestCluster.CreateEmptyBlobColumn();
-            ts.Insert(_points);
+            var col = QdbTestCluster.CreateEmptyBlobColumn();
+            col.Insert(_points);
 
-            var result = ts.Count();
+            var result = col.Count();
 
             Assert.AreEqual(3, result);
         }
@@ -47,46 +48,46 @@ namespace Quasardb.Tests.Entry.TimeSeries.Blob
         [TestMethod]
         public void GivenInRangeInterval_ReturnsNumberOfPointsInInterval()
         {
-            var ts = QdbTestCluster.CreateEmptyBlobColumn();
-            ts.Insert(_points);
+            var col = QdbTestCluster.CreateEmptyBlobColumn();
+            col.Insert(_points);
         
             var interval = new QdbTimeInterval(_points[0].Time, _points[2].Time);
-            var result = ts.Count(interval);
+            var result = col.Count(interval);
         
             Assert.AreEqual(2, result);
         }
         
-            [TestMethod]
-            public void GivenOutOfRangeInterval_ReturnsZero()
+        [TestMethod]
+        public void GivenOutOfRangeInterval_ReturnsZero()
+        {
+            var col = QdbTestCluster.CreateEmptyBlobColumn();
+            col.Insert(_points);
+        
+            var interval = new QdbTimeInterval(new DateTime(3000, 1, 1), new DateTime(4000, 1, 1));
+            var result = col.Count(interval);
+        
+            Assert.AreEqual(0, result);
+        }
+        
+        [TestMethod]
+        public void GivenSeveralIntervals_ReturnsCountOfEach()
+        {
+            var col = QdbTestCluster.CreateEmptyBlobColumn();
+            col.Insert(_points);
+        
+            var intervals = new[]
             {
-                var ts = QdbTestCluster.CreateEmptyBlobColumn();
-                ts.Insert(_points);
+                new QdbTimeInterval(new DateTime(2012, 1, 1), new DateTime(2015, 12, 31)),
+                new QdbTimeInterval(new DateTime(2014, 1, 1), new DateTime(2017, 12, 31)),
+                new QdbTimeInterval(new DateTime(2016, 6, 1), new DateTime(2018, 12, 31))
+            };
         
-                var interval = new QdbTimeInterval(new DateTime(3000, 1, 1), new DateTime(4000, 1, 1));
-                var result = ts.Count(interval);
+            var results = col.Count(intervals).ToArray();
         
-                Assert.AreEqual(0, result);
-            }
-        
-            [TestMethod]
-            public void GivenSeveralIntervals_ReturnsCountOfEach()
-            {
-                var ts = QdbTestCluster.CreateEmptyBlobColumn();
-                ts.Insert(_points);
-        
-                var intervals = new[]
-                {
-                    new QdbTimeInterval(new DateTime(2012, 1, 1), new DateTime(2015, 12, 31)),
-                    new QdbTimeInterval(new DateTime(2014, 1, 1), new DateTime(2017, 12, 31)),
-                    new QdbTimeInterval(new DateTime(2016, 6, 1), new DateTime(2018, 12, 31))
-                };
-        
-                var results = ts.Count(intervals).ToArray();
-        
-                Assert.AreEqual(3, results.Length);
-                Assert.AreEqual(2, results[0]);
-                Assert.AreEqual(2, results[1]);
-                Assert.AreEqual(0, results[2]);
-            }
+            Assert.AreEqual(3, results.Length);
+            Assert.AreEqual(2, results[0]);
+            Assert.AreEqual(2, results[1]);
+            Assert.AreEqual(0, results[2]);
+        }
     }
 }

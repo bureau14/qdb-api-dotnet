@@ -18,31 +18,29 @@ namespace Quasardb.Tests.Entry.TimeSeries.Blob
         };
 
         [TestMethod]
-        [Ignore] // Seems to be a bug in qdb_ts_blob_get_range()
         public void ThrowsAliasNotFound()
         {
-            var ts = QdbTestCluster.CreateEmptyBlobColumn();
+            var col = QdbTestCluster.GetNonExistingBlobColumn();
 
             try
             {
-                
-                // ReSharper disable once IteratorMethodResultIsIgnored
-                ts.Points();
+                // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+                col.Points().ToArray();
                 Assert.Fail("No exception thrown");
             }
-            catch (QdbAliasNotFoundException e)
+            catch (QdbColumnNotFoundException e)
             {
-                Assert.AreEqual(ts.Series.Alias, e.Alias);
+                Assert.AreEqual(col.Series.Alias, e.Alias);
             }
         }
    
         [TestMethod]
         public void GivenNoArgument_ReturnsPointsOfTimeSeries()
         {
-            var ts = QdbTestCluster.CreateEmptyBlobColumn();
-            ts.Insert(_points);
+            var col = QdbTestCluster.CreateEmptyBlobColumn();
+            col.Insert(_points);
 
-            var result = ts.Points();
+            var result = col.Points();
             
             CollectionAssert.AreEqual(_points.ToList(), result.ToList());
         }
@@ -50,11 +48,11 @@ namespace Quasardb.Tests.Entry.TimeSeries.Blob
         [TestMethod]
         public void GivenInRangeInterval_ReturnsPointsOfInterval()
         {
-            var ts = QdbTestCluster.CreateEmptyBlobColumn();
-            ts.Insert(_points);
+            var col = QdbTestCluster.CreateEmptyBlobColumn();
+            col.Insert(_points);
 
             var interval = new QdbTimeInterval(_points[0].Time,_points[2].Time);
-            var result = ts.Points(interval);
+            var result = col.Points(interval);
 
             CollectionAssert.AreEqual(_points.Take(2).ToList(), result.ToList());
         }
@@ -62,11 +60,11 @@ namespace Quasardb.Tests.Entry.TimeSeries.Blob
         [TestMethod]
         public void GivenOutOfRangeInterval_ReturnsEmptyCollection()
         {
-            var ts = QdbTestCluster.CreateEmptyBlobColumn();
-            ts.Insert(_points);
+            var col = QdbTestCluster.CreateEmptyBlobColumn();
+            col.Insert(_points);
 
             var interval = new QdbTimeInterval(new DateTime(3000,1,1),new DateTime(4000, 1, 1));
-            var result = ts.Points(interval);
+            var result = col.Points(interval);
 
             Assert.IsFalse(result.Any());
         }
@@ -74,8 +72,8 @@ namespace Quasardb.Tests.Entry.TimeSeries.Blob
         [TestMethod]
         public void GivenSeveralIntervals_ReturnsPointsOfEach()
         {
-            var ts = QdbTestCluster.CreateEmptyBlobColumn();
-            ts.Insert(_points);
+            var col = QdbTestCluster.CreateEmptyBlobColumn();
+            col.Insert(_points);
 
             var intervals = new[]
             {
@@ -84,7 +82,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Blob
                 new QdbTimeInterval(new DateTime(2018, 1, 1), new DateTime(2018, 12, 31))
             };
 
-            var result = ts.Points(intervals);
+            var result = col.Points(intervals);
 
             CollectionAssert.AreEqual(_points.Skip(1).ToList(), result.ToList());
         }

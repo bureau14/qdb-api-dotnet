@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="InteropableList.cs" />
+    <Compile Include="qdb_column_type.cs" />
     <Compile Include="qdb_string.cs" />
     <Compile Include="qdb_ts_blob_point.cs" />
     <Compile Include="qdb_ts_range.cs" />

@@ -17,28 +17,29 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
         };
 
         [TestMethod]
-        public void ThrowsAliasNotFound()
+        public void ThrowsColumnNotFound()
         {
-            var ts = QdbTestCluster.CreateEmptyDoubleColumn();
+            var col = QdbTestCluster.GetNonExistingDoubleColumn();
 
             try
             {
-                ts.Last();
+                col.Last();
                 Assert.Fail("No exception thrown");
             }
-            catch (QdbAliasNotFoundException e)
+            catch (QdbColumnNotFoundException e)
             {
-                Assert.AreEqual(ts.Series.Alias, e.Alias);
+                Assert.AreEqual(col.Series.Alias, e.Alias);
+                Assert.AreEqual(col.Name, e.Column);
             }
         }
 
         [TestMethod]
         public void GivenArgument_ReturnsLastPointOfTimeSeries()
         {
-            var ts = QdbTestCluster.CreateEmptyDoubleColumn();
-            ts.Insert(_points);
+            var col = QdbTestCluster.CreateEmptyDoubleColumn();
+            col.Insert(_points);
 
-            var result = ts.Last();
+            var result = col.Last();
 
             Assert.AreEqual(_points[2], result);
         }
@@ -46,11 +47,11 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
         [TestMethod]
         public void GivenInRangeInterval_IncludesBeginExcludesEnd()
         {
-            var ts = QdbTestCluster.CreateEmptyDoubleColumn();
-            ts.Insert(_points);
+            var col = QdbTestCluster.CreateEmptyDoubleColumn();
+            col.Insert(_points);
 
             var interval = new QdbTimeInterval(_points[0].Time, _points[2].Time);
-            var result = ts.Last(interval);
+            var result = col.Last(interval);
 
             Assert.AreEqual(_points[1], result);
         }
@@ -58,11 +59,11 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
         [TestMethod]
         public void GivenOutOfRangeInterval_ReturnsNull()
         {
-            var ts = QdbTestCluster.CreateEmptyDoubleColumn();
-            ts.Insert(_points);
+            var col = QdbTestCluster.CreateEmptyDoubleColumn();
+            col.Insert(_points);
 
             var interval = new QdbTimeInterval(new DateTime(3000, 1, 1), new DateTime(4000, 1, 1));
-            var result = ts.Last(interval);
+            var result = col.Last(interval);
 
             Assert.IsNull(result);
         }
@@ -71,8 +72,8 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
         [TestMethod]
         public void GivenSeveralIntervals_ReturnsLastOfEach()
         {
-            var ts = QdbTestCluster.CreateEmptyDoubleColumn();
-            ts.Insert(_points);
+            var col = QdbTestCluster.CreateEmptyDoubleColumn();
+            col.Insert(_points);
 
             var intervals = new[]
             {
@@ -81,7 +82,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
                 new QdbTimeInterval(new DateTime(2016, 6, 1), new DateTime(2018, 12, 31))
             };
 
-            var results = ts.Last(intervals).ToArray();
+            var results = col.Last(intervals).ToArray();
 
             Assert.AreEqual(3, results.Length);
             Assert.AreEqual(_points[1], results[0]);

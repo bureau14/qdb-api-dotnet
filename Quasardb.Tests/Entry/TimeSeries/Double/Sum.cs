@@ -17,28 +17,29 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
         };
 
         [TestMethod]
-        public void ThrowsAliasNotFound()
+        public void ThrowsColumnNotFound()
         {
-            var ts = QdbTestCluster.CreateEmptyDoubleColumn();
+            var col = QdbTestCluster.GetNonExistingDoubleColumn();
 
             try
             {
-                ts.First();
+                col.First();
                 Assert.Fail("No exception thrown");
             }
-            catch (QdbAliasNotFoundException e)
+            catch (QdbColumnNotFoundException e)
             {
-                Assert.AreEqual(ts.Series.Alias, e.Alias);
+                Assert.AreEqual(col.Series.Alias, e.Alias);
+                Assert.AreEqual(col.Name, e.Column);
             }
         }
 
         [TestMethod]
         public void GivenNoArgument_ReturnsSumOfTimeSeries()
         {
-            var ts = QdbTestCluster.CreateEmptyDoubleColumn();
-            ts.Insert(_points);
+            var col = QdbTestCluster.CreateEmptyDoubleColumn();
+            col.Insert(_points);
 
-            var result = ts.Sum();
+            var result = col.Sum();
 
             Assert.AreEqual(42+666, result);
         }
@@ -46,11 +47,11 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
         [TestMethod]
         public void GivenInRangeInterval_ReturnsMinPointOfInterval()
         {
-            var ts = QdbTestCluster.CreateEmptyDoubleColumn();
-            ts.Insert(_points);
+            var col = QdbTestCluster.CreateEmptyDoubleColumn();
+            col.Insert(_points);
 
             var interval = new QdbTimeInterval(_points[0].Time,_points[2].Time);
-            var result = ts.Sum(interval);
+            var result = col.Sum(interval);
 
             Assert.AreEqual(42, result);
         }
@@ -58,11 +59,11 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
         [TestMethod]
         public void GivenOutOfRangeInterval_ReturnsNan()
         {
-            var ts = QdbTestCluster.CreateEmptyDoubleColumn();
-            ts.Insert(_points);
+            var col = QdbTestCluster.CreateEmptyDoubleColumn();
+            col.Insert(_points);
 
             var interval = new QdbTimeInterval(new DateTime(3000,1,1),new DateTime(4000, 1, 1));
-            var result = ts.Sum(interval);
+            var result = col.Sum(interval);
 
             Assert.IsTrue(double.IsNaN(result));
         }
@@ -70,8 +71,8 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
         [TestMethod]
         public void GivenSeveralIntervals_ReturnsSumOfEach()
         {
-            var ts = QdbTestCluster.CreateEmptyDoubleColumn();
-            ts.Insert(_points);
+            var col = QdbTestCluster.CreateEmptyDoubleColumn();
+            col.Insert(_points);
 
             var intervals = new[]
             {
@@ -80,7 +81,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
                 new QdbTimeInterval(new DateTime(2016, 6, 1), new DateTime(2018, 12, 31))
             };
 
-            var results = ts.Sum(intervals).ToArray();
+            var results = col.Sum(intervals).ToArray();
 
             Assert.AreEqual(3, results.Length);
             Assert.AreEqual(42, results[0]);

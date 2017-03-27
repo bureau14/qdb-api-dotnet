@@ -7,16 +7,14 @@ namespace Quasardb.TimeSeries
     /// <summary>
     /// A column of a time series
     /// </summary>
-    public class QdbColumn
+    public abstract class QdbColumn
     {
         internal readonly QdbColumnAggregator _aggregator;
-        internal readonly string _alias; // TODO: remove once columns are supported in qdb_api.dll
 
         internal QdbColumn(QdbTimeSeries series, string name)
         {
             Series = series;
             Name = name;
-            _alias = series.Alias + "." + name;
             _aggregator = new QdbColumnAggregator(this);
         }
 
@@ -31,27 +29,6 @@ namespace Quasardb.TimeSeries
         public string Name { get; }
 
         internal qdb_handle Handle => Series.Handle;
-
-        /// <summary>
-        /// Removes the column from the timeseries.
-        /// </summary>
-        /// <returns><c>true</c> if the entry was removed, or <c>false</c> if the entry didn't exist.</returns>
-        public virtual bool Remove()
-        {
-            var error = qdb_api.qdb_remove(Handle, _alias);
-
-            switch (error)
-            {
-                case qdb_error_t.qdb_e_ok:
-                    return true;
-
-                case qdb_error_t.qdb_e_alias_not_found:
-                    return false;
-
-                default:
-                    throw QdbExceptionFactory.Create(error, alias: Series.Alias);
-            }
-        }
 
         #region Count
 
@@ -85,5 +62,15 @@ namespace Quasardb.TimeSeries
         }
 
         #endregion
+    }
+
+    class QdbUnknownColumn : QdbColumn
+    {
+        public readonly int Type;
+
+        public QdbUnknownColumn(QdbTimeSeries series, string name, qdb_ts_column_type type) : base(series, name)
+        {
+            Type = (int) type;
+        }
     }
 }

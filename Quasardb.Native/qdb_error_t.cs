@@ -52,6 +52,7 @@ namespace Quasardb.Native
         qdb_e_ok_created    = 0xb0000032,
         qdb_e_no_space_left = 0xf3000033,
         qdb_e_quota_exceeded = 0xf2000034,
-        qdb_e_alias_too_long = 0xc2000035
+        qdb_e_alias_too_long = 0xc2000035,
+        qdb_e_column_not_found = 0xb1000039
     }
 }

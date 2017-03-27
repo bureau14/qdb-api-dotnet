@@ -24,8 +24,8 @@ namespace Quasardb.TimeSeries
         /// <param name="points">The points to insert</param>
         public void Insert(QdbDoublePointCollection points)
         {
-            var error = qdb_api.qdb_ts_double_insert(Handle, _alias, points.Points.Buffer, points.Points.Count);
-            QdbExceptionThrower.ThrowIfNeeded(error, alias: _alias);
+            var error = qdb_api.qdb_ts_double_insert(Handle, Series.Alias, Name, points.Points.Buffer, points.Points.Count);
+            QdbExceptionThrower.ThrowIfNeeded(error, alias: Series.Alias);
         }
 
         /// <summary>
@@ -256,9 +256,9 @@ namespace Quasardb.TimeSeries
                 ranges.Add(interval.ToNative());
             using (var points = new QdbDoublePointResponse(Handle))
             {
-                var error = qdb_api.qdb_ts_double_get_range(Handle, _alias, ranges.Buffer, ranges.Count,
+                var error = qdb_api.qdb_ts_double_get_range(Handle, Series.Alias, Name, ranges.Buffer, ranges.Count,
                     out points.Pointer, out points.Size);
-                QdbExceptionThrower.ThrowIfNeeded(error, alias: Series.Alias);
+                QdbExceptionThrower.ThrowIfNeeded(error, alias: Series.Alias, column: Name);
 
                 foreach (var pt in points)
                     yield return pt.ToManaged();

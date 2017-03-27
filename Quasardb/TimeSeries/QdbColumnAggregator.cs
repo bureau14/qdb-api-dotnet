@@ -70,8 +70,8 @@ namespace Quasardb.TimeSeries
         {
             var aggregations = new InteropableList<qdb_ts_aggregation>(1);
             aggregations.Add(MakeAggregation(interval));
-            var error = qdb_api.qdb_ts_aggregate(_column.Handle, _column._alias, mode, aggregations.Buffer, aggregations.Count);
-            QdbExceptionThrower.ThrowIfNeeded(error, alias: _column.Series.Alias);
+            var error = qdb_api.qdb_ts_aggregate(_column.Handle, _column.Series.Alias, _column.Name, mode, aggregations.Buffer, aggregations.Count);
+            QdbExceptionThrower.ThrowIfNeeded(error, alias: _column.Series.Alias, column: _column.Name);
             return new SingleResult(aggregations[0]);
         }
 
@@ -81,7 +81,7 @@ namespace Quasardb.TimeSeries
             foreach (var interval in intervals)
                 aggregations.Add(MakeAggregation(interval));
 
-            var error = qdb_api.qdb_ts_aggregate(_column.Handle, _column._alias, mode, aggregations.Buffer, aggregations.Count);
+            var error = qdb_api.qdb_ts_aggregate(_column.Handle, _column.Series.Alias, _column.Name, mode, aggregations.Buffer, aggregations.Count);
             QdbExceptionThrower.ThrowIfNeeded(error, alias: _column.Series.Alias);
 
             return new MultipleResults(aggregations);

@@ -418,9 +418,26 @@ namespace Quasardb.Native
         #region Functions specific to time-series
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error_t qdb_ts_create(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In] string[] column_names,
+            [In] qdb_ts_column_type[] column_types,
+            qdb_size_t column_count);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error_t qdb_ts_list_columns(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [Out] out pointer_t column_names,
+            [Out] out pointer_t column_types,
+            [Out] out size_t column_count);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error_t qdb_ts_double_insert(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In] [MarshalAs(ALIAS_TYPE)] string column,
             [In] qdb_ts_double_point[] points,
             [In] qdb_size_t count);
 
@@ -428,6 +445,7 @@ namespace Quasardb.Native
         public static extern qdb_error_t qdb_ts_aggregate(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In] [MarshalAs(ALIAS_TYPE)] string column,
             [In] qdb_ts_aggregation_type type,
             [In,Out] qdb_ts_aggregation[] aggregations,
             [In] qdb_size_t aggregation_count);
@@ -436,6 +454,7 @@ namespace Quasardb.Native
         public static extern qdb_error_t qdb_ts_double_get_range(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In] [MarshalAs(ALIAS_TYPE)] string column,
             [In, Out] qdb_ts_range[] ranges,
             [In] qdb_size_t ranges_count,
             [Out] out pointer_t points,
@@ -445,6 +464,7 @@ namespace Quasardb.Native
         public static extern qdb_error_t qdb_ts_blob_insert(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In] [MarshalAs(ALIAS_TYPE)] string column,
             [In] qdb_ts_blob_point[] values,
             [In] qdb_size_t count);
 
@@ -452,6 +472,7 @@ namespace Quasardb.Native
         public static extern qdb_error_t qdb_ts_blob_get_range(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In] [MarshalAs(ALIAS_TYPE)] string column,
             [In, Out] qdb_ts_range[] ranges,
             [In] qdb_size_t ranges_count,
             [Out] out pointer_t points,

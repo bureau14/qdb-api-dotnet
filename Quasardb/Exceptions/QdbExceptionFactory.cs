@@ -4,8 +4,12 @@ namespace Quasardb.Exceptions
 {
     static class QdbExceptionFactory
     {
-        public static QdbException Create(qdb_error_t error, string alias = null)
+        public static QdbException Create(qdb_error_t error, string alias = null, string column = null)
         {
+            // TODO: temporary workaround until qdb_e_column_not_found is added
+            if (error == qdb_error_t.qdb_e_element_not_found && column != null)
+                return new QdbColumnNotFoundException(alias, column);
+
             var origin = (qdb_err_origin) ((uint) error & (uint) qdb_err_origin.mask);
 
             switch (origin)
@@ -17,7 +21,7 @@ namespace Quasardb.Exceptions
                     return CreateInputException(error);
 
                 case qdb_err_origin.operation:
-                    return CreateOperationException(error, alias);
+                    return CreateOperationException(error, alias, column);
 
                 case qdb_err_origin.protocol:
                     return CreateProtocolException(error);
@@ -53,7 +57,7 @@ namespace Quasardb.Exceptions
             }
         }
 
-        private static QdbOperationException CreateOperationException(qdb_error_t error, string alias)
+        static QdbOperationException CreateOperationException(qdb_error_t error, string alias, string column)
         {
             switch (error)
             {
@@ -68,6 +72,9 @@ namespace Quasardb.Exceptions
 
                 case qdb_error_t.qdb_e_resource_locked:
                     return new QdbResourceLockedException(alias);
+
+                case qdb_error_t.qdb_e_column_not_found:
+                    return new QdbColumnNotFoundException(alias, column);
 
                 default:
                     return new QdbOperationException(qdb_api.qdb_error(error), alias);

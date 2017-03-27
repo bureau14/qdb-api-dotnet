@@ -107,12 +107,11 @@ namespace Quasardb.Tests.Cluster
 
 
         [TestMethod]
-        [Ignore] // Requires support for columns in qdb_api.dll
         public void ReturnsTimeSeries()
         {
             var alias = RandomGenerator.CreateUniqueAlias();
 
-            QdbTestCluster.CreateDoubleColumn(alias);
+            QdbTestCluster.Instance.TimeSeries(alias).Create(new QdbBlobColumnDefinition("hello"));
             var result = _cluster.Entry(alias);
 
             Assert.IsInstanceOfType(result, typeof(QdbTimeSeries));

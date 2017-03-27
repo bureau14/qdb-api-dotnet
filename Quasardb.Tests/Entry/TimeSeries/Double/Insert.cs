@@ -9,7 +9,6 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
     public class Insert
     {
         [TestMethod]
-        [Ignore] // Requires support for columns in qdb_api.dll
         public void ThrowsIncompatibleType()
         {
             var points = new QdbDoublePointCollection
@@ -18,17 +17,17 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
                 {new DateTime(2000, 01, 02), 2},
             };
             var alias = RandomGenerator.CreateUniqueAlias();
-            var ts = QdbTestCluster.CreateEmptyDoubleColumn(alias);
             QdbTestCluster.CreateBlob(alias);
+            var col = QdbTestCluster.Instance.TimeSeries(alias).DoubleColumns["hello"];
 
             try
             {
-                ts.Insert(points);
+                col.Insert(points);
                 Assert.Fail("No exception thrown");
             }
             catch (QdbIncompatibleTypeException e)
             {
-                Assert.AreEqual(ts.Series.Alias, e.Alias);
+                Assert.AreEqual(col.Series.Alias, e.Alias);
             }
         }
     }
