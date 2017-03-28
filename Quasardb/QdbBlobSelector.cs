@@ -45,13 +45,13 @@ namespace Quasardb
         object IVisitable.Accept(object visitor)
         {
             var handle = (qdb_handle) visitor;
-            var result = new QdbStringCollection(handle);
+            var result = new qdb_buffer<qdb_string>(handle);
             var error = qdb_api.qdb_blob_scan(handle, _pattern, (UIntPtr)_pattern.Length, _maxCount, out result.Pointer, out result.Size);
 
             switch (error)
             {
-                case qdb_error_t.qdb_e_ok:
-                case qdb_error_t.qdb_e_alias_not_found:
+                case qdb_error.qdb_e_ok:
+                case qdb_error.qdb_e_alias_not_found:
                     return result;
 
                 default:
@@ -82,13 +82,13 @@ namespace Quasardb
         object IVisitable.Accept(object visitor)
         {
             var handle = (qdb_handle)visitor;
-            var result = new QdbStringCollection(handle);
+            var result = new qdb_buffer<qdb_string>(handle);
             var error = qdb_api.qdb_blob_scan_regex(handle, _pattern, _maxCount, out result.Pointer, out result.Size);
 
             switch (error)
             {
-                case qdb_error_t.qdb_e_ok:
-                case qdb_error_t.qdb_e_alias_not_found:
+                case qdb_error.qdb_e_ok:
+                case qdb_error.qdb_e_alias_not_found:
                     return result;
 
                 default:

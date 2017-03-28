@@ -4,12 +4,8 @@ namespace Quasardb.Exceptions
 {
     static class QdbExceptionFactory
     {
-        public static QdbException Create(qdb_error_t error, string alias = null, string column = null)
+        public static QdbException Create(qdb_error error, string alias = null, string column = null)
         {
-            // TODO: temporary workaround until qdb_e_column_not_found is added
-            if (error == qdb_error_t.qdb_e_element_not_found && column != null)
-                return new QdbColumnNotFoundException(alias, column);
-
             var origin = (qdb_err_origin) ((uint) error & (uint) qdb_err_origin.mask);
 
             switch (origin)
@@ -37,19 +33,19 @@ namespace Quasardb.Exceptions
             }
         }
 
-        private static QdbConnectionException CreateConnectionException(qdb_error_t error)
+        private static QdbConnectionException CreateConnectionException(qdb_error error)
         {
             return new QdbConnectionException(qdb_api.qdb_error(error));
         }
 
-        private static QdbInputException CreateInputException(qdb_error_t error)
+        private static QdbInputException CreateInputException(qdb_error error)
         {
             switch (error)
             {
-                case qdb_error_t.qdb_e_invalid_argument:
+                case qdb_error.qdb_e_invalid_argument:
                     return new QdbInvalidArgumentException();
 
-                case qdb_error_t.qdb_e_out_of_bounds:
+                case qdb_error.qdb_e_out_of_bounds:
                     return new QdbOutOfBoundsException();
 
                 default:
@@ -57,23 +53,23 @@ namespace Quasardb.Exceptions
             }
         }
 
-        static QdbOperationException CreateOperationException(qdb_error_t error, string alias, string column)
+        static QdbOperationException CreateOperationException(qdb_error error, string alias, string column)
         {
             switch (error)
             {
-                case qdb_error_t.qdb_e_alias_already_exists:
+                case qdb_error.qdb_e_alias_already_exists:
                     return new QdbAliasAlreadyExistsException(alias);
 
-                case qdb_error_t.qdb_e_alias_not_found:
+                case qdb_error.qdb_e_alias_not_found:
                     return new QdbAliasNotFoundException(alias);
 
-                case qdb_error_t.qdb_e_incompatible_type:
+                case qdb_error.qdb_e_incompatible_type:
                     return new QdbIncompatibleTypeException(alias);
 
-                case qdb_error_t.qdb_e_resource_locked:
+                case qdb_error.qdb_e_resource_locked:
                     return new QdbResourceLockedException(alias);
 
-                case qdb_error_t.qdb_e_column_not_found:
+                case qdb_error.qdb_e_column_not_found:
                     return new QdbColumnNotFoundException(alias, column);
 
                 default:
@@ -81,17 +77,17 @@ namespace Quasardb.Exceptions
             }
         }
 
-        private static QdbLocalSystemException CreateLocalSystemException(qdb_error_t error)
+        private static QdbLocalSystemException CreateLocalSystemException(qdb_error error)
         {
             return new QdbLocalSystemException(qdb_api.qdb_error(error));
         }
 
-        private static QdbProtocolException CreateProtocolException(qdb_error_t error)
+        private static QdbProtocolException CreateProtocolException(qdb_error error)
         {
             return new QdbProtocolException(qdb_api.qdb_error(error));
         }
 
-        private static QdbRemoteSystemException CreateRemoteSystemException(qdb_error_t error)
+        private static QdbRemoteSystemException CreateRemoteSystemException(qdb_error error)
         {
             return new QdbRemoteSystemException(qdb_api.qdb_error(error));
         }

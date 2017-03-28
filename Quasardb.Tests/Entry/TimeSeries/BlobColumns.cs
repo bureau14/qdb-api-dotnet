@@ -47,7 +47,7 @@ namespace Quasardb.Tests.Entry.TimeSeries
         }
 
         [TestMethod]
-        public void ReturnsOnlyDoubleColumns()
+        public void ReturnsOnlyBlobColumns()
         {
             var alias = RandomGenerator.CreateUniqueAlias();
             var ts = QdbTestCluster.Instance.TimeSeries(alias);

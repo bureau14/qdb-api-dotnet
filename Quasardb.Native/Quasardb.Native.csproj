@@ -71,11 +71,12 @@
     <Compile Include="qdb_column_type.cs" />
     <Compile Include="qdb_string.cs" />
     <Compile Include="qdb_ts_blob_point.cs" />
+    <Compile Include="qdb_ts_column_info.cs" />
     <Compile Include="qdb_ts_range.cs" />
     <Compile Include="qdb_ts_aggregation_type.cs" />
     <Compile Include="ConstCharPtrMarshaler.cs" />
     <Compile Include="qdb_buffer.cs" />
-    <Compile Include="qdb_error_t.cs" />
+    <Compile Include="qdb_error.cs" />
     <Compile Include="qdb_err_severity.cs" />
     <Compile Include="qdb_err_origin.cs" />
     <Compile Include="qdb_timespec.cs" />

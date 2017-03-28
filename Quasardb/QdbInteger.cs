@@ -80,10 +80,10 @@ namespace Quasardb
 
             switch (error)
             {
-                case qdb_error_t.qdb_e_ok:
+                case qdb_error.qdb_e_ok:
                     return false;
 
-                case qdb_error_t.qdb_e_ok_created:
+                case qdb_error.qdb_e_ok_created:
                     return true;
 
                 default:

@@ -81,14 +81,11 @@
     <Compile Include="ExtensionMethodWithFramework2.cs" />
     <Compile Include="IVisitable.cs" />
     <Compile Include="Batch\IOperation.cs" />
-    <Compile Include="TimeSeries\QdbColumnTypeCollection.cs" />
     <Compile Include="QdbUnknownEntry.cs" />
     <Compile Include="TimeSeries\PointConverter.cs" />
     <Compile Include="TimeSeries\QdbBlobPointCollection.cs" />
     <Compile Include="TimeSeries\QdbBlobColumn.cs" />
-    <Compile Include="TimeSeries\QdbBlobPointResponse.cs" />
     <Compile Include="TimeSeries\QdbColumnDefinition.cs" />
-    <Compile Include="TimeSeries\QdbDoublePointResponse.cs" />
     <Compile Include="Exceptions\QdbExceptionThrower.cs" />
     <Compile Include="Stream\QdbStreamAdapter.cs" />
     <Compile Include="Batch\QdbBatch.cs" />
@@ -101,7 +98,6 @@
     <Compile Include="QdbCluster.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QdbEntry.cs" />
-    <Compile Include="QdbStringCollection.cs" />
     <Compile Include="QdbEntryFactory.cs" />
     <Compile Include="QdbEntrySelector.cs" />
     <Compile Include="QdbExpirableEntry.cs" />

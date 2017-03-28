@@ -39,7 +39,7 @@ namespace Quasardb
             using (var content = new QdbBlobBuffer(Handle))
             {
                 var error = qdb_api.qdb_deque_back(Handle, Alias, out content.Pointer, out content.Size);
-                if (error == qdb_error_t.qdb_e_container_empty) return null;
+                if (error == qdb_error.qdb_e_container_empty) return null;
                 QdbExceptionThrower.ThrowIfNeeded(error, alias: Alias);
                 return content.GetBytes();
             }
@@ -56,7 +56,7 @@ namespace Quasardb
             using (var content = new QdbBlobBuffer(Handle))
             {
                 var error = qdb_api.qdb_deque_front(Handle, Alias, out content.Pointer, out content.Size);
-                if (error == qdb_error_t.qdb_e_container_empty) return null;
+                if (error == qdb_error.qdb_e_container_empty) return null;
                 QdbExceptionThrower.ThrowIfNeeded(error, alias: Alias);
                 return content.GetBytes();
             }
@@ -73,7 +73,7 @@ namespace Quasardb
             using (var content = new QdbBlobBuffer(Handle))
             {
                 var error = qdb_api.qdb_deque_pop_back(Handle, Alias, out content.Pointer, out content.Size);
-                if (error == qdb_error_t.qdb_e_container_empty) return null;
+                if (error == qdb_error.qdb_e_container_empty) return null;
                 QdbExceptionThrower.ThrowIfNeeded(error, alias: Alias);
                 return content.GetBytes();
             }
@@ -90,7 +90,7 @@ namespace Quasardb
             using (var content = new QdbBlobBuffer(Handle))
             {
                 var error = qdb_api.qdb_deque_pop_front(Handle, Alias, out content.Pointer, out content.Size);
-                if (error == qdb_error_t.qdb_e_container_empty) return null;
+                if (error == qdb_error.qdb_e_container_empty) return null;
                 QdbExceptionThrower.ThrowIfNeeded(error, alias: Alias);
                 return content.GetBytes();
             }

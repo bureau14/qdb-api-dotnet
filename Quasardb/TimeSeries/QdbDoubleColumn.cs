@@ -254,7 +254,7 @@ namespace Quasardb.TimeSeries
             var ranges = new InteropableList<qdb_ts_range>(Helpers.GetCountOrDefault(intervals));
             foreach (var interval in intervals)
                 ranges.Add(interval.ToNative());
-            using (var points = new QdbDoublePointResponse(Handle))
+            using (var points = new qdb_buffer<qdb_ts_double_point>(Handle))
             {
                 var error = qdb_api.qdb_ts_double_get_range(Handle, Series.Alias, Name, ranges.Buffer, ranges.Count,
                     out points.Pointer, out points.Size);

@@ -16,7 +16,7 @@ namespace Quasardb.Native
     {
         public qdb_operation_type type;
         public string alias;
-        public qdb_error_t error;
+        public qdb_error error;
         public qdb_operation_args args;
     };
 

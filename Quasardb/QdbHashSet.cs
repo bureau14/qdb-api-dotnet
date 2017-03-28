@@ -30,10 +30,10 @@ namespace Quasardb
 
             switch (error)
             {
-                case qdb_error_t.qdb_e_element_already_exists:
+                case qdb_error.qdb_e_element_already_exists:
                     return false;
 
-                case qdb_error_t.qdb_e_ok:
+                case qdb_error.qdb_e_ok:
                     return true;
 
                 default:
@@ -56,10 +56,10 @@ namespace Quasardb
 
             switch (error)
             {
-                case qdb_error_t.qdb_e_element_not_found:
+                case qdb_error.qdb_e_element_not_found:
                     return false;
 
-                case qdb_error_t.qdb_e_ok:
+                case qdb_error.qdb_e_ok:
                     return true;
 
                 default:
@@ -82,10 +82,10 @@ namespace Quasardb
 
             switch (error)
             {
-                case qdb_error_t.qdb_e_element_not_found:
+                case qdb_error.qdb_e_element_not_found:
                     return false;
 
-                case qdb_error_t.qdb_e_ok:
+                case qdb_error.qdb_e_ok:
                     return true;
 
                 default:

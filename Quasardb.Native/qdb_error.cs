@@ -2,7 +2,7 @@
 
 namespace Quasardb.Native
 {
-    public enum qdb_error_t : uint
+    public enum qdb_error : uint
     {
         qdb_e_ok = 0,
         qdb_e_uninitialized = 0xc300FFFF,

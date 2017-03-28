@@ -23,17 +23,16 @@ namespace Quasardb.TimeSeries
         {
             var handle = _series.Handle;
             var alias = _series.Alias;
-            var names = new QdbStringCollection(handle);
-            var types = new QdbColumnTypeCollection(handle);
 
-            var err = qdb_api.qdb_ts_list_columns(handle, alias, out names.Pointer, out types.Pointer,
-                out names.Size);
-            types.Size = names.Size;
-            QdbExceptionThrower.ThrowIfNeeded(err, alias: alias);
-
-            for (ulong i = 0; i < (ulong)types.Size; i++)
+            using (var columns = new qdb_buffer<qdb_ts_column_info>(handle))
             {
-                yield return MakeColumn(types[i], names[i]);
+                var err = qdb_api.qdb_ts_list_columns(handle, alias, out columns.Pointer, out columns.Size);
+                QdbExceptionThrower.ThrowIfNeeded(err, alias: alias);
+
+                foreach (var column in columns)
+                {
+                    yield return MakeColumn(column.type, column.name);
+                }
             }
         }
 
@@ -152,16 +151,18 @@ namespace Quasardb.TimeSeries
         public void Create(params QdbColumnDefinition[] columnDefinitions)
         {
             var count = columnDefinitions.Length;
-            var names = new string[count];
-            var types = new qdb_ts_column_type[count];
+            var columns = new InteropableList<qdb_ts_column_info>(columnDefinitions.Length);
 
-            for (var i = 0; i < count; i++)
+            foreach (var def in columnDefinitions)
             {
-                names[i] = columnDefinitions[i].Name;
-                types[i] = columnDefinitions[i].Type;
+                columns.Add(new qdb_ts_column_info
+                {
+                    name = def.Name,
+                    type = def.Type
+                });
             }
 
-            var err = qdb_api.qdb_ts_create(Handle, Alias, names, types, (UIntPtr) count);
+            var err = qdb_api.qdb_ts_create(Handle, Alias, columns.Buffer, columns.Count);
             QdbExceptionThrower.ThrowIfNeeded(err, alias: Alias);
         }
     }

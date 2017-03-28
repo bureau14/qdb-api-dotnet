@@ -44,10 +44,10 @@ namespace Quasardb
                     pin.Free();
 
                     // HACK: workaround a known bug in quasardb 2.0.0
-                    if (op.error == qdb_error_t.qdb_e_alias_not_found)
-                        op.error = qdb_error_t.qdb_e_tag_not_set;
+                    if (op.error == qdb_error.qdb_e_alias_not_found)
+                        op.error = qdb_error.qdb_e_tag_not_set;
 
-                    return op.error == qdb_error_t.qdb_e_ok;
+                    return op.error == qdb_error.qdb_e_ok;
                 });
         }
 

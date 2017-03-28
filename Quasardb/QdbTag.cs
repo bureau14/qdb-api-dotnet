@@ -48,7 +48,7 @@ namespace Quasardb
         {
             var factory = new QdbEntryFactory(Handle);
             
-            using (var result = new QdbStringCollection(Handle))
+            using (var result = new qdb_buffer<qdb_string>(Handle))
             { 
                 var error = qdb_api.qdb_get_tagged(Handle, Alias, out result.Pointer, out result.Size);
                 QdbExceptionThrower.ThrowIfNeeded(error, alias: Alias);

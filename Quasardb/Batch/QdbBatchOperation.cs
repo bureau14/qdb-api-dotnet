@@ -9,7 +9,7 @@ namespace Quasardb
 
     class DelegateOperation : IOperation, IQdbFuture
     {
-        qdb_error_t _error;
+        qdb_error _error;
         string _alias;
         readonly MarshalFunc _marshal;
         readonly UnmarshalFunc _unmarshal;
@@ -37,7 +37,7 @@ namespace Quasardb
 
     class DelegateOperation<T> : IOperation, IQdbFuture<T>
     {
-        qdb_error_t _error;
+        qdb_error _error;
         string _alias;
         T _result;
         readonly MarshalFunc _marshal;

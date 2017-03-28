@@ -36,10 +36,10 @@ namespace Quasardb
 
             switch (error)
             {
-                case qdb_error_t.qdb_e_ok:
+                case qdb_error.qdb_e_ok:
                     return true;
                     
-                case qdb_error_t.qdb_e_alias_not_found:
+                case qdb_error.qdb_e_alias_not_found:
                     return false;
 
                 default:
@@ -83,16 +83,16 @@ namespace Quasardb
 
             switch (error)
             {
-                case qdb_error_t.qdb_e_tag_already_set:
+                case qdb_error.qdb_e_tag_already_set:
                     return false;
 
-                case qdb_error_t.qdb_e_ok:
+                case qdb_error.qdb_e_ok:
                     return true;
 
-                case qdb_error_t.qdb_e_alias_not_found:
+                case qdb_error.qdb_e_alias_not_found:
                     throw new QdbAliasNotFoundException(target);
 
-                case qdb_error_t.qdb_e_incompatible_type:
+                case qdb_error.qdb_e_incompatible_type:
                     throw new QdbIncompatibleTypeException(tag);
 
                 default:
@@ -108,7 +108,7 @@ namespace Quasardb
         /// <seealso cref="QdbTag"/>
         public IEnumerable<QdbTag> GetTags()
         {
-            using (var result = new QdbStringCollection(Handle))
+            using (var result = new qdb_buffer<qdb_string>(Handle))
             {
                 var error = qdb_api.qdb_get_tags(Handle, Alias, out result.Pointer, out result.Size);
                 QdbExceptionThrower.ThrowIfNeeded(error, alias: Alias);
@@ -152,16 +152,16 @@ namespace Quasardb
 
             switch (error)
             {
-                case qdb_error_t.qdb_e_tag_not_set:
+                case qdb_error.qdb_e_tag_not_set:
                     return false;
 
-                case qdb_error_t.qdb_e_ok:
+                case qdb_error.qdb_e_ok:
                     return true;
 
-                case qdb_error_t.qdb_e_alias_not_found:
+                case qdb_error.qdb_e_alias_not_found:
                     throw new QdbAliasNotFoundException(target);
 
-                case qdb_error_t.qdb_e_incompatible_type:
+                case qdb_error.qdb_e_incompatible_type:
                     throw new QdbIncompatibleTypeException(tag);
 
                 default:
@@ -203,16 +203,16 @@ namespace Quasardb
 
             switch (error)
             {
-                case qdb_error_t.qdb_e_tag_not_set:
+                case qdb_error.qdb_e_tag_not_set:
                     return false;
 
-                case qdb_error_t.qdb_e_ok:
+                case qdb_error.qdb_e_ok:
                     return true;
 
-                case qdb_error_t.qdb_e_alias_not_found:
+                case qdb_error.qdb_e_alias_not_found:
                     throw new QdbAliasNotFoundException(target);
 
-                case qdb_error_t.qdb_e_incompatible_type:
+                case qdb_error.qdb_e_incompatible_type:
                     throw new QdbIncompatibleTypeException(tag);
 
                 default:

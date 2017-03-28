@@ -76,7 +76,7 @@ namespace Quasardb
             var upos = unchecked((ulong)value);
             var error = qdb_api.qdb_stream_truncate(_handle, upos);
 
-            if (error == qdb_error_t.qdb_e_out_of_bounds)
+            if (error == qdb_error.qdb_e_out_of_bounds)
                 throw new NotSupportedException("Size of stream cannot be increased by SetLength().");
 
             QdbExceptionThrower.ThrowIfNeeded(error);
