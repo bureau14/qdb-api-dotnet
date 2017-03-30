@@ -27,6 +27,11 @@ namespace Quasardb.TimeSeries
 
             public QdbDoublePoint ToDoublePoint()
             {
+                return _aggregation.result.ToManaged();
+            }
+
+            public QdbDoublePoint ToDoublePointOrNull()
+            {
                 return double.IsNaN(_aggregation.result.value) ? null : _aggregation.result.ToManaged();
             }
         }
@@ -66,7 +71,12 @@ namespace Quasardb.TimeSeries
             _column = column;
         }
 
-        public SingleResult Aggregate(QdbTimeInterval interval, qdb_ts_aggregation_type mode)
+        public SingleResult Aggregate(qdb_ts_aggregation_type mode)
+        {
+            return Aggregate(mode, QdbTimeInterval.Everything);
+        }
+
+        public SingleResult Aggregate(qdb_ts_aggregation_type mode, QdbTimeInterval interval)
         {
             var aggregations = new InteropableList<qdb_ts_aggregation>(1);
             aggregations.Add(MakeAggregation(interval));
@@ -75,7 +85,7 @@ namespace Quasardb.TimeSeries
             return new SingleResult(aggregations[0]);
         }
 
-        public MultipleResults Aggregate(IEnumerable<QdbTimeInterval> intervals, qdb_ts_aggregation_type mode)
+        public MultipleResults Aggregate(qdb_ts_aggregation_type mode, IEnumerable<QdbTimeInterval> intervals)
         {
             var aggregations = new InteropableList<qdb_ts_aggregation>(Helpers.GetCountOrDefault(intervals));
             foreach (var interval in intervals)

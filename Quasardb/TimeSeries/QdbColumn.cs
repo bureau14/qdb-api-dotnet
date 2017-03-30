@@ -48,7 +48,7 @@ namespace Quasardb.TimeSeries
         /// <returns>The number of points in the interval</returns>
         public long Count(QdbTimeInterval interval)
         {
-            return _aggregator.Aggregate(interval, qdb_ts_aggregation_type.Count).ToLong();
+            return _aggregator.Aggregate(qdb_ts_aggregation_type.Count, interval).ToLong();
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Quasardb.TimeSeries
         /// <returns>The number of points in each interval</returns>
         public IEnumerable<long> Count(IEnumerable<QdbTimeInterval> intervals)
         {
-            return _aggregator.Aggregate(intervals, qdb_ts_aggregation_type.Count).ToLong();
+            return _aggregator.Aggregate(qdb_ts_aggregation_type.Count, intervals).ToLong();
         }
 
         #endregion

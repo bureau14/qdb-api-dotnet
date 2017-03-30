@@ -88,5 +88,18 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
             Assert.AreEqual(_points[1], results[1]);
             Assert.IsNull(results[2]);
         }
+
+        [TestMethod]
+        public void WhenFirstIsNaN_ReturnsNonNull()
+        {
+            var col = QdbTestCluster.CreateEmptyDoubleColumn();
+            var time = new DateTime(2012,5,12);
+            col.Insert(time, double.NaN);
+
+            var result = col.First();
+
+            Assert.AreEqual(time, result.Time);
+            Assert.IsTrue(double.IsNaN(result.Value));
+        }
     }
 }
