@@ -150,8 +150,20 @@ namespace Quasardb.TimeSeries
         /// <exception cref="QdbInvalidArgumentException">If columns list is empty.</exception>
         public void Create(params QdbColumnDefinition[] columnDefinitions)
         {
-            var count = columnDefinitions.Length;
-            var columns = new InteropableList<qdb_ts_column_info>(columnDefinitions.Length);
+            Create((IEnumerable<QdbColumnDefinition>) columnDefinitions);
+        }
+
+        /// <summary>
+        /// Creates the time-series.
+        /// </summary>
+        /// <param name="columnDefinitions">The description of the columns</param>
+        /// <exception cref="QdbAliasAlreadyExistsException">If the time-series already exists.</exception>
+        /// <exception cref="QdbIncompatibleTypeException">If the alias matches with an entry of another type.</exception>
+        /// <exception cref="QdbInvalidArgumentException">If columns list is empty.</exception>
+        public void Create(IEnumerable<QdbColumnDefinition> columnDefinitions)
+        {
+            var count = Helpers.GetCountOrDefault(columnDefinitions);
+            var columns = new InteropableList<qdb_ts_column_info>(count);
 
             foreach (var def in columnDefinitions)
             {

@@ -154,17 +154,17 @@ namespace Quasardb.Tests
         
         #region TimeSeries
 
-        public static QdbDoubleColumn CreateEmptyDoubleColumn(string alias = null)
+        public static QdbDoubleColumn CreateEmptyDoubleColumn(string alias = null, string name = null)
         {
             var ts = Instance.TimeSeries(alias ?? RandomGenerator.CreateUniqueAlias());
-            var colName = RandomGenerator.CreateUniqueAlias();
+            var colName = name ?? RandomGenerator.CreateUniqueAlias();
             ts.Create(new QdbDoubleColumnDefinition(colName));
             return ts.DoubleColumns[colName];
         }
 
-        public static QdbDoubleColumn CreateDoubleColumn(string alias = null)
+        public static QdbDoubleColumn CreateDoubleColumn(string alias = null, string name = null)
         {
-            var column = CreateEmptyDoubleColumn(alias);
+            var column = CreateEmptyDoubleColumn(alias, null);
             column.Insert(DateTime.Now, 666);
             return column;
         }

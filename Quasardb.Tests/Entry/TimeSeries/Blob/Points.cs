@@ -33,7 +33,27 @@ namespace Quasardb.Tests.Entry.TimeSeries.Blob
                 Assert.AreEqual(col.Series.Alias, e.Alias);
             }
         }
-   
+
+        [TestMethod]
+        public void GivenDoubleColumn_ThrowsIncompatibleType()
+        {
+            var alias = RandomGenerator.CreateUniqueAlias();
+            var name = "hello";
+            QdbTestCluster.CreateEmptyDoubleColumn(alias, name);
+            var col = QdbTestCluster.Instance.TimeSeries(alias).BlobColumns[name];
+
+            try
+            {
+                // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+                col.Points().ToArray();
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbIncompatibleTypeException e)
+            {
+                Assert.AreEqual(col.Series.Alias, e.Alias);
+            }
+        }
+
         [TestMethod]
         public void GivenNoArgument_ReturnsPointsOfTimeSeries()
         {
