@@ -65,8 +65,10 @@
     <Compile Include="Exceptions\Connection\QdbConnectionException.cs" />
     <Compile Include="Exceptions\Input\QdbInputException.cs" />
     <Compile Include="Exceptions\Input\QdbOutOfBoundsException.cs" />
+    <Compile Include="Exceptions\Operation\Column\QdbColumnException.cs" />
+    <Compile Include="Exceptions\Operation\Column\QdbEmptyColumnException.cs" />
     <Compile Include="Exceptions\Operation\QdbAliasAlreadyExistsException.cs" />
-    <Compile Include="Exceptions\Operation\QdbColumnNotFoundException.cs" />
+    <Compile Include="Exceptions\Operation\Column\QdbColumnNotFoundException.cs" />
     <Compile Include="Exceptions\Operation\QdbAliasNotFoundException.cs" />
     <Compile Include="Exceptions\Operation\QdbOperationException.cs" />
     <Compile Include="Exceptions\Protocol\QdbProtocolException.cs" />

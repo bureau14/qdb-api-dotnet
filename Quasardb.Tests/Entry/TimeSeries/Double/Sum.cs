@@ -88,5 +88,15 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
             Assert.AreEqual(42+666, results[1]);
             Assert.IsTrue(double.IsNaN(results[2]));
         }
+
+        [TestMethod]
+        [Ignore] // case 1588 - When column is empty qdb_ts_aggregate() returns qdb_e_internal_remote
+        public void GivenEmptyColumn_ReturnsZero()
+        {
+            var col = QdbTestCluster.CreateEmptyDoubleColumn();
+
+            Assert.AreEqual(0, col.Sum());
+        }
+
     }
 }

@@ -27,11 +27,6 @@ namespace Quasardb.TimeSeries
 
             public QdbDoublePoint ToDoublePoint()
             {
-                return _aggregation.result.ToManaged();
-            }
-
-            public QdbDoublePoint ToDoublePointOrNull()
-            {
                 return double.IsNaN(_aggregation.result.value) ? null : _aggregation.result.ToManaged();
             }
         }

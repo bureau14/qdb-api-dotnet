@@ -34,6 +34,24 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
         }
 
         [TestMethod]
+        [Ignore] // case 1588 - When column is empty qdb_ts_aggregate() returns qdb_e_internal_remote
+        public void ThrowsEmptyColumn()
+        {
+            var col = QdbTestCluster.CreateEmptyDoubleColumn();
+
+            try
+            {
+                col.Average();
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbEmptyColumnException e)
+            {
+                Assert.AreEqual(col.Series.Alias, e.Alias);
+                Assert.AreEqual(col.Name, e.Column);
+            }
+        }
+
+        [TestMethod]
         public void GivenNoArgument_ReturnsAverageOfTimeSeries()
         {
             var col = QdbTestCluster.CreateEmptyDoubleColumn();

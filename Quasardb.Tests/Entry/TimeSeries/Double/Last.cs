@@ -91,17 +91,21 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
         }
 
         [TestMethod]
-        public void WhenLastIsNaN_ReturnsNonNull()
+        [Ignore] // case 1588 - When column is empty qdb_ts_aggregate() returns qdb_e_internal_remote
+        public void ThrowsEmptyColumn()
         {
             var col = QdbTestCluster.CreateEmptyDoubleColumn();
-            var time = new DateTime(2012, 5, 12);
 
-            col.Insert(time, double.NaN);
-
-            var result = col.Last();
-
-            Assert.AreEqual(time, result.Time);
-            Assert.IsTrue(double.IsNaN(result.Value));
+            try
+            {
+                col.Last();
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbEmptyColumnException e)
+            {
+                Assert.AreEqual(col.Series.Alias, e.Alias);
+                Assert.AreEqual(col.Name, e.Column);
+            }
         }
     }
 }

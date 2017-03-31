@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Quasardb.Exceptions;
 using Quasardb.Native;
 
@@ -64,9 +65,13 @@ namespace Quasardb.TimeSeries
         /// Gets the average (ie the mean of all values) of the timeseries
         /// </summary>
         /// <returns>The average value of the timeseries</returns>
+        /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
         public double Average()
         {
-            return _aggregator.Aggregate(qdb_ts_aggregation_type.Average).ToDouble();
+            var result = _aggregator.Aggregate(qdb_ts_aggregation_type.Average).ToDouble();
+            if (double.IsNaN(result))
+                throw new QdbEmptyColumnException(Series.Alias, Name);
+            return result;
         }
 
         /// <summary>
@@ -97,9 +102,13 @@ namespace Quasardb.TimeSeries
         /// Gets the first point (ie the one with the oldest timestamp) of the timeseries 
         /// </summary>
         /// <returns>The first point of the time series</returns>
+        /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
         public Point First()
         {
-            return _aggregator.Aggregate(qdb_ts_aggregation_type.First).ToDoublePoint();
+            var point = _aggregator.Aggregate(qdb_ts_aggregation_type.First).ToDoublePoint();
+            if (point == null)
+                throw new QdbEmptyColumnException(Series.Alias, Name);
+            return point;
         }
 
         /// <summary>
@@ -109,7 +118,7 @@ namespace Quasardb.TimeSeries
         /// <returns>The first point in the interval or <c>null</c> if there is no point in the interval</returns>
         public Point First(QdbTimeInterval interval)
         {
-            return _aggregator.Aggregate(qdb_ts_aggregation_type.First, interval).ToDoublePointOrNull();
+            return _aggregator.Aggregate(qdb_ts_aggregation_type.First, interval).ToDoublePoint();
         }
 
         /// <summary>
@@ -130,9 +139,13 @@ namespace Quasardb.TimeSeries
         /// Gets the last point (ie the one with the newest timestamp) of the time series
         /// </summary>
         /// <returns>The last point of the time series</returns>
+        /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
         public Point Last()
         {
-            return _aggregator.Aggregate(qdb_ts_aggregation_type.Last).ToDoublePoint();
+            var point = _aggregator.Aggregate(qdb_ts_aggregation_type.Last).ToDoublePoint();
+            if (point == null)
+                throw new QdbEmptyColumnException(Series.Alias, Name);
+            return point;
         }
 
         /// <summary>
@@ -142,7 +155,7 @@ namespace Quasardb.TimeSeries
         /// <returns>The last point in the interval or <c>null</c> if there is no point in the interval</returns>
         public Point Last(QdbTimeInterval interval)
         {
-            return _aggregator.Aggregate(qdb_ts_aggregation_type.Last, interval).ToDoublePointOrNull();
+            return _aggregator.Aggregate(qdb_ts_aggregation_type.Last, interval).ToDoublePoint();
         }
 
         /// <summary>
@@ -163,9 +176,13 @@ namespace Quasardb.TimeSeries
         /// Gets the max point (ie the one with the highest value) of the timeseries
         /// </summary>
         /// <returns>The max point of the time series</returns>
+        /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
         public Point Max()
         {
-            return _aggregator.Aggregate(qdb_ts_aggregation_type.Max).ToDoublePoint();
+            var point = _aggregator.Aggregate(qdb_ts_aggregation_type.Max).ToDoublePoint();
+            if (point == null)
+                throw new QdbEmptyColumnException(Series.Alias, Name);
+            return point;
         }
 
         /// <summary>
@@ -175,7 +192,7 @@ namespace Quasardb.TimeSeries
         /// <returns>The max point of the interval or <c>null</c> if there is no point in the interval</returns>
         public Point Max(QdbTimeInterval interval)
         {
-            return _aggregator.Aggregate(qdb_ts_aggregation_type.Max, interval).ToDoublePointOrNull();
+            return _aggregator.Aggregate(qdb_ts_aggregation_type.Max, interval).ToDoublePoint();
         }
 
         /// <summary>
@@ -196,9 +213,13 @@ namespace Quasardb.TimeSeries
         /// Gets the min point (ie the one with the lowest value) of the timeseries
         /// </summary>
         /// <returns>The min point of the time series</returns>
+        /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
         public Point Min()
         {
-            return _aggregator.Aggregate(qdb_ts_aggregation_type.Min).ToDoublePoint();
+            var point = _aggregator.Aggregate(qdb_ts_aggregation_type.Min).ToDoublePoint();
+            if (point == null)
+                throw new QdbEmptyColumnException(Series.Alias, Name);
+            return point;
         }
 
         /// <summary>
@@ -208,7 +229,7 @@ namespace Quasardb.TimeSeries
         /// <returns>The min point in the interval or <c>null</c> if there is no point in the interval</returns>
         public Point Min(QdbTimeInterval interval)
         {
-            return _aggregator.Aggregate(qdb_ts_aggregation_type.Min, interval).ToDoublePointOrNull();
+            return _aggregator.Aggregate(qdb_ts_aggregation_type.Min, interval).ToDoublePoint();
         }
 
         /// <summary>
