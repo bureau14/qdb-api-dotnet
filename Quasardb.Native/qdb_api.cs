@@ -449,7 +449,7 @@ namespace Quasardb.Native
             [In] qdb_size_t aggregation_count);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_ts_double_get_range(
+        public static extern qdb_error qdb_ts_double_get_ranges(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] [MarshalAs(ALIAS_TYPE)] string column,
@@ -467,7 +467,7 @@ namespace Quasardb.Native
             [In] qdb_size_t count);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_ts_blob_get_range(
+        public static extern qdb_error qdb_ts_blob_get_ranges(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] [MarshalAs(ALIAS_TYPE)] string column,

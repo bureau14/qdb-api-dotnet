@@ -99,7 +99,7 @@ namespace Quasardb.TimeSeries
         #region First()
 
         /// <summary>
-        /// Gets the first point (ie the one with the oldest timestamp) of the timeseries 
+        /// Gets the first point (ie the one with the oldest timestamp) of the timeseries
         /// </summary>
         /// <returns>The first point of the time series</returns>
         /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
@@ -277,7 +277,7 @@ namespace Quasardb.TimeSeries
                 ranges.Add(interval.ToNative());
             using (var points = new qdb_buffer<qdb_ts_double_point>(Handle))
             {
-                var error = qdb_api.qdb_ts_double_get_range(Handle, Series.Alias, Name, ranges.Buffer, ranges.Count,
+                var error = qdb_api.qdb_ts_double_get_ranges(Handle, Series.Alias, Name, ranges.Buffer, ranges.Count,
                     out points.Pointer, out points.Size);
                 QdbExceptionThrower.ThrowIfNeeded(error, alias: Series.Alias, column: Name);
 

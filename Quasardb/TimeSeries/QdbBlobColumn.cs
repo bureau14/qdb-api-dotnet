@@ -94,7 +94,7 @@ namespace Quasardb.TimeSeries
                 ranges.Add(interval.ToNative());
             using (var points = new qdb_buffer<qdb_ts_blob_point>(Handle))
             {
-                var error = qdb_api.qdb_ts_blob_get_range(Handle, Series.Alias, Name, ranges.Buffer, ranges.Count, out points.Pointer, out points.Size);
+                var error = qdb_api.qdb_ts_blob_get_ranges(Handle, Series.Alias, Name, ranges.Buffer, ranges.Count, out points.Pointer, out points.Size);
                 QdbExceptionThrower.ThrowIfNeeded(error, alias: Series.Alias, column: Name);
                 foreach (var pt in points)
                     yield return pt.ToManaged();
