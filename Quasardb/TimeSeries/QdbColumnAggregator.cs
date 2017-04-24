@@ -34,7 +34,7 @@ namespace Quasardb.TimeSeries
         public struct MultipleResults
         {
             readonly IEnumerable<qdb_ts_aggregation> _aggregations;
-  
+
             public MultipleResults(IEnumerable<qdb_ts_aggregation> aggregations)
             {
                 _aggregations = aggregations;
@@ -74,8 +74,8 @@ namespace Quasardb.TimeSeries
         public SingleResult Aggregate(qdb_ts_aggregation_type mode, QdbTimeInterval interval)
         {
             var aggregations = new InteropableList<qdb_ts_aggregation>(1);
-            aggregations.Add(MakeAggregation(interval));
-            var error = qdb_api.qdb_ts_aggregate(_column.Handle, _column.Series.Alias, _column.Name, mode, aggregations.Buffer, aggregations.Count);
+            aggregations.Add(MakeAggregation(mode, interval));
+            var error = qdb_api.qdb_ts_aggregate(_column.Handle, _column.Series.Alias, _column.Name, aggregations.Buffer, aggregations.Count);
             QdbExceptionThrower.ThrowIfNeeded(error, alias: _column.Series.Alias, column: _column.Name);
             return new SingleResult(aggregations[0]);
         }
@@ -84,17 +84,18 @@ namespace Quasardb.TimeSeries
         {
             var aggregations = new InteropableList<qdb_ts_aggregation>(Helpers.GetCountOrDefault(intervals));
             foreach (var interval in intervals)
-                aggregations.Add(MakeAggregation(interval));
+                aggregations.Add(MakeAggregation(mode, interval));
 
-            var error = qdb_api.qdb_ts_aggregate(_column.Handle, _column.Series.Alias, _column.Name, mode, aggregations.Buffer, aggregations.Count);
+            var error = qdb_api.qdb_ts_aggregate(_column.Handle, _column.Series.Alias, _column.Name, aggregations.Buffer, aggregations.Count);
             QdbExceptionThrower.ThrowIfNeeded(error, alias: _column.Series.Alias);
 
             return new MultipleResults(aggregations);
         }
 
-        static qdb_ts_aggregation MakeAggregation(QdbTimeInterval interval)
+        static qdb_ts_aggregation MakeAggregation(qdb_ts_aggregation_type mode, QdbTimeInterval interval)
         {
-            return new qdb_ts_aggregation { range = interval.ToNative() };
+          return new qdb_ts_aggregation{type = mode,
+                                        range = interval.ToNative()};
         }
     }
 }

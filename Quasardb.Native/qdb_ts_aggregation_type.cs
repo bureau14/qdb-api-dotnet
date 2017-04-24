@@ -7,7 +7,8 @@
         Min = 2,
         Max = 3,
         Average = 4,
-        Count = 5,
-        Sum = 6
+        ArithmeticMean = 4,
+        Count = 8,
+        Sum = 9
     }
 }

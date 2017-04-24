@@ -444,7 +444,6 @@ namespace Quasardb.Native
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] [MarshalAs(ALIAS_TYPE)] string column,
-            [In] qdb_ts_aggregation_type type,
             [In,Out] qdb_ts_aggregation[] aggregations,
             [In] qdb_size_t aggregation_count);
 
