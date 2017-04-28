@@ -55,7 +55,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
 
             Assert.AreEqual(_points[1], result);
         }
-        
+
         [TestMethod]
         public void GivenOutOfRangeInterval_ReturnsNull()
         {
@@ -90,7 +90,6 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
         }
 
         [TestMethod]
-        [Ignore] // case 1588 - When column is empty qdb_ts_aggregate() returns qdb_e_internal_remote
         public void ThrowsEmptyColumn()
         {
             var col = QdbTestCluster.CreateEmptyDoubleColumn();

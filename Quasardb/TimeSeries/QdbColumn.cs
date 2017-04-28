@@ -29,39 +29,6 @@ namespace Quasardb.TimeSeries
         public string Name { get; }
 
         internal qdb_handle Handle => Series.Handle;
-
-        #region Count
-
-        /// <summary>
-        /// Gets the number of points in the time series
-        /// </summary>
-        /// <returns>The number of points in the time series</returns>
-        public long Count()
-        {
-            return Count(QdbTimeInterval.Everything);
-        }
-
-        /// <summary>
-        /// Gets the number of points in an interval
-        /// </summary>
-        /// <param name="interval">The time interval to scan</param>
-        /// <returns>The number of points in the interval</returns>
-        public long Count(QdbTimeInterval interval)
-        {
-            return _aggregator.Aggregate(qdb_ts_aggregation_type.Count, interval).ToLong();
-        }
-
-        /// <summary>
-        /// Gets the number of points in each interval
-        /// </summary>
-        /// <param name="intervals">The time intervals to scan</param>
-        /// <returns>The number of points in each interval</returns>
-        public IEnumerable<long> Count(IEnumerable<QdbTimeInterval> intervals)
-        {
-            return _aggregator.Aggregate(qdb_ts_aggregation_type.Count, intervals).ToLong();
-        }
-
-        #endregion
     }
 
     class QdbUnknownColumn : QdbColumn

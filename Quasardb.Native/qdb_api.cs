@@ -440,11 +440,19 @@ namespace Quasardb.Native
             [In] qdb_size_t count);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_ts_aggregate(
+        public static extern qdb_error qdb_ts_blob_aggregate(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] [MarshalAs(ALIAS_TYPE)] string column,
-            [In,Out] qdb_ts_aggregation[] aggregations,
+            [In,Out] qdb_ts_blob_aggregation[] aggregations,
+            [In] qdb_size_t aggregation_count);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_ts_double_aggregate(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In] [MarshalAs(ALIAS_TYPE)] string column,
+            [In,Out] qdb_ts_double_aggregation[] aggregations,
             [In] qdb_size_t aggregation_count);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]

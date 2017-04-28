@@ -97,6 +97,8 @@
     <Compile Include="DaemonRunner.cs" />
     <Compile Include="Entry\TimeSeries\Columns.cs" />
     <Compile Include="Entry\TimeSeries\Blob\Count.cs" />
+    <Compile Include="Entry\TimeSeries\Blob\First.cs" />
+    <Compile Include="Entry\TimeSeries\Blob\Last.cs" />
     <Compile Include="Entry\TimeSeries\Blob\Points.cs" />
     <Compile Include="Entry\TimeSeries\BlobColumns.cs" />
     <Compile Include="Entry\TimeSeries\DoubleColumns.cs" />

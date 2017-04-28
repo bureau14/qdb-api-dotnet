@@ -102,5 +102,112 @@ namespace Quasardb.TimeSeries
         }
 
         #endregion
+
+        #region Count
+
+        /// <summary>
+        /// Gets the number of points in the time series
+        /// </summary>
+        /// <returns>The number of points in the time series</returns>
+        public long Count()
+        {
+            return Count(QdbTimeInterval.Everything);
+        }
+
+        /// <summary>
+        /// Gets the number of points in an interval
+        /// </summary>
+        /// <param name="interval">The time interval to scan</param>
+        /// <returns>The number of points in the interval</returns>
+        public long Count(QdbTimeInterval interval)
+        {
+            return _aggregator.BlobAggregate(qdb_ts_aggregation_type.Count, interval).ToLong();
+        }
+
+        /// <summary>
+        /// Gets the number of points in each interval
+        /// </summary>
+        /// <param name="intervals">The time intervals to scan</param>
+        /// <returns>The number of points in each interval</returns>
+        public IEnumerable<long> Count(IEnumerable<QdbTimeInterval> intervals)
+        {
+            return _aggregator.BlobAggregate(qdb_ts_aggregation_type.Count, intervals).ToLong();
+        }
+
+        #endregion
+
+        #region First()
+
+        /// <summary>
+        /// Gets the first point (ie the one with the oldest timestamp) of the timeseries
+        /// </summary>
+        /// <returns>The first point of the time series</returns>
+        /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
+        public Point First()
+        {
+            var point = _aggregator.BlobAggregate(qdb_ts_aggregation_type.First).ToBlobPoint();
+            if (point == null)
+                throw new QdbEmptyColumnException(Series.Alias, Name);
+            return point;
+        }
+
+        /// <summary>
+        /// Gets the first point (ie the one with the oldest timestamp) in an interval
+        /// </summary>
+        /// <param name="interval">The time interval to scan</param>
+        /// <returns>The first point in the interval or <c>null</c> if there is no point in the interval</returns>
+        public Point First(QdbTimeInterval interval)
+        {
+            return _aggregator.BlobAggregate(qdb_ts_aggregation_type.First, interval).ToBlobPoint();
+        }
+
+        /// <summary>
+        /// Gets the first points (ie the one with the oldest timestamp) of each interval
+        /// </summary>
+        /// <param name="intervals">The time intervals to scan</param>
+        /// <returns>The first point in each interval (<c>null</c> when there is no point in an interval)</returns>
+        public IEnumerable<Point> First(IEnumerable<QdbTimeInterval> intervals)
+        {
+            return _aggregator.BlobAggregate(qdb_ts_aggregation_type.First, intervals).ToBlobPoint();
+        }
+
+        #endregion
+
+        #region Last()
+
+        /// <summary>
+        /// Gets the last point (ie the one with the newest timestamp) of the time series
+        /// </summary>
+        /// <returns>The last point of the time series</returns>
+        /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
+        public Point Last()
+        {
+            var point = _aggregator.BlobAggregate(qdb_ts_aggregation_type.Last).ToBlobPoint();
+            if (point == null)
+                throw new QdbEmptyColumnException(Series.Alias, Name);
+            return point;
+        }
+
+        /// <summary>
+        /// Gets the last point (ie the one with the newest timestamp) in an interval
+        /// </summary>
+        /// <param name="interval">The time interval to scan</param>
+        /// <returns>The last point in the interval or <c>null</c> if there is no point in the interval</returns>
+        public Point Last(QdbTimeInterval interval)
+        {
+            return _aggregator.BlobAggregate(qdb_ts_aggregation_type.Last, interval).ToBlobPoint();
+        }
+
+        /// <summary>
+        /// Gets the last points (ie the one with the newest timestamp) in each interval
+        /// </summary>
+        /// <param name="intervals">The time intervals to scan</param>
+        /// <returns>The last point in each interval (<c>null</c> when there is no point in an interval)</returns>
+        public IEnumerable<Point> Last(IEnumerable<QdbTimeInterval> intervals)
+        {
+            return _aggregator.BlobAggregate(qdb_ts_aggregation_type.Last, intervals).ToBlobPoint();
+        }
+
+        #endregion
     }
 }

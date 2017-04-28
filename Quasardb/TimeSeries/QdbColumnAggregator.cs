@@ -6,11 +6,33 @@ namespace Quasardb.TimeSeries
 {
     class QdbColumnAggregator
     {
-        public struct SingleResult
+        public struct SingleBlobResult
         {
-            readonly qdb_ts_aggregation _aggregation;
+            readonly qdb_ts_blob_aggregation _aggregation;
 
-            public SingleResult(qdb_ts_aggregation aggregation)
+            public SingleBlobResult(qdb_ts_blob_aggregation aggregation)
+            {
+                _aggregation = aggregation;
+            }
+
+            public long ToLong()
+            {
+                return (long) _aggregation.count;
+            }
+
+            public QdbBlobPoint ToBlobPoint()
+            {
+                return ((int)_aggregation.result.content_size == 0)
+                           ? null
+                           : _aggregation.result.ToManaged();
+            }
+        }
+
+        public struct SingleDoubleResult
+        {
+            readonly qdb_ts_double_aggregation _aggregation;
+
+            public SingleDoubleResult(qdb_ts_double_aggregation aggregation)
             {
                 _aggregation = aggregation;
             }
@@ -31,11 +53,35 @@ namespace Quasardb.TimeSeries
             }
         }
 
-        public struct MultipleResults
+        public struct MultipleBlobResults
         {
-            readonly IEnumerable<qdb_ts_aggregation> _aggregations;
+            readonly IEnumerable<qdb_ts_blob_aggregation> _aggregations;
 
-            public MultipleResults(IEnumerable<qdb_ts_aggregation> aggregations)
+            public MultipleBlobResults(IEnumerable<qdb_ts_blob_aggregation> aggregations)
+            {
+                _aggregations = aggregations;
+            }
+
+            public IEnumerable<long> ToLong()
+            {
+                foreach (var agg in _aggregations)
+                    yield return (long)agg.count;
+            }
+
+            public IEnumerable<QdbBlobPoint> ToBlobPoint()
+            {
+                foreach (var agg in _aggregations)
+                    yield return ((int)agg.result.content_size == 0)
+                        ? null
+                        : agg.result.ToManaged();
+            }
+        }
+
+        public struct MultipleDoubleResults
+        {
+            readonly IEnumerable<qdb_ts_double_aggregation> _aggregations;
+
+            public MultipleDoubleResults(IEnumerable<qdb_ts_double_aggregation> aggregations)
             {
                 _aggregations = aggregations;
             }
@@ -66,36 +112,68 @@ namespace Quasardb.TimeSeries
             _column = column;
         }
 
-        public SingleResult Aggregate(qdb_ts_aggregation_type mode)
+        public SingleBlobResult BlobAggregate(qdb_ts_aggregation_type mode)
         {
-            return Aggregate(mode, QdbTimeInterval.Everything);
+            return BlobAggregate(mode, QdbTimeInterval.Everything);
         }
 
-        public SingleResult Aggregate(qdb_ts_aggregation_type mode, QdbTimeInterval interval)
+        public SingleBlobResult BlobAggregate(qdb_ts_aggregation_type mode, QdbTimeInterval interval)
         {
-            var aggregations = new InteropableList<qdb_ts_aggregation>(1);
-            aggregations.Add(MakeAggregation(mode, interval));
-            var error = qdb_api.qdb_ts_aggregate(_column.Handle, _column.Series.Alias, _column.Name, aggregations.Buffer, aggregations.Count);
+            var aggregations = new InteropableList<qdb_ts_blob_aggregation>(1);
+            aggregations.Add(MakeBlobAggregation(mode, interval));
+            var error = qdb_api.qdb_ts_blob_aggregate(_column.Handle, _column.Series.Alias, _column.Name, aggregations.Buffer, aggregations.Count);
             QdbExceptionThrower.ThrowIfNeeded(error, alias: _column.Series.Alias, column: _column.Name);
-            return new SingleResult(aggregations[0]);
+            return new SingleBlobResult(aggregations[0]);
         }
 
-        public MultipleResults Aggregate(qdb_ts_aggregation_type mode, IEnumerable<QdbTimeInterval> intervals)
+        public MultipleBlobResults BlobAggregate(qdb_ts_aggregation_type mode, IEnumerable<QdbTimeInterval> intervals)
         {
-            var aggregations = new InteropableList<qdb_ts_aggregation>(Helpers.GetCountOrDefault(intervals));
+            var aggregations = new InteropableList<qdb_ts_blob_aggregation>(Helpers.GetCountOrDefault(intervals));
             foreach (var interval in intervals)
-                aggregations.Add(MakeAggregation(mode, interval));
+                aggregations.Add(MakeBlobAggregation(mode, interval));
 
-            var error = qdb_api.qdb_ts_aggregate(_column.Handle, _column.Series.Alias, _column.Name, aggregations.Buffer, aggregations.Count);
+            var error = qdb_api.qdb_ts_blob_aggregate(_column.Handle, _column.Series.Alias, _column.Name, aggregations.Buffer, aggregations.Count);
             QdbExceptionThrower.ThrowIfNeeded(error, alias: _column.Series.Alias);
 
-            return new MultipleResults(aggregations);
+            return new MultipleBlobResults(aggregations);
         }
 
-        static qdb_ts_aggregation MakeAggregation(qdb_ts_aggregation_type mode, QdbTimeInterval interval)
+        public SingleDoubleResult DoubleAggregate(qdb_ts_aggregation_type mode)
         {
-          return new qdb_ts_aggregation{type = mode,
-                                        range = interval.ToNative()};
+            return DoubleAggregate(mode, QdbTimeInterval.Everything);
+        }
+
+        public SingleDoubleResult DoubleAggregate(qdb_ts_aggregation_type mode, QdbTimeInterval interval)
+        {
+            var aggregations = new InteropableList<qdb_ts_double_aggregation>(1);
+            aggregations.Add(MakeDoubleAggregation(mode, interval));
+            var error = qdb_api.qdb_ts_double_aggregate(_column.Handle, _column.Series.Alias, _column.Name, aggregations.Buffer, aggregations.Count);
+            QdbExceptionThrower.ThrowIfNeeded(error, alias: _column.Series.Alias, column: _column.Name);
+            return new SingleDoubleResult(aggregations[0]);
+        }
+
+        public MultipleDoubleResults DoubleAggregate(qdb_ts_aggregation_type mode, IEnumerable<QdbTimeInterval> intervals)
+        {
+            var aggregations = new InteropableList<qdb_ts_double_aggregation>(Helpers.GetCountOrDefault(intervals));
+            foreach (var interval in intervals)
+                aggregations.Add(MakeDoubleAggregation(mode, interval));
+
+            var error = qdb_api.qdb_ts_double_aggregate(_column.Handle, _column.Series.Alias, _column.Name, aggregations.Buffer, aggregations.Count);
+            QdbExceptionThrower.ThrowIfNeeded(error, alias: _column.Series.Alias);
+
+            return new MultipleDoubleResults(aggregations);
+        }
+
+        static qdb_ts_blob_aggregation MakeBlobAggregation(qdb_ts_aggregation_type mode, QdbTimeInterval interval)
+        {
+          return new qdb_ts_blob_aggregation{type = mode,
+                                            range = interval.ToNative()};
+        }
+
+        static qdb_ts_double_aggregation MakeDoubleAggregation(qdb_ts_aggregation_type mode, QdbTimeInterval interval)
+        {
+          return new qdb_ts_double_aggregation{type = mode,
+                                               range = interval.ToNative()};
         }
     }
 }

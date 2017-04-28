@@ -27,7 +27,7 @@ namespace Quasardb.TimeSeries
             {
                 timestamp = TimeConverter.ToTimespec(pt.Time),
                 content = (void*) pin.AddrOfPinnedObject(),
-                content_size = (UIntPtr)pt.Value.Length  
+                content_size = (UIntPtr)pt.Value.Length
             };
         }
 

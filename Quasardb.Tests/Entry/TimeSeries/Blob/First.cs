@@ -4,26 +4,26 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb.Exceptions;
 using Quasardb.TimeSeries;
 
-namespace Quasardb.Tests.Entry.TimeSeries.Double
+namespace Quasardb.Tests.Entry.TimeSeries.Blob
 {
     [TestClass]
-    public class Min
+    public class First
     {
-        readonly QdbDoublePointCollection _points = new QdbDoublePointCollection
+        readonly QdbBlobPoint[] _points =
         {
-            {new DateTime(2012, 11, 02), 666},
-            {new DateTime(2014, 06, 30), 42 },
-            {new DateTime(2016, 02, 04), 0} // <- min is here
+            new QdbBlobPoint(new DateTime(2012, 11, 02), RandomGenerator.CreateRandomContent()),
+            new QdbBlobPoint(new DateTime(2014, 06, 30), RandomGenerator.CreateRandomContent()),
+            new QdbBlobPoint(new DateTime(2016, 02, 04), RandomGenerator.CreateRandomContent())
         };
 
         [TestMethod]
         public void ThrowsColumnNotFound()
         {
-            var col = QdbTestCluster.GetNonExistingDoubleColumn();
+            var col = QdbTestCluster.GetNonExistingBlobColumn();
 
             try
             {
-                col.Min();
+                col.First();
                 Assert.Fail("No exception thrown");
             }
             catch (QdbColumnNotFoundException e)
@@ -34,24 +34,24 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
         }
 
         [TestMethod]
-        public void GivenNoArgument_ReturnsMinPointOfTimeSeries()
+        public void GivenNoArgument_ReturnsFirstPointOfTimeSeries()
         {
-            var col = QdbTestCluster.CreateEmptyDoubleColumn();
+            var col = QdbTestCluster.CreateEmptyBlobColumn();
             col.Insert(_points);
 
-            var result = col.Min();
+            var result = col.First();
 
-            Assert.AreEqual(_points[2], result);
+            Assert.AreEqual(_points[0], result);
         }
 
         [TestMethod]
-        public void GivenInterval_ReturnsMinPointOfInterval()
+        public void GivenInRangeInterval_ReturnsFirstPointOfInterval()
         {
-            var col = QdbTestCluster.CreateEmptyDoubleColumn();
+            var col = QdbTestCluster.CreateEmptyBlobColumn();
             col.Insert(_points);
 
-            var interval = new QdbTimeInterval(_points[0].Time, _points[2].Time);
-            var result = col.Min(interval);
+            var interval = new QdbTimeInterval(_points[0].Time.AddHours(1), _points[2].Time);
+            var result = col.First(interval);
 
             Assert.AreEqual(_points[1], result);
         }
@@ -59,44 +59,44 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
         [TestMethod]
         public void GivenOutOfRangeInterval_ReturnsNull()
         {
-            var col = QdbTestCluster.CreateEmptyDoubleColumn();
+            var col = QdbTestCluster.CreateEmptyBlobColumn();
             col.Insert(_points);
 
             var interval = new QdbTimeInterval(new DateTime(3000, 1, 1), new DateTime(4000, 1, 1));
-            var result = col.Min(interval);
+            var result = col.First(interval);
 
             Assert.IsNull(result);
         }
 
         [TestMethod]
-        public void GivenSeveralIntervals_ReturnsMinOfEach()
+        public void GivenSeveralIntervals_ReturnsFirstOfEach()
         {
-            var col = QdbTestCluster.CreateEmptyDoubleColumn();
+            var col = QdbTestCluster.CreateEmptyBlobColumn();
             col.Insert(_points);
 
-            var intervals = new[]
+            var intervals = new []
             {
-                new QdbTimeInterval(new DateTime(2012, 1, 1), new DateTime(2015, 12, 31)),
+                new QdbTimeInterval(new DateTime(2012, 1, 1), new DateTime(2016, 12, 31)),
                 new QdbTimeInterval(new DateTime(2014, 1, 1), new DateTime(2017, 12, 31)),
                 new QdbTimeInterval(new DateTime(2016, 6, 1), new DateTime(2018, 12, 31))
             };
 
-            var results = col.Min(intervals).ToArray();
+            var results = col.First(intervals).ToArray();
 
             Assert.AreEqual(3, results.Length);
-            Assert.AreEqual(_points[1], results[0]);
-            Assert.AreEqual(_points[2], results[1]);
+            Assert.AreEqual(_points[0], results[0]);
+            Assert.AreEqual(_points[1], results[1]);
             Assert.IsNull(results[2]);
         }
 
         [TestMethod]
         public void ThrowsEmptyColumn()
         {
-            var col = QdbTestCluster.CreateEmptyDoubleColumn();
+            var col = QdbTestCluster.CreateEmptyBlobColumn();
 
             try
             {
-                col.Min();
+                col.First();
                 Assert.Fail("No exception thrown");
             }
             catch (QdbEmptyColumnException e)
