@@ -106,6 +106,20 @@ namespace Quasardb
         }
 
         /// <summary>
+        /// Returns a collection of <see cref="String" /> matching the given criteria.
+        /// </summary>
+        /// <param name="selector">The criteria to filter the entries</param>
+        /// <returns>A collection of entry.</returns>
+        public IEnumerable<String> Keys(IQdbEntrySelector selector)
+        {
+            using (var aliases = (qdb_buffer<qdb_string>)selector.Accept(_handle))
+            {
+                foreach (var alias in aliases)
+                    yield return alias;
+            }
+        }
+
+        /// <summary>
         /// Returns a <see cref="QdbHashSet" /> attached to the specified alias.
         /// </summary>
         /// <remarks>No operation is performed in the database.</remarks>
