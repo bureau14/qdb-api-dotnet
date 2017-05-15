@@ -104,7 +104,7 @@ namespace Quasardb
                     yield return _factory.Create(alias);
             }
         }
-        
+
         /// <summary>
         /// Returns a <see cref="QdbHashSet" /> attached to the specified alias.
         /// </summary>
