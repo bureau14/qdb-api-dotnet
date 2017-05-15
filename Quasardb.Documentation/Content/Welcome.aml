@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <topic id="51f62749-4536-456d-abf2-27998cae62bb" revisionNumber="1">
-	<developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
-		<introduction>
-			<para>Welcome the Quasardb API for .NET.</para>
-		</introduction>
+  <developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <introduction>
+      <para>Welcome the Quasardb API for .NET.</para>
+    </introduction>
 
     <section>
       <title>Connecting to the database</title>
@@ -162,7 +162,49 @@
       </content>
     </section>
 
-		<relatedTopics>
+    <section>
+      <title>Search by prefix or suffix</title>
+      <content>
+        <para>
+          And here, you can find your data searching by prefix or suffix:
+        </para>
+        <code language="c#">
+          cluster.Blob("Hey! Bob the blob. Bye.");
+          cluster.Integer("Hey! Roger the integer. Bye.");
+
+          IEnumerable&lt;QdbEntry&gt; heys = cluster.Entries(new QdbPrefixSelector("Hey!", 10));
+          IEnumerable&lt;QdbEntry&gt; byes = cluster.Entries(new QdbSuffixSelector("Bye.", 10));
+        </code>
+        <code language="vb">
+          cluster.Blob("Hey! Bob the blob");
+          cluster.Integer("Hey! Roger the integer");
+
+          Dim heys = cluster.Entries(New QdbPrefixSelector("Hey!", 10))
+          Dim byes = cluster.Entries(New QdbSuffixSelector("Bye.", 10))
+        </code>
+
+        <para>
+          Instead of getting the entries as the result, one can ask only for a collection of strings using
+          <codeInline>Keys()</codeInline> method instead of <codeInline>Entries()</codeInline>.
+        </para>
+        <code language="c#">
+          cluster.Blob("Hey! Bob the blob. Bye.");
+          cluster.Integer("Hey! Roger the integer. Bye.");
+
+          IEnumerable&lt;String&gt; heys = cluster.Keys(new QdbPrefixSelector("Hey!", 10));
+          IEnumerable&lt;String&gt; byes = cluster.Keys(new QdbSuffixSelector("Bye.", 10));
+        </code>
+        <code language="vb">
+          cluster.Blob("Hey! Bob the blob");
+          cluster.Integer("Hey! Roger the integer");
+
+          Dim heys = cluster.Keys(New QdbPrefixSelector("Hey!", 10))
+          Dim byes = cluster.Keys(New QdbSuffixSelector("Bye.", 10))
+        </code>
+      </content>
+    </section>
+
+    <relatedTopics>
       <codeEntityReference>T:Quasardb.QdbCluster</codeEntityReference>
       <codeEntityReference>T:Quasardb.QdbBlob</codeEntityReference>
       <codeEntityReference>T:Quasardb.QdbDeque</codeEntityReference>
@@ -170,6 +212,8 @@
       <codeEntityReference>T:Quasardb.QdbInteger</codeEntityReference>
       <codeEntityReference>T:Quasardb.QdbStream</codeEntityReference>
       <codeEntityReference>T:Quasardb.QdbTag</codeEntityReference>
-		</relatedTopics>
-	</developerConceptualDocument>
+      <codeEntityReference>T:Quasardb.QdbPrefixSelector</codeEntityReference>
+      <codeEntityReference>T:Quasardb.QdbSuffixSelector</codeEntityReference>
+    </relatedTopics>
+  </developerConceptualDocument>
 </topic>

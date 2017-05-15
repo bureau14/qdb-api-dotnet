@@ -1,3 +1,4 @@
+.vs/
 bin/
 obj/
 *.user
@@ -6,6 +7,7 @@ obj/
 /TestResults/
 /packages/
 
+/Quasardb/win*/*.dll
 /Quasardb.Tests/qdbd.exe
 /Quasardb.Tests/db/
 /UpgradeLog.htm
