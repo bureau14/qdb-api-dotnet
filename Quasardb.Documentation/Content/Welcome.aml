@@ -191,8 +191,8 @@
           cluster.Blob("Hey! Bob the blob. Bye.");
           cluster.Integer("Hey! Roger the integer. Bye.");
 
-          IEnumerable&lt;string&gt; heys = cluster.Keys(new QdbPrefixSelector("Hey!", 10));
-          IEnumerable&lt;string&gt; byes = cluster.Keys(new QdbSuffixSelector("Bye.", 10));
+          IEnumerable&lt;String&gt; heys = cluster.Keys(new QdbPrefixSelector("Hey!", 10));
+          IEnumerable&lt;String&gt; byes = cluster.Keys(new QdbSuffixSelector("Bye.", 10));
         </code>
         <code language="vb">
           cluster.Blob("Hey! Bob the blob");
