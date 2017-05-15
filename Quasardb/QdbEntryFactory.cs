@@ -20,7 +20,7 @@ namespace Quasardb
             QdbExceptionThrower.ThrowIfNeeded(error, alias: alias);
             return Create(type, alias);
         }
-        
+
         QdbEntry Create(qdb_entry_type type, string alias)
         {
             switch (type)
