@@ -182,6 +182,25 @@
           Dim heys = cluster.Entries(New QdbPrefixSelector("Hey!", 10))
           Dim byes = cluster.Entries(New QdbSuffixSelector("Bye.", 10))
         </code>
+
+        <para>
+          Instead of getting the entries as the result, one can ask only for a collection of strings using
+          <codeInline>Keys()</codeInline> method instead of <codeInline>Entries()</codeInline>.
+        </para>
+        <code language="c#">
+          cluster.Blob("Hey! Bob the blob. Bye.");
+          cluster.Integer("Hey! Roger the integer. Bye.");
+
+          IEnumerable&lt;string&gt; heys = cluster.Keys(new QdbPrefixSelector("Hey!", 10));
+          IEnumerable&lt;string&gt; byes = cluster.Keys(new QdbSuffixSelector("Bye.", 10));
+        </code>
+        <code language="vb">
+          cluster.Blob("Hey! Bob the blob");
+          cluster.Integer("Hey! Roger the integer");
+
+          Dim heys = cluster.Keys(New QdbPrefixSelector("Hey!", 10))
+          Dim byes = cluster.Keys(New QdbSuffixSelector("Bye.", 10))
+        </code>
       </content>
     </section>
 
