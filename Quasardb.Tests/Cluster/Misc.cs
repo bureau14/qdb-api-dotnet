@@ -71,12 +71,31 @@ namespace Quasardb.Tests.Cluster
         {
             QdbTestCluster.Instance.Tag(null);
         }
-        
+
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void TimeSeries_ThrowsArgumentNull()
         {
             QdbTestCluster.Instance.TimeSeries(null);
+        }
+
+        [TestMethod]
+        public void SetCompression_None_ThrowsNothing()
+        {
+            QdbTestCluster.Instance.SetCompression(Quasardb.QdbCompression.None);
+        }
+
+        [TestMethod]
+        public void SetCompression_Fast_ThrowsNothing()
+        {
+            QdbTestCluster.Instance.SetCompression(Quasardb.QdbCompression.Fast);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(QdbRemoteSystemException))]
+        public void SetCompression_Best_ThrowsRemoteSystemException_NotImplemented()
+        {
+            QdbTestCluster.Instance.SetCompression(Quasardb.QdbCompression.Best);
         }
     }
 }

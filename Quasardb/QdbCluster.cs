@@ -8,6 +8,27 @@ using Quasardb.TimeSeries;
 namespace Quasardb
 {
     /// <summary>
+    /// Specifies compression mode.
+    /// </summary>
+    public enum QdbCompression
+    {
+        /// <summary>
+        /// Disable compression.
+        /// </summary>
+        None,
+
+        /// <summary>
+        /// Maximum compression speed, potentially minimum compression ratio (default).
+        /// </summary>
+        Fast,
+
+        /// <summary>
+        /// Maximum compression ratio, potentially minimum compression speed.
+        /// </summary>
+        Best
+    }
+
+    /// <summary>
     /// A connection to a quasardb database.
     /// </summary>
     public sealed class QdbCluster : IDisposable
@@ -28,6 +49,15 @@ namespace Quasardb
             var error = qdb_api.qdb_connect(_handle, uri);
             QdbExceptionThrower.ThrowIfNeeded(error);
             _factory = new QdbEntryFactory(_handle);
+        }
+
+        /// <summary>
+        /// Set the compression level.
+        /// </summary>
+        public void SetCompression(QdbCompression level)
+        {
+            var error = qdb_api.qdb_option_set_compression(_handle, (qdb_compression) level);
+            QdbExceptionThrower.ThrowIfNeeded(error);
         }
 
         /// <summary>

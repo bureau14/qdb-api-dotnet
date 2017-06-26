@@ -80,6 +80,15 @@ namespace Quasardb.Native
             [Out] out pointer_t aliases,
             [Out] out size_t aliases_count);
 
+        #region Options
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_option_set_compression(
+            [In] qdb_handle handle,
+            [In] qdb_compression compression_level);
+
+        #endregion
+
         #region Functions common to all entries
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
