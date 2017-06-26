@@ -11,3 +11,4 @@ obj/
 /Quasardb.Tests/qdbd.exe
 /Quasardb.Tests/db/
 /UpgradeLog.htm
+/Quasardb/*.nupkg
