@@ -20,7 +20,7 @@ namespace Quasardb.Tests
             _daemon = Process.Start(new ProcessStartInfo
             {
                 FileName = "qdbd.exe",
-                Arguments = $"--transient -a {EndPoint}",
+                Arguments = $"--security=false --transient -a {EndPoint}",
                 WindowStyle = ProcessWindowStyle.Hidden,
                 UseShellExecute = false,
                 RedirectStandardOutput = true
