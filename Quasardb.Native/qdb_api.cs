@@ -83,6 +83,17 @@ namespace Quasardb.Native
         #region Options
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_option_set_cluster_public_key(
+            [In] qdb_handle handle,
+            [In] string public_key);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_option_set_user_credentials(
+            [In] qdb_handle handle,
+            [In] string user_name,
+            [In] string private_key);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error qdb_option_set_compression(
             [In] qdb_handle handle,
             [In] qdb_compression compression_level);

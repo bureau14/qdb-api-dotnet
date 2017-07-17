@@ -1,0 +1,4 @@
+{
+    "username": "qdb-api-dotnet",
+    "secret_key": "SpGwxA5Pjv904DLkxA5a0lmJ0UvIMq96/+QFoFKh82eo="
+}

@@ -52,6 +52,31 @@ namespace Quasardb
         }
 
         /// <summary>
+        /// Connects securely to a quasardb database.
+        /// </summary>
+        /// <param name="uri">The URI of the quasardb database.</param>
+        /// <param name="clusterPublicKey">Cluster public key used for database authentication.</param>
+        /// <param name="userName">User name used for connection.</param>
+        /// <param name="userPrivateKey">User private key used for connection.</param>
+        public QdbCluster(string uri, string clusterPublicKey, string userName, string userPrivateKey)
+        {
+            if (uri == null) throw new ArgumentNullException(nameof(uri));
+
+            _handle = qdb_api.qdb_open_tcp();
+
+            var error = qdb_api.qdb_option_set_cluster_public_key(_handle, clusterPublicKey);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+
+            error = qdb_api.qdb_option_set_user_credentials(_handle, userName, userPrivateKey);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+
+            error = qdb_api.qdb_connect(_handle, uri);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+
+            _factory = new QdbEntryFactory(_handle);
+        }
+
+        /// <summary>
         /// Set the compression level.
         /// </summary>
         public void SetCompression(QdbCompression level)

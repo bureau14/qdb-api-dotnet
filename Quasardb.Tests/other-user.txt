@@ -1,0 +1,4 @@
+{
+    "username": "other-user",
+    "secret_key": "SdHgldWuQzFxeopvgKWQh3FDk12RojwaSh8yEB5qyccs="
+}

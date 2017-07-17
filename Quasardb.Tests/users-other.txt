@@ -1,0 +1,8 @@
+{
+    "users": [
+        {
+            "username": "other-user",
+            "public_key": "PUGa31VghAiORN+2nSe8EeZqYRXqp5VvV6gLJoLWE8DY="
+        }
+    ]
+}

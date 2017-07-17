@@ -1,0 +1,8 @@
+{
+    "users": [
+        {
+            "username": "qdb-api-dotnet",
+            "public_key": "PJIqKayw81NuBouDzEvNX8kLyPjaKpi5eTksxDP8K/R8="
+        }
+    ]
+}

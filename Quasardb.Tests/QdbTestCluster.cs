@@ -8,7 +8,16 @@ namespace Quasardb.Tests
     {
         static QdbTestCluster()
         {
-            Instance = new QdbCluster(DaemonRunner.ClusterUrl);
+            if (DaemonRunner.UseSecurity)
+            {
+                Instance = new QdbCluster(
+                    DaemonRunner.ClusterUrl, DaemonRunner.ClusterPublicKey,
+                    DaemonRunner.UserName, DaemonRunner.UserPrivateKey);
+            }
+            else
+            {
+                Instance = new QdbCluster(DaemonRunner.ClusterUrl);
+            }
         }
 
         public static QdbCluster Instance { get; }
@@ -151,7 +160,7 @@ namespace Quasardb.Tests
         }
 
         #endregion
-        
+
         #region TimeSeries
 
         public static QdbDoubleColumn CreateEmptyDoubleColumn(string alias = null, string name = null)

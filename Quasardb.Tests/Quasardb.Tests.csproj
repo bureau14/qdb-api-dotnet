@@ -157,11 +157,20 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="insecure.runsettings" />
     <None Include="qdbd.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="secure.runsettings" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="cluster-secret-key.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="users.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

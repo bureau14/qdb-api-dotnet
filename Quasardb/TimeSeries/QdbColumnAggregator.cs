@@ -119,8 +119,7 @@ namespace Quasardb.TimeSeries
 
         public SingleBlobResult BlobAggregate(qdb_ts_aggregation_type mode, QdbTimeInterval interval)
         {
-            var aggregations = new InteropableList<qdb_ts_blob_aggregation>(1);
-            aggregations.Add(MakeBlobAggregation(mode, interval));
+            var aggregations = new InteropableList<qdb_ts_blob_aggregation>(1) { MakeBlobAggregation(mode, interval) };
             var error = qdb_api.qdb_ts_blob_aggregate(_column.Handle, _column.Series.Alias, _column.Name, aggregations.Buffer, aggregations.Count);
             QdbExceptionThrower.ThrowIfNeeded(error, alias: _column.Series.Alias, column: _column.Name);
             return new SingleBlobResult(aggregations[0]);
@@ -145,8 +144,7 @@ namespace Quasardb.TimeSeries
 
         public SingleDoubleResult DoubleAggregate(qdb_ts_aggregation_type mode, QdbTimeInterval interval)
         {
-            var aggregations = new InteropableList<qdb_ts_double_aggregation>(1);
-            aggregations.Add(MakeDoubleAggregation(mode, interval));
+            var aggregations = new InteropableList<qdb_ts_double_aggregation>(1) { MakeDoubleAggregation(mode, interval) };
             var error = qdb_api.qdb_ts_double_aggregate(_column.Handle, _column.Series.Alias, _column.Name, aggregations.Buffer, aggregations.Count);
             QdbExceptionThrower.ThrowIfNeeded(error, alias: _column.Series.Alias, column: _column.Name);
             return new SingleDoubleResult(aggregations[0]);

@@ -7,11 +7,59 @@ namespace Quasardb.Tests.Cluster
     [TestClass]
     public class Misc
     {
-        [TestMethod]
-        public void CreateAndDispose()
+        [TestMethod, TestCategory("Insecure")]
+        public void CreateAndDispose_Insecure()
         {
-            var cluster = new QdbCluster(DaemonRunner.ClusterUrl);
-            cluster.Dispose();
+            if (DaemonRunner.UseSecurity) Assert.Inconclusive();
+
+            new QdbCluster(DaemonRunner.ClusterUrl).Dispose();
+        }
+
+        [TestMethod, TestCategory("Secure")]
+        public void CreateAndDispose_Secure()
+        {
+            if (!DaemonRunner.UseSecurity) Assert.Inconclusive();
+
+            new QdbCluster(DaemonRunner.ClusterUrl,
+                           DaemonRunner.ClusterPublicKey, DaemonRunner.UserName,
+                           DaemonRunner.UserPrivateKey)
+                .Dispose();
+        }
+
+        [TestMethod, TestCategory("Secure")]
+        [ExpectedException(typeof(QdbRemoteSystemException))]
+        public void WrongPublicKey()
+        {
+            if (!DaemonRunner.UseSecurity) Assert.Inconclusive();
+
+            new QdbCluster(DaemonRunner.ClusterUrl,
+                           "PK1VnpzfwPCfB4pYqqUiRD5TP7gHOOUHdKTJGAKRStGc=",
+                           DaemonRunner.UserName, DaemonRunner.UserPrivateKey)
+                .Dispose();
+        }
+
+        [TestMethod, TestCategory("Secure")]
+        [ExpectedException(typeof(QdbRemoteSystemException))]
+        public void WrongUserName()
+        {
+            if (!DaemonRunner.UseSecurity) Assert.Inconclusive();
+
+            new QdbCluster(DaemonRunner.ClusterUrl,
+                           DaemonRunner.ClusterPublicKey, "unexisting-user",
+                           DaemonRunner.UserPrivateKey)
+                .Dispose();
+        }
+
+        [TestMethod, TestCategory("Secure")]
+        [ExpectedException(typeof(QdbRemoteSystemException))]
+        public void WrongUserPrivateKey()
+        {
+            if (!DaemonRunner.UseSecurity) Assert.Inconclusive();
+
+            new QdbCluster(DaemonRunner.ClusterUrl,
+                           DaemonRunner.ClusterPublicKey, DaemonRunner.UserName,
+                           "SCTTE1TmTm8nz98ELpV/CSfqoaunupg5D0aQ20YIWAaE=")
+                .Dispose();
         }
 
         [TestMethod]
