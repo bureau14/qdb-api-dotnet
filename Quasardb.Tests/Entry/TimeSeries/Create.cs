@@ -10,15 +10,21 @@ namespace Quasardb.Tests.Entry.TimeSeries
     public class Create
     {
         [TestMethod]
-        [ExpectedException(typeof(QdbInvalidArgumentException))]
-        public void ThrowsInvalidArgument_GivenNoColumns()
+        public void OK_GivenNoColumns()
         {
             var alias = RandomGenerator.CreateUniqueAlias();
             var ts = QdbTestCluster.Instance.TimeSeries(alias);
 
-            ts.Create();
+            try
+            {
+                ts.Create();
+            }
+            catch (QdbException)
+            {
+                Assert.Fail("Creating a timeseries without columns should not throw");
+            }
         }
-    
+
         [TestMethod]
         public void ThrowsIncompatibleType_GivenExistingBlob()
         {

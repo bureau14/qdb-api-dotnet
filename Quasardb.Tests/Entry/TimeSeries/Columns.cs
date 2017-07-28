@@ -14,7 +14,7 @@ namespace Quasardb.Tests.Entry.TimeSeries
         {
             var alias = RandomGenerator.CreateUniqueAlias();
             var ts = QdbTestCluster.Instance.TimeSeries(alias);
-        
+
             try
             {
                 // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
@@ -60,9 +60,9 @@ namespace Quasardb.Tests.Entry.TimeSeries
 
             var result = ts.Columns.ToArray();
             Assert.AreEqual(4, result.Length);
-            Assert.AreEqual("John", result[0].Name);
-            Assert.AreEqual("Paul", result[1].Name);
-            Assert.AreEqual("Georges", result[2].Name);
+            Assert.AreEqual("Georges", result[0].Name);
+            Assert.AreEqual("John", result[1].Name);
+            Assert.AreEqual("Paul", result[2].Name);
             Assert.AreEqual("Ringo", result[3].Name);
         }
     }
