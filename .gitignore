@@ -10,5 +10,6 @@ obj/
 /Quasardb/win*/*.dll
 /Quasardb.Tests/qdbd.exe
 /Quasardb.Tests/db/
+/QuasardbTests/db/
 /UpgradeLog.htm
 /Quasardb/*.nupkg

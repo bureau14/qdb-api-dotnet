@@ -73,6 +73,9 @@
     <Compile Include="qdb_string.cs" />
     <Compile Include="qdb_ts_blob_point.cs" />
     <Compile Include="qdb_ts_column_info.cs" />
+    <Compile Include="qdb_ts_filter.cs" />
+    <Compile Include="qdb_ts_filtered_range.cs" />
+    <Compile Include="qdb_ts_filter_type.cs" />
     <Compile Include="qdb_ts_range.cs" />
     <Compile Include="qdb_ts_aggregation_type.cs" />
     <Compile Include="ConstCharPtrMarshaler.cs" />

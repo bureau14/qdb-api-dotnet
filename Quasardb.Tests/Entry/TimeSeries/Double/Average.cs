@@ -67,7 +67,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
             var col = QdbTestCluster.CreateEmptyDoubleColumn();
             col.Insert(_points);
 
-            var interval = new QdbTimeInterval(_points[0].Time, _points[2].Time);
+            var interval = new QdbFilteredTimeInterval(_points[0].Time, _points[2].Time);
             var result = col.Average(interval);
 
             Assert.AreEqual(42 / 2.0, result);
@@ -79,7 +79,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
             var col = QdbTestCluster.CreateEmptyDoubleColumn();
             col.Insert(_points);
 
-            var interval = new QdbTimeInterval(new DateTime(3000, 1, 1), new DateTime(4000, 1, 1));
+            var interval = new QdbFilteredTimeInterval(new DateTime(3000, 1, 1), new DateTime(4000, 1, 1));
             var result = col.Average(interval);
 
             Assert.IsTrue(double.IsNaN(result));
@@ -93,9 +93,9 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
 
             var intervals = new[]
             {
-                new QdbTimeInterval(new DateTime(2012, 1, 1), new DateTime(2015, 12, 31)),
-                new QdbTimeInterval(new DateTime(2014, 1, 1), new DateTime(2017, 12, 31)),
-                new QdbTimeInterval(new DateTime(2016, 6, 1), new DateTime(2018, 12, 31))
+                new QdbFilteredTimeInterval(new DateTime(2012, 1, 1), new DateTime(2015, 12, 31)),
+                new QdbFilteredTimeInterval(new DateTime(2014, 1, 1), new DateTime(2017, 12, 31)),
+                new QdbFilteredTimeInterval(new DateTime(2016, 6, 1), new DateTime(2018, 12, 31))
             };
 
             var results = col.Average(intervals).ToArray();

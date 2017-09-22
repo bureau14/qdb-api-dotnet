@@ -112,6 +112,8 @@
     <Compile Include="TimeSeries\Helpers.cs" />
     <Compile Include="TimeSeries\QdbColumn.cs" />
     <Compile Include="TimeSeries\QdbColumnAggregator.cs" />
+    <Compile Include="TimeSeries\QdbFilter.cs" />
+    <Compile Include="TimeSeries\QdbFilteredTimeInterval.cs" />
     <Compile Include="TimeSeries\QdbTimeInterval.cs" />
     <Compile Include="TimeSeries\QdbDoublePointCollection.cs" />
     <Compile Include="TimeSeries\QdbPoint.cs" />

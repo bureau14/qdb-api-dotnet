@@ -114,10 +114,10 @@ namespace Quasardb.TimeSeries
 
         public SingleBlobResult BlobAggregate(qdb_ts_aggregation_type mode)
         {
-            return BlobAggregate(mode, QdbTimeInterval.Everything);
+            return BlobAggregate(mode, QdbFilteredTimeInterval.Everything);
         }
 
-        public SingleBlobResult BlobAggregate(qdb_ts_aggregation_type mode, QdbTimeInterval interval)
+        public SingleBlobResult BlobAggregate(qdb_ts_aggregation_type mode, QdbFilteredTimeInterval interval)
         {
             var aggregations = new InteropableList<qdb_ts_blob_aggregation>(1) { MakeBlobAggregation(mode, interval) };
             var error = qdb_api.qdb_ts_blob_aggregate(_column.Handle, _column.Series.Alias, _column.Name, aggregations.Buffer, aggregations.Count);
@@ -125,7 +125,7 @@ namespace Quasardb.TimeSeries
             return new SingleBlobResult(aggregations[0]);
         }
 
-        public MultipleBlobResults BlobAggregate(qdb_ts_aggregation_type mode, IEnumerable<QdbTimeInterval> intervals)
+        public MultipleBlobResults BlobAggregate(qdb_ts_aggregation_type mode, IEnumerable<QdbFilteredTimeInterval> intervals)
         {
             var aggregations = new InteropableList<qdb_ts_blob_aggregation>(Helpers.GetCountOrDefault(intervals));
             foreach (var interval in intervals)
@@ -139,10 +139,10 @@ namespace Quasardb.TimeSeries
 
         public SingleDoubleResult DoubleAggregate(qdb_ts_aggregation_type mode)
         {
-            return DoubleAggregate(mode, QdbTimeInterval.Everything);
+            return DoubleAggregate(mode, QdbFilteredTimeInterval.Everything);
         }
 
-        public SingleDoubleResult DoubleAggregate(qdb_ts_aggregation_type mode, QdbTimeInterval interval)
+        public SingleDoubleResult DoubleAggregate(qdb_ts_aggregation_type mode, QdbFilteredTimeInterval interval)
         {
             var aggregations = new InteropableList<qdb_ts_double_aggregation>(1) { MakeDoubleAggregation(mode, interval) };
             var error = qdb_api.qdb_ts_double_aggregate(_column.Handle, _column.Series.Alias, _column.Name, aggregations.Buffer, aggregations.Count);
@@ -150,7 +150,7 @@ namespace Quasardb.TimeSeries
             return new SingleDoubleResult(aggregations[0]);
         }
 
-        public MultipleDoubleResults DoubleAggregate(qdb_ts_aggregation_type mode, IEnumerable<QdbTimeInterval> intervals)
+        public MultipleDoubleResults DoubleAggregate(qdb_ts_aggregation_type mode, IEnumerable<QdbFilteredTimeInterval> intervals)
         {
             var aggregations = new InteropableList<qdb_ts_double_aggregation>(Helpers.GetCountOrDefault(intervals));
             foreach (var interval in intervals)
@@ -162,13 +162,13 @@ namespace Quasardb.TimeSeries
             return new MultipleDoubleResults(aggregations);
         }
 
-        static qdb_ts_blob_aggregation MakeBlobAggregation(qdb_ts_aggregation_type mode, QdbTimeInterval interval)
+        static qdb_ts_blob_aggregation MakeBlobAggregation(qdb_ts_aggregation_type mode, QdbFilteredTimeInterval interval)
         {
           return new qdb_ts_blob_aggregation{type = mode,
                                             range = interval.ToNative()};
         }
 
-        static qdb_ts_double_aggregation MakeDoubleAggregation(qdb_ts_aggregation_type mode, QdbTimeInterval interval)
+        static qdb_ts_double_aggregation MakeDoubleAggregation(qdb_ts_aggregation_type mode, QdbFilteredTimeInterval interval)
         {
           return new qdb_ts_double_aggregation{type = mode,
                                                range = interval.ToNative()};

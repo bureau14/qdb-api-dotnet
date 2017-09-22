@@ -480,7 +480,7 @@ namespace Quasardb.Native
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] [MarshalAs(ALIAS_TYPE)] string column,
-            [In, Out] qdb_ts_range[] ranges,
+            [In, Out] qdb_ts_filtered_range[] ranges,
             [In] qdb_size_t ranges_count,
             [Out] out pointer_t points,
             [Out] out size_t points_count);
@@ -498,7 +498,7 @@ namespace Quasardb.Native
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] [MarshalAs(ALIAS_TYPE)] string column,
-            [In, Out] qdb_ts_range[] ranges,
+            [In, Out] qdb_ts_filtered_range[] ranges,
             [In] qdb_size_t ranges_count,
             [Out] out pointer_t points,
             [Out] out size_t points_count);
