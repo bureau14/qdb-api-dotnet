@@ -1,6 +1,6 @@
 ﻿using System;
 using Quasardb.Exceptions;
-using Quasardb.ManagedApi;
+using Quasardb.Native;
 
 namespace Quasardb
 {
@@ -27,7 +27,7 @@ namespace Quasardb
     /// </example>
     public sealed class QdbBlob : QdbExpirableEntry
     {
-        internal QdbBlob(QdbApi api, string alias) : base(api, alias)
+        internal QdbBlob(qdb_handle handle, string alias) : base(handle, alias)
         {
         }
 
@@ -45,7 +45,26 @@ namespace Quasardb
             if (content == null) throw new ArgumentNullException(nameof(content));
             if (comparand == null) throw new ArgumentNullException(nameof(comparand));
 
-            return Api.BlobCompareAndSwap(Alias, content, comparand, expiryTime);
+            using (var oldContent = new QdbBlobBuffer(Handle))
+            {
+                var error = qdb_api.qdb_blob_compare_and_swap(Handle, Alias,
+                    content, (UIntPtr)content.LongLength,
+                    comparand, (UIntPtr)comparand.LongLength,
+                    qdb_time.FromOptionalDateTime(expiryTime),
+                    out oldContent.Pointer, out oldContent.Size);
+
+                switch (error)
+                {
+                    case qdb_error_t.qdb_e_ok:
+                        return null;
+
+                    case qdb_error_t.qdb_e_unmatched_content:
+                        return oldContent.GetBytes();
+
+                    default:
+                        throw QdbExceptionFactory.Create(error, alias: Alias);
+                }
+            }
         }
 
         /// <summary>
@@ -56,7 +75,12 @@ namespace Quasardb
         /// <exception cref="QdbIncompatibleTypeException">The database entry is not a blob.</exception>
         public byte[] Get()
         {
-            return Api.BlobGet(Alias);
+            using (var content = new QdbBlobBuffer(Handle))
+            {
+                var error = qdb_api.qdb_blob_get(Handle, Alias, out content.Pointer, out content.Size);
+                QdbExceptionThrower.ThrowIfNeeded(error, alias: Alias);
+                return content.GetBytes();
+            }
         }
 
         /// <summary>
@@ -67,7 +91,12 @@ namespace Quasardb
         /// <exception cref="QdbIncompatibleTypeException">The database entry is not a blob.</exception>
         public byte[] GetAndRemove()
         {
-            return Api.BlobGetAndRemove(Alias);
+            using (var content = new QdbBlobBuffer(Handle))
+            {
+                var error = qdb_api.qdb_blob_get_and_remove(Handle, Alias, out content.Pointer, out content.Size);
+                QdbExceptionThrower.ThrowIfNeeded(error, alias: Alias);
+                return content.GetBytes();
+            }
         }
 
         /// <summary>
@@ -82,7 +111,16 @@ namespace Quasardb
         {
             if (content == null) throw new ArgumentNullException(nameof(content));
 
-            return Api.BlobGetAndUpdate(Alias, content, expiryTime);
+            using (var oldContent = new QdbBlobBuffer(Handle))
+            {
+                var error = qdb_api.qdb_blob_get_and_update(Handle, Alias,
+                    content, (UIntPtr)content.LongLength,
+                    qdb_time.FromOptionalDateTime(expiryTime),
+                    out oldContent.Pointer, out oldContent.Size);
+
+                QdbExceptionThrower.ThrowIfNeeded(error, alias: Alias);
+                return oldContent.GetBytes();
+            }
         }
 
         /// <summary>
@@ -95,7 +133,11 @@ namespace Quasardb
         {
             if (content == null) throw new ArgumentNullException(nameof(content));
 
-            Api.BlobPut(Alias, content, expiryTime);
+            var error = qdb_api.qdb_blob_put(Handle, Alias,
+                content, (UIntPtr)content.LongLength,
+                qdb_time.FromOptionalDateTime(expiryTime));
+
+            QdbExceptionThrower.ThrowIfNeeded(error, alias: Alias);
         }
 
         /// <summary>
@@ -109,7 +151,19 @@ namespace Quasardb
         {
             if (comparand == null) throw new ArgumentNullException(nameof(comparand));
 
-            return Api.BlobRemoveIf(Alias, comparand);
+            var error = qdb_api.qdb_blob_remove_if(Handle, Alias, comparand, (UIntPtr)comparand.Length);
+
+            switch (error)
+            {
+                case qdb_error_t.qdb_e_unmatched_content:
+                    return false;
+
+                case qdb_error_t.qdb_e_ok:
+                    return true;
+
+                default:
+                    throw QdbExceptionFactory.Create(error, alias: Alias);
+            }
         }
 
         /// <summary>
@@ -124,7 +178,21 @@ namespace Quasardb
         {
             if (content == null) throw new ArgumentNullException(nameof(content));
 
-            return Api.BlobUpdate(Alias, content, expiryTime);
+            var error = qdb_api.qdb_blob_update(Handle, Alias,
+                content, (UIntPtr)content.Length,
+                qdb_time.FromOptionalDateTime(expiryTime));
+            
+            switch (error)
+            {
+                case qdb_error_t.qdb_e_ok:
+                    return false;
+
+                case qdb_error_t.qdb_e_ok_created:
+                    return true;
+
+                default:
+                    throw QdbExceptionFactory.Create(error, alias: Alias);
+            }
         }
     }
 }

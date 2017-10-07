@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Quasardb.Exceptions;
-using Quasardb.ManagedApi;
+using Quasardb.Native;
 
 namespace Quasardb
 {
@@ -35,7 +35,7 @@ namespace Quasardb
     /// <seealso cref="QdbEntry"/>
     public sealed class QdbTag : QdbEntry
     {
-        internal QdbTag(QdbApi api, string alias) : base(api, alias)
+        internal QdbTag(qdb_handle handle, string alias) : base(handle, alias)
         {
         }
 
@@ -46,14 +46,17 @@ namespace Quasardb
         /// <seealso cref="QdbEntry"/>
         public IEnumerable<QdbEntry> GetEntries()
         {
-            var factory = new QdbEntryFactory(Api);
+            var factory = new QdbEntryFactory(Handle);
             
-            using (var aliases = Api.GetTagged(Alias))
-            {            
+            using (var result = new QdbStringCollection(Handle))
+            { 
+                var error = qdb_api.qdb_get_tagged(Handle, Alias, out result.Pointer, out result.Size);
+                QdbExceptionThrower.ThrowIfNeeded(error, alias: Alias);
+
                 // ReSharper disable once LoopCanBeConvertedToQuery
                 // To stay compatible with .NET Framework 2.0
-                foreach (var alias in aliases)
-                    yield return factory.Create(alias);
+                foreach (var alias in result)
+                    yield return factory.Create(alias.ToString());
             }
         }
 
@@ -68,7 +71,7 @@ namespace Quasardb
         {
             if (entry == null) throw new ArgumentNullException(nameof(entry));
 
-            return Api.AttachTag(entry.Alias, Alias);
+            return AttachTag(entry.Alias, Alias);
         }
 
         /// <summary>
@@ -82,7 +85,7 @@ namespace Quasardb
         {
             if (entry == null) throw new ArgumentNullException(nameof(entry));
 
-            return Api.AttachTag(entry, Alias);
+            return AttachTag(entry, Alias);
         }
 
         /// <summary>
@@ -94,7 +97,7 @@ namespace Quasardb
         {
             if (entry == null) throw new ArgumentNullException(nameof(entry));
 
-            return Api.HasTag(entry.Alias, Alias);
+            return HasTag(entry.Alias, Alias);
         }
 
         /// <summary>
@@ -106,7 +109,7 @@ namespace Quasardb
         {
             if (entry == null) throw new ArgumentNullException(nameof(entry));
 
-            return Api.HasTag(entry, Alias);
+            return HasTag(entry, Alias);
         }
 
         /// <summary>
@@ -119,7 +122,7 @@ namespace Quasardb
         {
             if (entry == null) throw new ArgumentNullException(nameof(entry));
 
-            return Api.DetachTag(entry.Alias, Alias);
+            return DetachTag(entry.Alias, Alias);
         }
 
         /// <summary>
@@ -132,7 +135,7 @@ namespace Quasardb
         {
             if (entry == null) throw new ArgumentNullException(nameof(entry));
 
-            return Api.DetachTag(entry, Alias);
+            return DetachTag(entry, Alias);
         }
     }
 }

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Quasardb.Exceptions;
-using Quasardb.ManagedApi;
+using Quasardb.Native;
+using Quasardb.TimeSeries;
 
 namespace Quasardb
 {
@@ -10,8 +11,8 @@ namespace Quasardb
     /// </summary>
     public sealed class QdbCluster : IDisposable
     {
-        private readonly QdbApi _api;
-        private readonly QdbEntryFactory _factory;
+        readonly qdb_handle _api;
+        readonly QdbEntryFactory _factory;
 
         /// <summary>
         /// Connects to a quasardb database.
@@ -19,8 +20,12 @@ namespace Quasardb
         /// <param name="uri">The URI of the quasardb database.</param>
         public QdbCluster(string uri)
         {
-            _api = new QdbApi();
-            _api.Connect(uri);
+            if (uri == null) throw new ArgumentNullException(nameof(uri));
+
+            _api = qdb_api.qdb_open_tcp();
+
+            var error = qdb_api.qdb_connect(_api, uri);
+            QdbExceptionThrower.ThrowIfNeeded(error);
             _factory = new QdbEntryFactory(_api);
         }
 
@@ -37,7 +42,7 @@ namespace Quasardb
         /// </summary>
         /// <remarks>No operation is performed in the database.</remarks>
         /// <param name="alias">The alias (i.e. key) of the blob in the database.</param>
-        /// <returns>A blob associated attached to the specified alias.</returns>
+        /// <returns>A blob associated to the specified alias.</returns>
         /// <seealso cref="QdbBlob"/>
         public QdbBlob Blob(string alias)
         {
@@ -64,7 +69,7 @@ namespace Quasardb
         /// </summary>
         /// <remarks>No operation is performed in the database.</remarks>
         /// <param name="alias">The alias (i.e. key) of the queue in the database.</param>
-        /// <returns>A queue associated attached to the specified alias.</returns>
+        /// <returns>A queue associated to the specified alias.</returns>
         /// <seealso cref="QdbDeque"/>
         public QdbDeque Deque(string alias)
         {
@@ -77,7 +82,7 @@ namespace Quasardb
         /// The actual type of the return value depends on the type of the entry in the database.
         /// </summary>
         /// <param name="alias"></param>
-        /// <returns></returns>
+        /// <returns>An entry associated to the specified alias.</returns>
         /// <exception cref="QdbAliasNotFoundException">If the entry doesn't exists.</exception>
         public QdbEntry Entry(string alias)
         {
@@ -88,6 +93,7 @@ namespace Quasardb
         /// <summary>
         /// Returns a collection of <see cref="QdbEntry" /> matching the given criteria.
         /// </summary>
+        /// <param name="selector">The criteria to filter the entries</param>
         /// <returns>A collection of entry.</returns>
         public IEnumerable<QdbEntry> Entries(IQdbEntrySelector selector)
         {
@@ -155,7 +161,27 @@ namespace Quasardb
         /// <param name="batch">The collection of operation to execute.</param>
         public void RunBatch(QdbBatch batch)
         {
-            _api.RunBatch(batch.Operations);
+            var managedOps = batch.Operations;
+            if (managedOps.Count == 0) return;
+
+            var nativeOps = new qdb_operation[managedOps.Count];
+
+            var err = qdb_api.qdb_init_operations(nativeOps, (UIntPtr) nativeOps.Length);
+            QdbExceptionThrower.ThrowIfNeeded(err);
+            
+            for (var i = 0; i < managedOps.Count; i++)
+            {
+                managedOps[i].MarshalTo(ref nativeOps[i]);
+            }
+            qdb_api.qdb_run_batch(_api, nativeOps,  (UIntPtr) nativeOps.Length);
+            for (var i = 0; i < managedOps.Count; i++)
+            {
+                managedOps[i].UnmarshalFrom(ref nativeOps[i]);
+            }
+
+            err = qdb_api.qdb_free_operations(_api, nativeOps, (UIntPtr) nativeOps.Length);
+            QdbExceptionThrower.ThrowIfNeeded(err);
         }
+
     }
 }

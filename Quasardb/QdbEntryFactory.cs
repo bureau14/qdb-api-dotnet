@@ -1,21 +1,23 @@
-﻿using System;
-using Quasardb.ManagedApi;
+﻿using Quasardb.Exceptions;
 using Quasardb.Native;
 
 namespace Quasardb
 {
     class QdbEntryFactory
     {
-        readonly QdbApi _handle;
+        readonly qdb_handle _handle;
 
-        public QdbEntryFactory(QdbApi handle)
+        public QdbEntryFactory(qdb_handle handle)
         {
             _handle = handle;
         }
 
         public QdbEntry Create(string alias)
         {
-            return Create(_handle.GetEntryType(alias), alias);
+            qdb_entry_type type;
+            var error = qdb_api.qdb_get_type(_handle, alias, out type);
+            QdbExceptionThrower.ThrowIfNeeded(error, alias: alias);
+            return Create(type, alias);
         }
         
         QdbEntry Create(qdb_entry_type type, string alias)
@@ -49,7 +51,7 @@ namespace Quasardb
 
     class QdbUnknownEntry : QdbEntry
     {
-        public QdbUnknownEntry(QdbApi api, string alias) : base(api, alias)
+        public QdbUnknownEntry(qdb_handle handle, string alias) : base(handle, alias)
         {
         }
     }

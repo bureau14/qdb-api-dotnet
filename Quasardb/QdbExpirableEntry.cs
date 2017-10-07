@@ -1,6 +1,6 @@
 ﻿using System;
 using Quasardb.Exceptions;
-using Quasardb.ManagedApi;
+using Quasardb.Native;
 
 namespace Quasardb
 {
@@ -9,7 +9,7 @@ namespace Quasardb
     /// </summary>
     public class QdbExpirableEntry : QdbEntry
     {
-        internal QdbExpirableEntry(QdbApi api, string alias) : base(api, alias)
+        internal QdbExpirableEntry(qdb_handle handle, string alias) : base(handle, alias)
         {
         }
 
@@ -20,7 +20,8 @@ namespace Quasardb
         /// <exception cref="QdbAliasNotFoundException">The entry doesn't exists in the database.</exception>
         public void ExpiresAt(DateTime expiryTime)
         {
-            Api.ExpiresAt(Alias, expiryTime);
+            var error = qdb_api.qdb_expires_at(Handle, Alias, qdb_time.FromDateTime(expiryTime));
+            QdbExceptionThrower.ThrowIfNeeded(error, alias: Alias);
         }
 
         /// <summary>
@@ -30,7 +31,8 @@ namespace Quasardb
         /// <exception cref="QdbAliasNotFoundException">The entry doesn't exists in the database.</exception>
         public void ExpiresFromNow(TimeSpan ttl)
         {
-            Api.ExpiresFromNow(Alias, ttl);
+            var error = qdb_api.qdb_expires_from_now(Handle, Alias, qdb_time.FromTimeSpan(ttl));
+            QdbExceptionThrower.ThrowIfNeeded(error, alias: Alias);
         }
 
         /// <summary>
@@ -40,7 +42,10 @@ namespace Quasardb
         /// <exception cref="QdbAliasNotFoundException">The entry doesn't exists in the database.</exception>
         public DateTime? GetExpiryTime()
         {
-            return Api.GetExpiryTime(Alias);
+            long expiryTime;
+            var error = qdb_api.qdb_get_expiry_time(Handle, Alias, out expiryTime);
+            QdbExceptionThrower.ThrowIfNeeded(error, alias: Alias);
+            return qdb_time.ToOptionalDateTime(expiryTime);
         }
     }
 }

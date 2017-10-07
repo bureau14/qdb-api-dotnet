@@ -76,25 +76,17 @@
     <Compile Include="Exceptions\System\QdbRemoteSystemException.cs" />
     <Compile Include="Exceptions\System\QdbLocalSystemException.cs" />
     <Compile Include="Exceptions\System\QdbSystemException.cs" />
+    <Compile Include="ExtensionMethodWithFramework2.cs" />
     <Compile Include="IVisitable.cs" />
+    <Compile Include="Batch\IOperation.cs" />
 
-    <Compile Include="ManagedApi\QdbApi.Batch.cs" />
-    <Compile Include="ManagedApi\QdbApi.Stream.cs" />
-    <Compile Include="ManagedApi\QdbApi.Affix.cs" />
     <Compile Include="Exceptions\QdbExceptionThrower.cs" />
-    <Compile Include="ManagedApi\QdbApi.Blob.cs" />
-    <Compile Include="ManagedApi\QdbApi.Integer.cs" />
-    <Compile Include="ManagedApi\QdbApi.HashSet.cs" />
-    <Compile Include="ManagedApi\QdbApi.Expiry.cs" />
-    <Compile Include="ManagedApi\QdbApi.Deque.cs" />
-    <Compile Include="ManagedApi\QdbApi.Tags.cs" />
-    <Compile Include="ManagedApi\QdbApi.cs" />
-    <Compile Include="ManagedApi\QdbStreamAdapter.cs" />
-    <Compile Include="QdbBatch.cs" />
-    <Compile Include="QdbBatchEntry.cs" />
-    <Compile Include="QdbBatchInteger.cs" />
-    <Compile Include="QdbBatchBlob.cs" />
-    <Compile Include="QdbBatchOperation.cs" />
+    <Compile Include="Stream\QdbStreamAdapter.cs" />
+    <Compile Include="Batch\QdbBatch.cs" />
+    <Compile Include="Batch\QdbBatchEntry.cs" />
+    <Compile Include="Batch\QdbBatchInteger.cs" />
+    <Compile Include="Batch\QdbBatchBlob.cs" />
+    <Compile Include="Batch\QdbBatchOperation.cs" />
     <Compile Include="QdbBlob.cs" />
     <Compile Include="QdbBlobSelector.cs" />
     <Compile Include="QdbCluster.cs" />
@@ -107,7 +99,7 @@
     <Compile Include="QdbHashSet.cs" />
     <Compile Include="QdbInteger.cs" />
     <Compile Include="QdbDeque.cs" />
-    <Compile Include="QdbStream.cs" />
+    <Compile Include="Stream\QdbStream.cs" />
     <Compile Include="QdbTag.cs" />
     <Compile Include="QdbBlobBuffer.cs" />
 
@@ -124,6 +116,7 @@
       <Name>Quasardb.Native</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
