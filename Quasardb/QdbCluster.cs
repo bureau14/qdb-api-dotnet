@@ -52,7 +52,7 @@ namespace Quasardb
         /// <returns>A collection of blob matching the criteria.</returns>
         public IEnumerable<QdbBlob> Blobs(IQdbBlobSelector selector)
         {
-            using (var aliases = (QdbAliasCollection)selector.Accept(_api))
+            using (var aliases = (QdbStringCollection)selector.Accept(_api))
             {
                 foreach (var alias in aliases)
                     yield return new QdbBlob(_api, alias);
@@ -91,7 +91,7 @@ namespace Quasardb
         /// <returns>A collection of entry.</returns>
         public IEnumerable<QdbEntry> Entries(IQdbEntrySelector selector)
         {
-            using (var aliases = (QdbAliasCollection)selector.Accept(_api))
+            using (var aliases = (QdbStringCollection)selector.Accept(_api))
             {
                 foreach (var alias in aliases)
                     yield return _factory.Create(alias);

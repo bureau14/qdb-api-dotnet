@@ -77,12 +77,11 @@
     <Compile Include="Exceptions\System\QdbLocalSystemException.cs" />
     <Compile Include="Exceptions\System\QdbSystemException.cs" />
     <Compile Include="IVisitable.cs" />
-    <Compile Include="ManagedApi\InteropableList.cs" />
-    <Compile Include="ManagedApi\QdbDoublePointCollection.cs" />
+
     <Compile Include="ManagedApi\QdbApi.Batch.cs" />
     <Compile Include="ManagedApi\QdbApi.Stream.cs" />
     <Compile Include="ManagedApi\QdbApi.Affix.cs" />
-    <Compile Include="ManagedApi\QdbExceptionThrower.cs" />
+    <Compile Include="Exceptions\QdbExceptionThrower.cs" />
     <Compile Include="ManagedApi\QdbApi.Blob.cs" />
     <Compile Include="ManagedApi\QdbApi.Integer.cs" />
     <Compile Include="ManagedApi\QdbApi.HashSet.cs" />
@@ -101,7 +100,7 @@
     <Compile Include="QdbCluster.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QdbEntry.cs" />
-    <Compile Include="ManagedApi\QdbAliasCollection.cs" />
+    <Compile Include="QdbStringCollection.cs" />
     <Compile Include="QdbEntryFactory.cs" />
     <Compile Include="QdbEntrySelector.cs" />
     <Compile Include="QdbExpirableEntry.cs" />
@@ -110,6 +109,8 @@
     <Compile Include="QdbDeque.cs" />
     <Compile Include="QdbStream.cs" />
     <Compile Include="QdbTag.cs" />
+    <Compile Include="QdbBlobBuffer.cs" />
+
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

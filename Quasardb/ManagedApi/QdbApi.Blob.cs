@@ -6,9 +6,9 @@ namespace Quasardb.ManagedApi
 {
     partial class QdbApi
     {
-        public byte[] BlobCompareAndSwap(string alias, byte[] content, byte[] comparand, DateTime? expiryTime)
+        public unsafe byte[] BlobCompareAndSwap(string alias, byte[] content, byte[] comparand, DateTime? expiryTime)
         {
-            using (var oldContent = new qdb_buffer(_handle))
+            using (var oldContent = new QdbBlobBuffer(_handle))
             {
                 var error = qdb_api.qdb_blob_compare_and_swap(_handle, alias,
                     content, (UIntPtr)content.LongLength,
@@ -30,9 +30,9 @@ namespace Quasardb.ManagedApi
             }
         }
 
-        public byte[] BlobGet(string alias)
+        public unsafe byte[] BlobGet(string alias)
         {
-            using (var content = new qdb_buffer(_handle))
+            using (var content = new QdbBlobBuffer(_handle))
             {
                 var error = qdb_api.qdb_blob_get(_handle, alias, out content.Pointer, out content.Size);
                 QdbExceptionThrower.ThrowIfNeeded(error, alias: alias);
@@ -40,9 +40,9 @@ namespace Quasardb.ManagedApi
             }
         }
 
-        public byte[] BlobGetAndRemove(string alias)
+        public unsafe byte[] BlobGetAndRemove(string alias)
         {
-            using (var content = new qdb_buffer(_handle))
+            using (var content = new QdbBlobBuffer(_handle))
             {
                 var error = qdb_api.qdb_blob_get_and_remove(_handle, alias, out content.Pointer, out content.Size);
                 QdbExceptionThrower.ThrowIfNeeded(error, alias: alias);
@@ -50,9 +50,9 @@ namespace Quasardb.ManagedApi
             }
         }
 
-        public byte[] BlobGetAndUpdate(string alias, byte[] content, DateTime? expiryTime)
+        public unsafe byte[] BlobGetAndUpdate(string alias, byte[] content, DateTime? expiryTime)
         {
-            using (var oldContent = new qdb_buffer(_handle))
+            using (var oldContent = new QdbBlobBuffer(_handle))
             {
                 var error = qdb_api.qdb_blob_get_and_update(_handle, alias,
                     content, (UIntPtr)content.LongLength,
@@ -109,9 +109,9 @@ namespace Quasardb.ManagedApi
             }
         }
 
-        public QdbAliasCollection BlobScan(byte[] pattern, long max)
+        public unsafe QdbStringCollection BlobScan(byte[] pattern, long max)
         {
-            var result = new QdbAliasCollection(_handle);
+            var result = new QdbStringCollection(_handle);
             var error = qdb_api.qdb_blob_scan(_handle, pattern, (UIntPtr)pattern.Length, max, out result.Pointer, out result.Size);
 
             switch (error)
@@ -125,9 +125,9 @@ namespace Quasardb.ManagedApi
             }
         }
 
-        public QdbAliasCollection BlobScanRegex(string pattern, long max)
+        public unsafe QdbStringCollection BlobScanRegex(string pattern, long max)
         {
-            var result = new QdbAliasCollection(_handle);
+            var result = new QdbStringCollection(_handle);
             var error = qdb_api.qdb_blob_scan_regex(_handle, pattern, max, out result.Pointer, out result.Size);
 
             switch (error)

@@ -6,7 +6,7 @@ using System.Runtime.ConstrainedExecution;
 
 namespace Quasardb.Native
 {
-    public unsafe class qdb_buffer : CriticalFinalizerObject, IDisposable
+    public unsafe class qdb_results : CriticalFinalizerObject, IDisposable
     {
         public struct data {}
 
@@ -15,29 +15,29 @@ namespace Quasardb.Native
         public data* Pointer;
         public UIntPtr Size;
 
-        public qdb_buffer(qdb_handle handle)
+        public qdb_results(qdb_handle handle)
         {
             _handle = handle;
         }
 
-        ~qdb_buffer()
+        ~qdb_results()
         {
-            qdb_api.qdb_free_buffer(_handle, Pointer);
+            qdb_api.qdb_free_results(_handle, Pointer, Size);
         }
 
         public void Dispose()
         {
-            qdb_api.qdb_free_buffer(_handle, Pointer);
+            qdb_api.qdb_free_results(_handle, Pointer, Size);
             GC.SuppressFinalize(this);
             Pointer = null;
         }
     }
 
-    public abstract unsafe class qdb_buffer<T> : qdb_buffer, IEnumerable<T>
+    public abstract unsafe class qdb_results<T> : qdb_results, IEnumerable<T>
     {
         protected abstract T Dereference(void* p, ulong i);
 
-        protected qdb_buffer(qdb_handle handle) : base(handle)
+        protected qdb_results(qdb_handle handle) : base(handle)
         {
         }
 
