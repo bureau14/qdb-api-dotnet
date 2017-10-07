@@ -4,9 +4,9 @@
 
 using qdb_time_t = System.Int64;
 
-namespace Quasardb.NativeApi
+namespace Quasardb.Native
 {
-    static class qdb_time
+    public static class qdb_time
     {
         static readonly DateTime _utcEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using Quasardb.ManagedApi;
+using Quasardb.Native;
 
 namespace Quasardb
 {
@@ -17,27 +18,28 @@ namespace Quasardb
             return Create(_handle.GetEntryType(alias), alias);
         }
         
-        QdbEntry Create(QdbEntryType type, string alias)
+        QdbEntry Create(qdb_entry_type type, string alias)
         {
             switch (type)
             {
-                case QdbEntryType.Blob:
+                case qdb_entry_type.qdb_entry_blob:
                     return new QdbBlob(_handle, alias);
 
-                case QdbEntryType.Deque:
+                case qdb_entry_type.qdb_entry_deque:
                     return new QdbDeque(_handle, alias);
 
-                case QdbEntryType.HashSet:
+                case qdb_entry_type.qdb_entry_hset:
                     return new QdbHashSet(_handle, alias);
 
-                case QdbEntryType.Integer:
+                case qdb_entry_type.qdb_entry_integer:
                     return new QdbInteger(_handle, alias);
 
-                case QdbEntryType.Tag:
+                case qdb_entry_type.qdb_entry_stream:
+                    return new QdbStream(_handle, alias);
+
+                case qdb_entry_type.qdb_entry_tag:
                     return new QdbTag(_handle, alias);
 
-                case QdbEntryType.Stream:
-                    return new QdbStream(_handle, alias);
 
                 default:
                     return new QdbUnknownEntry(_handle, alias);

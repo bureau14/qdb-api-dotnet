@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Quasardb.NativeApi;
+using Quasardb.Native;
 
 namespace Quasardb.ManagedApi
 {

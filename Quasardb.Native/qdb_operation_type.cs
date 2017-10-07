@@ -1,8 +1,8 @@
 ﻿// ReSharper disable InconsistentNaming
 
-namespace Quasardb.NativeApi
+namespace Quasardb.Native
 {
-    enum qdb_operation_type : int
+    public enum qdb_operation_type : int
     {
         qdb_op_uninitialized = -1,
         qdb_op_blob_get = 0,

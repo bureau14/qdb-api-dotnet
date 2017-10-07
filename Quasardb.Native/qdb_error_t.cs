@@ -1,8 +1,8 @@
 ﻿// ReSharper disable InconsistentNaming
 
-namespace Quasardb.NativeApi
+namespace Quasardb.Native
 {
-    enum qdb_error_t : uint
+    public enum qdb_error_t : uint
     {
         qdb_e_ok = 0,
         qdb_e_uninitialized = 0xc300FFFF,

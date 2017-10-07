@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using System.Text;
 using Quasardb.ManagedApi;
-using Quasardb.NativeApi;
+using Quasardb.Native;
 
 namespace Quasardb
 {

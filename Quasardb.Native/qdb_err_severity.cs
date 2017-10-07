@@ -1,8 +1,8 @@
 ﻿// ReSharper disable InconsistentNaming
 
-namespace Quasardb.NativeApi
+namespace Quasardb.Native
 {
-    enum qdb_err_severity : uint
+    public enum qdb_err_severity : uint
     {
         unrecoverable = 0x03000000,
         error = 0x02000000,
