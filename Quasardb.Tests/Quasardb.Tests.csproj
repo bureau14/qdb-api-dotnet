@@ -145,11 +145,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="insecure.runsettings" />
     <None Include="qdbd.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="secure.runsettings" />
   </ItemGroup>
-  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
