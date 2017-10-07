@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Quasardb.Exceptions;
 using Quasardb.Native;
-using Quasardb.TimeSeries;
 
 namespace Quasardb
 {

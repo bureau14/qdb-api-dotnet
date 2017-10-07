@@ -76,10 +76,8 @@
     <Compile Include="Exceptions\System\QdbRemoteSystemException.cs" />
     <Compile Include="Exceptions\System\QdbLocalSystemException.cs" />
     <Compile Include="Exceptions\System\QdbSystemException.cs" />
-    <Compile Include="ExtensionMethodWithFramework2.cs" />
     <Compile Include="IVisitable.cs" />
     <Compile Include="Batch\IOperation.cs" />
-
     <Compile Include="Exceptions\QdbExceptionThrower.cs" />
     <Compile Include="Stream\QdbStreamAdapter.cs" />
     <Compile Include="Batch\QdbBatch.cs" />
@@ -102,7 +100,6 @@
     <Compile Include="Stream\QdbStream.cs" />
     <Compile Include="QdbTag.cs" />
     <Compile Include="QdbBlobBuffer.cs" />
-
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

@@ -14,14 +14,14 @@ namespace Quasardb.Native
         public IntPtr Pointer;
         public UIntPtr Size;
 
-        public qdb_buffer(qdb_handle handle)
+        protected qdb_buffer(qdb_handle handle)
         {
             _handle = handle;
         }
 
         ~qdb_buffer()
         {
-            qdb_api.qdb_free_buffer(_handle, Pointer);
+            Free();
         }
 
         public void Dispose()

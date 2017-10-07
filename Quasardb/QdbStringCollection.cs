@@ -10,10 +10,10 @@ namespace Quasardb
 
         protected override qdb_string Dereference(void* p, ulong i)
         {
-            return ((qdb_string*) p)[i];
+            return ((qdb_string*)p)[i];
         }
 
-        protected override void Free()
+        protected override unsafe void Free()
         {
             qdb_api.qdb_free_results(_handle, Pointer, Size);
         }

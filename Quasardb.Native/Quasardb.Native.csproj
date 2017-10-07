@@ -68,7 +68,6 @@
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="InteropableList.cs" />
-    <Compile Include="qdb_results.cs" />
     <Compile Include="qdb_string.cs" />
     <Compile Include="ConstCharPtrMarshaler.cs" />
     <Compile Include="qdb_buffer.cs" />
