@@ -6,8 +6,8 @@ obj/
 /TestResults/
 /packages/
 
-Quasardb/win32/qdb_api.dll
-Quasardb/win64/qdb_api.dll
-QuasardbTests/qdbd.exe
-/QuasardbTests/db
+/Quasardb/win32/qdb_api.dll
+/Quasardb/win64/qdb_api.dll
+/Quasardb.Tests/qdbd.exe
+/Quasardb.Tests/db/
 /UpgradeLog.htm
