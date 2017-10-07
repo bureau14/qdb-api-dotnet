@@ -58,6 +58,12 @@ namespace Quasardb.Native
             [In] void* buffer);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern void qdb_free_results(
+            [In] qdb_handle handle,
+            [In] void* results,
+            [In] size_t results_count);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error_t qdb_get_type(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,

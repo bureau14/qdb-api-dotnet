@@ -70,16 +70,11 @@
     <Compile Include="InteropableList.cs" />
     <Compile Include="qdb_results.cs" />
     <Compile Include="qdb_string.cs" />
-    <Compile Include="qdb_ts_range.cs" />
-    <Compile Include="qdb_ts_aggregation_type.cs" />
     <Compile Include="ConstCharPtrMarshaler.cs" />
     <Compile Include="qdb_buffer.cs" />
     <Compile Include="qdb_error_t.cs" />
     <Compile Include="qdb_err_severity.cs" />
     <Compile Include="qdb_err_origin.cs" />
-    <Compile Include="qdb_timespec.cs" />
-    <Compile Include="qdb_ts_aggregation.cs" />
-    <Compile Include="qdb_ts_double_point.cs" />
     <Compile Include="qdb_operation.cs" />
     <Compile Include="qdb_operation_type.cs" />
     <Compile Include="qdb_stream_handle.cs" />
