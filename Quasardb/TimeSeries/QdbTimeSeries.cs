@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Quasardb.Exceptions;
 using Quasardb.Native;
 
@@ -156,11 +157,41 @@ namespace Quasardb.TimeSeries
         /// <summary>
         /// Creates the time-series.
         /// </summary>
+        /// <param name="shardSize">The size of a single shard (bucket)</param>
+        /// <param name="columnDefinitions">The description of the columns</param>
+        /// <exception cref="QdbAliasAlreadyExistsException">If the time-series already exists.</exception>
+        /// <exception cref="QdbIncompatibleTypeException">If the alias matches with an entry of another type.</exception>
+        /// <exception cref="QdbInvalidArgumentException">If columns list is empty.</exception>
+        /// <exception cref="QdbInvalidArgumentException">If shard size is less than one millisecond or greater than maximum allowed length.</exception>
+        public void Create(TimeSpan shardSize, params QdbColumnDefinition[] columnDefinitions)
+        {
+            Create(shardSize, (IEnumerable<QdbColumnDefinition>) columnDefinitions);
+        }
+
+        /// <summary>
+        /// Creates the time-series.
+        /// </summary>
         /// <param name="columnDefinitions">The description of the columns</param>
         /// <exception cref="QdbAliasAlreadyExistsException">If the time-series already exists.</exception>
         /// <exception cref="QdbIncompatibleTypeException">If the alias matches with an entry of another type.</exception>
         /// <exception cref="QdbInvalidArgumentException">If columns list is empty.</exception>
         public void Create(IEnumerable<QdbColumnDefinition> columnDefinitions)
+        {
+            Create(TimeSpan.FromMilliseconds(
+                       (double)qdb_duration.qdb_d_default_shard_size),
+                   columnDefinitions);
+        }
+
+        /// <summary>
+        /// Creates the time-series.
+        /// </summary>
+        /// <param name="shardSize">The size of a single shard (bucket)</param>
+        /// <param name="columnDefinitions">The description of the columns</param>
+        /// <exception cref="QdbAliasAlreadyExistsException">If the time-series already exists.</exception>
+        /// <exception cref="QdbIncompatibleTypeException">If the alias matches with an entry of another type.</exception>
+        /// <exception cref="QdbInvalidArgumentException">If columns list is empty.</exception>
+        /// <exception cref="QdbInvalidArgumentException">If shard size is less than one millisecond or greater than maximum allowed length.</exception>
+        public void Create(TimeSpan shardSize, IEnumerable<QdbColumnDefinition> columnDefinitions)
         {
             var count = Helpers.GetCountOrDefault(columnDefinitions);
             var columns = new InteropableList<qdb_ts_column_info>(count);
@@ -174,7 +205,11 @@ namespace Quasardb.TimeSeries
                 });
             }
 
-            var err = qdb_api.qdb_ts_create(Handle, Alias, columns.Buffer, columns.Count);
+            var err = qdb_api.qdb_ts_create(
+                Handle, Alias,
+                (qdb_duration)(shardSize.TotalMilliseconds *
+                               (double)qdb_duration.qdb_d_millisecond),
+                columns.Buffer, columns.Count);
             QdbExceptionThrower.ThrowIfNeeded(err, alias: Alias);
         }
     }
