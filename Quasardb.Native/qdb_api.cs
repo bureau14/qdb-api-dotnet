@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Security;
 
 using qdb_int_t = System.Int64;
+using qdb_uint_t = System.UInt64;
 using qdb_time_t = System.Int64;
 using size_t = System.UIntPtr;
 using qdb_size_t = System.UIntPtr;
@@ -441,7 +442,7 @@ namespace Quasardb.Native
         public static extern qdb_error qdb_ts_create(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
-            [In] qdb_duration shard_size,
+            [In] qdb_uint_t shard_size,
             [In] qdb_ts_column_info[] columns,
             qdb_size_t column_count);
 

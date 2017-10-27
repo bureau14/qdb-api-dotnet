@@ -206,8 +206,8 @@ namespace Quasardb.TimeSeries
 
             var err = qdb_api.qdb_ts_create(
                 Handle, Alias,
-                (qdb_duration)(shardSize.TotalMilliseconds *
-                               (double)qdb_duration.qdb_d_millisecond),
+                (ulong)(shardSize.TotalMilliseconds *
+                        (double)qdb_duration.qdb_d_millisecond),
                 columns.Buffer, columns.Count);
             QdbExceptionThrower.ThrowIfNeeded(err, alias: Alias);
         }
