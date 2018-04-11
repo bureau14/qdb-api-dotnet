@@ -175,19 +175,6 @@ namespace Quasardb
         }
 
         /// <summary>
-        /// Returns a <see cref="QdbHashSet" /> attached to the specified alias.
-        /// </summary>
-        /// <remarks>No operation is performed in the database.</remarks>
-        /// <param name="alias">The alias (i.e. key) of the hash-set in the database.</param>
-        /// <returns>A hash-set associated to the specified alias.</returns>
-        /// <seealso cref="QdbHashSet"/>
-        public QdbHashSet HashSet(string alias)
-        {
-            if (alias == null) throw new ArgumentNullException(nameof(alias));
-            return new QdbHashSet(_handle, alias);
-        }
-
-        /// <summary>
         /// Returns a <see cref="QdbInteger" /> attached to the specified alias.
         /// </summary>
         /// <remarks>No operation is performed in the database.</remarks>

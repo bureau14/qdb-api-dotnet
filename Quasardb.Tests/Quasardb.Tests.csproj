@@ -107,9 +107,6 @@
     <Compile Include="Entry\AttachTag.cs" />
     <Compile Include="Entry\GetTags.cs" />
     <Compile Include="Entry\HasTag.cs" />
-    <Compile Include="Entry\HashSet\Contains.cs" />
-    <Compile Include="Entry\HashSet\Insert.cs" />
-    <Compile Include="Entry\HashSet\Erase.cs" />
     <Compile Include="Entry\Integer\Update.cs" />
     <Compile Include="Entry\Integer\Add.cs" />
     <Compile Include="Entry\Integer\Get.cs" />

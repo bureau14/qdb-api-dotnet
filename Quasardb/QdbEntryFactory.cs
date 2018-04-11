@@ -31,9 +31,6 @@ namespace Quasardb
                 case qdb_entry_type.qdb_entry_deque:
                     return new QdbDeque(_handle, alias);
 
-                case qdb_entry_type.qdb_entry_hset:
-                    return new QdbHashSet(_handle, alias);
-
                 case qdb_entry_type.qdb_entry_integer:
                     return new QdbInteger(_handle, alias);
 

@@ -39,17 +39,6 @@ namespace Quasardb.Tests.Entry.Tag
         }
 
         [TestMethod]
-        public void ReturnsOneHashSet()
-        {
-            var tag = QdbTestCluster.CreateEmptyTag();
-            var hashSet1 = QdbTestCluster.CreateTaggedHashSet(tag);
-
-            var hashSet2 = tag.GetEntries().Cast<QdbHashSet>().Single();
-
-            Assert.AreEqual(hashSet1.Alias, hashSet2.Alias);
-        }
-
-        [TestMethod]
         public void ReturnsOneInteger()
         {
             var tag = QdbTestCluster.CreateEmptyTag();
@@ -76,14 +65,12 @@ namespace Quasardb.Tests.Entry.Tag
         {
             var tag = QdbTestCluster.CreateEmptyTag();
             tag.AttachEntry(QdbTestCluster.CreateBlob());
-            tag.AttachEntry(QdbTestCluster.CreateHashSet());
             tag.AttachEntry(QdbTestCluster.CreateInteger());
             tag.AttachEntry(QdbTestCluster.CreateQueue());
             tag.AttachEntry(QdbTestCluster.CreateTag());
 
-            Assert.AreEqual(5, tag.GetEntries().Count());
+            Assert.AreEqual(4, tag.GetEntries().Count());
             Assert.AreEqual(1, tag.GetEntries().OfType<QdbBlob>().Count());
-            Assert.AreEqual(1, tag.GetEntries().OfType<QdbHashSet>().Count());
             Assert.AreEqual(1, tag.GetEntries().OfType<QdbInteger>().Count());
             Assert.AreEqual(1, tag.GetEntries().OfType<QdbDeque>().Count());
             Assert.AreEqual(1, tag.GetEntries().OfType<QdbTag>().Count());

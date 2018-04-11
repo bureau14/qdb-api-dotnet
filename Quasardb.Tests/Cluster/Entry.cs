@@ -70,18 +70,6 @@ namespace Quasardb.Tests.Cluster
         }
 
         [TestMethod]
-        public void ReturnsHashSet()
-        {
-            var alias = RandomGenerator.CreateUniqueAlias();
-
-            QdbTestCluster.CreateHashSet(alias);
-            var result = _cluster.Entry(alias);
-
-            Assert.IsInstanceOfType(result, typeof(QdbHashSet));
-            Assert.AreEqual(alias, result.Alias);
-        }
-
-        [TestMethod]
         public void ReturnsStream()
         {
             var alias = RandomGenerator.CreateUniqueAlias();

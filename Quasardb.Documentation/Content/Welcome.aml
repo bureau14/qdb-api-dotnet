@@ -75,33 +75,6 @@
     </section>
 
     <section>
-      <title>Hash sets</title>
-      <content>
-        <para>
-          We also provide distributed sets.
-        </para>
-        <code language="c#">
-          byte[] a, b, c;
-
-          QdbHashSet mySet = cluster.HashSet("Janet the set");
-
-          mySet.Insert(a);
-          mySet.Erase(b);
-          bool hasC = mySet.Contains(c);
-        </code>
-        <code language="vb">
-          Dim a, b, c As Byte()
-
-          Dim mySet = cluster.HashSet("Janet the set")
-
-          mySet.Insert(a)
-          mySet.Erase(b)
-          Dim hasC = mySet.Contains(c)
-        </code>
-      </content>
-    </section>
-
-    <section>
       <title>Integers</title>
       <content>
         <para>
@@ -208,7 +181,6 @@
       <codeEntityReference>T:Quasardb.QdbCluster</codeEntityReference>
       <codeEntityReference>T:Quasardb.QdbBlob</codeEntityReference>
       <codeEntityReference>T:Quasardb.QdbDeque</codeEntityReference>
-      <codeEntityReference>T:Quasardb.QdbHashSet</codeEntityReference>
       <codeEntityReference>T:Quasardb.QdbInteger</codeEntityReference>
       <codeEntityReference>T:Quasardb.QdbStream</codeEntityReference>
       <codeEntityReference>T:Quasardb.QdbTag</codeEntityReference>

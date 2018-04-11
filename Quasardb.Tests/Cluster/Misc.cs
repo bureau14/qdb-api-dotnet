@@ -101,13 +101,6 @@ namespace Quasardb.Tests.Cluster
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void HashSet_ThrowsArgumentNull()
-        {
-            QdbTestCluster.Instance.HashSet(null);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void Stream_ThrowsArgumentNull()
         {
             QdbTestCluster.Instance.Stream(null);

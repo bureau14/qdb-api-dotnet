@@ -103,7 +103,6 @@
     <Compile Include="QdbEntryFactory.cs" />
     <Compile Include="QdbEntrySelector.cs" />
     <Compile Include="QdbExpirableEntry.cs" />
-    <Compile Include="QdbHashSet.cs" />
     <Compile Include="QdbInteger.cs" />
     <Compile Include="QdbDeque.cs" />
     <Compile Include="Stream\QdbStream.cs" />

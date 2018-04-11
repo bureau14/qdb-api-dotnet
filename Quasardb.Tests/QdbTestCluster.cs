@@ -42,30 +42,7 @@ namespace Quasardb.Tests
             blob.AttachTag(tag);
             return blob;
         }
-
-        #endregion
-
-        #region HashSet
-
-        public static QdbHashSet CreateEmptyHashSet(string alias = null)
-        {
-            return Instance.HashSet(alias ?? RandomGenerator.CreateUniqueAlias());
-        }
-
-        public static QdbHashSet CreateHashSet(string alias = null)
-        {
-            var hashSet = CreateEmptyHashSet(alias);
-            hashSet.Insert(RandomGenerator.CreateRandomContent());
-            return hashSet;
-        }
-
-        public static QdbHashSet CreateTaggedHashSet(QdbTag tag)
-        {
-            var hashSet = CreateHashSet();
-            hashSet.AttachTag(tag);
-            return hashSet;
-        }
-
+        
         #endregion
 
         #region Deque
