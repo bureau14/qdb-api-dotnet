@@ -71,7 +71,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Blob
             var col = QdbTestCluster.CreateEmptyBlobColumn();
             col.Insert(_points);
 
-            var interval = new QdbFilteredTimeInterval(_points[0].Time,_points[2].Time);
+            var interval = new QdbTimeInterval(_points[0].Time,_points[2].Time);
             var result = col.Points(interval);
 
             CollectionAssert.AreEqual(_points.Take(2).ToList(), result.ToList());
@@ -83,7 +83,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Blob
             var col = QdbTestCluster.CreateEmptyBlobColumn();
             col.Insert(_points);
 
-            var interval = new QdbFilteredTimeInterval(new DateTime(3000,1,1),new DateTime(4000, 1, 1));
+            var interval = new QdbTimeInterval(new DateTime(3000,1,1),new DateTime(4000, 1, 1));
             var result = col.Points(interval);
 
             Assert.IsFalse(result.Any());
@@ -97,9 +97,9 @@ namespace Quasardb.Tests.Entry.TimeSeries.Blob
 
             var intervals = new[]
             {
-                new QdbFilteredTimeInterval(new DateTime(2014, 1, 1), new DateTime(2014, 12, 31)),
-                new QdbFilteredTimeInterval(new DateTime(2016, 1, 1), new DateTime(2016, 12, 31)),
-                new QdbFilteredTimeInterval(new DateTime(2018, 1, 1), new DateTime(2018, 12, 31))
+                new QdbTimeInterval(new DateTime(2014, 1, 1), new DateTime(2014, 12, 31)),
+                new QdbTimeInterval(new DateTime(2016, 1, 1), new DateTime(2016, 12, 31)),
+                new QdbTimeInterval(new DateTime(2018, 1, 1), new DateTime(2018, 12, 31))
             };
 
             var result = col.Points(intervals);
