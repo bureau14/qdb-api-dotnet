@@ -28,17 +28,6 @@ namespace Quasardb.Tests.Entry.Tag
         }
 
         [TestMethod]
-        public void ReturnsOneDeque()
-        {
-            var tag = QdbTestCluster.CreateEmptyTag();
-            var queue1 = QdbTestCluster.CreateTaggedQueue(tag);
-
-            var queue2 = tag.GetEntries().Cast<QdbDeque>().Single();
-
-            Assert.AreEqual(queue1.Alias, queue2.Alias);
-        }
-
-        [TestMethod]
         public void ReturnsOneInteger()
         {
             var tag = QdbTestCluster.CreateEmptyTag();
@@ -66,13 +55,11 @@ namespace Quasardb.Tests.Entry.Tag
             var tag = QdbTestCluster.CreateEmptyTag();
             tag.AttachEntry(QdbTestCluster.CreateBlob());
             tag.AttachEntry(QdbTestCluster.CreateInteger());
-            tag.AttachEntry(QdbTestCluster.CreateQueue());
             tag.AttachEntry(QdbTestCluster.CreateTag());
 
-            Assert.AreEqual(4, tag.GetEntries().Count());
+            Assert.AreEqual(3, tag.GetEntries().Count());
             Assert.AreEqual(1, tag.GetEntries().OfType<QdbBlob>().Count());
             Assert.AreEqual(1, tag.GetEntries().OfType<QdbInteger>().Count());
-            Assert.AreEqual(1, tag.GetEntries().OfType<QdbDeque>().Count());
             Assert.AreEqual(1, tag.GetEntries().OfType<QdbTag>().Count());
         }
     }

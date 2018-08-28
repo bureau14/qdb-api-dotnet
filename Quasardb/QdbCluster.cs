@@ -121,19 +121,6 @@ namespace Quasardb
         }
 
         /// <summary>
-        /// Returns a <see cref="QdbDeque" /> attached to the specified alias.
-        /// </summary>
-        /// <remarks>No operation is performed in the database.</remarks>
-        /// <param name="alias">The alias (i.e. key) of the queue in the database.</param>
-        /// <returns>A queue associated to the specified alias.</returns>
-        /// <seealso cref="QdbDeque"/>
-        public QdbDeque Deque(string alias)
-        {
-            if (alias == null) throw new ArgumentNullException(nameof(alias));
-            return new QdbDeque(_handle, alias);
-        }
-
-        /// <summary>
         /// Returns a <see cref="QdbEntry" /> attached to the specified alias.
         /// The actual type of the return value depends on the type of the entry in the database.
         /// </summary>

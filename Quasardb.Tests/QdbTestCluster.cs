@@ -45,29 +45,6 @@ namespace Quasardb.Tests
         
         #endregion
 
-        #region Deque
-
-        public static QdbDeque CreateEmptyQueue(string alias=null)
-        {
-            return Instance.Deque(alias ?? RandomGenerator.CreateUniqueAlias());
-        }
-
-        public static QdbDeque CreateQueue(string alias = null)
-        {
-            var queue = CreateEmptyQueue(alias);
-            queue.PushBack(RandomGenerator.CreateRandomContent());
-            return queue;
-        }
-
-        public static QdbDeque CreateTaggedQueue(QdbTag tag)
-        {
-            var queue = CreateQueue();
-            queue.AttachTag(tag);
-            return queue;
-        }
-
-        #endregion
-
         #region Integer
 
         public static QdbInteger CreateEmptyInteger(string alias=null)

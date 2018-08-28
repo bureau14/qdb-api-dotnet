@@ -58,18 +58,6 @@ namespace Quasardb.Tests.Cluster
         }
 
         [TestMethod]
-        public void ReturnsDeque()
-        {
-            var alias = RandomGenerator.CreateUniqueAlias();
-
-            QdbTestCluster.CreateQueue(alias);
-            var result = _cluster.Entry(alias);
-
-            Assert.IsInstanceOfType(result, typeof(QdbDeque));
-            Assert.AreEqual(alias, result.Alias);
-        }
-
-        [TestMethod]
         public void ReturnsStream()
         {
             var alias = RandomGenerator.CreateUniqueAlias();

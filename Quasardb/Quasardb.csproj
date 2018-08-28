@@ -104,7 +104,6 @@
     <Compile Include="QdbEntrySelector.cs" />
     <Compile Include="QdbExpirableEntry.cs" />
     <Compile Include="QdbInteger.cs" />
-    <Compile Include="QdbDeque.cs" />
     <Compile Include="Stream\QdbStream.cs" />
     <Compile Include="QdbTag.cs" />
     <Compile Include="QdbBlobBuffer.cs" />

@@ -86,15 +86,6 @@
     <Compile Include="Entry\Blob\RemoveIf.cs" />
     <Compile Include="Entry\Blob\Remove.cs" />
     <Compile Include="Entry\Blob\Update.cs" />
-    <Compile Include="Entry\Deque\Back.cs" />
-    <Compile Include="Entry\Deque\Front.cs" />
-    <Compile Include="Entry\Deque\GetAt.cs" />
-    <Compile Include="Entry\Deque\PopBack.cs" />
-    <Compile Include="Entry\Deque\PopFront.cs" />
-    <Compile Include="Entry\Deque\PushBack.cs" />
-    <Compile Include="Entry\Deque\PushFront.cs" />
-    <Compile Include="Entry\Deque\SetAt.cs" />
-    <Compile Include="Entry\Deque\Size.cs" />
     <Compile Include="Entry\DetachTag.cs" />
     <Compile Include="Entry\TimeSeries\Blob\Count.cs" />
     <Compile Include="Entry\TimeSeries\Blob\First.cs" />
