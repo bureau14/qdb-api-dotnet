@@ -28,7 +28,7 @@ namespace Quasardb.Tests
             Process daemon = Process.Start(new ProcessStartInfo
             {
                 FileName = "qdbd.exe",
-                Arguments = $"--transient -a {endPoint} {securityArguments}",
+                Arguments = $"--storage-engine=transient -a {endPoint} {securityArguments}",
                 WindowStyle = ProcessWindowStyle.Hidden,
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
@@ -56,7 +56,7 @@ namespace Quasardb.Tests
             if (UseSecurity)
             {
                 _daemon = StartDaemon(testContext, EndPoint, "secure",
-                                      $"--cluster-private-file={SecretKeyFile} --user-list={UserCredentialsFile}");
+                                      $"--security=true --cluster-private-file={SecretKeyFile} --user-list={UserCredentialsFile}");
             } else
             {
                 _daemon = StartDaemon(testContext, EndPoint, "insecure", "--security=false");
