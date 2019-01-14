@@ -48,33 +48,6 @@
     </section>
 
     <section>
-      <title>Double-ended queues</title>
-      <content>
-        <para>
-          Quasardb provides double-ended queues, or simply "deque".
-        </para>
-        <code language="c#">
-          byte[] a, b, c;
-
-          QdbDeque myQueue = cluster.Deque("Andrew the queue");
-
-          myQueue.PushBack(a);
-          myQueue.PushBack(b);
-          c = myQueue.PopFront();
-        </code>
-        <code language="vb">
-          Dim a, b, c As Byte()
-
-          Dim myQueue = cluster.Deque("Andrew the queue")
-
-          myQueue.PushBack(a)
-          myQueue.PushBack(b)
-          c = myQueue.PopFront()
-        </code>
-      </content>
-    </section>
-
-    <section>
       <title>Integers</title>
       <content>
         <para>
@@ -180,7 +153,6 @@
     <relatedTopics>
       <codeEntityReference>T:Quasardb.QdbCluster</codeEntityReference>
       <codeEntityReference>T:Quasardb.QdbBlob</codeEntityReference>
-      <codeEntityReference>T:Quasardb.QdbDeque</codeEntityReference>
       <codeEntityReference>T:Quasardb.QdbInteger</codeEntityReference>
       <codeEntityReference>T:Quasardb.QdbStream</codeEntityReference>
       <codeEntityReference>T:Quasardb.QdbTag</codeEntityReference>
