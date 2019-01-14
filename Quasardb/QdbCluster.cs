@@ -79,6 +79,7 @@ namespace Quasardb
         /// <summary>
         /// Set the compression level.
         /// </summary>
+        /// <param name="level">The level of compression to be used for the current handle to cluster.</param>
         public void SetCompression(QdbCompression level)
         {
             var error = qdb_api.qdb_option_set_compression(_handle, (qdb_compression) level);
