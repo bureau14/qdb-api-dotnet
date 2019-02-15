@@ -2,6 +2,7 @@
     "users": [
         {
             "username": "qdb-api-dotnet",
+            "superuser": true,
             "public_key": "PJIqKayw81NuBouDzEvNX8kLyPjaKpi5eTksxDP8K/R8="
         }
     ]
