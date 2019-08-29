@@ -51,4 +51,32 @@ namespace Quasardb.TimeSeries
         {
         }
     }
+
+    /// <summary>
+    /// Describes a time-series column that contains int64 point values.
+    /// </summary>
+    public class QdbInt64ColumnDefinition : QdbColumnDefinition
+    {
+        /// <summary>
+        /// Creates a column description with the specified name.
+        /// </summary>
+        /// <param name="name">The name of the column</param>
+        public QdbInt64ColumnDefinition(string name) : base(name, qdb_ts_column_type.qdb_ts_column_int64)
+        {
+        }
+    }
+
+    /// <summary>
+    /// Describes a time-series column that contains timestamp point values.
+    /// </summary>
+    public class QdbTimestampColumnDefinition : QdbColumnDefinition
+    {
+        /// <summary>
+        /// Creates a column description with the specified name.
+        /// </summary>
+        /// <param name="name">The name of the column</param>
+        public QdbTimestampColumnDefinition(string name) : base(name, qdb_ts_column_type.qdb_ts_column_timestamp)
+        {
+        }
+    }
 }

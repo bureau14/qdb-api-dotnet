@@ -117,8 +117,12 @@
     <Compile Include="TimeSeries\QdbColumnAggregator.cs" />
     <Compile Include="TimeSeries\QdbTimeInterval.cs" />
     <Compile Include="TimeSeries\QdbDoublePointCollection.cs" />
+    <Compile Include="TimeSeries\QdbInt64PointCollection.cs" />
+    <Compile Include="TimeSeries\QdbTimestampPointCollection.cs" />
     <Compile Include="TimeSeries\QdbPoint.cs" />
     <Compile Include="TimeSeries\QdbDoubleColumn.cs" />
+    <Compile Include="TimeSeries\QdbInt64Column.cs" />
+    <Compile Include="TimeSeries\QdbTimestampColumn.cs" />
     <Compile Include="TimeSeries\QdbTimeSeries.cs" />
     <Compile Include="TimeConverter.cs" />
   </ItemGroup>

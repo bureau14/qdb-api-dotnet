@@ -13,3 +13,6 @@ obj/
 /QuasardbTests/db/
 /UpgradeLog.htm
 /Quasardb/*.nupkg
+
+# Ignore qdb folder
+qdb/

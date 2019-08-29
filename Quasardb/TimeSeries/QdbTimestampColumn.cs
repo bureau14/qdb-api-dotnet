@@ -1,18 +1,18 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Quasardb.Exceptions;
 using Quasardb.Native;
 
-using Point = Quasardb.TimeSeries.QdbBlobPoint;
+using Point = Quasardb.TimeSeries.QdbTimestampPoint;
 
 namespace Quasardb.TimeSeries
 {
     /// <summary>
     /// A column of a time series in a quasardb database.
     /// </summary>
-    public sealed class QdbBlobColumn : QdbColumn
+    public sealed class QdbTimestampColumn : QdbColumn
     {
-        internal QdbBlobColumn(QdbTimeSeries series, string name) : base(series, name)
+        internal QdbTimestampColumn(QdbTimeSeries series, string name) : base(series, name)
         {
         }
 
@@ -22,9 +22,9 @@ namespace Quasardb.TimeSeries
         /// Inserts one or more points in the time series
         /// </summary>
         /// <param name="points">The points to insert</param>
-        public void Insert(QdbBlobPointCollection points)
+        public void Insert(QdbTimestampPointCollection points)
         {
-            var error = qdb_api.qdb_ts_blob_insert(Handle, Series.Alias, Name, points.Points.Buffer, points.Points.Count);
+            var error = qdb_api.qdb_ts_timestamp_insert(Handle, Series.Alias, Name, points.Points.Buffer, points.Points.Count);
             QdbExceptionThrower.ThrowIfNeeded(error, alias: Series.Alias);
         }
 
@@ -34,10 +34,7 @@ namespace Quasardb.TimeSeries
         /// <param name="points">The points to insert</param>
         public void Insert(IEnumerable<Point> points)
         {
-            using (var pointCollection = new QdbBlobPointCollection(points))
-            {
-                Insert(pointCollection);
-            }
+            Insert(new QdbTimestampPointCollection(points));
         }
 
         /// <summary>
@@ -54,7 +51,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="time">The timestamp of the point to insert</param>
         /// <param name="value">The value of the point to insert</param>
-        public void Insert(DateTime time, byte[] value)
+        public void Insert(DateTime time, DateTime value)
         {
             Insert(new Point(time, value));
         }
@@ -92,9 +89,9 @@ namespace Quasardb.TimeSeries
             var ranges = new InteropableList<qdb_ts_range>(Helpers.GetCountOrDefault(intervals));
             foreach (var interval in intervals)
                 ranges.Add(interval.ToNative());
-            using (var points = new qdb_buffer<qdb_ts_blob_point>(Handle))
+            using (var points = new qdb_buffer<qdb_ts_timestamp_point>(Handle))
             {
-                var error = qdb_api.qdb_ts_blob_get_ranges(Handle, Series.Alias, Name, ranges.Buffer, ranges.Count, out points.Pointer, out points.Size);
+                var error = qdb_api.qdb_ts_timestamp_get_ranges(Handle, Series.Alias, Name, ranges.Buffer, ranges.Count, out points.Pointer, out points.Size);
                 QdbExceptionThrower.ThrowIfNeeded(error, alias: Series.Alias, column: Name);
                 foreach (var pt in points)
                     yield return pt.ToManaged();
@@ -121,7 +118,7 @@ namespace Quasardb.TimeSeries
         /// <returns>The number of points in the interval</returns>
         public long Count(QdbTimeInterval interval)
         {
-            return _aggregator.BlobAggregate(qdb_ts_aggregation_type.Count, interval).Count();
+            return _aggregator.TimestampAggregate(qdb_ts_aggregation_type.Count, interval).Count();
         }
 
         /// <summary>
@@ -131,7 +128,7 @@ namespace Quasardb.TimeSeries
         /// <returns>The number of points in each interval</returns>
         public IEnumerable<long> Count(IEnumerable<QdbTimeInterval> intervals)
         {
-            return _aggregator.BlobAggregate(qdb_ts_aggregation_type.Count, intervals).Count();
+            return _aggregator.TimestampAggregate(qdb_ts_aggregation_type.Count, intervals).Count();
         }
 
         #endregion
@@ -145,7 +142,7 @@ namespace Quasardb.TimeSeries
         /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
         public Point First()
         {
-            var result = _aggregator.BlobAggregate(qdb_ts_aggregation_type.First);
+            var result = _aggregator.TimestampAggregate(qdb_ts_aggregation_type.First);
             if (result.Count() == 0)
                 throw new QdbEmptyColumnException(Series.Alias, Name);
             return result.AsPoint();
@@ -158,7 +155,7 @@ namespace Quasardb.TimeSeries
         /// <returns>The first point in the interval or <c>null</c> if there is no point in the interval</returns>
         public Point First(QdbTimeInterval interval)
         {
-            return _aggregator.BlobAggregate(qdb_ts_aggregation_type.First, interval).AsPoint();
+            return _aggregator.TimestampAggregate(qdb_ts_aggregation_type.First, interval).AsPoint();
         }
 
         /// <summary>
@@ -168,7 +165,7 @@ namespace Quasardb.TimeSeries
         /// <returns>The first point in each interval (<c>null</c> when there is no point in an interval)</returns>
         public IEnumerable<Point> First(IEnumerable<QdbTimeInterval> intervals)
         {
-            return _aggregator.BlobAggregate(qdb_ts_aggregation_type.First, intervals).AsPoint();
+            return _aggregator.TimestampAggregate(qdb_ts_aggregation_type.First, intervals).AsPoint();
         }
 
         #endregion
@@ -182,7 +179,7 @@ namespace Quasardb.TimeSeries
         /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
         public Point Last()
         {
-            var result = _aggregator.BlobAggregate(qdb_ts_aggregation_type.Last);
+            var result = _aggregator.TimestampAggregate(qdb_ts_aggregation_type.Last);
             if (result.Count() == 0)
                 throw new QdbEmptyColumnException(Series.Alias, Name);
             return result.AsPoint();
@@ -195,7 +192,7 @@ namespace Quasardb.TimeSeries
         /// <returns>The last point in the interval or <c>null</c> if there is no point in the interval</returns>
         public Point Last(QdbTimeInterval interval)
         {
-            return _aggregator.BlobAggregate(qdb_ts_aggregation_type.Last, interval).AsPoint();
+            return _aggregator.TimestampAggregate(qdb_ts_aggregation_type.Last, interval).AsPoint();
         }
 
         /// <summary>
@@ -205,7 +202,7 @@ namespace Quasardb.TimeSeries
         /// <returns>The last point in each interval (<c>null</c> when there is no point in an interval)</returns>
         public IEnumerable<Point> Last(IEnumerable<QdbTimeInterval> intervals)
         {
-            return _aggregator.BlobAggregate(qdb_ts_aggregation_type.Last, intervals).AsPoint();
+            return _aggregator.TimestampAggregate(qdb_ts_aggregation_type.Last, intervals).AsPoint();
         }
 
         #endregion

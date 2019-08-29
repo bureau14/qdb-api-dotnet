@@ -105,4 +105,36 @@ namespace Quasardb.TimeSeries
             return true;
         }
     }
+    
+
+    /// <summary>
+    /// A Time/Value pair, where value is an int64 point
+    /// </summary>
+    public class QdbInt64Point : QdbPoint<long>
+    {
+        /// <summary>
+        /// Creates a point.
+        /// </summary>
+        /// <param name="time">The point's time</param>
+        /// <param name="value">The point's value</param>
+        public QdbInt64Point(DateTime time, long value) : base(time, value)
+        {
+        }
+    }
+    
+
+    /// <summary>
+    /// A Time/Value pair, where value is a datetime point
+    /// </summary>
+    public class QdbTimestampPoint : QdbPoint<DateTime>
+    {
+        /// <summary>
+        /// Creates a point.
+        /// </summary>
+        /// <param name="time">The point's time</param>
+        /// <param name="value">The point's value</param>
+        public QdbTimestampPoint(DateTime time, DateTime value) : base(time, value)
+        {
+        }
+    }
 }
