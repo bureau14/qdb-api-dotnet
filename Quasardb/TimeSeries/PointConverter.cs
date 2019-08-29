@@ -38,5 +38,33 @@ namespace Quasardb.TimeSeries
             Marshal.Copy(new IntPtr(pt.content), content, 0, (int)pt.content_size);
             return new QdbBlobPoint(TimeConverter.ToDateTime(pt.timestamp), content);
         }
+        
+        public static qdb_ts_int64_point ToNative(this QdbPoint<long> pt)
+        {
+            return new qdb_ts_int64_point
+            {
+                timestamp = TimeConverter.ToTimespec(pt.Time),
+                value = pt.Value
+            };
+        }
+
+        public static QdbInt64Point ToManaged(this qdb_ts_int64_point pt)
+        {
+            return new QdbInt64Point(TimeConverter.ToDateTime(pt.timestamp), pt.value);
+        }
+        
+        public static qdb_ts_timestamp_point ToNative(this QdbPoint<DateTime> pt)
+        {
+            return new qdb_ts_timestamp_point
+            {
+                timestamp = TimeConverter.ToTimespec(pt.Time),
+                value = TimeConverter.ToTimespec(pt.Value)
+            };
+        }
+
+        public static QdbTimestampPoint ToManaged(this qdb_ts_timestamp_point pt)
+        {
+            return new QdbTimestampPoint(TimeConverter.ToDateTime(pt.timestamp), TimeConverter.ToDateTime(pt.value));
+        }
     }
 }

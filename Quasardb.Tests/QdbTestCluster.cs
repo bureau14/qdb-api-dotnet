@@ -29,7 +29,7 @@ namespace Quasardb.Tests
             return Instance.Blob(alias ?? RandomGenerator.CreateUniqueAlias());
         }
 
-        public static QdbBlob CreateBlob(string alias=null)
+        public static QdbBlob CreateBlob(string alias = null)
         {
             var blob = CreateEmptyBlob(alias);
             blob.Put(RandomGenerator.CreateRandomContent());
@@ -42,12 +42,12 @@ namespace Quasardb.Tests
             blob.AttachTag(tag);
             return blob;
         }
-        
+
         #endregion
 
         #region Integer
 
-        public static QdbInteger CreateEmptyInteger(string alias=null)
+        public static QdbInteger CreateEmptyInteger(string alias = null)
         {
             return Instance.Integer(alias ?? RandomGenerator.CreateUniqueAlias());
         }
@@ -132,6 +132,35 @@ namespace Quasardb.Tests
             return column;
         }
 
+        public static QdbInt64Column CreateEmptyInt64Column(string alias = null, string name = null)
+        {
+            var ts = Instance.TimeSeries(alias ?? RandomGenerator.CreateUniqueAlias());
+            var colName = name ?? RandomGenerator.CreateUniqueAlias();
+            ts.Create(new QdbInt64ColumnDefinition(colName));
+            return ts.Int64Columns[colName];
+        }
+
+        public static QdbInt64Column CreateInt64Column(string alias = null, string name = null)
+        {
+            var column = CreateEmptyInt64Column(alias, null);
+            column.Insert(DateTime.Now, 666);
+            return column;
+        }
+        public static QdbTimestampColumn CreateEmptyTimestampColumn(string alias = null, string name = null)
+        {
+            var ts = Instance.TimeSeries(alias ?? RandomGenerator.CreateUniqueAlias());
+            var colName = name ?? RandomGenerator.CreateUniqueAlias();
+            ts.Create(new QdbTimestampColumnDefinition(colName));
+            return ts.TimestampColumns[colName];
+        }
+
+        public static QdbTimestampColumn CreateTimestampColumn(string alias = null, string name = null)
+        {
+            var column = CreateEmptyTimestampColumn(alias, null);
+            column.Insert(DateTime.Now, DateTime.Now);
+            return column;
+        }
+
         public static QdbBlobColumn CreateEmptyBlobColumn(string alias = null)
         {
             var ts = Instance.TimeSeries(alias ?? RandomGenerator.CreateUniqueAlias());
@@ -153,6 +182,22 @@ namespace Quasardb.Tests
             var ts = Instance.TimeSeries(alias);
             ts.Create(new QdbBlobColumnDefinition("existing"));
             return ts.DoubleColumns["non-existing"];
+        }
+
+        public static QdbInt64Column GetNonExistingInt64Column()
+        {
+            var alias = RandomGenerator.CreateUniqueAlias();
+            var ts = Instance.TimeSeries(alias);
+            ts.Create(new QdbBlobColumnDefinition("existing"));
+            return ts.Int64Columns["non-existing"];
+        }
+
+        public static QdbTimestampColumn GetNonExistingTimestampColumn()
+        {
+            var alias = RandomGenerator.CreateUniqueAlias();
+            var ts = Instance.TimeSeries(alias);
+            ts.Create(new QdbBlobColumnDefinition("existing"));
+            return ts.TimestampColumns["non-existing"];
         }
 
         public static QdbBlobColumn GetNonExistingBlobColumn()

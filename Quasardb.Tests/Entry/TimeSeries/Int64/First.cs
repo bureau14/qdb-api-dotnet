@@ -4,22 +4,22 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb.Exceptions;
 using Quasardb.TimeSeries;
 
-namespace Quasardb.Tests.Entry.TimeSeries.Blob
+namespace Quasardb.Tests.Entry.TimeSeries.Int64
 {
     [TestClass]
     public class First
     {
-        readonly QdbBlobPoint[] _points =
+        readonly QdbInt64PointCollection _points = new QdbInt64PointCollection
         {
-            new QdbBlobPoint(new DateTime(2012, 11, 02), RandomGenerator.CreateRandomContent()),
-            new QdbBlobPoint(new DateTime(2014, 06, 30), RandomGenerator.CreateRandomContent()),
-            new QdbBlobPoint(new DateTime(2016, 02, 04), RandomGenerator.CreateRandomContent())
+            {new DateTime(2012, 11, 02), 666},
+            {new DateTime(2014, 06, 30), 42 },
+            {new DateTime(2016, 02, 04), 0}
         };
 
         [TestMethod]
         public void ThrowsColumnNotFound()
         {
-            var col = QdbTestCluster.GetNonExistingBlobColumn();
+            var col = QdbTestCluster.GetNonExistingInt64Column();
 
             try
             {
@@ -36,7 +36,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Blob
         [TestMethod]
         public void GivenNoArgument_ReturnsFirstPointOfTimeSeries()
         {
-            var col = QdbTestCluster.CreateEmptyBlobColumn();
+            var col = QdbTestCluster.CreateEmptyInt64Column();
             col.Insert(_points);
 
             var result = col.First();
@@ -47,7 +47,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Blob
         [TestMethod]
         public void GivenInRangeInterval_ReturnsFirstPointOfInterval()
         {
-            var col = QdbTestCluster.CreateEmptyBlobColumn();
+            var col = QdbTestCluster.CreateEmptyInt64Column();
             col.Insert(_points);
 
             var interval = new QdbTimeInterval(_points[0].Time.AddHours(1), _points[2].Time);
@@ -59,7 +59,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Blob
         [TestMethod]
         public void GivenOutOfRangeInterval_ReturnsNull()
         {
-            var col = QdbTestCluster.CreateEmptyBlobColumn();
+            var col = QdbTestCluster.CreateEmptyInt64Column();
             col.Insert(_points);
 
             var interval = new QdbTimeInterval(new DateTime(3000, 1, 1), new DateTime(4000, 1, 1));
@@ -71,7 +71,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Blob
         [TestMethod]
         public void GivenSeveralIntervals_ReturnsFirstOfEach()
         {
-            var col = QdbTestCluster.CreateEmptyBlobColumn();
+            var col = QdbTestCluster.CreateEmptyInt64Column();
             col.Insert(_points);
 
             var intervals = new[]
@@ -92,7 +92,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Blob
         [TestMethod]
         public void ThrowsEmptyColumn()
         {
-            var col = QdbTestCluster.CreateEmptyBlobColumn();
+            var col = QdbTestCluster.CreateEmptyInt64Column();
 
             try
             {

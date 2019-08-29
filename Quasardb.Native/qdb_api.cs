@@ -373,7 +373,7 @@ namespace Quasardb.Native
         public static extern qdb_error qdb_stream_read(
             [In] qdb_stream_handle handle,
             [In] byte* buffer,
-            [In,Out] ref size_t size);
+            [In, Out] ref size_t size);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error qdb_stream_getpos(
@@ -437,11 +437,27 @@ namespace Quasardb.Native
             [In] qdb_size_t count);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_ts_int64_insert(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In] [MarshalAs(ALIAS_TYPE)] string column,
+            [In] qdb_ts_int64_point[] points,
+            [In] qdb_size_t count);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_ts_timestamp_insert(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In] [MarshalAs(ALIAS_TYPE)] string column,
+            [In] qdb_ts_timestamp_point[] points,
+            [In] qdb_size_t count);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error qdb_ts_blob_aggregate(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] [MarshalAs(ALIAS_TYPE)] string column,
-            [In,Out] qdb_ts_blob_aggregation[] aggregations,
+            [In, Out] qdb_ts_blob_aggregation[] aggregations,
             [In] qdb_size_t aggregation_count);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
@@ -449,11 +465,47 @@ namespace Quasardb.Native
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] [MarshalAs(ALIAS_TYPE)] string column,
-            [In,Out] qdb_ts_double_aggregation[] aggregations,
+            [In, Out] qdb_ts_double_aggregation[] aggregations,
+            [In] qdb_size_t aggregation_count);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_ts_int64_aggregate(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In] [MarshalAs(ALIAS_TYPE)] string column,
+            [In, Out] qdb_ts_int64_aggregation[] aggregations,
+            [In] qdb_size_t aggregation_count);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_ts_timestamp_aggregate(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In] [MarshalAs(ALIAS_TYPE)] string column,
+            [In, Out] qdb_ts_timestamp_aggregation[] aggregations,
             [In] qdb_size_t aggregation_count);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error qdb_ts_double_get_ranges(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In] [MarshalAs(ALIAS_TYPE)] string column,
+            [In, Out] qdb_ts_range[] ranges,
+            [In] qdb_size_t ranges_count,
+            [Out] out pointer_t points,
+            [Out] out size_t points_count);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_ts_int64_get_ranges(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In] [MarshalAs(ALIAS_TYPE)] string column,
+            [In, Out] qdb_ts_range[] ranges,
+            [In] qdb_size_t ranges_count,
+            [Out] out pointer_t points,
+            [Out] out size_t points_count);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_ts_timestamp_get_ranges(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] [MarshalAs(ALIAS_TYPE)] string column,

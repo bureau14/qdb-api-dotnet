@@ -46,6 +46,10 @@ namespace Quasardb.TimeSeries
                     return new QdbDoubleColumn(_series, name);
                 case qdb_ts_column_type.qdb_ts_column_blob:
                     return new QdbBlobColumn(_series, name);
+                case qdb_ts_column_type.qdb_ts_column_int64:
+                    return new QdbInt64Column(_series, name);
+                case qdb_ts_column_type.qdb_ts_column_timestamp:
+                    return new QdbTimestampColumn(_series, name);
                 default:
                     return new QdbUnknownColumn(_series, name, type);
             }
@@ -113,6 +117,68 @@ namespace Quasardb.TimeSeries
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
+    
+    /// <summary>
+    /// A collection of columns contains int64 point values.
+    /// </summary>
+    public class QdbInt64ColumnCollection : IEnumerable<QdbInt64Column>
+    {
+        internal readonly QdbTimeSeries _series;
+
+        internal QdbInt64ColumnCollection(QdbTimeSeries series)
+        {
+            _series = series;
+        }
+
+        /// <summary>
+        /// Gets the columns with the specified name
+        /// </summary>
+        /// <param name="name">The name of the column</param>
+        public QdbInt64Column this[string name] => new QdbInt64Column(_series, name);
+
+        /// <inheritdoc />
+        public IEnumerator<QdbInt64Column> GetEnumerator()
+        {
+            foreach (var col in new QdbColumnCollection(_series))
+            {
+                if (col is QdbInt64Column int64Column)
+                    yield return int64Column;
+            }
+        }
+
+       IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    }
+
+    /// <summary>
+    /// A collection of columns contains timestamp point values.
+    /// </summary>
+    public class QdbTimestampColumnCollection : IEnumerable<QdbTimestampColumn>
+    {
+        internal readonly QdbTimeSeries _series;
+
+        internal QdbTimestampColumnCollection(QdbTimeSeries series)
+        {
+            _series = series;
+        }
+
+        /// <summary>
+        /// Gets the columns with the specified name
+        /// </summary>
+        /// <param name="name">The name of the column</param>
+        public QdbTimestampColumn this[string name] => new QdbTimestampColumn(_series, name);
+
+        /// <inheritdoc />
+        public IEnumerator<QdbTimestampColumn> GetEnumerator()
+        {
+            foreach (var col in new QdbColumnCollection(_series))
+            {
+                if (col is QdbTimestampColumn timestampColumn)
+                    yield return timestampColumn;
+            }
+        }
+
+       IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    }
 
     /// <summary>
     /// A time series
@@ -124,6 +190,8 @@ namespace Quasardb.TimeSeries
             DoubleColumns = new QdbDoubleColumnCollection(this);
             Columns = new QdbColumnCollection(this);
             BlobColumns = new QdbBlobColumnCollection(this);
+            Int64Columns = new QdbInt64ColumnCollection(this);
+            TimestampColumns = new QdbTimestampColumnCollection(this);
         }
 
         /// <summary>
@@ -140,6 +208,16 @@ namespace Quasardb.TimeSeries
         /// The columns of the time series that contains double-precision floating-point values.
         /// </summary>
         public QdbDoubleColumnCollection DoubleColumns { get; }
+
+        /// <summary>
+        /// The columns of the time series that contains int64 point values.
+        /// </summary>
+        public QdbInt64ColumnCollection Int64Columns { get; }
+
+        /// <summary>
+        /// The columns of the time series that contains timestamp point values.
+        /// </summary>
+        public QdbTimestampColumnCollection TimestampColumns { get; }
 
         /// <summary>
         /// Creates the time-series.

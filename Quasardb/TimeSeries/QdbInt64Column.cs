@@ -1,19 +1,19 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Quasardb.Exceptions;
 using Quasardb.Native;
 
-using Point = Quasardb.TimeSeries.QdbDoublePoint;
+using Point = Quasardb.TimeSeries.QdbInt64Point;
 
 namespace Quasardb.TimeSeries
 {
     /// <summary>
     /// A column of a time series in a quasardb database.
     /// </summary>
-    public sealed class QdbDoubleColumn : QdbColumn
+    public sealed class QdbInt64Column : QdbColumn
     {
-        internal QdbDoubleColumn(QdbTimeSeries series, string name) : base(series, name)
+        internal QdbInt64Column(QdbTimeSeries series, string name) : base(series, name)
         {
         }
 
@@ -23,9 +23,9 @@ namespace Quasardb.TimeSeries
         /// Inserts one or more points in the time series
         /// </summary>
         /// <param name="points">The points to insert</param>
-        public void Insert(QdbDoublePointCollection points)
+        public void Insert(QdbInt64PointCollection points)
         {
-            var error = qdb_api.qdb_ts_double_insert(Handle, Series.Alias, Name, points.Points.Buffer, points.Points.Count);
+            var error = qdb_api.qdb_ts_int64_insert(Handle, Series.Alias, Name, points.Points.Buffer, points.Points.Count);
             QdbExceptionThrower.ThrowIfNeeded(error, alias: Series.Alias);
         }
 
@@ -35,7 +35,7 @@ namespace Quasardb.TimeSeries
         /// <param name="points">The points to insert</param>
         public void Insert(IEnumerable<Point> points)
         {
-            Insert(new QdbDoublePointCollection(points));
+            Insert(new QdbInt64PointCollection(points));
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="time">The timestamp of the point to insert</param>
         /// <param name="value">The value of the point to insert</param>
-        public void Insert(DateTime time, double value)
+        public void Insert(DateTime time, long value)
         {
             Insert(new Point(time, value));
         }
@@ -77,7 +77,7 @@ namespace Quasardb.TimeSeries
         /// <returns>The number of points in the interval</returns>
         public long Count(QdbTimeInterval interval)
         {
-            return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Count, interval).Count();
+            return _aggregator.Int64Aggregate(qdb_ts_aggregation_type.Count, interval).Count();
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace Quasardb.TimeSeries
         /// <returns>The number of points in each interval</returns>
         public IEnumerable<long> Count(IEnumerable<QdbTimeInterval> intervals)
         {
-            return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Count, intervals).Count();
+            return _aggregator.Int64Aggregate(qdb_ts_aggregation_type.Count, intervals).Count();
         }
 
         #endregion
@@ -99,9 +99,9 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <returns>The average value of the timeseries</returns>
         /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
-        public double Average()
+        public long Average()
         {
-            var result = _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Average);
+            var result = _aggregator.Int64Aggregate(qdb_ts_aggregation_type.Average);
 
             if (result.Count() == 0)
                 throw new QdbEmptyColumnException(Series.Alias, Name);
@@ -112,20 +112,20 @@ namespace Quasardb.TimeSeries
         /// Gets the average (ie the mean of all values) in an interval
         /// </summary>
         /// <param name="interval">The time interval to scan</param>
-        /// <returns>The average value or <c>NaN</c> if there is no point in the interval</returns>
-        public double Average(QdbTimeInterval interval)
+        /// <returns>The average value</returns>
+        public long Average(QdbTimeInterval interval)
         {
-            return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Average, interval).Value();
+            return _aggregator.Int64Aggregate(qdb_ts_aggregation_type.Average, interval).Value();
         }
 
         /// <summary>
         /// Gets the average (ie the mean of all values) in each interval
         /// </summary>
         /// <param name="intervals">The time intervals to scan</param>
-        /// <returns>The average values (<c>NaN</c> when there is no point in an interval)</returns>
-        public IEnumerable<double> Average(IEnumerable<QdbTimeInterval> intervals)
+        /// <returns>The average values</returns>
+        public IEnumerable<long> Average(IEnumerable<QdbTimeInterval> intervals)
         {
-            return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Average, intervals).Value();
+            return _aggregator.Int64Aggregate(qdb_ts_aggregation_type.Average, intervals).Value();
         }
 
         #endregion
@@ -139,7 +139,7 @@ namespace Quasardb.TimeSeries
         /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
         public Point First()
         {
-            var point = _aggregator.DoubleAggregate(qdb_ts_aggregation_type.First).AsPoint();
+            var point = _aggregator.Int64Aggregate(qdb_ts_aggregation_type.First).AsPoint();
             if (point == null)
                 throw new QdbEmptyColumnException(Series.Alias, Name);
             return point;
@@ -152,7 +152,7 @@ namespace Quasardb.TimeSeries
         /// <returns>The first point in the interval or <c>null</c> if there is no point in the interval</returns>
         public Point First(QdbTimeInterval interval)
         {
-            return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.First, interval).AsPoint();
+            return _aggregator.Int64Aggregate(qdb_ts_aggregation_type.First, interval).AsPoint();
         }
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace Quasardb.TimeSeries
         /// <returns>The first point in each interval (<c>null</c> when there is no point in an interval)</returns>
         public IEnumerable<Point> First(IEnumerable<QdbTimeInterval> intervals)
         {
-            return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.First, intervals).AsPoint();
+            return _aggregator.Int64Aggregate(qdb_ts_aggregation_type.First, intervals).AsPoint();
         }
 
         #endregion
@@ -176,7 +176,7 @@ namespace Quasardb.TimeSeries
         /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
         public Point Last()
         {
-            var point = _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Last).AsPoint();
+            var point = _aggregator.Int64Aggregate(qdb_ts_aggregation_type.Last).AsPoint();
             if (point == null)
                 throw new QdbEmptyColumnException(Series.Alias, Name);
             return point;
@@ -189,7 +189,7 @@ namespace Quasardb.TimeSeries
         /// <returns>The last point in the interval or <c>null</c> if there is no point in the interval</returns>
         public Point Last(QdbTimeInterval interval)
         {
-            return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Last, interval).AsPoint();
+            return _aggregator.Int64Aggregate(qdb_ts_aggregation_type.Last, interval).AsPoint();
         }
 
         /// <summary>
@@ -199,7 +199,7 @@ namespace Quasardb.TimeSeries
         /// <returns>The last point in each interval (<c>null</c> when there is no point in an interval)</returns>
         public IEnumerable<Point> Last(IEnumerable<QdbTimeInterval> intervals)
         {
-            return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Last, intervals).AsPoint();
+            return _aggregator.Int64Aggregate(qdb_ts_aggregation_type.Last, intervals).AsPoint();
         }
 
         #endregion
@@ -213,7 +213,7 @@ namespace Quasardb.TimeSeries
         /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
         public Point Max()
         {
-            var point = _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Max).AsPoint();
+            var point = _aggregator.Int64Aggregate(qdb_ts_aggregation_type.Max).AsPoint();
             if (point == null)
                 throw new QdbEmptyColumnException(Series.Alias, Name);
             return point;
@@ -226,7 +226,7 @@ namespace Quasardb.TimeSeries
         /// <returns>The max point of the interval or <c>null</c> if there is no point in the interval</returns>
         public Point Max(QdbTimeInterval interval)
         {
-            return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Max, interval).AsPoint();
+            return _aggregator.Int64Aggregate(qdb_ts_aggregation_type.Max, interval).AsPoint();
         }
 
         /// <summary>
@@ -236,7 +236,7 @@ namespace Quasardb.TimeSeries
         /// <returns>The max point in each interval (<c>null</c> when there is no point in an interval)</returns>
         public IEnumerable<Point> Max(IEnumerable<QdbTimeInterval> intervals)
         {
-            return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Max, intervals).AsPoint();
+            return _aggregator.Int64Aggregate(qdb_ts_aggregation_type.Max, intervals).AsPoint();
         }
 
         #endregion
@@ -250,7 +250,7 @@ namespace Quasardb.TimeSeries
         /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
         public Point Min()
         {
-            var point = _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Min).AsPoint();
+            var point = _aggregator.Int64Aggregate(qdb_ts_aggregation_type.Min).AsPoint();
             if (point == null)
                 throw new QdbEmptyColumnException(Series.Alias, Name);
             return point;
@@ -263,7 +263,7 @@ namespace Quasardb.TimeSeries
         /// <returns>The min point in the interval or <c>null</c> if there is no point in the interval</returns>
         public Point Min(QdbTimeInterval interval)
         {
-            return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Min, interval).AsPoint();
+            return _aggregator.Int64Aggregate(qdb_ts_aggregation_type.Min, interval).AsPoint();
         }
 
         /// <summary>
@@ -273,7 +273,7 @@ namespace Quasardb.TimeSeries
         /// <returns>The min point of each interval (<c>null</c> when there is no point in an interval)</returns>
         public IEnumerable<Point> Min(IEnumerable<QdbTimeInterval> intervals)
         {
-            return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Min, intervals).AsPoint();
+            return _aggregator.Int64Aggregate(qdb_ts_aggregation_type.Min, intervals).AsPoint();
         }
 
         #endregion
@@ -309,9 +309,9 @@ namespace Quasardb.TimeSeries
             var ranges = new InteropableList<qdb_ts_range>(Helpers.GetCountOrDefault(intervals));
             foreach (var interval in intervals)
                 ranges.Add(interval.ToNative());
-            using (var points = new qdb_buffer<qdb_ts_double_point>(Handle))
+            using (var points = new qdb_buffer<qdb_ts_int64_point>(Handle))
             {
-                var error = qdb_api.qdb_ts_double_get_ranges(Handle, Series.Alias, Name, ranges.Buffer, ranges.Count,
+                var error = qdb_api.qdb_ts_int64_get_ranges(Handle, Series.Alias, Name, ranges.Buffer, ranges.Count,
                     out points.Pointer, out points.Size);
                 QdbExceptionThrower.ThrowIfNeeded(error, alias: Series.Alias, column: Name);
 
@@ -329,9 +329,9 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <returns>The sum of the timeseries</returns>
         /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
-        public double Sum()
+        public long Sum()
         {
-            var result = _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Sum);
+            var result = _aggregator.Int64Aggregate(qdb_ts_aggregation_type.Sum);
             if (result.Count() == 0)
                 throw new QdbEmptyColumnException(Series.Alias, Name);
             return result.Value();
@@ -342,9 +342,9 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="interval">The time interval to scan</param>
         /// <returns>The sum of the interval or <c>NaN</c> if there is no point in the interval</returns>
-        public double Sum(QdbTimeInterval interval)
+        public long Sum(QdbTimeInterval interval)
         {
-            return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Sum, interval).Value();
+            return _aggregator.Int64Aggregate(qdb_ts_aggregation_type.Sum, interval).Value();
         }
 
         /// <summary>
@@ -352,9 +352,9 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="intervals">The time intervals to scan</param>
         /// <returns>The sum of each interval or <c>NaN</c> when there is no point in an interval</returns>
-        public IEnumerable<double> Sum(IEnumerable<QdbTimeInterval> intervals)
+        public IEnumerable<long> Sum(IEnumerable<QdbTimeInterval> intervals)
         {
-            return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Sum, intervals).Value();
+            return _aggregator.Int64Aggregate(qdb_ts_aggregation_type.Sum, intervals).Value();
         }
 
         #endregion
