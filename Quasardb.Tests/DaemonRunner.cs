@@ -24,14 +24,12 @@ namespace Quasardb.Tests
         {
             UseSecurity = testContext.Properties["useSecurity"]?.Equals("true") ?? false;
             ClusterUrl = UseSecurity ? SecureClusterUrl : InsecureClusterUrl;
-            if (UseSecurity)
-            {
-                ClusterPublicKey = System.IO.File.ReadAllText(ClusterPublicKeyFile);
-                var credentials = new JavaScriptSerializer().Deserialize<Dictionary<string, string>>(System.IO.File.ReadAllText(UserCredentialsFile));
 
-                UserName = credentials["username"];
-                UserPrivateKey = credentials["secret_key"];
-            }
+            ClusterPublicKey = System.IO.File.ReadAllText(ClusterPublicKeyFile);
+            var credentials = new JavaScriptSerializer().Deserialize<Dictionary<string, string>>(System.IO.File.ReadAllText(UserCredentialsFile));
+
+            UserName = credentials["username"];
+            UserPrivateKey = credentials["secret_key"];
         }
     }
 }
