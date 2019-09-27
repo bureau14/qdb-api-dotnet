@@ -2,7 +2,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
 // import-start
-using Quasardb.Exceptions;
 using Quasardb.TimeSeries;
 // import-end
 
@@ -12,34 +11,24 @@ namespace Quasardb.Tests.Tutorial
     public class Tutorial
     {
         [TestMethod]
-        public void Test()
+        public void OnSecure()
         {
-            // connect-start
-            QdbCluster c = null;
-            try
-            {
-                c = new QdbCluster("qdb://127.0.0.1:2836");
-            }
-            catch (QdbException e)
-            {
-                Console.WriteLine("Could not connect to cluster: {}", e.ToString());
-            }
-            // connect-end
-
+            var secureClusterURI = DaemonRunner.SecureClusterUrl;
             var clusterPublicKey = DaemonRunner.ClusterPublicKey;
             var userName = DaemonRunner.UserName;
             var userPrivateKey = DaemonRunner.UserPrivateKey;
             // secure-connect-start
-            QdbCluster sc = null;
-            try
-            {
-                sc = new QdbCluster("qdb://127.0.0.1:2837", clusterPublicKey, userName, userPrivateKey);
-            }
-            catch (QdbException e)
-            {
-                Console.WriteLine("Could not connect to secure cluster: {}", e.ToString());
-            }
+            QdbCluster sc = new QdbCluster(secureClusterURI, clusterPublicKey, userName, userPrivateKey);
             // secure-connect-end
+            Assert.IsNotNull(sc);
+        }
+        [TestMethod]
+        public void OnInsecure()
+        {
+            // connect-start
+            QdbCluster c = new QdbCluster("qdb://127.0.0.1:2836");
+            // connect-end
+            Assert.IsNotNull(c);
 
             // create-table-start
             // First we acquire a reference to a table (which may or may not yet exist)
@@ -50,16 +39,9 @@ namespace Quasardb.Tests.Tutorial
                     new QdbDoubleColumnDefinition("open"),
                     new QdbDoubleColumnDefinition("close"),
                     new QdbInt64ColumnDefinition("volume")};
-            try
-            {
-                // Now create the table with the default shard size
-                ts.Create(columns);
 
-            }
-            catch (QdbException e)
-            {
-                Console.WriteLine("Could not create timeseries: {}", e.ToString());
-            }
+            // Now create the table with the default shard size
+            ts.Create(columns);
             // create-table-end
 
             // tags-start
@@ -93,6 +75,10 @@ namespace Quasardb.Tests.Tutorial
             // you can now inspect the values in the enumerable Points
             var resultPoints = openCol.Points();
             // column-get-end
+            var ptEnum = resultPoints.GetEnumerator();
+            ptEnum.MoveNext();
+            Assert.AreEqual(ptEnum.Current.Time, opens[0].Time);
+            Assert.AreEqual(ptEnum.Current.Value, opens[0].Value);
         }
     }
 }
