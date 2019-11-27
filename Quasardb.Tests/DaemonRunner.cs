@@ -14,7 +14,7 @@ namespace Quasardb.Tests
         public static string UserPrivateKey { get; private set; }
 
         public const string InsecureClusterUrl = "qdb://127.0.0.1:2836";
-        public const string SecureClusterUrl = "qdb://127.0.0.1:2837";
+        public const string SecureClusterUrl = "qdb://127.0.0.1:2838";
 
         public const string ClusterPublicKeyFile = "../../../cluster_public.key";
         public const string UserCredentialsFile = "../../../user_private.key";
