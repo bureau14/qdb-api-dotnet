@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using Quasardb.Exceptions;
 using Quasardb.Native;
 using Quasardb.TimeSeries;
+using Quasardb.Query;
 
 namespace Quasardb
 {
@@ -82,7 +82,7 @@ namespace Quasardb
         /// <param name="level">The level of compression to be used for the current handle to cluster.</param>
         public void SetCompression(QdbCompression level)
         {
-            var error = qdb_api.qdb_option_set_compression(_handle, (qdb_compression) level);
+            var error = qdb_api.qdb_option_set_compression(_handle, (qdb_compression)level);
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
 
@@ -225,6 +225,21 @@ namespace Quasardb
         {
             if (alias == null) throw new ArgumentNullException(nameof(alias));
             return new QdbTimeSeries(_handle, alias);
+        }
+
+        /// <summary>
+        /// Run the provided query and creates a table directory with the results.
+        /// </summary>
+        /// <remarks>Queries are transactional. The complexity of this function
+        /// is dependent on the complexity of the query.</remarks>
+        /// <param name="query">The string representing the query to perform.</param>
+        /// <returns>A <see cref="QdbQueryResult" /> holding the results of the query.</returns>
+        /// <seealso cref="QdbQueryResult"/>
+        public QdbQueryResult Query(string query)
+        {
+            if (query == null) throw new ArgumentNullException(nameof(query));
+
+            return new QdbQueryResult(_handle, query);
         }
     }
 }

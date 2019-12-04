@@ -148,6 +148,7 @@
     <Compile Include="Misc\QdbExceptionFactoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QdbTestCluster.cs" />
+    <Compile Include="Query\Query.cs" />
     <Compile Include="RandomGenerator.cs" />
     <Compile Include="Tutorial.cs" />
   </ItemGroup>
