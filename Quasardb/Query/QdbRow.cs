@@ -12,7 +12,7 @@ namespace Quasardb.Query
     /// <summary>
     /// A row of results.
     /// </summary>
-    public unsafe class QdbRow : IEnumerable<QdbCell>
+    public class QdbRow : IEnumerable<QdbCell>
     {
         static readonly long SizeOfT = Marshal.SizeOf(typeof(qdb_point_result));
 
@@ -35,7 +35,7 @@ namespace Quasardb.Query
         /// </summary>
         /// <param name="index">The zero-based position in the row</param>
         /// <exception cref="ArgumentOutOfRangeException">If index is negative or above Count</exception>
-        public unsafe QdbCell this[long index]
+        public QdbCell this[long index]
         {
             get
             {
@@ -50,7 +50,7 @@ namespace Quasardb.Query
         /// </summary>
         /// <param name="name">The name of the column</param>
         /// <exception cref="QdbColumnNotFoundException">If a column with the given name is not found.</exception>
-        public unsafe QdbCell this[string name]
+        public QdbCell this[string name]
         {
             get
             {

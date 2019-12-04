@@ -9,11 +9,11 @@ namespace Quasardb.Query
     /// <summary>
     /// A variadic structure holding the result type as well as the result value.
     /// </summary>
-    public unsafe class QdbCell
+    public class QdbCell
     {
         private readonly qdb_point_result _result;
 
-        internal unsafe QdbCell(qdb_point_result result)
+        internal QdbCell(qdb_point_result result)
         {
             _result = result;
         }
@@ -96,7 +96,7 @@ namespace Quasardb.Query
         /// Gets the result value.
         /// </summary>
         /// <exception cref="InvalidCastException">The result value is not of type <see cref="QdbValueType.Blob" /> </exception>
-        public byte[] BlobValue
+        public unsafe byte[] BlobValue
         {
             get
             {
