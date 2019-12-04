@@ -84,7 +84,7 @@ namespace Quasardb.TimeSeries
             }
         }
 
-       IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
     /// <summary>
@@ -117,7 +117,7 @@ namespace Quasardb.TimeSeries
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
-    
+
     /// <summary>
     /// A collection of columns contains int64 point values.
     /// </summary>
@@ -146,7 +146,7 @@ namespace Quasardb.TimeSeries
             }
         }
 
-       IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
     /// <summary>
@@ -177,7 +177,7 @@ namespace Quasardb.TimeSeries
             }
         }
 
-       IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
     /// <summary>
@@ -225,10 +225,9 @@ namespace Quasardb.TimeSeries
         /// <param name="columnDefinitions">The description of the columns</param>
         /// <exception cref="QdbAliasAlreadyExistsException">If the time-series already exists.</exception>
         /// <exception cref="QdbIncompatibleTypeException">If the alias matches with an entry of another type.</exception>
-        /// <exception cref="QdbInvalidArgumentException">If columns list is empty.</exception>
         public void Create(params QdbColumnDefinition[] columnDefinitions)
         {
-            Create((IEnumerable<QdbColumnDefinition>) columnDefinitions);
+            Create((IEnumerable<QdbColumnDefinition>)columnDefinitions);
         }
 
         /// <summary>
@@ -238,11 +237,10 @@ namespace Quasardb.TimeSeries
         /// <param name="columnDefinitions">The description of the columns</param>
         /// <exception cref="QdbAliasAlreadyExistsException">If the time-series already exists.</exception>
         /// <exception cref="QdbIncompatibleTypeException">If the alias matches with an entry of another type.</exception>
-        /// <exception cref="QdbInvalidArgumentException">If columns list is empty.</exception>
         /// <exception cref="QdbInvalidArgumentException">If shard size is less than one millisecond or greater than maximum allowed length.</exception>
         public void Create(TimeSpan shardSize, params QdbColumnDefinition[] columnDefinitions)
         {
-            Create(shardSize, (IEnumerable<QdbColumnDefinition>) columnDefinitions);
+            Create(shardSize, (IEnumerable<QdbColumnDefinition>)columnDefinitions);
         }
 
         /// <summary>
@@ -251,7 +249,6 @@ namespace Quasardb.TimeSeries
         /// <param name="columnDefinitions">The description of the columns</param>
         /// <exception cref="QdbAliasAlreadyExistsException">If the time-series already exists.</exception>
         /// <exception cref="QdbIncompatibleTypeException">If the alias matches with an entry of another type.</exception>
-        /// <exception cref="QdbInvalidArgumentException">If columns list is empty.</exception>
         public void Create(IEnumerable<QdbColumnDefinition> columnDefinitions)
         {
             Create(TimeSpan.FromMilliseconds(
@@ -266,7 +263,6 @@ namespace Quasardb.TimeSeries
         /// <param name="columnDefinitions">The description of the columns</param>
         /// <exception cref="QdbAliasAlreadyExistsException">If the time-series already exists.</exception>
         /// <exception cref="QdbIncompatibleTypeException">If the alias matches with an entry of another type.</exception>
-        /// <exception cref="QdbInvalidArgumentException">If columns list is empty.</exception>
         /// <exception cref="QdbInvalidArgumentException">If shard size is less than one millisecond or greater than maximum allowed length.</exception>
         public void Create(TimeSpan shardSize, IEnumerable<QdbColumnDefinition> columnDefinitions)
         {
@@ -286,6 +282,41 @@ namespace Quasardb.TimeSeries
                 Handle, Alias,
                 (ulong)(shardSize.TotalMilliseconds *
                         (double)qdb_duration.qdb_d_millisecond),
+                columns.Buffer, columns.Count);
+            QdbExceptionThrower.ThrowIfNeeded(err, alias: Alias);
+        }
+
+        /// <summary>
+        /// Appends columns to an existing time series.
+        /// </summary>
+        /// <param name="columnDefinitions">The description of the columns</param>
+        /// <exception cref="QdbInvalidArgumentException">If columns list is empty.</exception>
+        public void InsertColumns(params QdbColumnDefinition[] columnDefinitions)
+        {
+            InsertColumns((IEnumerable<QdbColumnDefinition>)columnDefinitions);
+        }
+
+        /// <summary>
+        /// Appends columns to an existing time series.
+        /// </summary>
+        /// <param name="columnDefinitions">The description of the columns</param>
+        /// <exception cref="QdbInvalidArgumentException">If columns list is empty.</exception>
+        public void InsertColumns(IEnumerable<QdbColumnDefinition> columnDefinitions)
+        {
+            var count = Helpers.GetCountOrDefault(columnDefinitions);
+            var columns = new InteropableList<qdb_ts_column_info>(count);
+
+            foreach (var def in columnDefinitions)
+            {
+                columns.Add(new qdb_ts_column_info
+                {
+                    name = def.Name,
+                    type = def.Type
+                });
+            }
+
+            var err = qdb_api.qdb_ts_insert_columns(
+                Handle, Alias,
                 columns.Buffer, columns.Count);
             QdbExceptionThrower.ThrowIfNeeded(err, alias: Alias);
         }
