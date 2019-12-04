@@ -220,6 +220,22 @@ namespace Quasardb.TimeSeries
         public QdbTimestampColumnCollection TimestampColumns { get; }
 
         /// <summary>
+        /// Returns the shard size of a time series.
+        /// </summary>
+        public TimeSpan ShardSize
+        {
+            get
+            {
+                ulong shardSize = 0;
+                var err = qdb_api.qdb_ts_shard_size(
+                    Handle, Alias,
+                    out shardSize);
+                QdbExceptionThrower.ThrowIfNeeded(err, alias: Alias);
+                return TimeSpan.FromMilliseconds((double)shardSize);
+            }
+        }
+
+        /// <summary>
         /// Creates the time-series.
         /// </summary>
         /// <param name="columnDefinitions">The description of the columns</param>

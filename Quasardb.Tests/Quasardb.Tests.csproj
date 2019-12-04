@@ -88,6 +88,7 @@
     <Compile Include="Entry\Blob\Remove.cs" />
     <Compile Include="Entry\Blob\Update.cs" />
     <Compile Include="Entry\DetachTag.cs" />
+    <Compile Include="Entry\TimeSeries\ShardSize.cs" />
     <Compile Include="Entry\TimeSeries\InsertColumns.cs" />
     <Compile Include="Entry\TimeSeries\Create.cs" />
     <Compile Include="Entry\TimeSeries\Columns.cs" />
