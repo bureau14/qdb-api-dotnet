@@ -54,16 +54,11 @@ namespace Quasardb.Query
         {
             get
             {
-                string alias = null;
-                for (var index = 0L; index < _columns.Count; ++index)
-                {
-                    var column = _columns[index];
-                    if (column.Equals("$table"))
-                        alias = this[index].StringValue;
+                long index = _columns.IndexOf(name);
+                if (index != -1) return this[index];
 
-                    if (column.Equals(name, StringComparison.InvariantCultureIgnoreCase))
-                        return this[index];
-                }
+                long tableIndex = _columns.IndexOf("$table");
+                string alias = tableIndex != -1 ? this[tableIndex].StringValue : null;
                 throw new QdbColumnNotFoundException(alias, name);
             }
         }

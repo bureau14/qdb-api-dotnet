@@ -11,43 +11,44 @@ namespace Quasardb.Query
     /// <summary>
     /// A read-only collection of column names.
     /// </summary>
-    public class QdbColumnNameCollection : IEnumerable<String>
+    public class QdbColumnNameCollection : IEnumerable<string>
     {
-        static readonly long SizeOfT = Marshal.SizeOf(typeof(qdb_sized_string));
-
-        private readonly IntPtr _pointer;
-        private readonly UIntPtr _size;
+        private readonly string[] _columns;
 
         internal unsafe QdbColumnNameCollection(qdb_sized_string* pointer, UIntPtr size)
         {
-            _pointer = new IntPtr(pointer);
-            _size = size;
+            _columns = new string[size.ToUInt64()];
+            for (var i = 0UL; i < size.ToUInt64(); i++)
+            {
+                var p = new IntPtr(pointer + i);
+                _columns[i] = (qdb_sized_string)Marshal.PtrToStructure(p, typeof(qdb_sized_string));
+            }
         }
+
+        internal int IndexOf(string column) => Array.IndexOf(_columns, column);
 
         /// <summary>
         /// Gets the number of column names in the collection.
         /// </summary>
-        public long Count => (long)_size;
+        public long Count => _columns.LongLength;
 
         /// <summary>
         /// Gets the column name at the specified index.
         /// </summary>
         /// <param name="index">The zero-based position in the collection</param>
         /// <exception cref="ArgumentOutOfRangeException">If index is negative or above Count</exception>
-        public String this[long index]
+        public string this[long index]
         {
             get
             {
-                if (index < 0 || (ulong)index >= _size.ToUInt64()) throw new ArgumentOutOfRangeException();
-                var p = new IntPtr(_pointer.ToInt64() + SizeOfT * index);
-                return (qdb_sized_string)Marshal.PtrToStructure(p, typeof(qdb_sized_string));
+                return _columns[index];
             }
         }
 
         /// <inheritdoc />
-        public IEnumerator<String> GetEnumerator()
+        public IEnumerator<string> GetEnumerator()
         {
-            for (var i = 0L; (ulong)i < _size.ToUInt64(); i++)
+            for (var i = 0L; i < _columns.LongLength; i++)
                 yield return this[i];
         }
 
