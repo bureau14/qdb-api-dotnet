@@ -25,7 +25,7 @@ namespace Quasardb.TimeSeries
         public void Insert(QdbTimestampPointCollection points)
         {
             var error = qdb_api.qdb_ts_timestamp_insert(Handle, Series.Alias, Name, points.Points.Buffer, points.Points.Count);
-            QdbExceptionThrower.ThrowIfNeeded(error, alias: Series.Alias);
+            QdbExceptionThrower.ThrowIfNeeded(error, alias: Series.Alias, column: Name);
         }
 
         /// <summary>
@@ -54,6 +54,107 @@ namespace Quasardb.TimeSeries
         public void Insert(DateTime time, DateTime value)
         {
             Insert(new Point(time, value));
+        }
+
+        #endregion
+
+        #region InsertTruncate
+
+        /// <summary>
+        /// Inserts one or more points in the time series and erases given
+        /// ranges in the same transaction
+        /// </summary>
+        /// <param name="intervals">The time intervals to erase</param>
+        /// <param name="points">The points to insert</param>
+        public void InsertTruncate(IEnumerable<QdbTimeInterval> intervals, QdbTimestampPointCollection points)
+        {
+            var ranges = new InteropableList<qdb_ts_range>(Helpers.GetCountOrDefault(intervals));
+            foreach (var interval in intervals)
+                ranges.Add(interval.ToNative());
+            var error = qdb_api.qdb_ts_timestamp_insert_truncate(
+                Handle, Series.Alias, Name,
+                ranges.Buffer, ranges.Count,
+                points.Points.Buffer, points.Points.Count);
+            QdbExceptionThrower.ThrowIfNeeded(error, alias: Series.Alias, column: Name);
+        }
+
+        /// <summary>
+        /// Inserts one or more points in the time series and erases the given
+        /// range in the same transaction
+        /// </summary>
+        /// <param name="interval">The time interval to erase</param>
+        /// <param name="points">The points to insert</param>
+        public void InsertTruncate(QdbTimeInterval interval, QdbTimestampPointCollection points)
+        {
+            InsertTruncate(new[] { interval }, points);
+        }
+
+        /// <summary>
+        /// Inserts one or more points in the time series and erases given
+        /// ranges in the same transaction
+        /// </summary>
+        /// <param name="intervals">The time intervals to erase</param>
+        /// <param name="points">The points to insert</param>
+        public void InsertTruncate(IEnumerable<QdbTimeInterval> intervals, IEnumerable<Point> points)
+        {
+            InsertTruncate(intervals, new QdbTimestampPointCollection(points));
+        }
+
+        /// <summary>
+        /// Inserts one or more points in the time series and erases the given
+        /// range in the same transaction
+        /// </summary>
+        /// <param name="interval">The time interval to erase</param>
+        /// <param name="points">The points to insert</param>
+        public void InsertTruncate(QdbTimeInterval interval, IEnumerable<Point> points)
+        {
+            InsertTruncate(new[] { interval }, new QdbTimestampPointCollection(points));
+        }
+
+        /// <summary>
+        /// Inserts one or more points in the time series and erases given
+        /// ranges in the same transaction
+        /// </summary>
+        /// <param name="intervals">The time intervals to erase</param>
+        /// <param name="points">The points to insert</param>
+        public void InsertTruncate(IEnumerable<QdbTimeInterval> intervals, params Point[] points)
+        {
+            InsertTruncate(intervals, (IEnumerable<Point>)points);
+        }
+
+        /// <summary>
+        /// Inserts one or more points in the time series and erases the given
+        /// range in the same transaction
+        /// </summary>
+        /// <param name="interval">The time interval to erase</param>
+        /// <param name="points">The points to insert</param>
+        public void InsertTruncate(QdbTimeInterval interval, params Point[] points)
+        {
+            InsertTruncate(new[] { interval }, (IEnumerable<Point>)points);
+        }
+
+        /// <summary>
+        /// Inserts one point in the time series and erases given ranges in
+        /// the same transaction
+        /// </summary>
+        /// <param name="intervals">The time intervals to erase</param>
+        /// <param name="time">The timestamp of the point to insert</param>
+        /// <param name="value">The value of the point to insert</param>
+        public void InsertTruncate(IEnumerable<QdbTimeInterval> intervals, DateTime time, DateTime value)
+        {
+            InsertTruncate(intervals, new Point(time, value));
+        }
+
+        /// <summary>
+        /// Inserts one point in the time series and erases the given range in
+        /// the same transaction
+        /// </summary>
+        /// <param name="interval">The time interval to erase</param>
+        /// <param name="time">The timestamp of the point to insert</param>
+        /// <param name="value">The value of the point to insert</param>
+        public void InsertTruncate(QdbTimeInterval interval, DateTime time, DateTime value)
+        {
+            InsertTruncate(new[] { interval }, new Point(time, value));
         }
 
         #endregion

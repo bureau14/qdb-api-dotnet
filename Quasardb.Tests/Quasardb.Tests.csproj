@@ -88,6 +88,9 @@
     <Compile Include="Entry\Blob\Remove.cs" />
     <Compile Include="Entry\Blob\Update.cs" />
     <Compile Include="Entry\DetachTag.cs" />
+    <Compile Include="Entry\TimeSeries\Blob\InsertTruncate.cs" />
+    <Compile Include="Entry\TimeSeries\Double\InsertTruncate.cs" />
+    <Compile Include="Entry\TimeSeries\Int64\InsertTruncate.cs" />
     <Compile Include="Entry\TimeSeries\ShardSize.cs" />
     <Compile Include="Entry\TimeSeries\InsertColumns.cs" />
     <Compile Include="Entry\TimeSeries\Create.cs" />
@@ -143,6 +146,7 @@
     <Compile Include="Entry\TimeSeries\Int64\Insert.cs" />
     <Compile Include="Entry\TimeSeries\Timestamp\Count.cs" />
     <Compile Include="Entry\TimeSeries\Timestamp\First.cs" />
+    <Compile Include="Entry\TimeSeries\Timestamp\InsertTruncate.cs" />
     <Compile Include="Entry\TimeSeries\Timestamp\Last.cs" />
     <Compile Include="Entry\TimeSeries\Timestamp\Points.cs" />
     <Compile Include="Misc\TimeConverter\ToDateTime.cs" />
