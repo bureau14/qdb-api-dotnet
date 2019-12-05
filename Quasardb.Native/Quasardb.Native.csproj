@@ -76,7 +76,11 @@
     <Compile Include="qdb_column_type.cs" />
     <Compile Include="qdb_compression.cs" />
     <Compile Include="qdb_duration.cs" />
+    <Compile Include="qdb_sized_string.cs" />
+    <Compile Include="qdb_query_result.cs" />
     <Compile Include="qdb_string.cs" />
+    <Compile Include="qdb_point_result.cs" />
+    <Compile Include="qdb_query_result_value_type.cs" />
     <Compile Include="qdb_ts_column_info.cs" />
     <Compile Include="qdb_ts_range.cs" />
     <Compile Include="qdb_ts_aggregation_type.cs" />

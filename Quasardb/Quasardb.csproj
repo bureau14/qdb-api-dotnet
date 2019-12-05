@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="Batch\QdbNativeBatch.cs" />
     <Compile Include="Exceptions\Connection\QdbConnectionException.cs" />
+    <Compile Include="Query\QdbQueryException.cs" />
     <Compile Include="Exceptions\Input\QdbInputException.cs" />
     <Compile Include="Exceptions\Input\QdbOutOfBoundsException.cs" />
     <Compile Include="Exceptions\Operation\Column\QdbColumnException.cs" />
@@ -89,6 +90,13 @@
     <Compile Include="IVisitable.cs" />
     <Compile Include="Batch\IOperation.cs" />
     <Compile Include="QdbUnknownEntry.cs" />
+    <Compile Include="Query\QdbCell.cs" />
+    <Compile Include="QdbNone.cs" />
+    <Compile Include="Query\QdbColumnNameCollection.cs" />
+    <Compile Include="Query\QdbRowCollection.cs" />
+    <Compile Include="Query\QdbValueType.cs" />
+    <Compile Include="Query\QdbQueryResult.cs" />
+    <Compile Include="Query\QdbRow.cs" />
     <Compile Include="TimeSeries\PointConverter.cs" />
     <Compile Include="TimeSeries\QdbBlobPointCollection.cs" />
     <Compile Include="TimeSeries\QdbBlobColumn.cs" />

@@ -533,5 +533,15 @@ namespace Quasardb.Native
             [Out] out size_t points_count);
 
         #endregion
+
+        #region Functions specific to queries
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_query(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string query,
+            [Out] out qdb_query_result* result);
+
+        #endregion
     }
 }
