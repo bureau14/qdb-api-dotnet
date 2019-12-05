@@ -542,10 +542,6 @@ namespace Quasardb.Native
             [In] [MarshalAs(ALIAS_TYPE)] string query,
             [Out] out qdb_query_result* result);
 
-        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_release(qdb_handle handle,
-            [In] qdb_query_result* result);
-
         #endregion
     }
 }

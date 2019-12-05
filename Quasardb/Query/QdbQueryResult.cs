@@ -26,7 +26,7 @@ namespace Quasardb.Query
                 {
                     if (_result->error_message.length.ToUInt64() > 0UL)
                         error_message = _result->error_message;
-                    qdb_api.qdb_release(_handle, _result);
+                    qdb_api.qdb_release(_handle, new IntPtr(_result));
                 }
                 throw new QdbQueryException(error_message ?? qdb_api.qdb_error(error));
             }
@@ -40,7 +40,7 @@ namespace Quasardb.Query
         /// </summary>
         public void Dispose()
         {
-            qdb_api.qdb_release(_handle, _result);
+            qdb_api.qdb_release(_handle, new IntPtr(_result));
         }
 
         /// <summary>
