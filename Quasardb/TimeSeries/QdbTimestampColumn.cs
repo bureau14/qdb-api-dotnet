@@ -201,39 +201,6 @@ namespace Quasardb.TimeSeries
 
         #endregion
 
-        #region Count
-
-        /// <summary>
-        /// Gets the number of points in the time series
-        /// </summary>
-        /// <returns>The number of points in the time series</returns>
-        public long Count()
-        {
-            return Count(QdbTimeInterval.Everything);
-        }
-
-        /// <summary>
-        /// Gets the number of points in an interval
-        /// </summary>
-        /// <param name="interval">The time interval to scan</param>
-        /// <returns>The number of points in the interval</returns>
-        public long Count(QdbTimeInterval interval)
-        {
-            return _aggregator.TimestampAggregate(qdb_ts_aggregation_type.Count, interval).Count();
-        }
-
-        /// <summary>
-        /// Gets the number of points in each interval
-        /// </summary>
-        /// <param name="intervals">The time intervals to scan</param>
-        /// <returns>The number of points in each interval</returns>
-        public IEnumerable<long> Count(IEnumerable<QdbTimeInterval> intervals)
-        {
-            return _aggregator.TimestampAggregate(qdb_ts_aggregation_type.Count, intervals).Count();
-        }
-
-        #endregion
-
         #region First()
 
         /// <summary>
@@ -304,6 +271,220 @@ namespace Quasardb.TimeSeries
         public IEnumerable<Point> Last(IEnumerable<QdbTimeInterval> intervals)
         {
             return _aggregator.TimestampAggregate(qdb_ts_aggregation_type.Last, intervals).AsPoint();
+        }
+
+        #endregion
+
+        #region Min()
+
+        /// <summary>
+        /// Gets the point with the smallest value of the timeseries
+        /// </summary>
+        /// <returns>The point with the smallest value of the time series</returns>
+        /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
+        public Point Min()
+        {
+            var point = _aggregator.TimestampAggregate(qdb_ts_aggregation_type.Min).AsPoint();
+            if (point == null)
+                throw new QdbEmptyColumnException(Series.Alias, Name);
+            return point;
+        }
+
+        /// <summary>
+        /// Gets the point with the smallest value in an interval
+        /// </summary>
+        /// <param name="interval">The time interval to scan</param>
+        /// <returns>The point with the smallest value in the interval or <c>null</c> if there is no point in the interval</returns>
+        public Point Min(QdbTimeInterval interval)
+        {
+            return _aggregator.TimestampAggregate(qdb_ts_aggregation_type.Min, interval).AsPoint();
+        }
+
+        /// <summary>
+        /// Gets the point with the smallest value in each interval
+        /// </summary>
+        /// <param name="intervals">The time intervals to scan</param>
+        /// <returns>The point with the smallest value of each interval (<c>null</c> when there is no point in an interval)</returns>
+        public IEnumerable<Point> Min(IEnumerable<QdbTimeInterval> intervals)
+        {
+            return _aggregator.TimestampAggregate(qdb_ts_aggregation_type.Min, intervals).AsPoint();
+        }
+
+        #endregion
+
+        #region Max()
+
+        /// <summary>
+        /// Gets the point with the largest value of the timeseries
+        /// </summary>
+        /// <returns>The point with the largest value of the time series</returns>
+        /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
+        public Point Max()
+        {
+            var point = _aggregator.TimestampAggregate(qdb_ts_aggregation_type.Max).AsPoint();
+            if (point == null)
+                throw new QdbEmptyColumnException(Series.Alias, Name);
+            return point;
+        }
+
+        /// <summary>
+        /// Gets the point with the largest value in an interval
+        /// </summary>
+        /// <param name="interval">The time interval to scan</param>
+        /// <returns>The point with the largest value of the interval or <c>null</c> if there is no point in the interval</returns>
+        public Point Max(QdbTimeInterval interval)
+        {
+            return _aggregator.TimestampAggregate(qdb_ts_aggregation_type.Max, interval).AsPoint();
+        }
+
+        /// <summary>
+        /// Gets the point with the largest value in each interval
+        /// </summary>
+        /// <param name="intervals">The time intervals to scan</param>
+        /// <returns>The point with the largest value in each interval (<c>null</c> when there is no point in an interval)</returns>
+        public IEnumerable<Point> Max(IEnumerable<QdbTimeInterval> intervals)
+        {
+            return _aggregator.TimestampAggregate(qdb_ts_aggregation_type.Max, intervals).AsPoint();
+        }
+
+        #endregion
+
+        #region Count
+
+        /// <summary>
+        /// Gets the number of points in the time series
+        /// </summary>
+        /// <returns>The number of points in the time series</returns>
+        public long Count()
+        {
+            return Count(QdbTimeInterval.Everything);
+        }
+
+        /// <summary>
+        /// Gets the number of points in an interval
+        /// </summary>
+        /// <param name="interval">The time interval to scan</param>
+        /// <returns>The number of points in the interval</returns>
+        public long Count(QdbTimeInterval interval)
+        {
+            return _aggregator.TimestampAggregate(qdb_ts_aggregation_type.Count, interval).Count();
+        }
+
+        /// <summary>
+        /// Gets the number of points in each interval
+        /// </summary>
+        /// <param name="intervals">The time intervals to scan</param>
+        /// <returns>The number of points in each interval</returns>
+        public IEnumerable<long> Count(IEnumerable<QdbTimeInterval> intervals)
+        {
+            return _aggregator.TimestampAggregate(qdb_ts_aggregation_type.Count, intervals).Count();
+        }
+
+        #endregion
+
+        #region AbsMin()
+
+        /// <summary>
+        /// Gets the point with the smallest absolute value of the timeseries
+        /// </summary>
+        /// <returns>The point with the smallest absolute value of the time series</returns>
+        /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
+        public Point AbsMin()
+        {
+            var point = _aggregator.TimestampAggregate(qdb_ts_aggregation_type.AbsMin).AsPoint();
+            if (point == null)
+                throw new QdbEmptyColumnException(Series.Alias, Name);
+            return point;
+        }
+
+        /// <summary>
+        /// Gets the point with the smallest absolute value in an interval
+        /// </summary>
+        /// <param name="interval">The time interval to scan</param>
+        /// <returns>The point with the smallest absolute value in the interval or <c>null</c> if there is no point in the interval</returns>
+        public Point AbsMin(QdbTimeInterval interval)
+        {
+            return _aggregator.TimestampAggregate(qdb_ts_aggregation_type.AbsMin, interval).AsPoint();
+        }
+
+        /// <summary>
+        /// Gets the point with the smallest absolute value in each interval
+        /// </summary>
+        /// <param name="intervals">The time intervals to scan</param>
+        /// <returns>The point with the smallest absolute value of each interval (<c>null</c> when there is no point in an interval)</returns>
+        public IEnumerable<Point> AbsMin(IEnumerable<QdbTimeInterval> intervals)
+        {
+            return _aggregator.TimestampAggregate(qdb_ts_aggregation_type.AbsMin, intervals).AsPoint();
+        }
+
+        #endregion
+
+        #region AbsMax()
+
+        /// <summary>
+        /// Gets the point with the largest absolute value of the timeseries
+        /// </summary>
+        /// <returns>The point with the largest absolute value of the time series</returns>
+        /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
+        public Point AbsMax()
+        {
+            var point = _aggregator.TimestampAggregate(qdb_ts_aggregation_type.AbsMax).AsPoint();
+            if (point == null)
+                throw new QdbEmptyColumnException(Series.Alias, Name);
+            return point;
+        }
+
+        /// <summary>
+        /// Gets the point with the largest absolute value in an interval
+        /// </summary>
+        /// <param name="interval">The time interval to scan</param>
+        /// <returns>The point with the largest absolute value of the interval or <c>null</c> if there is no point in the interval</returns>
+        public Point AbsMax(QdbTimeInterval interval)
+        {
+            return _aggregator.TimestampAggregate(qdb_ts_aggregation_type.AbsMax, interval).AsPoint();
+        }
+
+        /// <summary>
+        /// Gets the point with the largest absolute value in each interval
+        /// </summary>
+        /// <param name="intervals">The time intervals to scan</param>
+        /// <returns>The point with the largest absolute value in each interval (<c>null</c> when there is no point in an interval)</returns>
+        public IEnumerable<Point> AbsMax(IEnumerable<QdbTimeInterval> intervals)
+        {
+            return _aggregator.TimestampAggregate(qdb_ts_aggregation_type.AbsMax, intervals).AsPoint();
+        }
+
+        #endregion
+
+        #region DistinctCount
+
+        /// <summary>
+        /// Gets the number of points with distinct values in the time series
+        /// </summary>
+        /// <returns>The number of points with distinct values in the time series</returns>
+        public long DistinctCount()
+        {
+            return DistinctCount(QdbTimeInterval.Everything);
+        }
+
+        /// <summary>
+        /// Gets the number of points with distinct values in an interval
+        /// </summary>
+        /// <param name="interval">The time interval to scan</param>
+        /// <returns>The number of points with distinct values in the interval</returns>
+        public long DistinctCount(QdbTimeInterval interval)
+        {
+            return _aggregator.TimestampAggregate(qdb_ts_aggregation_type.DistinctCount, interval).Count();
+        }
+
+        /// <summary>
+        /// Gets the number of points with distinct values in each interval
+        /// </summary>
+        /// <param name="intervals">The time intervals to scan</param>
+        /// <returns>The number of points with distinct values in each interval</returns>
+        public IEnumerable<long> DistinctCount(IEnumerable<QdbTimeInterval> intervals)
+        {
+            return _aggregator.TimestampAggregate(qdb_ts_aggregation_type.DistinctCount, intervals).Count();
         }
 
         #endregion

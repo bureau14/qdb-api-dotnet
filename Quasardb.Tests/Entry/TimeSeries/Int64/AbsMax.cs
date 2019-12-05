@@ -7,23 +7,22 @@ using Quasardb.TimeSeries;
 namespace Quasardb.Tests.Entry.TimeSeries.Int64
 {
     [TestClass]
-    public class Min
+    public class AbsMax
     {
         readonly QdbInt64PointCollection _points = new QdbInt64PointCollection
         {
-            {new DateTime(2012, 11, 02), 666},
-            {new DateTime(2014, 06, 30), 42},
-            {new DateTime(2016, 02, 04), 0} // <- min is here
+            {new DateTime(2012, 11, 02), 0},
+            {new DateTime(2014, 06, 30), -42},
+            {new DateTime(2016, 02, 04), -666} // <- max is here
         };
 
         [TestMethod]
         public void ThrowsColumnNotFound()
         {
             var col = QdbTestCluster.GetNonExistingInt64Column();
-
             try
             {
-                col.Min();
+                col.AbsMax();
                 Assert.Fail("No exception thrown");
             }
             catch (QdbColumnNotFoundException e)
@@ -34,24 +33,24 @@ namespace Quasardb.Tests.Entry.TimeSeries.Int64
         }
 
         [TestMethod]
-        public void GivenNoArgument_ReturnsMinPointOfTimeSeries()
+        public void GivenNoArgument_ReturnsAbsMaxPointOfTimeSeries()
         {
             var col = QdbTestCluster.CreateEmptyInt64Column();
             col.Insert(_points);
 
-            var result = col.Min();
+            var result = col.AbsMax();
 
             Assert.AreEqual(_points[2], result);
         }
 
         [TestMethod]
-        public void GivenInterval_ReturnsMinPointOfInterval()
+        public void GivenInRangeInterval_ReturnsMinPointOfInterval()
         {
             var col = QdbTestCluster.CreateEmptyInt64Column();
             col.Insert(_points);
 
             var interval = new QdbTimeInterval(_points[0].Time, _points[2].Time);
-            var result = col.Min(interval);
+            var result = col.AbsMax(interval);
 
             Assert.AreEqual(_points[1], result);
         }
@@ -63,13 +62,13 @@ namespace Quasardb.Tests.Entry.TimeSeries.Int64
             col.Insert(_points);
 
             var interval = new QdbTimeInterval(new DateTime(3000, 1, 1), new DateTime(4000, 1, 1));
-            var result = col.Min(interval);
+            var result = col.AbsMax(interval);
 
             Assert.IsNull(result);
         }
 
         [TestMethod]
-        public void GivenSeveralIntervals_ReturnsMinOfEach()
+        public void GivenSeveralIntervals_ReturnsAbsMaxOfEach()
         {
             var col = QdbTestCluster.CreateEmptyInt64Column();
             col.Insert(_points);
@@ -81,7 +80,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Int64
                 new QdbTimeInterval(new DateTime(2016, 6, 1), new DateTime(2018, 12, 31))
             };
 
-            var results = col.Min(intervals).ToArray();
+            var results = col.AbsMax(intervals).ToArray();
 
             Assert.AreEqual(3, results.Length);
             Assert.AreEqual(_points[1], results[0]);
@@ -96,7 +95,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Int64
 
             try
             {
-                col.Min();
+                col.AbsMax();
                 Assert.Fail("No exception thrown");
             }
             catch (QdbEmptyColumnException e)

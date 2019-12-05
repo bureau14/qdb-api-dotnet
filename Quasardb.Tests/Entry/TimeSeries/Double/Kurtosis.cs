@@ -7,13 +7,15 @@ using Quasardb.TimeSeries;
 namespace Quasardb.Tests.Entry.TimeSeries.Double
 {
     [TestClass]
-    public class Sum
+    public class Kurtosis
     {
         readonly QdbDoublePointCollection _points = new QdbDoublePointCollection
         {
-            {new DateTime(2012, 11, 02), 0},
-            {new DateTime(2014, 06, 30), 42 },
-            {new DateTime(2016, 02, 04), 666}
+            {new DateTime(2012, 11, 02), 1},
+            {new DateTime(2014, 06, 30), 42},
+            {new DateTime(2016, 02, 04), 666},
+            {new DateTime(2016, 03, 05), 1234},
+            {new DateTime(2016, 04, 06), 5678}
         };
 
         [TestMethod]
@@ -23,7 +25,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
 
             try
             {
-                col.First();
+                col.Kurtosis();
                 Assert.Fail("No exception thrown");
             }
             catch (QdbColumnNotFoundException e)
@@ -34,26 +36,43 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
         }
 
         [TestMethod]
-        public void GivenNoArgument_ReturnsSumOfTimeSeries()
+        public void ThrowsEmptyColumn()
         {
             var col = QdbTestCluster.CreateEmptyDoubleColumn();
-            col.Insert(_points);
 
-            var result = col.Sum();
-
-            Assert.AreEqual(42 + 666, result);
+            try
+            {
+                col.Kurtosis();
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbEmptyColumnException e)
+            {
+                Assert.AreEqual(col.Series.Alias, e.Alias);
+                Assert.AreEqual(col.Name, e.Column);
+            }
         }
 
         [TestMethod]
-        public void GivenInRangeInterval_ReturnsMinPointOfInterval()
+        public void GivenNoArgument_ReturnsKurtosisOfTimeSeries()
         {
             var col = QdbTestCluster.CreateEmptyDoubleColumn();
             col.Insert(_points);
 
-            var interval = new QdbTimeInterval(_points[0].Time, _points[2].Time);
-            var result = col.Sum(interval);
+            var result = col.Kurtosis();
 
-            Assert.AreEqual(42, result);
+            Assert.AreEqual(0.021815331452089914, result);
+        }
+
+        [TestMethod]
+        public void GivenInRangeInterval_ReturnsKurtosisOfInterval()
+        {
+            var col = QdbTestCluster.CreateEmptyDoubleColumn();
+            col.Insert(_points);
+
+            var interval = new QdbTimeInterval(_points[0].Time, _points[4].Time);
+            var result = col.Kurtosis(interval);
+
+            Assert.AreEqual(-1.4424596911530097, result);
         }
 
         [TestMethod]
@@ -63,13 +82,13 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
             col.Insert(_points);
 
             var interval = new QdbTimeInterval(new DateTime(3000, 1, 1), new DateTime(4000, 1, 1));
-            var result = col.Sum(interval);
+            var result = col.Kurtosis(interval);
 
             Assert.IsTrue(double.IsNaN(result));
         }
 
         [TestMethod]
-        public void GivenSeveralIntervals_ReturnsSumOfEach()
+        public void GivenSeveralIntervals_ReturnsKurtosisOfEach()
         {
             var col = QdbTestCluster.CreateEmptyDoubleColumn();
             col.Insert(_points);
@@ -81,30 +100,12 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
                 new QdbTimeInterval(new DateTime(2016, 6, 1), new DateTime(2018, 12, 31))
             };
 
-            var results = col.Sum(intervals).ToArray();
+            var results = col.Kurtosis(intervals).ToArray();
 
             Assert.AreEqual(3, results.Length);
-            Assert.AreEqual(42, results[0]);
-            Assert.AreEqual(42 + 666, results[1]);
+            Assert.AreEqual(-2, results[0]);
+            Assert.AreEqual(-0.75887135138223272, results[1]);
             Assert.IsTrue(double.IsNaN(results[2]));
         }
-
-        [TestMethod]
-        public void ThrowsEmptyColumn()
-        {
-            var col = QdbTestCluster.CreateEmptyDoubleColumn();
-
-            try
-            {
-                col.Sum();
-                Assert.Fail("No exception thrown");
-            }
-            catch (QdbEmptyColumnException e)
-            {
-                Assert.AreEqual(col.Series.Alias, e.Alias);
-                Assert.AreEqual(col.Name, e.Column);
-            }
-        }
-
     }
 }

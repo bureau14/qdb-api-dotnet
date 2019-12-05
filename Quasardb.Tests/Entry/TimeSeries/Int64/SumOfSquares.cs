@@ -7,13 +7,13 @@ using Quasardb.TimeSeries;
 namespace Quasardb.Tests.Entry.TimeSeries.Int64
 {
     [TestClass]
-    public class Min
+    public class SumOfSquares
     {
         readonly QdbInt64PointCollection _points = new QdbInt64PointCollection
         {
-            {new DateTime(2012, 11, 02), 666},
-            {new DateTime(2014, 06, 30), 42},
-            {new DateTime(2016, 02, 04), 0} // <- min is here
+            {new DateTime(2012, 11, 02), 0},
+            {new DateTime(2014, 06, 30), 42 },
+            {new DateTime(2016, 02, 04), 666}
         };
 
         [TestMethod]
@@ -23,7 +23,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Int64
 
             try
             {
-                col.Min();
+                col.First();
                 Assert.Fail("No exception thrown");
             }
             catch (QdbColumnNotFoundException e)
@@ -34,42 +34,40 @@ namespace Quasardb.Tests.Entry.TimeSeries.Int64
         }
 
         [TestMethod]
-        public void GivenNoArgument_ReturnsMinPointOfTimeSeries()
+        public void GivenNoArgument_ReturnsSumOfSquaresOfTimeSeries()
         {
             var col = QdbTestCluster.CreateEmptyInt64Column();
             col.Insert(_points);
 
-            var result = col.Min();
+            var result = col.SumOfSquares();
 
-            Assert.AreEqual(_points[2], result);
+            Assert.AreEqual(42 * 42 + 666 * 666, result);
         }
 
         [TestMethod]
-        public void GivenInterval_ReturnsMinPointOfInterval()
+        public void GivenInRangeInterval_ReturnsMinPointOfInterval()
         {
             var col = QdbTestCluster.CreateEmptyInt64Column();
             col.Insert(_points);
 
             var interval = new QdbTimeInterval(_points[0].Time, _points[2].Time);
-            var result = col.Min(interval);
+            var result = col.SumOfSquares(interval);
 
-            Assert.AreEqual(_points[1], result);
+            Assert.AreEqual(42 * 42, result);
         }
 
         [TestMethod]
-        public void GivenOutOfRangeInterval_ReturnsNull()
+        public void GivenOutOfRangeInterval_ReturnsNan()
         {
             var col = QdbTestCluster.CreateEmptyInt64Column();
             col.Insert(_points);
 
             var interval = new QdbTimeInterval(new DateTime(3000, 1, 1), new DateTime(4000, 1, 1));
-            var result = col.Min(interval);
-
-            Assert.IsNull(result);
+            var result = col.SumOfSquares(interval);
         }
 
         [TestMethod]
-        public void GivenSeveralIntervals_ReturnsMinOfEach()
+        public void GivenSeveralIntervals_ReturnsSumOfSquaresOfEach()
         {
             var col = QdbTestCluster.CreateEmptyInt64Column();
             col.Insert(_points);
@@ -81,12 +79,11 @@ namespace Quasardb.Tests.Entry.TimeSeries.Int64
                 new QdbTimeInterval(new DateTime(2016, 6, 1), new DateTime(2018, 12, 31))
             };
 
-            var results = col.Min(intervals).ToArray();
+            var results = col.SumOfSquares(intervals).ToArray();
 
             Assert.AreEqual(3, results.Length);
-            Assert.AreEqual(_points[1], results[0]);
-            Assert.AreEqual(_points[2], results[1]);
-            Assert.IsNull(results[2]);
+            Assert.AreEqual(42 * 42, results[0]);
+            Assert.AreEqual(42 * 42 + 666 * 666, results[1]);
         }
 
         [TestMethod]
@@ -96,7 +93,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Int64
 
             try
             {
-                col.Min();
+                col.SumOfSquares();
                 Assert.Fail("No exception thrown");
             }
             catch (QdbEmptyColumnException e)
@@ -105,5 +102,6 @@ namespace Quasardb.Tests.Entry.TimeSeries.Int64
                 Assert.AreEqual(col.Name, e.Column);
             }
         }
+
     }
 }

@@ -4,26 +4,28 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb.Exceptions;
 using Quasardb.TimeSeries;
 
-namespace Quasardb.Tests.Entry.TimeSeries.Double
+namespace Quasardb.Tests.Entry.TimeSeries.Timestamp
 {
     [TestClass]
-    public class Count
+    public class DistinctCount
     {
-        readonly QdbDoublePointCollection _points = new QdbDoublePointCollection
+        readonly QdbTimestampPoint[] _points =
         {
-            {new DateTime(2012, 11, 02), 666},
-            {new DateTime(2014, 06, 30), 42},
-            {new DateTime(2016, 02, 04), 0}
+            new QdbTimestampPoint(new DateTime(2012, 11, 02), new DateTime(2012, 11, 02)),
+            new QdbTimestampPoint(new DateTime(2014, 06, 30), new DateTime(2014, 06, 30)),
+            new QdbTimestampPoint(new DateTime(2016, 02, 04), new DateTime(2016, 02, 04)),
+            new QdbTimestampPoint(new DateTime(2017, 06, 30), new DateTime(2014, 06, 30)),
+            new QdbTimestampPoint(new DateTime(2018, 11, 02), new DateTime(2012, 11, 02))
         };
 
         [TestMethod]
         public void ThrowsColumnNotFound()
         {
-            var col = QdbTestCluster.GetNonExistingDoubleColumn();
+            var col = QdbTestCluster.GetNonExistingTimestampColumn();
 
             try
             {
-                col.Count();
+                col.DistinctCount();
                 Assert.Fail("No exception thrown");
             }
             catch (QdbColumnNotFoundException e)
@@ -34,32 +36,25 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
         }
 
         [TestMethod]
-        public void GivenEmptyColumn_ReturnsZero()
-        {
-            var col = QdbTestCluster.CreateEmptyDoubleColumn();
-
-            Assert.AreEqual(0, col.Count());
-        }
-
-        [TestMethod]
         public void GivenArgument_ReturnsNumberOfPointsInTimeSeries()
         {
-            var col = QdbTestCluster.CreateEmptyDoubleColumn();
+            var col = QdbTestCluster.CreateEmptyTimestampColumn();
             col.Insert(_points);
 
-            var result = col.Count();
+            var result = col.DistinctCount();
 
             Assert.AreEqual(3, result);
         }
 
+
         [TestMethod]
         public void GivenInRangeInterval_ReturnsNumberOfPointsInInterval()
         {
-            var col = QdbTestCluster.CreateEmptyDoubleColumn();
+            var col = QdbTestCluster.CreateEmptyTimestampColumn();
             col.Insert(_points);
 
             var interval = new QdbTimeInterval(_points[0].Time, _points[2].Time);
-            var result = col.Count(interval);
+            var result = col.DistinctCount(interval);
 
             Assert.AreEqual(2, result);
         }
@@ -67,19 +62,19 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
         [TestMethod]
         public void GivenOutOfRangeInterval_ReturnsZero()
         {
-            var col = QdbTestCluster.CreateEmptyDoubleColumn();
+            var col = QdbTestCluster.CreateEmptyTimestampColumn();
             col.Insert(_points);
 
             var interval = new QdbTimeInterval(new DateTime(3000, 1, 1), new DateTime(4000, 1, 1));
-            var result = col.Count(interval);
+            var result = col.DistinctCount(interval);
 
             Assert.AreEqual(0, result);
         }
 
         [TestMethod]
-        public void GivenSeveralIntervals_ReturnsCountOfEach()
+        public void GivenSeveralIntervals_ReturnsDistinctCountOfEach()
         {
-            var col = QdbTestCluster.CreateEmptyDoubleColumn();
+            var col = QdbTestCluster.CreateEmptyTimestampColumn();
             col.Insert(_points);
 
             var intervals = new[]
@@ -89,12 +84,12 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
                 new QdbTimeInterval(new DateTime(2016, 6, 1), new DateTime(2018, 12, 31))
             };
 
-            var results = col.Count(intervals).ToArray();
+            var results = col.DistinctCount(intervals).ToArray();
 
             Assert.AreEqual(3, results.Length);
             Assert.AreEqual(2, results[0]);
             Assert.AreEqual(2, results[1]);
-            Assert.AreEqual(0, results[2]);
+            Assert.AreEqual(2, results[2]);
         }
     }
 }
