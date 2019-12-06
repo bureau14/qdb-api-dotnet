@@ -88,11 +88,13 @@
     <Compile Include="Entry\Blob\Remove.cs" />
     <Compile Include="Entry\Blob\Update.cs" />
     <Compile Include="Entry\DetachTag.cs" />
+    <Compile Include="Entry\TimeSeries\Blob\Erase.cs" />
     <Compile Include="Entry\TimeSeries\Blob\InsertTruncate.cs" />
     <Compile Include="Entry\TimeSeries\Blob\Timestamps.cs" />
     <Compile Include="Entry\TimeSeries\Double\AbsMax.cs" />
     <Compile Include="Entry\TimeSeries\Double\AbsMin.cs" />
     <Compile Include="Entry\TimeSeries\Double\DistinctCount.cs" />
+    <Compile Include="Entry\TimeSeries\Double\Erase.cs" />
     <Compile Include="Entry\TimeSeries\Double\Timestamps.cs" />
     <Compile Include="Entry\TimeSeries\Double\PopulationStdDev.cs" />
     <Compile Include="Entry\TimeSeries\Double\Kurtosis.cs" />
@@ -110,6 +112,7 @@
     <Compile Include="Entry\TimeSeries\Int64\AbsMax.cs" />
     <Compile Include="Entry\TimeSeries\Int64\AbsMin.cs" />
     <Compile Include="Entry\TimeSeries\Int64\DistinctCount.cs" />
+    <Compile Include="Entry\TimeSeries\Int64\Erase.cs" />
     <Compile Include="Entry\TimeSeries\Int64\Timestamps.cs" />
     <Compile Include="Entry\TimeSeries\Int64\PopulationStdDev.cs" />
     <Compile Include="Entry\TimeSeries\Int64\Kurtosis.cs" />
@@ -181,6 +184,7 @@
     <Compile Include="Entry\TimeSeries\Timestamp\DistinctCount.cs" />
     <Compile Include="Entry\TimeSeries\Timestamp\Count.cs" />
     <Compile Include="Entry\TimeSeries\Timestamp\First.cs" />
+    <Compile Include="Entry\TimeSeries\Timestamp\Erase.cs" />
     <Compile Include="Entry\TimeSeries\Timestamp\InsertTruncate.cs" />
     <Compile Include="Entry\TimeSeries\Timestamp\Last.cs" />
     <Compile Include="Entry\TimeSeries\Timestamp\AbsMax.cs" />

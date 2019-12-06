@@ -74,6 +74,38 @@ namespace Quasardb.TimeSeries
         }
 
         #endregion
+
+        #region Erase
+
+        /// <summary>
+        /// Erases all points in the specified ranges (left inclusive)
+        /// </summary>
+        /// <param name="intervals">The time intervals to erase</param>
+        /// <returns>The number of erased points</returns>
+        public long Erase(IEnumerable<QdbTimeInterval> intervals)
+        {
+            var ranges = new InteropableList<qdb_ts_range>(Helpers.GetCountOrDefault(intervals));
+            foreach (var interval in intervals)
+                ranges.Add(interval.ToNative());
+            var error = qdb_api.qdb_ts_erase_ranges(
+                Handle, Series.Alias, Name,
+                ranges.Buffer, ranges.Count,
+                out ulong erasedCount);
+            QdbExceptionThrower.ThrowIfNeeded(error, alias: Series.Alias, column: Name);
+            return (long)erasedCount;
+        }
+
+        /// <summary>
+        /// Erases all points in the specified range (left inclusive)
+        /// </summary>
+        /// <param name="interval">The time interval to erase</param>
+        /// <returns>The number of erased points</returns>
+        public long Erase(QdbTimeInterval interval)
+        {
+            return Erase(new[] { interval });
+        }
+
+        #endregion
     }
 
     class QdbUnknownColumn : QdbColumn
