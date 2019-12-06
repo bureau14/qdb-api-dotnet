@@ -336,5 +336,49 @@ namespace Quasardb.TimeSeries
                 columns.Buffer, columns.Count);
             QdbExceptionThrower.ThrowIfNeeded(err, alias: Alias);
         }
+
+        #region Timestamps
+
+        /// <summary>
+        /// Gets all the timestamps in the time series
+        /// </summary>
+        /// <returns>All the timestamps in the time series</returns>
+        public IEnumerable<DateTime> Timestamps()
+        {
+            return Timestamps(QdbTimeInterval.Everything);
+        }
+
+        /// <summary>
+        /// Gets all the timestamps in an interval
+        /// </summary>
+        /// <param name="interval">The time interval to scan</param>
+        /// <returns>All the timestamps in the interval</returns>
+        public IEnumerable<DateTime> Timestamps(QdbTimeInterval interval)
+        {
+            return Timestamps(new[] { interval });
+        }
+
+        /// <summary>
+        /// Gets all the timestamps in each interval
+        /// </summary>
+        /// <param name="intervals">The time intervals to scan</param>
+        /// <returns>All the timestamps in each interval</returns>
+        public IEnumerable<DateTime> Timestamps(IEnumerable<QdbTimeInterval> intervals)
+        {
+            var ranges = new InteropableList<qdb_ts_range>(Helpers.GetCountOrDefault(intervals));
+            foreach (var interval in intervals)
+                ranges.Add(interval.ToNative());
+            using (var timestamps = new qdb_buffer<qdb_timespec>(Handle))
+            {
+                var error = qdb_api.qdb_ts_get_timestamps(Handle, Alias, null, ranges.Buffer, ranges.Count,
+                    out timestamps.Pointer, out timestamps.Size);
+                QdbExceptionThrower.ThrowIfNeeded(error, alias: Alias);
+
+                foreach (var pt in timestamps)
+                    yield return TimeConverter.ToDateTime(pt);
+            }
+        }
+
+        #endregion
     }
 }

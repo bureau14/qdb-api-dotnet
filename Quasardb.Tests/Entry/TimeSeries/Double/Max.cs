@@ -20,6 +20,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
         public void ThrowsColumnNotFound()
         {
             var col = QdbTestCluster.GetNonExistingDoubleColumn();
+
             try
             {
                 col.Max();

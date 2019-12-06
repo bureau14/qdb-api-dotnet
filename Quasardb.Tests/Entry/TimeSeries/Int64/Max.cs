@@ -20,6 +20,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Int64
         public void ThrowsColumnNotFound()
         {
             var col = QdbTestCluster.GetNonExistingInt64Column();
+
             try
             {
                 col.Max();

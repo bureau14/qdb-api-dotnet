@@ -20,6 +20,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Timestamp
         public void ThrowsColumnNotFound()
         {
             var col = QdbTestCluster.GetNonExistingTimestampColumn();
+
             try
             {
                 col.AbsMax();

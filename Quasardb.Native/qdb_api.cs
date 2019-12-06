@@ -585,6 +585,16 @@ namespace Quasardb.Native
             [Out] out pointer_t points,
             [Out] out size_t points_count);
 
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_ts_get_timestamps(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In] [MarshalAs(ALIAS_TYPE)] string column,
+            [In] qdb_ts_range[] ranges,
+            [In] qdb_size_t ranges_count,
+            [Out] out pointer_t timestamps,
+            [Out] out size_t timestamps_count);
+
         #endregion
 
         #region Functions specific to queries

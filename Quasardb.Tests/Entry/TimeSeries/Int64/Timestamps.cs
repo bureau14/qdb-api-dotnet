@@ -7,7 +7,7 @@ using Quasardb.TimeSeries;
 namespace Quasardb.Tests.Entry.TimeSeries.Int64
 {
     [TestClass]
-    public class Points
+    public class Timestamps
     {
         readonly QdbInt64Point[] _points = new[]
         {
@@ -17,44 +17,27 @@ namespace Quasardb.Tests.Entry.TimeSeries.Int64
         };
 
         [TestMethod]
-        public void ThrowsColumnNotFound()
-        {
-            var col = QdbTestCluster.GetNonExistingInt64Column();
-
-            try
-            {
-                // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-                col.Points().ToArray();
-                Assert.Fail("No exception thrown");
-            }
-            catch (QdbColumnNotFoundException e)
-            {
-                Assert.AreEqual(col.Series.Alias, e.Alias);
-            }
-        }
-
-        [TestMethod]
-        public void GivenNoArgument_ReturnsPointsOfTimeSeries()
+        public void GivenNoArgument_ReturnsTimestampsOfTimeSeries()
         {
             var ts = QdbTestCluster.CreateEmptyInt64Column();
             ts.Insert(_points);
 
-            var result = ts.Points();
+            var result = ts.Timestamps();
 
-            CollectionAssert.AreEqual(_points.ToList(), result.ToList());
+            CollectionAssert.AreEqual(_points.Select(x => x.Time).ToList(), result.ToList());
         }
 
 
         [TestMethod]
-        public void GivenInRangeInterval_ReturnsPointsOfInterval()
+        public void GivenInRangeInterval_ReturnsTimestampsOfInterval()
         {
             var ts = QdbTestCluster.CreateEmptyInt64Column();
             ts.Insert(_points);
 
             var interval = new QdbTimeInterval(_points[0].Time, _points[2].Time);
-            var result = ts.Points(interval);
+            var result = ts.Timestamps(interval);
 
-            CollectionAssert.AreEqual(_points.Take(2).ToList(), result.ToList());
+            CollectionAssert.AreEqual(_points.Take(2).Select(x => x.Time).ToList(), result.ToList());
         }
 
         [TestMethod]
@@ -64,13 +47,13 @@ namespace Quasardb.Tests.Entry.TimeSeries.Int64
             ts.Insert(_points);
 
             var interval = new QdbTimeInterval(new DateTime(3000, 1, 1), new DateTime(4000, 1, 1));
-            var result = ts.Points(interval);
+            var result = ts.Timestamps(interval);
 
             Assert.IsFalse(result.Any());
         }
 
         [TestMethod]
-        public void GivenSeveralIntervals_ReturnsPointsOfEach()
+        public void GivenSeveralIntervals_ReturnsTimestampsOfEach()
         {
             var ts = QdbTestCluster.CreateEmptyInt64Column();
             ts.Insert(_points);
@@ -82,9 +65,9 @@ namespace Quasardb.Tests.Entry.TimeSeries.Int64
                 new QdbTimeInterval(new DateTime(2018, 1, 1), new DateTime(2018, 12, 31))
             };
 
-            var result = ts.Points(intervals);
+            var result = ts.Timestamps(intervals);
 
-            CollectionAssert.AreEqual(_points.Skip(1).ToList(), result.ToList());
+            CollectionAssert.AreEqual(_points.Skip(1).Select(x => x.Time).ToList(), result.ToList());
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Quasardb.Exceptions;
 using Quasardb.Native;
 
@@ -29,6 +30,50 @@ namespace Quasardb.TimeSeries
         public string Name { get; }
 
         internal qdb_handle Handle => Series.Handle;
+
+        #region Timestamps
+
+        /// <summary>
+        /// Gets all the timestamps in the time series
+        /// </summary>
+        /// <returns>All the timestamps in the time series</returns>
+        public IEnumerable<DateTime> Timestamps()
+        {
+            return Timestamps(QdbTimeInterval.Everything);
+        }
+
+        /// <summary>
+        /// Gets all the timestamps in an interval
+        /// </summary>
+        /// <param name="interval">The time interval to scan</param>
+        /// <returns>All the timestamps in the interval</returns>
+        public IEnumerable<DateTime> Timestamps(QdbTimeInterval interval)
+        {
+            return Timestamps(new[] { interval });
+        }
+
+        /// <summary>
+        /// Gets all the timestamps in each interval
+        /// </summary>
+        /// <param name="intervals">The time intervals to scan</param>
+        /// <returns>All the timestamps in each interval</returns>
+        public IEnumerable<DateTime> Timestamps(IEnumerable<QdbTimeInterval> intervals)
+        {
+            var ranges = new InteropableList<qdb_ts_range>(Helpers.GetCountOrDefault(intervals));
+            foreach (var interval in intervals)
+                ranges.Add(interval.ToNative());
+            using (var timestamps = new qdb_buffer<qdb_timespec>(Handle))
+            {
+                var error = qdb_api.qdb_ts_get_timestamps(Handle, Series.Alias, Name, ranges.Buffer, ranges.Count,
+                    out timestamps.Pointer, out timestamps.Size);
+                QdbExceptionThrower.ThrowIfNeeded(error, alias: Series.Alias, column: Name);
+
+                foreach (var pt in timestamps)
+                    yield return TimeConverter.ToDateTime(pt);
+            }
+        }
+
+        #endregion
     }
 
     class QdbUnknownColumn : QdbColumn
@@ -37,7 +82,7 @@ namespace Quasardb.TimeSeries
 
         public QdbUnknownColumn(QdbTimeSeries series, string name, qdb_ts_column_type type) : base(series, name)
         {
-            Type = (int) type;
+            Type = (int)type;
         }
     }
 }
