@@ -380,5 +380,20 @@ namespace Quasardb.TimeSeries
         }
 
         #endregion
+
+        /// <summary>
+        /// Trim the timeseries, so that it uses approximately the provided size.
+        /// </summary>
+        /// <param name="size">The desired disk usage size after the operation, in bytes</param>
+        /// <exception cref="QdbInvalidArgumentException">If size is negative.</exception>
+        public void ExpireBySize(long size)
+        {
+            if (size < 0)
+                throw new QdbInvalidArgumentException();
+
+            var err = qdb_api.qdb_ts_expire_by_size(
+                Handle, Alias, (ulong)size);
+            QdbExceptionThrower.ThrowIfNeeded(err, alias: Alias);
+        }
     }
 }

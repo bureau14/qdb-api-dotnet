@@ -604,6 +604,12 @@ namespace Quasardb.Native
             [In] qdb_size_t range_count,
             [Out] out qdb_uint_t erased_count);
 
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_ts_expire_by_size(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In] qdb_uint_t size);
+
         #endregion
 
         #region Functions specific to queries
