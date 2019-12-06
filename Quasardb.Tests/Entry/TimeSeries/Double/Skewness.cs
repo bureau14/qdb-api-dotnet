@@ -11,11 +11,11 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
     {
         readonly QdbDoublePointCollection _points = new QdbDoublePointCollection
         {
-            {new DateTime(2012, 11, 02), 1},
-            {new DateTime(2014, 06, 30), 42},
-            {new DateTime(2016, 02, 04), 666},
-            {new DateTime(2016, 03, 05), 1234},
-            {new DateTime(2016, 04, 06), 5678}
+            {new DateTime(2012, 11, 02).AddHours(1), 1},
+            {new DateTime(2012, 11, 02).AddHours(2), 42},
+            {new DateTime(2012, 11, 02).AddHours(3), 666},
+            {new DateTime(2012, 11, 02).AddHours(4), 1234},
+            {new DateTime(2012, 11, 02).AddHours(5), 5678}
         };
 
         [TestMethod]
@@ -95,16 +95,16 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
 
             var intervals = new[]
             {
-                new QdbTimeInterval(new DateTime(2012, 1, 1), new DateTime(2015, 12, 31)),
-                new QdbTimeInterval(new DateTime(2014, 1, 1), new DateTime(2017, 12, 31)),
-                new QdbTimeInterval(new DateTime(2016, 6, 1), new DateTime(2018, 12, 31))
+                new QdbTimeInterval(new DateTime(2012, 11, 02).AddHours(1), new DateTime(2012, 11, 02).AddHours(4)),
+                new QdbTimeInterval(new DateTime(2012, 11, 02).AddHours(2), new DateTime(2012, 11, 02).AddHours(5)),
+                new QdbTimeInterval(new DateTime(2012, 11, 03), new DateTime(2012, 11, 04))
             };
 
             var results = col.Skewness(intervals).ToArray();
 
             Assert.AreEqual(3, results.Length);
-            Assert.AreEqual(0.0, results[0]);
-            Assert.AreEqual(1.0308833583584158, results[1]);
+            Assert.AreEqual(0.69749030004661439, results[0]);
+            Assert.AreEqual(-0.057460816522297134, results[1]);
             Assert.IsTrue(double.IsNaN(results[2]));
         }
     }

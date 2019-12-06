@@ -11,11 +11,11 @@ namespace Quasardb.Tests.Entry.TimeSeries.Int64
     {
         readonly QdbInt64PointCollection _points = new QdbInt64PointCollection
         {
-            {new DateTime(2012, 11, 02), 1},
-            {new DateTime(2014, 06, 30), 42},
-            {new DateTime(2016, 02, 04), 666},
-            {new DateTime(2016, 03, 05), 1234},
-            {new DateTime(2016, 04, 06), 5678}
+            {new DateTime(2012, 11, 02).AddHours(1), 1},
+            {new DateTime(2012, 11, 02).AddHours(2), 42},
+            {new DateTime(2012, 11, 02).AddHours(3), 666},
+            {new DateTime(2012, 11, 02).AddHours(4), 1234},
+            {new DateTime(2012, 11, 02).AddHours(5), 5678}
         };
 
         [TestMethod]
@@ -83,16 +83,16 @@ namespace Quasardb.Tests.Entry.TimeSeries.Int64
 
             var intervals = new[]
             {
-                new QdbTimeInterval(new DateTime(2012, 1, 1), new DateTime(2015, 12, 31)),
-                new QdbTimeInterval(new DateTime(2014, 1, 1), new DateTime(2017, 12, 31)),
-                new QdbTimeInterval(new DateTime(2016, 6, 1), new DateTime(2018, 12, 31))
+                new QdbTimeInterval(new DateTime(2012, 11, 02).AddHours(1), new DateTime(2012, 11, 02).AddHours(3)),
+                new QdbTimeInterval(new DateTime(2012, 11, 02).AddHours(2), new DateTime(2012, 11, 02).AddHours(5)),
+                new QdbTimeInterval(new DateTime(2012, 11, 03), new DateTime(2012, 11, 04))
             };
 
             var results = col.Kurtosis(intervals).ToArray();
 
             Assert.AreEqual(3, results.Length);
             Assert.AreEqual(-2L, results[0]);
-            Assert.AreEqual(0L, results[1]);
+            Assert.AreEqual(-1L, results[1]);
         }
     }
 }
