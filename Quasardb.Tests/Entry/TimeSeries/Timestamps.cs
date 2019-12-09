@@ -26,8 +26,8 @@ namespace Quasardb.Tests.Entry.TimeSeries
                 new QdbInt64ColumnDefinition("the_int64")
             });
             ts.BlobColumns["the_blob"].Insert(new QdbBlobPoint(_timestamps[0], Encoding.UTF8.GetBytes("Hello World!")));
-            ts.DoubleColumns["the_double"].Insert(new QdbDoublePoint(_timestamps[0], 42));
-            ts.Int64Columns["the_int64"].Insert(new QdbInt64Point(_timestamps[0], 666));
+            ts.DoubleColumns["the_double"].Insert(new QdbDoublePoint(_timestamps[1], 42));
+            ts.Int64Columns["the_int64"].Insert(new QdbInt64Point(_timestamps[2], 666));
             return ts;
         }
 
