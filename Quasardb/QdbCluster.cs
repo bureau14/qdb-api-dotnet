@@ -228,6 +228,30 @@ namespace Quasardb
         }
 
         /// <summary>
+        /// Returns a <see cref="QdbTimeSeriesBatch" /> attached to the specified columns.
+        /// </summary>
+        /// <param name="columnDefinitions">The description of the columns</param>
+        /// <exception cref="QdbInvalidArgumentException">If columns list is empty.</exception>
+        /// <returns>A batch table for bulk insertion associated with the specified columns.</returns>
+        /// <seealso cref="QdbTimeSeriesBatch"/>
+        public QdbTimeSeriesBatch Inserter(params QdbBatchColumnDefinition[] columnDefinitions)
+        {
+            return Inserter((IEnumerable<QdbBatchColumnDefinition>)columnDefinitions);
+        }
+
+        /// <summary>
+        /// Returns a <see cref="QdbTimeSeriesBatch" /> attached to the specified columns.
+        /// </summary>
+        /// <param name="columnDefinitions">The description of the columns</param>
+        /// <exception cref="QdbInvalidArgumentException">If columns list is empty.</exception>
+        /// <returns>A batch table for bulk insertion associated with the specified columns.</returns>
+        /// <seealso cref="QdbTimeSeriesBatch"/>
+        public QdbTimeSeriesBatch Inserter(IEnumerable<QdbBatchColumnDefinition> columnDefinitions)
+        {
+            return new QdbTimeSeriesBatch(_handle, columnDefinitions);
+        }
+
+        /// <summary>
         /// Run the provided query and creates a table directory with the results.
         /// </summary>
         /// <remarks>Queries are transactional. The complexity of this function

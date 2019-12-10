@@ -419,14 +419,14 @@ namespace Quasardb.Native
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] qdb_uint_t shard_size,
             [In] qdb_ts_column_info[] columns,
-            qdb_size_t column_count);
+            [In] qdb_size_t column_count);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error qdb_ts_insert_columns(
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] qdb_ts_column_info[] columns,
-            qdb_size_t column_count);
+            [In] qdb_size_t column_count);
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error qdb_ts_list_columns(
@@ -609,6 +609,107 @@ namespace Quasardb.Native
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] qdb_uint_t size);
+
+        #region Functions specific to local tables
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_ts_local_table_init(
+            [In] qdb_handle handle,
+            [In] [MarshalAs(ALIAS_TYPE)] string alias,
+            [In] qdb_ts_column_info[] columns,
+            [In] qdb_size_t column_count,
+            [Out] out pointer_t table);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_ts_row_get_blob_no_copy(
+            [In] pointer_t table,
+            [In] qdb_size_t column_index,
+            [Out] out pointer_t content,
+            [Out] out size_t content_length);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_ts_row_get_double(
+            [In] pointer_t table,
+            [In] qdb_size_t column_index,
+            [Out] out double value);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_ts_row_get_int64(
+            [In] pointer_t table,
+            [In] qdb_size_t column_index,
+            [Out] out qdb_int_t value);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_ts_row_get_timestamp(
+            [In] pointer_t table,
+            [In] qdb_size_t column_index,
+            [Out] out qdb_timespec value);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_ts_table_next_row(
+            [In] pointer_t table,
+            [Out] out qdb_timespec timestamp);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_ts_table_get_ranges(
+            [In] pointer_t table,
+            [In] qdb_ts_range[] ranges,
+            [In] qdb_size_t range_count);
+
+        #endregion
+
+        #region Functions specific to batch tables
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_ts_batch_table_init(
+            [In] qdb_handle handle,
+            [In] qdb_ts_batch_column_info[] columns,
+            [In] qdb_size_t column_count,
+            [Out] out pointer_t table);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_ts_batch_start_row(
+            [In] pointer_t table,
+            [In] qdb_timespec* timestamp);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_ts_batch_row_set_blob(
+            [In] pointer_t table,
+            [In] qdb_size_t index,
+            [In] byte[] content,
+            [In] qdb_size_t content_length);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_ts_batch_row_set_double(
+            [In] pointer_t table,
+            [In] qdb_size_t index,
+            [In] double value);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_ts_batch_row_set_int64(
+            [In] pointer_t table,
+            [In] qdb_size_t index,
+            [In] qdb_int_t value);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_ts_batch_row_set_timestamp(
+            [In] pointer_t table,
+            [In] qdb_size_t index,
+            [In] qdb_timespec* value);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_ts_batch_push(
+            [In] pointer_t table);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_ts_batch_push_fast(
+            [In] pointer_t table);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_ts_batch_push_async(
+            [In] pointer_t table);
+
+        #endregion
 
         #endregion
 
