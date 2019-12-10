@@ -12,7 +12,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Int64
         readonly QdbInt64PointCollection _points = new QdbInt64PointCollection
         {
             {new DateTime(2012, 11, 02), 666},
-            {new DateTime(2014, 06, 30), 42 },
+            {new DateTime(2014, 06, 30), 42},
             {new DateTime(2016, 02, 04), 0} // <- min is here
         };
 

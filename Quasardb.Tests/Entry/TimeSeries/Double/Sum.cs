@@ -41,7 +41,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
 
             var result = col.Sum();
 
-            Assert.AreEqual(42+666, result);
+            Assert.AreEqual(42 + 666, result);
         }
 
         [TestMethod]
@@ -50,7 +50,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
             var col = QdbTestCluster.CreateEmptyDoubleColumn();
             col.Insert(_points);
 
-            var interval = new QdbTimeInterval(_points[0].Time,_points[2].Time);
+            var interval = new QdbTimeInterval(_points[0].Time, _points[2].Time);
             var result = col.Sum(interval);
 
             Assert.AreEqual(42, result);
@@ -62,7 +62,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
             var col = QdbTestCluster.CreateEmptyDoubleColumn();
             col.Insert(_points);
 
-            var interval = new QdbTimeInterval(new DateTime(3000,1,1),new DateTime(4000, 1, 1));
+            var interval = new QdbTimeInterval(new DateTime(3000, 1, 1), new DateTime(4000, 1, 1));
             var result = col.Sum(interval);
 
             Assert.IsTrue(double.IsNaN(result));
@@ -85,7 +85,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
 
             Assert.AreEqual(3, results.Length);
             Assert.AreEqual(42, results[0]);
-            Assert.AreEqual(42+666, results[1]);
+            Assert.AreEqual(42 + 666, results[1]);
             Assert.IsTrue(double.IsNaN(results[2]));
         }
 

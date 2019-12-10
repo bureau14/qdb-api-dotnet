@@ -12,7 +12,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
         readonly QdbDoublePointCollection _points = new QdbDoublePointCollection
         {
             {new DateTime(2012, 11, 02), 0},
-            {new DateTime(2014, 06, 30), 42 },
+            {new DateTime(2014, 06, 30), 42},
             {new DateTime(2016, 02, 04), 666} // <- max is here
         };
 
@@ -20,6 +20,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
         public void ThrowsColumnNotFound()
         {
             var col = QdbTestCluster.GetNonExistingDoubleColumn();
+
             try
             {
                 col.Max();

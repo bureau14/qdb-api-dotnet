@@ -12,7 +12,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Int64
         readonly QdbInt64Point[] _points = new[]
         {
             new QdbInt64Point(new DateTime(2012, 11, 02), 0),
-            new QdbInt64Point(new DateTime(2014, 06, 30), 42 ),
+            new QdbInt64Point(new DateTime(2014, 06, 30), 42),
             new QdbInt64Point(new DateTime(2016, 02, 04), 666)
         };
 
@@ -23,7 +23,6 @@ namespace Quasardb.Tests.Entry.TimeSeries.Int64
 
             try
             {
-
                 // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
                 col.Points().ToArray();
                 Assert.Fail("No exception thrown");

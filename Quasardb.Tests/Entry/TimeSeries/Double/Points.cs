@@ -9,10 +9,10 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
     [TestClass]
     public class Points
     {
-        readonly QdbDoublePoint[] _points = new []
+        readonly QdbDoublePoint[] _points = new[]
         {
             new QdbDoublePoint(new DateTime(2012, 11, 02), 0),
-            new QdbDoublePoint(new DateTime(2014, 06, 30), 42 ),
+            new QdbDoublePoint(new DateTime(2014, 06, 30), 42),
             new QdbDoublePoint(new DateTime(2016, 02, 04), 666)
         };
 
@@ -23,7 +23,6 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
 
             try
             {
-                
                 // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
                 col.Points().ToArray();
                 Assert.Fail("No exception thrown");
@@ -33,7 +32,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
                 Assert.AreEqual(col.Series.Alias, e.Alias);
             }
         }
-   
+
         [TestMethod]
         public void GivenNoArgument_ReturnsPointsOfTimeSeries()
         {
@@ -41,35 +40,35 @@ namespace Quasardb.Tests.Entry.TimeSeries.Double
             ts.Insert(_points);
 
             var result = ts.Points();
-            
+
             CollectionAssert.AreEqual(_points.ToList(), result.ToList());
         }
 
-        
+
         [TestMethod]
         public void GivenInRangeInterval_ReturnsPointsOfInterval()
         {
             var ts = QdbTestCluster.CreateEmptyDoubleColumn();
             ts.Insert(_points);
 
-            var interval = new QdbTimeInterval(_points[0].Time,_points[2].Time);
+            var interval = new QdbTimeInterval(_points[0].Time, _points[2].Time);
             var result = ts.Points(interval);
 
             CollectionAssert.AreEqual(_points.Take(2).ToList(), result.ToList());
         }
-        
+
         [TestMethod]
         public void GivenOutOfRangeInterval_ReturnsEmptyCollection()
         {
             var ts = QdbTestCluster.CreateEmptyDoubleColumn();
             ts.Insert(_points);
 
-            var interval = new QdbTimeInterval(new DateTime(3000,1,1),new DateTime(4000, 1, 1));
+            var interval = new QdbTimeInterval(new DateTime(3000, 1, 1), new DateTime(4000, 1, 1));
             var result = ts.Points(interval);
 
             Assert.IsFalse(result.Any());
         }
-        
+
         [TestMethod]
         public void GivenSeveralIntervals_ReturnsPointsOfEach()
         {

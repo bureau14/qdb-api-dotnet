@@ -18,7 +18,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Timestamp
         };
 
         [TestMethod]
-        public void ThrowsAliasNotFound()
+        public void ThrowsColumnNotFound()
         {
             var col = QdbTestCluster.GetNonExistingTimestampColumn();
 

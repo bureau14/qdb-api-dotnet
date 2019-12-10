@@ -12,7 +12,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Int64
         readonly QdbInt64PointCollection _points = new QdbInt64PointCollection
         {
             {new DateTime(2012, 11, 02), 0},
-            {new DateTime(2014, 06, 30), 42 },
+            {new DateTime(2014, 06, 30), 42},
             {new DateTime(2016, 02, 04), 666} // <- max is here
         };
 
@@ -20,6 +20,7 @@ namespace Quasardb.Tests.Entry.TimeSeries.Int64
         public void ThrowsColumnNotFound()
         {
             var col = QdbTestCluster.GetNonExistingInt64Column();
+
             try
             {
                 col.Max();
