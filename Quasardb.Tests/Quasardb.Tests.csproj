@@ -134,6 +134,7 @@
     <Compile Include="Entry\TimeSeries\BlobColumns.cs" />
     <Compile Include="Entry\TimeSeries\DoubleColumns.cs" />
     <Compile Include="Entry\TimeSeries\Int64Columns.cs" />
+    <Compile Include="Entry\TimeSeries\TimeSeriesReader.cs" />
     <Compile Include="Entry\TimeSeries\TimestampColumns.cs" />
     <Compile Include="Entry\AttachTag.cs" />
     <Compile Include="Entry\GetTags.cs" />

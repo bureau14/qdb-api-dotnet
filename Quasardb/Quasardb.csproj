@@ -100,6 +100,7 @@
     <Compile Include="TimeSeries\PointConverter.cs" />
     <Compile Include="TimeSeries\QdbBlobPointCollection.cs" />
     <Compile Include="TimeSeries\QdbBlobColumn.cs" />
+    <Compile Include="TimeSeries\QdbColumnType.cs" />
     <Compile Include="TimeSeries\QdbColumnDefinition.cs" />
     <Compile Include="Exceptions\QdbExceptionThrower.cs" />
     <Compile Include="Stream\QdbStreamAdapter.cs" />
@@ -123,6 +124,9 @@
     <Compile Include="TimeSeries\Helpers.cs" />
     <Compile Include="TimeSeries\QdbColumn.cs" />
     <Compile Include="TimeSeries\QdbColumnAggregator.cs" />
+    <Compile Include="TimeSeries\Reader\QdbCell.cs" />
+    <Compile Include="TimeSeries\Reader\QdbRow.cs" />
+    <Compile Include="TimeSeries\Reader\QdbTimeSeriesReader.cs" />
     <Compile Include="TimeSeries\QdbTimeInterval.cs" />
     <Compile Include="TimeSeries\QdbDoublePointCollection.cs" />
     <Compile Include="TimeSeries\QdbInt64PointCollection.cs" />

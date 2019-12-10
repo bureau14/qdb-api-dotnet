@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Quasardb.Exceptions;
 using Quasardb.Native;
+using Quasardb.TimeSeries.Reader;
 
 namespace Quasardb.TimeSeries
 {
@@ -235,6 +237,22 @@ namespace Quasardb.TimeSeries
             }
         }
 
+        internal InteropableList<qdb_ts_column_info> GetColumnDefinitions()
+        {
+            using (var columns = new qdb_buffer<qdb_ts_column_info>(Handle))
+            {
+                var err = qdb_api.qdb_ts_list_columns(Handle, Alias, out columns.Pointer, out columns.Size);
+                QdbExceptionThrower.ThrowIfNeeded(err, alias: Alias);
+
+                var columnDefinitions = new InteropableList<qdb_ts_column_info>((int)columns.Size);
+                foreach (var def in columns)
+                {
+                    columnDefinitions.Add(def);
+                }
+                return columnDefinitions;
+            }
+        }
+
         /// <summary>
         /// Creates the time-series.
         /// </summary>
@@ -395,5 +413,108 @@ namespace Quasardb.TimeSeries
                 Handle, Alias, (ulong)size);
             QdbExceptionThrower.ThrowIfNeeded(err, alias: Alias);
         }
+
+        #region TimeSeriesReader
+
+        /// <summary>
+        /// Initialize a local table for reading from this timeseries.
+        /// </summary>
+        public QdbTimeSeriesReader TimeSeriesReader()
+        {
+            return TimeSeriesReader(null, QdbTimeInterval.Everything);
+        }
+
+        /// <summary>
+        /// Initialize a local table for reading from this timeseries.
+        /// </summary>
+        /// <param name="interval">The time interval to read</param>
+        public QdbTimeSeriesReader TimeSeriesReader(QdbTimeInterval interval)
+        {
+            return TimeSeriesReader(null, new[] { interval });
+        }
+
+        /// <summary>
+        /// Initialize a local table for reading from this timeseries.
+        /// </summary>
+        /// <param name="intervals">The time intervals to read</param>
+        /// <exception cref="QdbInvalidArgumentException">If interval list is empty.</exception>
+        public QdbTimeSeriesReader TimeSeriesReader(IEnumerable<QdbTimeInterval> intervals)
+        {
+            return TimeSeriesReader(null, intervals);
+        }
+
+        /// <summary>
+        /// Initialize a local table for reading from this timeseries.
+        /// </summary>
+        /// <param name="columnDefinitions">The description of the columns</param>
+        public QdbTimeSeriesReader TimeSeriesReader(IEnumerable<QdbColumnDefinition> columnDefinitions)
+        {
+            return TimeSeriesReader(columnDefinitions, QdbTimeInterval.Everything);
+        }
+
+        /// <summary>
+        /// Initialize a local table for reading from this timeseries.
+        /// </summary>
+        /// <param name="columnDefinitions">The description of the columns</param>
+        /// <param name="interval">The time interval to read</param>
+        public QdbTimeSeriesReader TimeSeriesReader(IEnumerable<QdbColumnDefinition> columnDefinitions, QdbTimeInterval interval)
+        {
+            return TimeSeriesReader(columnDefinitions, new[] { interval });
+        }
+
+        /// <summary>
+        /// Initialize a local table for reading from this timeseries.
+        /// </summary>
+        /// <param name="columnDefinitions">The description of the columns</param>
+        /// <param name="intervals">The time intervals to read</param>
+        /// <exception cref="QdbInvalidArgumentException">If interval list is empty.</exception>
+        public QdbTimeSeriesReader TimeSeriesReader(IEnumerable<QdbColumnDefinition> columnDefinitions, IEnumerable<QdbTimeInterval> intervals)
+        {
+            var count = Helpers.GetCountOrDefault(columnDefinitions);
+            InteropableList<qdb_ts_column_info> columns;
+
+            if (columnDefinitions == null)
+            {
+                columns = GetColumnDefinitions();
+            }
+            else
+            {
+                columns = new InteropableList<qdb_ts_column_info>(count);
+                foreach (var def in columnDefinitions)
+                {
+                    columns.Add(new qdb_ts_column_info
+                    {
+                        name = def.Name,
+                        type = def.Type
+                    });
+                }
+            }
+
+            var err = qdb_api.qdb_ts_local_table_init(
+                Handle, Alias,
+                columns.Buffer, columns.Count,
+                out IntPtr table);
+            QdbExceptionThrower.ThrowIfNeeded(err, alias: Alias);
+
+            try
+            {
+                var ranges = new InteropableList<qdb_ts_range>(Helpers.GetCountOrDefault(intervals));
+                foreach (var interval in intervals)
+                    ranges.Add(interval.ToNative());
+
+                err = qdb_api.qdb_ts_table_get_ranges(
+                    table, ranges.Buffer, ranges.Count);
+                QdbExceptionThrower.ThrowIfNeeded(err, alias: Alias);
+            }
+            catch
+            {
+                qdb_api.qdb_release(Handle, table);
+                throw;
+            }
+
+            return new QdbTimeSeriesReader(Handle, Alias, table, columns);
+        }
+
+        #endregion
     }
 }
