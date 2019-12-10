@@ -94,10 +94,10 @@ namespace Quasardb.Tests.Entry.TimeSeries
             for (int i = 0; i < 10; ++i)
             {
                 batch.StartRow(startTime.AddSeconds(i));
-                batch.SetBlob(0, blobPoints[i].Value);
-                batch.SetDouble(1, doublePoints[i].Value);
-                batch.SetInt64(2, int64Points[i].Value);
-                batch.SetTimestamp(3, timestampPoints[i].Value);
+                batch.SetBlob("the_blob", blobPoints[i].Value);
+                batch.SetDouble("the_double", doublePoints[i].Value);
+                batch.SetInt64("the_int64", int64Points[i].Value);
+                batch.SetTimestamp("the_ts", timestampPoints[i].Value);
             }
             return batch;
         }

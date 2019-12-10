@@ -16,17 +16,18 @@ namespace Quasardb.TimeSeries
     {
         private readonly qdb_handle _handle;
         private readonly IntPtr _table;
+        private readonly InteropableList<qdb_ts_batch_column_info> _columns;
 
         internal QdbTimeSeriesBatch(qdb_handle handle, IEnumerable<QdbBatchColumnDefinition> columnDefinitions)
         {
             _handle = handle;
 
             var count = Helpers.GetCountOrDefault(columnDefinitions);
-            var columns = new InteropableList<qdb_ts_batch_column_info>(count);
+            _columns = new InteropableList<qdb_ts_batch_column_info>(count);
 
             foreach (var def in columnDefinitions)
             {
-                columns.Add(new qdb_ts_batch_column_info
+                _columns.Add(new qdb_ts_batch_column_info
                 {
                     timeseries = def.Alias,
                     column = def.Column
@@ -35,7 +36,7 @@ namespace Quasardb.TimeSeries
 
             var err = qdb_api.qdb_ts_batch_table_init(
                 _handle,
-                columns.Buffer, columns.Count,
+                _columns.Buffer, _columns.Count,
                 out _table);
             QdbExceptionThrower.ThrowIfNeeded(err);
         }
@@ -46,6 +47,16 @@ namespace Quasardb.TimeSeries
         public void Dispose()
         {
             qdb_api.qdb_release(_handle, _table);
+        }
+
+        internal long IndexOf(string column)
+        {
+            for (int i = 0; i < (int)_columns.Count; ++i)
+            {
+                if (_columns[i].column == column)
+                    return i;
+            }
+            return -1;
         }
 
         /// <summary>
@@ -74,6 +85,20 @@ namespace Quasardb.TimeSeries
         }
 
         /// <summary>
+        /// Set a value in the current row in a column of blobs.
+        /// </summary>
+        /// <param name="name">The name of the column you want to modify</param>
+        /// <param name="value">The value of the point to insert</param>
+        public unsafe void SetBlob(string name, byte[] value)
+        {
+            long index = IndexOf(name);
+            if (index == -1)
+                throw new QdbColumnNotFoundException(null, name);
+
+            SetBlob(index, value);
+        }
+
+        /// <summary>
         /// Set a value in the current row in a column of doubles.
         /// </summary>
         /// <param name="index">The index to the column you want to modify</param>
@@ -84,6 +109,20 @@ namespace Quasardb.TimeSeries
                 _table,
                 (qdb_size_t)index, value);
             QdbExceptionThrower.ThrowIfNeeded(err);
+        }
+
+        /// <summary>
+        /// Set a value in the current row in a column of doubles.
+        /// </summary>
+        /// <param name="name">The name of the column you want to modify</param>
+        /// <param name="value">The value of the point to insert</param>
+        public void SetDouble(string name, double value)
+        {
+            long index = IndexOf(name);
+            if (index == -1)
+                throw new QdbColumnNotFoundException(null, name);
+
+            SetDouble(index, value);
         }
 
         /// <summary>
@@ -100,6 +139,20 @@ namespace Quasardb.TimeSeries
         }
 
         /// <summary>
+        /// Set a value in the current row in a column of integers.
+        /// </summary>
+        /// <param name="name">The name of the column you want to modify</param>
+        /// <param name="value">The value of the point to insert</param>
+        public void SetInt64(string name, long value)
+        {
+            long index = IndexOf(name);
+            if (index == -1)
+                throw new QdbColumnNotFoundException(null, name);
+
+            SetInt64(index, value);
+        }
+
+        /// <summary>
         /// Set a value in the current row in a column of timestamps.
         /// </summary>
         /// <param name="index">The index to the column you want to modify</param>
@@ -111,6 +164,20 @@ namespace Quasardb.TimeSeries
                 _table,
                 (qdb_size_t)index, &converted);
             QdbExceptionThrower.ThrowIfNeeded(err);
+        }
+
+        /// <summary>
+        /// Set a value in the current row in a column of timestamps.
+        /// </summary>
+        /// <param name="name">The name of the column you want to modify</param>
+        /// <param name="value">The value of the point to insert</param>
+        public unsafe void SetTimestamp(string name, DateTime value)
+        {
+            long index = IndexOf(name);
+            if (index == -1)
+                throw new QdbColumnNotFoundException(null, name);
+
+            SetTimestamp(index, value);
         }
 
         /// <summary>
