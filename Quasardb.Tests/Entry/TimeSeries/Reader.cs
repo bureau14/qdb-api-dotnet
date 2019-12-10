@@ -7,7 +7,7 @@ using Quasardb.TimeSeries;
 namespace Quasardb.Tests.Entry.TimeSeries
 {
     [TestClass]
-    public class TimeSeriesReader
+    public class Reader
     {
         public QdbTimeSeries CreateTable(string alias = null)
         {
@@ -87,7 +87,7 @@ namespace Quasardb.Tests.Entry.TimeSeries
             try
             {
                 var now = DateTime.Now;
-                ts.TimeSeriesReader(new QdbTimeInterval(now.AddSeconds(6), now.AddSeconds(5)));
+                ts.Reader(new QdbTimeInterval(now.AddSeconds(6), now.AddSeconds(5)));
                 Assert.Fail("No exception thrown");
             }
             catch (QdbInvalidArgumentException)
@@ -99,7 +99,7 @@ namespace Quasardb.Tests.Entry.TimeSeries
         {
             var ts = CreateTable();
 
-            var reader = ts.TimeSeriesReader();
+            var reader = ts.Reader();
             Assert.AreEqual(0, reader.Count());
         }
 
@@ -113,7 +113,7 @@ namespace Quasardb.Tests.Entry.TimeSeries
             var insertedInt64Data = InsertInt64Points(ts, startTime, 10);
             var insertedTimestampData = InsertTimestampPoints(ts, startTime, 10);
 
-            var reader = ts.TimeSeriesReader();
+            var reader = ts.Reader();
 
             long index = 0;
             foreach (var row in reader)
@@ -139,7 +139,7 @@ namespace Quasardb.Tests.Entry.TimeSeries
             var insertedInt64Data = InsertInt64Points(ts, startTime, 10);
             var insertedTimestampData = InsertTimestampPoints(ts, startTime, 10);
 
-            var reader = ts.TimeSeriesReader(new QdbColumnDefinition[]{
+            var reader = ts.Reader(new QdbColumnDefinition[]{
                 new QdbDoubleColumnDefinition("the_double"),
                 new QdbInt64ColumnDefinition("the_int64")
             });
@@ -166,7 +166,7 @@ namespace Quasardb.Tests.Entry.TimeSeries
             var insertedInt64Data = InsertInt64Points(ts, startTime, 10);
             var insertedTimestampData = InsertTimestampPoints(ts, startTime, 10);
 
-            var reader = ts.TimeSeriesReader(new QdbTimeInterval[]{
+            var reader = ts.Reader(new QdbTimeInterval[]{
                 new QdbTimeInterval(startTime, startTime.AddSeconds(1)),
                 new QdbTimeInterval(startTime.AddSeconds(5), startTime.AddSeconds(6)),
             });
