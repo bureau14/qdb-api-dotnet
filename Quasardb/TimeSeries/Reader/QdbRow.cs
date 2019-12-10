@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
 using Quasardb.Exceptions;
 using Quasardb.Native;
@@ -23,11 +22,13 @@ namespace Quasardb.TimeSeries.Reader
         private readonly string _alias;
         private readonly qdb_ts_column_info[] _columns;
 
-        internal QdbRow(IntPtr table, string alias, IEnumerable<qdb_ts_column_info> columns)
+        internal QdbRow(IntPtr table, string alias, InteropableList<qdb_ts_column_info> columns)
         {
             _table = table;
             _alias = alias;
-            _columns = columns.ToArray();
+            _columns = new qdb_ts_column_info[(long)columns.Count];
+            for (int i = 0; i < (long)columns.Count; ++i)
+                _columns[i] = columns[i];
         }
 
         internal int IndexOf(string column)

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Quasardb.Exceptions;
 using Quasardb.Native;
 using Quasardb.TimeSeries.Reader;

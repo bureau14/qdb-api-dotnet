@@ -16,7 +16,7 @@ namespace Quasardb.TimeSeries.Reader
         private readonly IntPtr _table;
         private QdbRow _row;
 
-        internal QdbTimeSeriesReader(qdb_handle handle, string alias, IntPtr table, IEnumerable<qdb_ts_column_info> columns)
+        internal QdbTimeSeriesReader(qdb_handle handle, string alias, IntPtr table, InteropableList<qdb_ts_column_info> columns)
         {
             _handle = handle;
             _alias = alias;
