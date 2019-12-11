@@ -16,7 +16,7 @@ namespace Quasardb.TimeSeries
         {
         }
 
-        #region Insert
+        #region Insert()
 
         /// <summary>
         /// Inserts one or more points in the table
@@ -51,14 +51,14 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="time">The timestamp of the point to insert</param>
         /// <param name="value">The value of the point to insert</param>
-        public void Insert(DateTime time, DateTime value)
+        public void Insert(DateTime time, DateTime? value)
         {
             Insert(new Point(time, value));
         }
 
         #endregion
 
-        #region InsertTruncate
+        #region InsertTruncate()
 
         /// <summary>
         /// Inserts one or more points in the table and erases given
@@ -140,7 +140,7 @@ namespace Quasardb.TimeSeries
         /// <param name="intervals">The time intervals to erase</param>
         /// <param name="time">The timestamp of the point to insert</param>
         /// <param name="value">The value of the point to insert</param>
-        public void InsertTruncate(IEnumerable<QdbTimeInterval> intervals, DateTime time, DateTime value)
+        public void InsertTruncate(IEnumerable<QdbTimeInterval> intervals, DateTime time, DateTime? value)
         {
             InsertTruncate(intervals, new Point(time, value));
         }
@@ -152,14 +152,14 @@ namespace Quasardb.TimeSeries
         /// <param name="interval">The time interval to erase</param>
         /// <param name="time">The timestamp of the point to insert</param>
         /// <param name="value">The value of the point to insert</param>
-        public void InsertTruncate(QdbTimeInterval interval, DateTime time, DateTime value)
+        public void InsertTruncate(QdbTimeInterval interval, DateTime time, DateTime? value)
         {
             InsertTruncate(new[] { interval }, new Point(time, value));
         }
 
         #endregion
 
-        #region Points
+        #region Points()
 
         /// <summary>
         /// Gets all the points in the table
@@ -349,7 +349,7 @@ namespace Quasardb.TimeSeries
 
         #endregion
 
-        #region Count
+        #region Count()
 
         /// <summary>
         /// Gets the number of points in the table
@@ -456,7 +456,7 @@ namespace Quasardb.TimeSeries
 
         #endregion
 
-        #region DistinctCount
+        #region DistinctCount()
 
         /// <summary>
         /// Gets the number of points with distinct values in the table

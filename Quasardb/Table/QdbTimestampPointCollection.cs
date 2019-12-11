@@ -39,9 +39,9 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="timestamp">The timestamp of the new point</param>
         /// <param name="value">The value of the new point</param>
-        public void Add(DateTime timestamp, DateTime value)
+        public void Add(DateTime timestamp, DateTime? value)
         {
-            Add(new QdbTimestampPoint(timestamp, value));
+            Add(new Point(timestamp, value));
         }
 
         /// <summary>

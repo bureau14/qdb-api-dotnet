@@ -101,11 +101,11 @@ namespace Quasardb.TimeSeries.Writer
         /// </summary>
         /// <param name="index">The index to the column you want to modify</param>
         /// <param name="value">The value of the point to insert</param>
-        public void SetDouble(long index, double value)
+        public void SetDouble(long index, double? value)
         {
             var err = qdb_api.qdb_ts_batch_row_set_double(
                 _table,
-                (qdb_size_t)index, value);
+                (qdb_size_t)index, value?? double.NaN);
             QdbExceptionThrower.ThrowIfNeeded(err);
         }
 
@@ -114,7 +114,7 @@ namespace Quasardb.TimeSeries.Writer
         /// </summary>
         /// <param name="name">The name of the column you want to modify</param>
         /// <param name="value">The value of the point to insert</param>
-        public void SetDouble(string name, double value)
+        public void SetDouble(string name, double? value)
         {
             long index = IndexOf(name);
             if (index == -1)
@@ -128,11 +128,11 @@ namespace Quasardb.TimeSeries.Writer
         /// </summary>
         /// <param name="index">The index to the column you want to modify</param>
         /// <param name="value">The value of the point to insert</param>
-        public void SetInt64(long index, long value)
+        public void SetInt64(long index, long? value)
         {
             var err = qdb_api.qdb_ts_batch_row_set_int64(
                 _table,
-                (qdb_size_t)index, value);
+                (qdb_size_t)index, value ?? long.MinValue);
             QdbExceptionThrower.ThrowIfNeeded(err);
         }
 
@@ -141,7 +141,7 @@ namespace Quasardb.TimeSeries.Writer
         /// </summary>
         /// <param name="name">The name of the column you want to modify</param>
         /// <param name="value">The value of the point to insert</param>
-        public void SetInt64(string name, long value)
+        public void SetInt64(string name, long? value)
         {
             long index = IndexOf(name);
             if (index == -1)
@@ -155,7 +155,7 @@ namespace Quasardb.TimeSeries.Writer
         /// </summary>
         /// <param name="index">The index to the column you want to modify</param>
         /// <param name="value">The value of the point to insert</param>
-        public unsafe void SetTimestamp(long index, DateTime value)
+        public unsafe void SetTimestamp(long index, DateTime? value)
         {
             qdb_timespec converted = TimeConverter.ToTimespec(value);
             var err = qdb_api.qdb_ts_batch_row_set_timestamp(
@@ -169,7 +169,7 @@ namespace Quasardb.TimeSeries.Writer
         /// </summary>
         /// <param name="name">The name of the column you want to modify</param>
         /// <param name="value">The value of the point to insert</param>
-        public unsafe void SetTimestamp(string name, DateTime value)
+        public unsafe void SetTimestamp(string name, DateTime? value)
         {
             long index = IndexOf(name);
             if (index == -1)

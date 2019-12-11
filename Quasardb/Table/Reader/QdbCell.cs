@@ -62,7 +62,7 @@ namespace Quasardb.TimeSeries.Reader
         /// Gets the value.
         /// </summary>
         /// <exception cref="InvalidCastException">The value is not of type <see cref="QdbColumnType.Double" /> </exception>
-        public double DoubleValue
+        public double? DoubleValue
         {
             get
             {
@@ -71,6 +71,8 @@ namespace Quasardb.TimeSeries.Reader
                 var err = qdb_api.qdb_ts_row_get_double(
                     _table, _index,
                     out double value);
+                if (err == qdb_error.qdb_e_element_not_found)
+                    return null;
                 QdbExceptionThrower.ThrowIfNeeded(err, alias: _alias, column: _column.name);
                 return value;
             }
@@ -89,6 +91,8 @@ namespace Quasardb.TimeSeries.Reader
                 var err = qdb_api.qdb_ts_row_get_blob_no_copy(
                     _table, _index,
                     out pointer_t content, out size_t length);
+                if (err == qdb_error.qdb_e_element_not_found)
+                    return null;
                 QdbExceptionThrower.ThrowIfNeeded(err, alias: _alias, column: _column.name);
                 // TODO: limited to 32-bit
                 var value = new byte[(int)length];
@@ -105,7 +109,8 @@ namespace Quasardb.TimeSeries.Reader
         {
             get
             {
-                return System.Text.Encoding.UTF8.GetString(BlobValue);
+                var value = BlobValue;
+                return value != null ? System.Text.Encoding.UTF8.GetString(value) : null;
             }
         }
 
@@ -113,7 +118,7 @@ namespace Quasardb.TimeSeries.Reader
         /// Gets the value.
         /// </summary>
         /// <exception cref="InvalidCastException">The value is not of type <see cref="QdbColumnType.Int64" /> </exception>
-        public long Int64Value
+        public long? Int64Value
         {
             get
             {
@@ -122,6 +127,8 @@ namespace Quasardb.TimeSeries.Reader
                 var err = qdb_api.qdb_ts_row_get_int64(
                     _table, _index,
                     out qdb_int_t value);
+                if (err == qdb_error.qdb_e_element_not_found)
+                    return null;
                 QdbExceptionThrower.ThrowIfNeeded(err, alias: _alias, column: _column.name);
                 return value;
             }
@@ -131,7 +138,7 @@ namespace Quasardb.TimeSeries.Reader
         /// Gets the value.
         /// </summary>
         /// <exception cref="InvalidCastException">The value is not of type <see cref="QdbColumnType.Timestamp" /> </exception>
-        public DateTime TimestampValue
+        public DateTime? TimestampValue
         {
             get
             {
@@ -140,6 +147,8 @@ namespace Quasardb.TimeSeries.Reader
                 var err = qdb_api.qdb_ts_row_get_timestamp(
                     _table, _index,
                     out qdb_timespec value);
+                if (err == qdb_error.qdb_e_element_not_found)
+                    return null;
                 QdbExceptionThrower.ThrowIfNeeded(err, alias: _alias, column: _column.name);
                 return TimeConverter.ToDateTime(value);
             }

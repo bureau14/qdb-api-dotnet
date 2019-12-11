@@ -13,7 +13,8 @@ namespace Quasardb.Tests.Entry.Table.Double
         {
             new QdbDoublePoint(new DateTime(2012, 11, 02), 0),
             new QdbDoublePoint(new DateTime(2014, 06, 30), 42),
-            new QdbDoublePoint(new DateTime(2016, 02, 04), 666)
+            new QdbDoublePoint(new DateTime(2016, 02, 04), 666),
+            new QdbDoublePoint(new DateTime(2019, 12, 11), null)
         };
 
         [TestMethod]
@@ -79,7 +80,8 @@ namespace Quasardb.Tests.Entry.Table.Double
             {
                 new QdbTimeInterval(new DateTime(2014, 1, 1), new DateTime(2014, 12, 31)),
                 new QdbTimeInterval(new DateTime(2016, 1, 1), new DateTime(2016, 12, 31)),
-                new QdbTimeInterval(new DateTime(2018, 1, 1), new DateTime(2018, 12, 31))
+                new QdbTimeInterval(new DateTime(2019, 1, 1), new DateTime(2019, 12, 31)),
+                new QdbTimeInterval(new DateTime(2028, 1, 1), new DateTime(2028, 12, 31))
             };
 
             var result = ts.Points(intervals);

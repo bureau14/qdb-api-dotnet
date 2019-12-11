@@ -12,6 +12,12 @@ namespace Quasardb
         const long NanosPerTick = 100;
         const long TicksPerSecond = 1000000000 / NanosPerTick;
 
+        static qdb_timespec NullTimespec = new qdb_timespec
+        {
+            tv_sec = long.MinValue,
+            tv_nsec = long.MinValue
+        };
+
         public static qdb_timespec ToTimespec(DateTime dt)
         {
             var ticksSinceEpoch = (dt - _epoch).Ticks;
@@ -21,6 +27,13 @@ namespace Quasardb
                 out ts.tv_nsec);
             ts.tv_nsec *= NanosPerTick;
             return ts;
+        }
+
+        public static qdb_timespec ToTimespec(DateTime? dt)
+        {
+            if (dt == null)
+                return NullTimespec;
+            return ToTimespec((DateTime)dt);
         }
 
         public static DateTime ToDateTime(qdb_timespec ts)

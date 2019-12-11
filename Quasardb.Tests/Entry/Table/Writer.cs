@@ -152,7 +152,7 @@ namespace Quasardb.Tests.Entry.Table
         }
 
         [TestMethod]
-        public void Ok_BulkPartialRowInsert()
+        public void Ok_BulkRowInsertPartial()
         {
             var startTime = DateTime.Now;
             QdbTable ts = CreateTable();
@@ -172,13 +172,40 @@ namespace Quasardb.Tests.Entry.Table
             CollectionAssert.AreEqual(blobPoints.ToArray(), blobColumn.Points().ToArray());
 
             var doubleColumn = ts.DoubleColumns["the_double"];
-            Assert.AreEqual(blobPoints.Count, doubleColumn.Points().ToArray().Length);
+            var doublePoints = doubleColumn.Points().ToArray();
+            Assert.IsTrue(doublePoints.All(x => x.Value == null));
+            Assert.AreEqual(blobPoints.Count, doublePoints.Length);
 
             var int64Column = ts.Int64Columns["the_int64"];
-            Assert.AreEqual(blobPoints.Count, int64Column.Points().ToArray().Length);
+            var int64Points = int64Column.Points().ToArray();
+            Assert.IsTrue(int64Points.All(x => x.Value == null));
+            Assert.AreEqual(blobPoints.Count, int64Points.Length);
 
             var timestampColumn = ts.TimestampColumns["the_ts"];
-            Assert.AreEqual(blobPoints.Count, timestampColumn.Points().ToArray().Length);
+            var timestampPoints = timestampColumn.Points().ToArray();
+            Assert.IsTrue(timestampPoints.All(x => x.Value == null));
+            Assert.AreEqual(blobPoints.Count, timestampPoints.Length);
+        }
+
+        [TestMethod]
+        public void Ok_BulkRowInsertWithNulls()
+        {
+            var startTime = DateTime.Now;
+            QdbTable ts = CreateTable();
+            var blobData = CreateBlobPoints(startTime, 9);
+            var doubleData = CreateDoublePoints(startTime, 9);
+            var int64Data = CreateInt64Points(startTime, 9);
+            var timestampData = CreateTimestampPoints(startTime, 9);
+
+            blobData.Add(startTime.AddSeconds(9), new byte[]{10});
+            doubleData.Add(startTime.AddSeconds(9), null);
+            int64Data.Add(startTime.AddSeconds(9), null);
+            timestampData.Add(startTime.AddSeconds(9), null);
+
+            var writer = Insert(ts, startTime, blobData, doubleData, int64Data, timestampData);
+            writer.Push();
+
+            CheckTable(ts, blobData, doubleData, int64Data, timestampData);
         }
 
         [TestMethod]
