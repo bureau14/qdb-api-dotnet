@@ -83,14 +83,14 @@ namespace Quasardb.Tests.Cluster
 
 
         [TestMethod]
-        public void ReturnsTimeSeries()
+        public void ReturnsTable()
         {
             var alias = RandomGenerator.CreateUniqueAlias();
 
-            QdbTestCluster.Instance.TimeSeries(alias).Create(new QdbBlobColumnDefinition("hello"));
+            QdbTestCluster.Instance.Table(alias).Create(new QdbBlobColumnDefinition("hello"));
             var result = _cluster.Entry(alias);
 
-            Assert.IsInstanceOfType(result, typeof(QdbTimeSeries));
+            Assert.IsInstanceOfType(result, typeof(QdbTable));
             Assert.AreEqual(alias, result.Alias);
         }
     }

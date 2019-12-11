@@ -67,6 +67,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Batch\QdbNativeBatch.cs" />
+    <Compile Include="TimeSeries.cs" />
     <Compile Include="Exceptions\Connection\QdbConnectionException.cs" />
     <Compile Include="Query\QdbQueryException.cs" />
     <Compile Include="Exceptions\Input\QdbInputException.cs" />
@@ -97,12 +98,12 @@
     <Compile Include="Query\QdbValueType.cs" />
     <Compile Include="Query\QdbQueryResult.cs" />
     <Compile Include="Query\QdbRow.cs" />
-    <Compile Include="TimeSeries\PointConverter.cs" />
-    <Compile Include="TimeSeries\QdbBlobPointCollection.cs" />
-    <Compile Include="TimeSeries\QdbBlobColumn.cs" />
-    <Compile Include="TimeSeries\QdbBatchColumnDefinition.cs" />
-    <Compile Include="TimeSeries\QdbColumnType.cs" />
-    <Compile Include="TimeSeries\QdbColumnDefinition.cs" />
+    <Compile Include="Table\PointConverter.cs" />
+    <Compile Include="Table\QdbBlobPointCollection.cs" />
+    <Compile Include="Table\QdbBlobColumn.cs" />
+    <Compile Include="Table\QdbBatchColumnDefinition.cs" />
+    <Compile Include="Table\QdbColumnType.cs" />
+    <Compile Include="Table\QdbColumnDefinition.cs" />
     <Compile Include="Exceptions\QdbExceptionThrower.cs" />
     <Compile Include="Stream\QdbStreamAdapter.cs" />
     <Compile Include="Batch\QdbBatch.cs" />
@@ -122,22 +123,22 @@
     <Compile Include="Stream\QdbStream.cs" />
     <Compile Include="QdbTag.cs" />
     <Compile Include="QdbBlobBuffer.cs" />
-    <Compile Include="TimeSeries\Helpers.cs" />
-    <Compile Include="TimeSeries\QdbColumn.cs" />
-    <Compile Include="TimeSeries\QdbColumnAggregator.cs" />
-    <Compile Include="TimeSeries\Writer\QdbTimeSeriesWriter.cs" />
-    <Compile Include="TimeSeries\Reader\QdbCell.cs" />
-    <Compile Include="TimeSeries\Reader\QdbRow.cs" />
-    <Compile Include="TimeSeries\Reader\QdbTimeSeriesReader.cs" />
-    <Compile Include="TimeSeries\QdbTimeInterval.cs" />
-    <Compile Include="TimeSeries\QdbDoublePointCollection.cs" />
-    <Compile Include="TimeSeries\QdbInt64PointCollection.cs" />
-    <Compile Include="TimeSeries\QdbTimestampPointCollection.cs" />
-    <Compile Include="TimeSeries\QdbPoint.cs" />
-    <Compile Include="TimeSeries\QdbDoubleColumn.cs" />
-    <Compile Include="TimeSeries\QdbInt64Column.cs" />
-    <Compile Include="TimeSeries\QdbTimestampColumn.cs" />
-    <Compile Include="TimeSeries\QdbTimeSeries.cs" />
+    <Compile Include="Table\Helpers.cs" />
+    <Compile Include="Table\QdbColumn.cs" />
+    <Compile Include="Table\QdbColumnAggregator.cs" />
+    <Compile Include="Table\Writer\QdbTableWriter.cs" />
+    <Compile Include="Table\Reader\QdbCell.cs" />
+    <Compile Include="Table\Reader\QdbRow.cs" />
+    <Compile Include="Table\Reader\QdbTableReader.cs" />
+    <Compile Include="Table\QdbTimeInterval.cs" />
+    <Compile Include="Table\QdbDoublePointCollection.cs" />
+    <Compile Include="Table\QdbInt64PointCollection.cs" />
+    <Compile Include="Table\QdbTimestampPointCollection.cs" />
+    <Compile Include="Table\QdbPoint.cs" />
+    <Compile Include="Table\QdbDoubleColumn.cs" />
+    <Compile Include="Table\QdbInt64Column.cs" />
+    <Compile Include="Table\QdbTimestampColumn.cs" />
+    <Compile Include="Table\QdbTable.cs" />
     <Compile Include="TimeConverter.cs" />
   </ItemGroup>
   <ItemGroup>

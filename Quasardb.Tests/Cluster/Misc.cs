@@ -108,9 +108,9 @@ namespace Quasardb.Tests.Cluster
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void TimeSeries_ThrowsArgumentNull()
+        public void Table_ThrowsArgumentNull()
         {
-            QdbTestCluster.Instance.TimeSeries(null);
+            QdbTestCluster.Instance.Table(null);
         }
 
         [TestMethod]
