@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Quasardb.Exceptions;
 using Quasardb.Native;
 using Quasardb.TimeSeries.Reader;
+using Quasardb.TimeSeries.Writer;
 
 namespace Quasardb.TimeSeries
 {
@@ -427,6 +428,7 @@ namespace Quasardb.TimeSeries
         /// Initialize a local table for reading from this timeseries.
         /// </summary>
         /// <param name="interval">The time interval to read</param>
+        /// <seealso cref="QdbTimeSeriesReader"/>
         public QdbTimeSeriesReader Reader(QdbTimeInterval interval)
         {
             return Reader(null, new[] { interval });
@@ -437,6 +439,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="intervals">The time intervals to read</param>
         /// <exception cref="QdbInvalidArgumentException">If interval list is empty.</exception>
+        /// <seealso cref="QdbTimeSeriesReader"/>
         public QdbTimeSeriesReader Reader(IEnumerable<QdbTimeInterval> intervals)
         {
             return Reader(null, intervals);
@@ -446,6 +449,7 @@ namespace Quasardb.TimeSeries
         /// Initialize a local table for reading from this timeseries.
         /// </summary>
         /// <param name="columnDefinitions">The description of the columns</param>
+        /// <seealso cref="QdbTimeSeriesReader"/>
         public QdbTimeSeriesReader Reader(IEnumerable<QdbColumnDefinition> columnDefinitions)
         {
             return Reader(columnDefinitions, QdbTimeInterval.Everything);
@@ -456,6 +460,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="columnDefinitions">The description of the columns</param>
         /// <param name="interval">The time interval to read</param>
+        /// <seealso cref="QdbTimeSeriesReader"/>
         public QdbTimeSeriesReader Reader(IEnumerable<QdbColumnDefinition> columnDefinitions, QdbTimeInterval interval)
         {
             return Reader(columnDefinitions, new[] { interval });
@@ -467,6 +472,7 @@ namespace Quasardb.TimeSeries
         /// <param name="columnDefinitions">The description of the columns</param>
         /// <param name="intervals">The time intervals to read</param>
         /// <exception cref="QdbInvalidArgumentException">If interval list is empty.</exception>
+        /// <seealso cref="QdbTimeSeriesReader"/>
         public QdbTimeSeriesReader Reader(IEnumerable<QdbColumnDefinition> columnDefinitions, IEnumerable<QdbTimeInterval> intervals)
         {
             var count = Helpers.GetCountOrDefault(columnDefinitions);
@@ -512,6 +518,48 @@ namespace Quasardb.TimeSeries
             }
 
             return new QdbTimeSeriesReader(Handle, Alias, table, columns);
+        }
+
+        #endregion
+
+        #region Writer
+
+        /// <summary>
+        /// Initialize a batch table for writing to this timeseries.
+        /// </summary>
+        /// <seealso cref="QdbTimeSeriesWriter"/>
+        public QdbTimeSeriesWriter Writer()
+        {
+            return Writer(null);
+        }
+
+        /// <summary>
+        /// Initialize a batch table for writing to this timeseries.
+        /// </summary>
+        /// <param name="columnDefinitions">The description of the columns</param>
+        /// <exception cref="QdbInvalidArgumentException">If columns list is empty.</exception>
+        /// <seealso cref="QdbTimeSeriesWriter"/>
+        public QdbTimeSeriesWriter Writer(IEnumerable<QdbColumnDefinition> columnDefinitions)
+        {
+            var count = Helpers.GetCountOrDefault(columnDefinitions);
+            var batchColumnDefinitions = new List<QdbBatchColumnDefinition>(count);
+
+            if (columnDefinitions == null)
+            {
+                foreach (var def in GetColumnDefinitions())
+                {
+                    batchColumnDefinitions.Add(new QdbBatchColumnDefinition(Alias, def.name));
+                }
+            }
+            else
+            {
+                foreach (var def in columnDefinitions)
+                {
+                    batchColumnDefinitions.Add(new QdbBatchColumnDefinition(Alias, def.Name));
+                }
+            }
+
+            return new QdbTimeSeriesWriter(Handle, batchColumnDefinitions);
         }
 
         #endregion

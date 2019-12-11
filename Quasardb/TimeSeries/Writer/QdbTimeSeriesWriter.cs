@@ -1,24 +1,22 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using Quasardb.Exceptions;
 using Quasardb.Native;
 
 using qdb_size_t = System.UIntPtr;
 
-namespace Quasardb.TimeSeries
+namespace Quasardb.TimeSeries.Writer
 {
     /// <summary>
     /// A batch table for bulk insertion in time series
     /// </summary>
-    public sealed class QdbTimeSeriesBatch : IDisposable
+    public sealed class QdbTimeSeriesWriter : IDisposable
     {
         private readonly qdb_handle _handle;
         private readonly IntPtr _table;
         private readonly InteropableList<qdb_ts_batch_column_info> _columns;
 
-        internal QdbTimeSeriesBatch(qdb_handle handle, IEnumerable<QdbBatchColumnDefinition> columnDefinitions)
+        internal QdbTimeSeriesWriter(qdb_handle handle, IEnumerable<QdbBatchColumnDefinition> columnDefinitions)
         {
             _handle = handle;
 

@@ -75,6 +75,7 @@
     <Compile Include="Cluster\Entry.cs" />
     <Compile Include="Cluster\Keys.cs" />
     <Compile Include="Cluster\Misc.cs" />
+    <Compile Include="Cluster\Writer.cs" />
     <Compile Include="DaemonRunner.cs" />
     <Compile Include="Entry\Blob\CompareAndSwap.cs" />
     <Compile Include="Entry\Blob\ExpiresAt.cs" />
@@ -135,7 +136,7 @@
     <Compile Include="Entry\TimeSeries\DoubleColumns.cs" />
     <Compile Include="Entry\TimeSeries\Int64Columns.cs" />
     <Compile Include="Entry\TimeSeries\Reader.cs" />
-    <Compile Include="Entry\TimeSeries\Inserter.cs" />
+    <Compile Include="Entry\TimeSeries\Writer.cs" />
     <Compile Include="Entry\TimeSeries\TimestampColumns.cs" />
     <Compile Include="Entry\AttachTag.cs" />
     <Compile Include="Entry\GetTags.cs" />

@@ -154,6 +154,7 @@ namespace Quasardb.Tests.Entry.TimeSeries
                 Assert.AreEqual(insertedInt64Data[index], row["the_int64"].Value);
                 ++index;
             }
+            Assert.AreEqual(10L, index);
         }
 
         [TestMethod]
@@ -185,6 +186,7 @@ namespace Quasardb.Tests.Entry.TimeSeries
                 Assert.AreEqual(insertedTimestampData[index], row["the_ts"].Value);
                 ++i;
             }
+            Assert.AreEqual(2L, i);
         }
     }
 }

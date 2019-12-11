@@ -125,7 +125,7 @@
     <Compile Include="TimeSeries\Helpers.cs" />
     <Compile Include="TimeSeries\QdbColumn.cs" />
     <Compile Include="TimeSeries\QdbColumnAggregator.cs" />
-    <Compile Include="TimeSeries\QdbTimeSeriesBatch.cs" />
+    <Compile Include="TimeSeries\Writer\QdbTimeSeriesWriter.cs" />
     <Compile Include="TimeSeries\Reader\QdbCell.cs" />
     <Compile Include="TimeSeries\Reader\QdbRow.cs" />
     <Compile Include="TimeSeries\Reader\QdbTimeSeriesReader.cs" />

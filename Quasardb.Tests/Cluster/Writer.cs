@@ -4,11 +4,12 @@ using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb.Exceptions;
 using Quasardb.TimeSeries;
+using Quasardb.TimeSeries.Writer;
 
-namespace Quasardb.Tests.Entry.TimeSeries
+namespace Quasardb.Tests.Cluster
 {
     [TestClass]
-    public class Inserter
+    public class Writer
     {
         private readonly QdbCluster _cluster = QdbTestCluster.Instance;
 
@@ -78,18 +79,18 @@ namespace Quasardb.Tests.Entry.TimeSeries
             return r;
         }
 
-        public QdbTimeSeriesBatch Insert(QdbTimeSeries ts,
+        public QdbTimeSeriesWriter Insert(QdbTimeSeries ts1, QdbTimeSeries ts2,
             DateTime startTime,
             QdbBlobPointCollection blobPoints,
             QdbDoublePointCollection doublePoints,
             QdbInt64PointCollection int64Points,
             QdbTimestampPointCollection timestampPoints)
         {
-            var batch = _cluster.Inserter(new QdbBatchColumnDefinition[]{
-                new QdbBatchColumnDefinition(ts.Alias, "the_blob"),
-                new QdbBatchColumnDefinition(ts.Alias, "the_double"),
-                new QdbBatchColumnDefinition(ts.Alias, "the_int64"),
-                new QdbBatchColumnDefinition(ts.Alias, "the_ts"),
+            var batch = _cluster.Writer(new QdbBatchColumnDefinition[]{
+                new QdbBatchColumnDefinition(ts1.Alias, "the_blob"),
+                new QdbBatchColumnDefinition(ts1.Alias, "the_double"),
+                new QdbBatchColumnDefinition(ts2.Alias, "the_int64"),
+                new QdbBatchColumnDefinition(ts2.Alias, "the_ts"),
             });
             for (int i = 0; i < 10; ++i)
             {
@@ -102,22 +103,22 @@ namespace Quasardb.Tests.Entry.TimeSeries
             return batch;
         }
 
-        public void CheckTable(QdbTimeSeries ts,
+        public void CheckTables(QdbTimeSeries ts1, QdbTimeSeries ts2,
             QdbBlobPointCollection blobPoints,
             QdbDoublePointCollection doublePoints,
             QdbInt64PointCollection int64Points,
             QdbTimestampPointCollection timestampPoints)
         {
-            var blobColumn = ts.BlobColumns["the_blob"];
+            var blobColumn = ts1.BlobColumns["the_blob"];
             CollectionAssert.AreEqual(blobPoints.ToArray(), blobColumn.Points().ToArray());
 
-            var doubleColumn = ts.DoubleColumns["the_double"];
+            var doubleColumn = ts1.DoubleColumns["the_double"];
             CollectionAssert.AreEqual(doublePoints.ToArray(), doubleColumn.Points().ToArray());
 
-            var int64Column = ts.Int64Columns["the_int64"];
+            var int64Column = ts2.Int64Columns["the_int64"];
             CollectionAssert.AreEqual(int64Points.ToArray(), int64Column.Points().ToArray());
 
-            var timestampColumn = ts.TimestampColumns["the_ts"];
+            var timestampColumn = ts2.TimestampColumns["the_ts"];
             CollectionAssert.AreEqual(timestampPoints.ToArray(), timestampColumn.Points().ToArray());
         }
 
@@ -128,7 +129,7 @@ namespace Quasardb.Tests.Entry.TimeSeries
 
             try
             {
-                var batch = _cluster.Inserter(new QdbBatchColumnDefinition(ts.Alias, "col"));
+                var batch = _cluster.Writer(new QdbBatchColumnDefinition(ts.Alias, "col"));
                 Assert.Fail("No exception thrown");
             }
             catch (QdbColumnNotFoundException e)
@@ -143,52 +144,55 @@ namespace Quasardb.Tests.Entry.TimeSeries
         public void Ok_BulkRowInsert()
         {
             var startTime = DateTime.Now;
-            QdbTimeSeries ts = CreateTable();
+            QdbTimeSeries ts1 = CreateTable();
+            QdbTimeSeries ts2 = CreateTable();
             var blobData = CreateBlobPoints(startTime, 10);
             var doubleData = CreateDoublePoints(startTime, 10);
             var int64Data = CreateInt64Points(startTime, 10);
             var timestampData = CreateTimestampPoints(startTime, 10);
 
-            var batch = Insert(ts, startTime, blobData, doubleData, int64Data, timestampData);
+            var batch = Insert(ts1, ts2, startTime, blobData, doubleData, int64Data, timestampData);
             batch.Push();
 
-            CheckTable(ts, blobData, doubleData, int64Data, timestampData);
+            CheckTables(ts1, ts2, blobData, doubleData, int64Data, timestampData);
         }
 
         [TestMethod]
         public void Ok_BulkRowFastInsert()
         {
             var startTime = DateTime.Now;
-            QdbTimeSeries ts = CreateTable();
+            QdbTimeSeries ts1 = CreateTable();
+            QdbTimeSeries ts2 = CreateTable();
             var blobData = CreateBlobPoints(startTime, 10);
             var doubleData = CreateDoublePoints(startTime, 10);
             var int64Data = CreateInt64Points(startTime, 10);
             var timestampData = CreateTimestampPoints(startTime, 10);
 
-            var batch = Insert(ts, startTime, blobData, doubleData, int64Data, timestampData);
+            var batch = Insert(ts1, ts2, startTime, blobData, doubleData, int64Data, timestampData);
             batch.PushFast();
 
-            CheckTable(ts, blobData, doubleData, int64Data, timestampData);
+            CheckTables(ts1, ts2, blobData, doubleData, int64Data, timestampData);
         }
 
         [TestMethod]
         public void Ok_BulkRowAsyncInsert()
         {
             var startTime = DateTime.Now;
-            QdbTimeSeries ts = CreateTable();
+            QdbTimeSeries ts1 = CreateTable();
+            QdbTimeSeries ts2 = CreateTable();
             var blobData = CreateBlobPoints(startTime, 10);
             var doubleData = CreateDoublePoints(startTime, 10);
             var int64Data = CreateInt64Points(startTime, 10);
             var timestampData = CreateTimestampPoints(startTime, 10);
 
-            var batch = Insert(ts, startTime, blobData, doubleData, int64Data, timestampData);
+            var batch = Insert(ts1, ts2, startTime, blobData, doubleData, int64Data, timestampData);
             batch.PushAsync();
 
             // Wait for push_async to complete
             // Ideally we could be able to get the proper flush interval
             Thread.Sleep(8 * 1000);
 
-            CheckTable(ts, blobData, doubleData, int64Data, timestampData);
+            CheckTables(ts1, ts2, blobData, doubleData, int64Data, timestampData);
         }
     }
 }

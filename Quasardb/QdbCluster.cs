@@ -4,6 +4,7 @@ using Quasardb.Exceptions;
 using Quasardb.Native;
 using Quasardb.TimeSeries;
 using Quasardb.Query;
+using Quasardb.TimeSeries.Writer;
 
 namespace Quasardb
 {
@@ -228,27 +229,27 @@ namespace Quasardb
         }
 
         /// <summary>
-        /// Returns a <see cref="QdbTimeSeriesBatch" /> attached to the specified columns.
+        /// Returns a <see cref="QdbTimeSeriesWriter" /> attached to the specified columns.
         /// </summary>
         /// <param name="columnDefinitions">The description of the columns</param>
         /// <exception cref="QdbInvalidArgumentException">If columns list is empty.</exception>
         /// <returns>A batch table for bulk insertion associated with the specified columns.</returns>
-        /// <seealso cref="QdbTimeSeriesBatch"/>
-        public QdbTimeSeriesBatch Inserter(params QdbBatchColumnDefinition[] columnDefinitions)
+        /// <seealso cref="QdbTimeSeriesWriter"/>
+        public QdbTimeSeriesWriter Writer(params QdbBatchColumnDefinition[] columnDefinitions)
         {
-            return Inserter((IEnumerable<QdbBatchColumnDefinition>)columnDefinitions);
+            return Writer((IEnumerable<QdbBatchColumnDefinition>)columnDefinitions);
         }
 
         /// <summary>
-        /// Returns a <see cref="QdbTimeSeriesBatch" /> attached to the specified columns.
+        /// Returns a <see cref="QdbTimeSeriesWriter" /> attached to the specified columns.
         /// </summary>
         /// <param name="columnDefinitions">The description of the columns</param>
         /// <exception cref="QdbInvalidArgumentException">If columns list is empty.</exception>
         /// <returns>A batch table for bulk insertion associated with the specified columns.</returns>
-        /// <seealso cref="QdbTimeSeriesBatch"/>
-        public QdbTimeSeriesBatch Inserter(IEnumerable<QdbBatchColumnDefinition> columnDefinitions)
+        /// <seealso cref="QdbTimeSeriesWriter"/>
+        public QdbTimeSeriesWriter Writer(IEnumerable<QdbBatchColumnDefinition> columnDefinitions)
         {
-            return new QdbTimeSeriesBatch(_handle, columnDefinitions);
+            return new QdbTimeSeriesWriter(_handle, columnDefinitions);
         }
 
         /// <summary>
