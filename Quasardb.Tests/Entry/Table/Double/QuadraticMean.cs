@@ -84,7 +84,7 @@ namespace Quasardb.Tests.Entry.Table.Double
             var interval = new QdbTimeInterval(new DateTime(3000, 1, 1), new DateTime(4000, 1, 1));
             var result = col.QuadraticMean(interval);
 
-            Assert.IsTrue(double.IsNaN(result));
+            Assert.IsNull(result);
         }
 
         [TestMethod]
@@ -105,7 +105,7 @@ namespace Quasardb.Tests.Entry.Table.Double
             Assert.AreEqual(3, results.Length);
             Assert.AreEqual(29.706901555025897, results[0]);
             Assert.AreEqual(2924.3700176277284, results[1]);
-            Assert.IsTrue(double.IsNaN(results[2]));
+            Assert.IsNull(results[2]);
         }
     }
 }

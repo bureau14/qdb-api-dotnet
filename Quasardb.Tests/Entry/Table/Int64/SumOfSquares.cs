@@ -84,6 +84,7 @@ namespace Quasardb.Tests.Entry.Table.Int64
             Assert.AreEqual(3, results.Length);
             Assert.AreEqual(42 * 42, results[0]);
             Assert.AreEqual(42 * 42 + 666 * 666, results[1]);
+            Assert.IsNull(results[2]);
         }
 
         [TestMethod]

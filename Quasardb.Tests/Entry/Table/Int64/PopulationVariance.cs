@@ -93,6 +93,7 @@ namespace Quasardb.Tests.Entry.Table.Int64
             Assert.AreEqual(3, results.Length);
             Assert.AreEqual(420L, results[0]);
             Assert.AreEqual(4922915L, results[1]);
+            Assert.IsNull(results[2]);
         }
     }
 }

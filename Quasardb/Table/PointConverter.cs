@@ -99,7 +99,7 @@ namespace Quasardb.TimeSeries
 
         public static bool IsNull(qdb_ts_timestamp_point pt)
         {
-            return pt.value.tv_sec == long.MinValue && pt.value.tv_nsec == long.MinValue;
+            return TimeConverter.IsNull(pt.value);
         }
 
         public static QdbTimestampPoint ToManaged(this qdb_ts_timestamp_point pt)

@@ -12,11 +12,16 @@ namespace Quasardb
         const long NanosPerTick = 100;
         const long TicksPerSecond = 1000000000 / NanosPerTick;
 
-        static qdb_timespec NullTimespec = new qdb_timespec
+        internal static qdb_timespec NullTimespec = new qdb_timespec
         {
             tv_sec = long.MinValue,
             tv_nsec = long.MinValue
         };
+
+        public static bool IsNull(qdb_timespec ts)
+        {
+            return ts.tv_sec == long.MinValue && ts.tv_nsec == long.MinValue;
+        }
 
         public static qdb_timespec ToTimespec(DateTime dt)
         {
