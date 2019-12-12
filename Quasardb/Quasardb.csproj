@@ -67,7 +67,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Batch\QdbNativeBatch.cs" />
-    <Compile Include="TimeSeries.cs" />
+    <Compile Include="QdbTimeSeries.cs" />
     <Compile Include="Exceptions\Connection\QdbConnectionException.cs" />
     <Compile Include="Query\QdbQueryException.cs" />
     <Compile Include="Exceptions\Input\QdbInputException.cs" />
