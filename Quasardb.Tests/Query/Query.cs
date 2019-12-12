@@ -24,63 +24,66 @@ namespace Quasardb.Tests.Query
             return ts;
         }
 
-        public byte[][] InsertBlobPoints(string alias, DateTime time, int count)
+        public QdbBlobPointCollection InsertBlobPoints(QdbTable ts, DateTime time, int count)
         {
             Random random = new Random();
-            var r = new byte[count][];
+            var r = new QdbBlobPointCollection(count);
 
-            var ts = _cluster.Table(alias);
             var column = ts.BlobColumns["the_blob"];
             for (int i = 0; i < count; ++i)
             {
-                r[i] = new byte[32];
-                random.NextBytes(r[i]);
-                column.Insert(time, r[i]);
+                var value = new byte[32];
+                random.NextBytes(value);
+                column.Insert(time, value);
+                r.Add(time, value);
                 time = time.AddSeconds(1);
             }
             return r;
         }
 
-        public double[] InsertDoublePoints(string alias, DateTime time, int count)
+        public QdbDoublePointCollection InsertDoublePoints(QdbTable ts, DateTime time, int count)
         {
             Random random = new Random();
-            var r = new double[count];
+            var r = new QdbDoublePointCollection(count);
 
-            var ts = _cluster.Table(alias);
             var column = ts.DoubleColumns["the_double"];
             for (int i = 0; i < count; ++i)
             {
-                column.Insert(time, r[i] = random.NextDouble());
+                var value = random.NextDouble();
+                column.Insert(time, value);
+                r.Add(time, value);
                 time = time.AddSeconds(1);
             }
             return r;
         }
 
-        public long[] InsertInt64Points(string alias, DateTime time, int count)
+        public QdbInt64PointCollection InsertInt64Points(QdbTable ts, DateTime time, int count)
         {
             Random random = new Random();
-            var r = new long[count];
+            var r = new QdbInt64PointCollection(count);
 
-            var ts = _cluster.Table(alias);
             var column = ts.Int64Columns["the_int64"];
             for (int i = 0; i < count; ++i)
             {
-                column.Insert(time, r[i] = random.Next());
+                var value = random.Next();
+                column.Insert(time, value);
+                r.Add(time, value);
                 time = time.AddSeconds(1);
             }
             return r;
         }
 
-        public DateTime[] InsertTimestampPoints(string alias, DateTime time, int count)
+        public QdbTimestampPointCollection InsertTimestampPoints(QdbTable ts, DateTime time, int count)
         {
             Random random = new Random();
-            var r = new DateTime[count];
+            var r = new QdbTimestampPointCollection(count);
 
-            var ts = _cluster.Table(alias);
             var column = ts.TimestampColumns["the_ts"];
             for (int i = 0; i < count; ++i)
             {
-                column.Insert(time, r[i] = DateTime.Today.AddSeconds(random.NextDouble()));
+                var value = DateTime.Today.AddSeconds(random.NextDouble());
+                column.Insert(time, value);
+                r.Add(time, value);
                 time = time.AddSeconds(1);
             }
             return r;
@@ -177,7 +180,7 @@ namespace Quasardb.Tests.Query
         {
             var startTime = DateTime.Now;
             QdbTable ts = CreateTable();
-            var insertedDoubleData = InsertDoublePoints(ts.Alias, startTime, 10);
+            var insertedDoubleData = InsertDoublePoints(ts, startTime, 10);
             try
             {
                 var results = _cluster.Query("select * from " + ts.Alias);
@@ -185,13 +188,13 @@ namespace Quasardb.Tests.Query
 
                 var rows = results.Rows;
                 Assert.AreEqual(10L, rows.Count);
-                for (long i = 0; i < 10L; ++i)
+                for (int i = 0; i < 10L; ++i)
                 {
                     var row = rows[i];
-                    Assert.AreEqual(QdbNone.Instance, row["the_blob"].Value);
-                    Assert.AreEqual(insertedDoubleData[i], row["the_double"].Value);
-                    Assert.AreEqual(QdbNone.Instance, row["the_int64"].Value);
-                    Assert.AreEqual(QdbNone.Instance, row["the_ts"].Value);
+                    Assert.AreEqual(null, row["the_blob"].Value);
+                    Assert.AreEqual(insertedDoubleData[i].Value, row["the_double"].Value);
+                    Assert.AreEqual(null, row["the_int64"].Value);
+                    Assert.AreEqual(null, row["the_ts"].Value);
                     Assert.AreEqual(ts.Alias, row["$table"].StringValue);
                 }
             }
@@ -206,7 +209,7 @@ namespace Quasardb.Tests.Query
         {
             var startTime = DateTime.Now;
             QdbTable ts = CreateTable();
-            var insertedDoubleData = InsertDoublePoints(ts.Alias, startTime, 10);
+            var insertedDoubleData = InsertDoublePoints(ts, startTime, 10);
             try
             {
                 var results = _cluster.Query("select the_double from " + ts.Alias);
@@ -215,10 +218,10 @@ namespace Quasardb.Tests.Query
 
                 var rows = results.Rows;
                 Assert.AreEqual(10L, rows.Count);
-                for (long i = 0; i < 10L; ++i)
+                for (int i = 0; i < 10L; ++i)
                 {
                     var row = rows[i];
-                    Assert.AreEqual(insertedDoubleData[i], row[0].Value);
+                    Assert.AreEqual(insertedDoubleData[i].Value, row[0].Value);
                 }
             }
             finally
@@ -232,7 +235,7 @@ namespace Quasardb.Tests.Query
         {
             var startTime = DateTime.Now;
             QdbTable ts = CreateTable();
-            var insertedDoubleData = InsertDoublePoints(ts.Alias, startTime, 10);
+            var insertedDoubleData = InsertDoublePoints(ts, startTime, 10);
             try
             {
                 var results = _cluster.Query("select $timestamp, $table, the_double from " + ts.Alias);
@@ -243,12 +246,12 @@ namespace Quasardb.Tests.Query
 
                 var rows = results.Rows;
                 Assert.AreEqual(10L, rows.Count);
-                for (long i = 0; i < 10L; ++i)
+                for (int i = 0; i < 10L; ++i)
                 {
                     var row = rows[i];
                     Assert.AreEqual(startTime.AddSeconds(i), row[0].TimestampValue);
                     Assert.AreEqual(ts.Alias, row[1].StringValue);
-                    Assert.AreEqual(insertedDoubleData[i], row[2].Value);
+                    Assert.AreEqual(insertedDoubleData[i].Value, row[2].Value);
                 }
             }
             finally
@@ -262,7 +265,7 @@ namespace Quasardb.Tests.Query
         {
             var startTime = DateTime.Now;
             QdbTable ts = CreateTable();
-            var insertedDoubleData = InsertDoublePoints(ts.Alias, startTime, 10);
+            var insertedDoubleData = InsertDoublePoints(ts, startTime, 10);
             try
             {
                 var results = _cluster.Query("select count(the_double) from " + ts.Alias);
@@ -284,7 +287,7 @@ namespace Quasardb.Tests.Query
         {
             var startTime = DateTime.Now;
             QdbTable ts = CreateTable();
-            var insertedDoubleData = InsertDoublePoints(ts.Alias, startTime, 10);
+            var insertedDoubleData = InsertDoublePoints(ts, startTime, 10);
             try
             {
                 var results = _cluster.Query("select sum(the_double) from " + ts.Alias);
@@ -293,7 +296,7 @@ namespace Quasardb.Tests.Query
 
                 var rows = results.Rows;
                 Assert.AreEqual(1L, rows.Count);
-                Assert.AreEqual(insertedDoubleData.Sum(), rows[0]["sum(the_double)"].Value);
+                Assert.AreEqual(insertedDoubleData.Select(x => x.Value).Sum(), rows[0]["sum(the_double)"].Value);
             }
             finally
             {
@@ -306,10 +309,10 @@ namespace Quasardb.Tests.Query
         {
             var startTime = DateTime.Now;
             QdbTable ts = CreateTable();
-            var insertedBlobData = InsertBlobPoints(ts.Alias, startTime, 10);
-            var insertedDoubleData = InsertDoublePoints(ts.Alias, startTime, 10);
-            var insertedInt64Data = InsertInt64Points(ts.Alias, startTime, 10);
-            var insertedTimestampData = InsertTimestampPoints(ts.Alias, startTime, 10);
+            var insertedBlobData = InsertBlobPoints(ts, startTime, 10);
+            var insertedDoubleData = InsertDoublePoints(ts, startTime, 10);
+            var insertedInt64Data = InsertInt64Points(ts, startTime, 10);
+            var insertedTimestampData = InsertTimestampPoints(ts, startTime, 10);
             try
             {
                 var results = _cluster.Query("select * from " + ts.Alias);
@@ -317,13 +320,51 @@ namespace Quasardb.Tests.Query
 
                 var rows = results.Rows;
                 Assert.AreEqual(10L, rows.Count);
-                for (long i = 0; i < 10L; ++i)
+                for (int i = 0; i < 10L; ++i)
                 {
                     var row = rows[i];
-                    CollectionAssert.AreEqual(insertedBlobData[i], row["the_blob"].BlobValue);
-                    Assert.AreEqual(insertedDoubleData[i], row["the_double"].Value);
-                    Assert.AreEqual(insertedInt64Data[i], row["the_int64"].Value);
-                    Assert.AreEqual(insertedTimestampData[i], row["the_ts"].Value);
+                    CollectionAssert.AreEqual(insertedBlobData[i].Value, row["the_blob"].BlobValue);
+                    Assert.AreEqual(insertedDoubleData[i].Value, row["the_double"].Value);
+                    Assert.AreEqual(insertedInt64Data[i].Value, row["the_int64"].Value);
+                    Assert.AreEqual(insertedTimestampData[i].Value, row["the_ts"].Value);
+                    Assert.AreEqual(ts.Alias, row["$table"].StringValue);
+                }
+            }
+            finally
+            {
+                ts.Remove();
+            }
+        }
+
+        [TestMethod]
+        public void ReturnsInsertedMultiDataWithStarSelect_WithNulls()
+        {
+            var startTime = DateTime.Now;
+            QdbTable ts = CreateTable();
+            var insertedBlobData = InsertBlobPoints(ts, startTime, 9);
+            var insertedDoubleData = InsertDoublePoints(ts, startTime, 9);
+            var insertedInt64Data = InsertInt64Points(ts, startTime, 9);
+            var insertedTimestampData = InsertTimestampPoints(ts, startTime, 9);
+
+            ts.BlobColumns["the_blob"].Insert(startTime.AddSeconds(9), new byte[] { 10 });
+            insertedBlobData.Add(startTime.AddSeconds(9), new byte[] { 10 });
+            insertedDoubleData.Add(startTime.AddSeconds(9), null);
+            insertedInt64Data.Add(startTime.AddSeconds(9), null);
+            insertedTimestampData.Add(startTime.AddSeconds(9), null);
+            try
+            {
+                var results = _cluster.Query("select * from " + ts.Alias);
+                CheckColumns(results.ColumnNames);
+
+                var rows = results.Rows;
+                Assert.AreEqual(10L, rows.Count);
+                for (int i = 0; i < 10L; ++i)
+                {
+                    var row = rows[i];
+                    CollectionAssert.AreEqual(insertedBlobData[i].Value, row["the_blob"].BlobValue);
+                    Assert.AreEqual(insertedDoubleData[i].Value, row["the_double"].Value);
+                    Assert.AreEqual(insertedInt64Data[i].Value, row["the_int64"].Value);
+                    Assert.AreEqual(insertedTimestampData[i].Value, row["the_ts"].Value);
                     Assert.AreEqual(ts.Alias, row["$table"].StringValue);
                 }
             }

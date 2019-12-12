@@ -11,7 +11,7 @@ namespace Quasardb.Query
     public enum QdbValueType
     {
         /// <summary>
-        /// A result of type <see cref="QdbNone" />.
+        /// A null result />.
         /// </summary>
         None = -1,
 
