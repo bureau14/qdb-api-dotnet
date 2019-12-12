@@ -4,6 +4,7 @@ using Quasardb.Exceptions;
 using Quasardb.Native;
 using Quasardb.TimeSeries;
 using Quasardb.Query;
+using Quasardb.TimeSeries.Writer;
 
 namespace Quasardb
 {
@@ -225,6 +226,30 @@ namespace Quasardb
         {
             if (alias == null) throw new ArgumentNullException(nameof(alias));
             return new QdbTimeSeries(_handle, alias);
+        }
+
+        /// <summary>
+        /// Returns a <see cref="QdbTimeSeriesWriter" /> attached to the specified columns.
+        /// </summary>
+        /// <param name="columnDefinitions">The description of the columns</param>
+        /// <exception cref="QdbInvalidArgumentException">If columns list is empty.</exception>
+        /// <returns>A batch table for bulk insertion associated with the specified columns.</returns>
+        /// <seealso cref="QdbTimeSeriesWriter"/>
+        public QdbTimeSeriesWriter Writer(params QdbBatchColumnDefinition[] columnDefinitions)
+        {
+            return Writer((IEnumerable<QdbBatchColumnDefinition>)columnDefinitions);
+        }
+
+        /// <summary>
+        /// Returns a <see cref="QdbTimeSeriesWriter" /> attached to the specified columns.
+        /// </summary>
+        /// <param name="columnDefinitions">The description of the columns</param>
+        /// <exception cref="QdbInvalidArgumentException">If columns list is empty.</exception>
+        /// <returns>A batch table for bulk insertion associated with the specified columns.</returns>
+        /// <seealso cref="QdbTimeSeriesWriter"/>
+        public QdbTimeSeriesWriter Writer(IEnumerable<QdbBatchColumnDefinition> columnDefinitions)
+        {
+            return new QdbTimeSeriesWriter(_handle, columnDefinitions);
         }
 
         /// <summary>

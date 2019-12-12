@@ -81,6 +81,7 @@
     <Compile Include="qdb_string.cs" />
     <Compile Include="qdb_point_result.cs" />
     <Compile Include="qdb_query_result_value_type.cs" />
+    <Compile Include="qdb_ts_batch_column_info.cs" />
     <Compile Include="qdb_ts_column_info.cs" />
     <Compile Include="qdb_ts_range.cs" />
     <Compile Include="qdb_ts_aggregation_type.cs" />
