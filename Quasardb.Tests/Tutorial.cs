@@ -20,7 +20,7 @@ namespace Quasardb.Tests.Tutorial
 
             // create-table-start
             // First we acquire a reference to a table (which may or may not yet exist)
-            var ts = c.TimeSeries("stocks");
+            var ts = c.Table("stocks");
 
             // Initialize our column definitions
             var columns = new QdbColumnDefinition[]{
@@ -42,7 +42,7 @@ namespace Quasardb.Tests.Tutorial
             var closes = new QdbDoublePointCollection { { new DateTime(2019, 02, 01), 3.50 }, { new DateTime(2019, 02, 02), 3.55 } };
             var volumes = new QdbInt64PointCollection { { new DateTime(2019, 02, 01), 10000 }, { new DateTime(2019, 02, 02), 7500 } };
 
-            // Retrieve the different columns from our timeseries
+            // Retrieve the different columns from our table
             var openCol = ts.DoubleColumns["open"];
             var closeCol = ts.DoubleColumns["close"];
             var volumeCol = ts.Int64Columns["volume"];

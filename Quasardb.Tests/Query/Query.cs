@@ -12,9 +12,9 @@ namespace Quasardb.Tests.Query
     {
         private readonly QdbCluster _cluster = QdbTestCluster.Instance;
 
-        public QdbTimeSeries CreateTable(string alias = null)
+        public QdbTable CreateTable(string alias = null)
         {
-            var ts = _cluster.TimeSeries(alias ?? RandomGenerator.CreateUniqueAlias());
+            var ts = _cluster.Table(alias ?? RandomGenerator.CreateUniqueAlias());
             ts.Create(new QdbColumnDefinition[] {
                 new QdbBlobColumnDefinition("the_blob"),
                 new QdbDoubleColumnDefinition("the_double"),
@@ -29,7 +29,7 @@ namespace Quasardb.Tests.Query
             Random random = new Random();
             var r = new byte[count][];
 
-            var ts = _cluster.TimeSeries(alias);
+            var ts = _cluster.Table(alias);
             var column = ts.BlobColumns["the_blob"];
             for (int i = 0; i < count; ++i)
             {
@@ -46,7 +46,7 @@ namespace Quasardb.Tests.Query
             Random random = new Random();
             var r = new double[count];
 
-            var ts = _cluster.TimeSeries(alias);
+            var ts = _cluster.Table(alias);
             var column = ts.DoubleColumns["the_double"];
             for (int i = 0; i < count; ++i)
             {
@@ -61,7 +61,7 @@ namespace Quasardb.Tests.Query
             Random random = new Random();
             var r = new long[count];
 
-            var ts = _cluster.TimeSeries(alias);
+            var ts = _cluster.Table(alias);
             var column = ts.Int64Columns["the_int64"];
             for (int i = 0; i < count; ++i)
             {
@@ -76,7 +76,7 @@ namespace Quasardb.Tests.Query
             Random random = new Random();
             var r = new DateTime[count];
 
-            var ts = _cluster.TimeSeries(alias);
+            var ts = _cluster.Table(alias);
             var column = ts.TimestampColumns["the_ts"];
             for (int i = 0; i < count; ++i)
             {
@@ -138,7 +138,7 @@ namespace Quasardb.Tests.Query
         [ExpectedException(typeof(QdbQueryException))]
         public void ThrowsWhenColumnNotFound()
         {
-            var ts = _cluster.TimeSeries(RandomGenerator.CreateUniqueAlias());
+            var ts = _cluster.Table(RandomGenerator.CreateUniqueAlias());
             ts.Create(new QdbColumnDefinition[] { });
             try
             {
@@ -157,7 +157,7 @@ namespace Quasardb.Tests.Query
         [TestMethod]
         public void ReturnsEmptyResult()
         {
-            QdbTimeSeries ts = CreateTable();
+            QdbTable ts = CreateTable();
             try
             {
                 var results = _cluster.Query("select * from " + ts.Alias + " in range(2016, +1y)");
@@ -176,7 +176,7 @@ namespace Quasardb.Tests.Query
         public void ReturnsInsertedDataWithStarSelect()
         {
             var startTime = DateTime.Now;
-            QdbTimeSeries ts = CreateTable();
+            QdbTable ts = CreateTable();
             var insertedDoubleData = InsertDoublePoints(ts.Alias, startTime, 10);
             try
             {
@@ -205,7 +205,7 @@ namespace Quasardb.Tests.Query
         public void ReturnsInsertedDataWithColumnSelect()
         {
             var startTime = DateTime.Now;
-            QdbTimeSeries ts = CreateTable();
+            QdbTable ts = CreateTable();
             var insertedDoubleData = InsertDoublePoints(ts.Alias, startTime, 10);
             try
             {
@@ -231,7 +231,7 @@ namespace Quasardb.Tests.Query
         public void ReturnsInsertedDataWithSpecificSelect()
         {
             var startTime = DateTime.Now;
-            QdbTimeSeries ts = CreateTable();
+            QdbTable ts = CreateTable();
             var insertedDoubleData = InsertDoublePoints(ts.Alias, startTime, 10);
             try
             {
@@ -261,7 +261,7 @@ namespace Quasardb.Tests.Query
         public void ReturnsInsertedDataWithCountSelect()
         {
             var startTime = DateTime.Now;
-            QdbTimeSeries ts = CreateTable();
+            QdbTable ts = CreateTable();
             var insertedDoubleData = InsertDoublePoints(ts.Alias, startTime, 10);
             try
             {
@@ -283,7 +283,7 @@ namespace Quasardb.Tests.Query
         public void ReturnsInsertedDataWithSumSelect()
         {
             var startTime = DateTime.Now;
-            QdbTimeSeries ts = CreateTable();
+            QdbTable ts = CreateTable();
             var insertedDoubleData = InsertDoublePoints(ts.Alias, startTime, 10);
             try
             {
@@ -305,7 +305,7 @@ namespace Quasardb.Tests.Query
         public void ReturnsInsertedMultiDataWithStarSelect()
         {
             var startTime = DateTime.Now;
-            QdbTimeSeries ts = CreateTable();
+            QdbTable ts = CreateTable();
             var insertedBlobData = InsertBlobPoints(ts.Alias, startTime, 10);
             var insertedDoubleData = InsertDoublePoints(ts.Alias, startTime, 10);
             var insertedInt64Data = InsertInt64Points(ts.Alias, startTime, 10);

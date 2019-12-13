@@ -13,9 +13,9 @@ namespace Quasardb.Tests.Cluster
     {
         private readonly QdbCluster _cluster = QdbTestCluster.Instance;
 
-        public QdbTimeSeries CreateTable(string alias = null)
+        public QdbTable CreateTable(string alias = null)
         {
-            var ts = _cluster.TimeSeries(alias ?? RandomGenerator.CreateUniqueAlias());
+            var ts = _cluster.Table(alias ?? RandomGenerator.CreateUniqueAlias());
             ts.Create(new QdbColumnDefinition[] {
                 new QdbBlobColumnDefinition("the_blob"),
                 new QdbDoubleColumnDefinition("the_double"),
@@ -79,7 +79,7 @@ namespace Quasardb.Tests.Cluster
             return r;
         }
 
-        public QdbTimeSeriesWriter Insert(QdbTimeSeries ts1, QdbTimeSeries ts2,
+        public QdbTableWriter Insert(QdbTable ts1, QdbTable ts2,
             DateTime startTime,
             QdbBlobPointCollection blobPoints,
             QdbDoublePointCollection doublePoints,
@@ -103,7 +103,7 @@ namespace Quasardb.Tests.Cluster
             return batch;
         }
 
-        public void CheckTables(QdbTimeSeries ts1, QdbTimeSeries ts2,
+        public void CheckTables(QdbTable ts1, QdbTable ts2,
             QdbBlobPointCollection blobPoints,
             QdbDoublePointCollection doublePoints,
             QdbInt64PointCollection int64Points,
@@ -144,8 +144,8 @@ namespace Quasardb.Tests.Cluster
         public void Ok_BulkRowInsert()
         {
             var startTime = DateTime.Now;
-            QdbTimeSeries ts1 = CreateTable();
-            QdbTimeSeries ts2 = CreateTable();
+            QdbTable ts1 = CreateTable();
+            QdbTable ts2 = CreateTable();
             var blobData = CreateBlobPoints(startTime, 10);
             var doubleData = CreateDoublePoints(startTime, 10);
             var int64Data = CreateInt64Points(startTime, 10);
@@ -161,8 +161,8 @@ namespace Quasardb.Tests.Cluster
         public void Ok_BulkRowFastInsert()
         {
             var startTime = DateTime.Now;
-            QdbTimeSeries ts1 = CreateTable();
-            QdbTimeSeries ts2 = CreateTable();
+            QdbTable ts1 = CreateTable();
+            QdbTable ts2 = CreateTable();
             var blobData = CreateBlobPoints(startTime, 10);
             var doubleData = CreateDoublePoints(startTime, 10);
             var int64Data = CreateInt64Points(startTime, 10);
@@ -178,8 +178,8 @@ namespace Quasardb.Tests.Cluster
         public void Ok_BulkRowAsyncInsert()
         {
             var startTime = DateTime.Now;
-            QdbTimeSeries ts1 = CreateTable();
-            QdbTimeSeries ts2 = CreateTable();
+            QdbTable ts1 = CreateTable();
+            QdbTable ts2 = CreateTable();
             var blobData = CreateBlobPoints(startTime, 10);
             var doubleData = CreateDoublePoints(startTime, 10);
             var int64Data = CreateInt64Points(startTime, 10);

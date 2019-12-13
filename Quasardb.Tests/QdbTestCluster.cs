@@ -115,11 +115,11 @@ namespace Quasardb.Tests
 
         #endregion
 
-        #region TimeSeries
+        #region Table
 
         public static QdbDoubleColumn CreateEmptyDoubleColumn(string alias = null, string name = null)
         {
-            var ts = Instance.TimeSeries(alias ?? RandomGenerator.CreateUniqueAlias());
+            var ts = Instance.Table(alias ?? RandomGenerator.CreateUniqueAlias());
             var colName = name ?? RandomGenerator.CreateUniqueAlias();
             ts.Create(new QdbDoubleColumnDefinition(colName));
             return ts.DoubleColumns[colName];
@@ -134,7 +134,7 @@ namespace Quasardb.Tests
 
         public static QdbInt64Column CreateEmptyInt64Column(string alias = null, string name = null)
         {
-            var ts = Instance.TimeSeries(alias ?? RandomGenerator.CreateUniqueAlias());
+            var ts = Instance.Table(alias ?? RandomGenerator.CreateUniqueAlias());
             var colName = name ?? RandomGenerator.CreateUniqueAlias();
             ts.Create(new QdbInt64ColumnDefinition(colName));
             return ts.Int64Columns[colName];
@@ -148,7 +148,7 @@ namespace Quasardb.Tests
         }
         public static QdbTimestampColumn CreateEmptyTimestampColumn(string alias = null, string name = null)
         {
-            var ts = Instance.TimeSeries(alias ?? RandomGenerator.CreateUniqueAlias());
+            var ts = Instance.Table(alias ?? RandomGenerator.CreateUniqueAlias());
             var colName = name ?? RandomGenerator.CreateUniqueAlias();
             ts.Create(new QdbTimestampColumnDefinition(colName));
             return ts.TimestampColumns[colName];
@@ -163,7 +163,7 @@ namespace Quasardb.Tests
 
         public static QdbBlobColumn CreateEmptyBlobColumn(string alias = null)
         {
-            var ts = Instance.TimeSeries(alias ?? RandomGenerator.CreateUniqueAlias());
+            var ts = Instance.Table(alias ?? RandomGenerator.CreateUniqueAlias());
             var colName = RandomGenerator.CreateUniqueAlias();
             ts.Create(new QdbBlobColumnDefinition(colName));
             return ts.BlobColumns[colName];
@@ -179,7 +179,7 @@ namespace Quasardb.Tests
         public static QdbDoubleColumn GetNonExistingDoubleColumn()
         {
             var alias = RandomGenerator.CreateUniqueAlias();
-            var ts = Instance.TimeSeries(alias);
+            var ts = Instance.Table(alias);
             ts.Create(new QdbBlobColumnDefinition("existing"));
             return ts.DoubleColumns["non-existing"];
         }
@@ -187,7 +187,7 @@ namespace Quasardb.Tests
         public static QdbInt64Column GetNonExistingInt64Column()
         {
             var alias = RandomGenerator.CreateUniqueAlias();
-            var ts = Instance.TimeSeries(alias);
+            var ts = Instance.Table(alias);
             ts.Create(new QdbBlobColumnDefinition("existing"));
             return ts.Int64Columns["non-existing"];
         }
@@ -195,7 +195,7 @@ namespace Quasardb.Tests
         public static QdbTimestampColumn GetNonExistingTimestampColumn()
         {
             var alias = RandomGenerator.CreateUniqueAlias();
-            var ts = Instance.TimeSeries(alias);
+            var ts = Instance.Table(alias);
             ts.Create(new QdbBlobColumnDefinition("existing"));
             return ts.TimestampColumns["non-existing"];
         }
@@ -203,7 +203,7 @@ namespace Quasardb.Tests
         public static QdbBlobColumn GetNonExistingBlobColumn()
         {
             var alias = RandomGenerator.CreateUniqueAlias();
-            var ts = Instance.TimeSeries(alias);
+            var ts = Instance.Table(alias);
             ts.Create(new QdbBlobColumnDefinition("existing"));
             return ts.BlobColumns["non-existing"];
         }

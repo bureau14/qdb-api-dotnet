@@ -216,12 +216,26 @@ namespace Quasardb
         }
 
         /// <summary>
+        /// Returns a <see cref="QdbTable" /> attached to the specified alias.
+        /// </summary>
+        /// <remarks>No operation is performed in the database.</remarks>
+        /// <param name="alias">The alias (i.e. key) of the table in the database.</param>
+        /// <returns>A table associated to the specified alias.</returns>
+        /// <seealso cref="QdbTable"/>
+        public QdbTable Table(string alias)
+        {
+            if (alias == null) throw new ArgumentNullException(nameof(alias));
+            return new QdbTable(_handle, alias);
+        }
+
+        /// <summary>
         /// Returns a <see cref="QdbTimeSeries" /> attached to the specified alias.
         /// </summary>
         /// <remarks>No operation is performed in the database.</remarks>
         /// <param name="alias">The alias (i.e. key) of the time series in the database.</param>
         /// <returns>A time series associated to the specified alias.</returns>
-        /// <seealso cref="QdbTimeSeries"/>
+        /// <seealso cref="Table"/>
+        [Obsolete("Use QdbCluster.Table(string) instead")]
         public QdbTimeSeries TimeSeries(string alias)
         {
             if (alias == null) throw new ArgumentNullException(nameof(alias));
@@ -229,27 +243,27 @@ namespace Quasardb
         }
 
         /// <summary>
-        /// Returns a <see cref="QdbTimeSeriesWriter" /> attached to the specified columns.
+        /// Returns a <see cref="QdbTableWriter" /> attached to the specified columns.
         /// </summary>
         /// <param name="columnDefinitions">The description of the columns</param>
         /// <exception cref="QdbInvalidArgumentException">If columns list is empty.</exception>
         /// <returns>A batch table for bulk insertion associated with the specified columns.</returns>
-        /// <seealso cref="QdbTimeSeriesWriter"/>
-        public QdbTimeSeriesWriter Writer(params QdbBatchColumnDefinition[] columnDefinitions)
+        /// <seealso cref="QdbTableWriter"/>
+        public QdbTableWriter Writer(params QdbBatchColumnDefinition[] columnDefinitions)
         {
             return Writer((IEnumerable<QdbBatchColumnDefinition>)columnDefinitions);
         }
 
         /// <summary>
-        /// Returns a <see cref="QdbTimeSeriesWriter" /> attached to the specified columns.
+        /// Returns a <see cref="QdbTableWriter" /> attached to the specified columns.
         /// </summary>
         /// <param name="columnDefinitions">The description of the columns</param>
         /// <exception cref="QdbInvalidArgumentException">If columns list is empty.</exception>
         /// <returns>A batch table for bulk insertion associated with the specified columns.</returns>
-        /// <seealso cref="QdbTimeSeriesWriter"/>
-        public QdbTimeSeriesWriter Writer(IEnumerable<QdbBatchColumnDefinition> columnDefinitions)
+        /// <seealso cref="QdbTableWriter"/>
+        public QdbTableWriter Writer(IEnumerable<QdbBatchColumnDefinition> columnDefinitions)
         {
-            return new QdbTimeSeriesWriter(_handle, columnDefinitions);
+            return new QdbTableWriter(_handle, columnDefinitions);
         }
 
         /// <summary>
