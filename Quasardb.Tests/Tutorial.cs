@@ -133,7 +133,10 @@ namespace Quasardb.Tests.Tutorial
             Console.Write($"sum(volume): {aggregateResult}");
             // query-end
 
+            // drop-table-start
+            // Use the earlier reference of the table we acquired to remove it:
             ts.Remove();
+            // drop-table-end
         }
         [TestMethod]
         public void OnSecure()
