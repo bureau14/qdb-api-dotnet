@@ -105,7 +105,7 @@ namespace Quasardb.TimeSeries.Writer
         {
             var err = qdb_api.qdb_ts_batch_row_set_double(
                 _table,
-                (qdb_size_t)index, value?? double.NaN);
+                (qdb_size_t)index, value ?? double.NaN);
             QdbExceptionThrower.ThrowIfNeeded(err);
         }
 
