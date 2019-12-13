@@ -2,6 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
 // import-start
+using Quasardb;
 using Quasardb.TimeSeries;
 // import-end
 
@@ -36,6 +37,53 @@ namespace Quasardb.Tests.Tutorial
             ts.AttachTag(c.Tag("nasdaq"));
             // tags-end
 
+            // batch-insert-start
+            // We initialize a writer our batch writer.
+            var writer = ts.Writer();
+
+            // Insert the first row: to start a new row, we must provide it with a mandatory
+            // timestamp that all values for this row will share. QuasarDB will use this timestamp
+            // as its primary index.
+            writer.StartRow(new DateTime(2019, 02, 01));
+
+            // We now set the values for our columns by their relative offsets: column 0 below
+            // refers to the first column we provide in the columns variable above.
+            writer.SetDouble(0, 3.40);
+            writer.SetDouble(1, 3.50);
+            writer.SetInt64(2, 10000);
+
+            // We tell the batch writer to start a new row before we can set the values for the
+            // next row.
+            writer.StartRow(new DateTime(2019, 02, 02));
+
+            writer.SetDouble(0, 3.50);
+            writer.SetDouble(1, 3.55);
+            writer.SetInt64(2, 7500);
+
+            // Now that we're done, we push the buffer as one single operation.
+            writer.Push();
+            // batch-insert-end
+
+            // bulk-read-start
+            // We can initialize a bulk reader based directly from our table.
+            var reader = ts.Reader();
+            ts.Reader(new QdbTimeInterval(new DateTime(2019, 02, 01), new DateTime(2019, 02, 02)));
+
+            // The bulk reader is exposed as a regular .Net Enumerable
+            foreach (var row in reader)
+            {
+                // Each row has a timestamp which you can access as a Timespec:
+                Console.WriteLine($"row timestamp: {row.Timestamp}");
+
+                // Note that the offsets of the values array align with the offsets we used
+                // when creating the table, i.e. 0 means "open", 1 means "close" and 2 means
+                // "volume":
+                var openValue = row[0].DoubleValue;
+                var closealue = row[1].DoubleValue;
+                var volumeValue = row[2].Int64Value;
+            }
+            // bulk-read-end
+
             // column-insert-start
             // Prepare some data to be inserted
             var opens = new QdbDoublePointCollection { { new DateTime(2019, 02, 01), 3.40 }, { new DateTime(2019, 02, 02), 3.50 } };
@@ -67,6 +115,24 @@ namespace Quasardb.Tests.Tutorial
             ptEnum.MoveNext();
             Assert.AreEqual(ptEnum.Current.Time, opens[0].Time);
             Assert.AreEqual(ptEnum.Current.Value, opens[0].Value);
+
+            // query-start
+            // Execute the query
+            var r = c.Query("SELECT SUM(volume) FROM stocks");
+
+            // The rows are exposed as a regular .Net Enumerable
+            var columnNames = r.ColumnNames;
+            var rows = r.Rows;
+            foreach (var row in rows)
+            {
+                Console.WriteLine($"{columnNames[0]}: {row[0].Value}");
+            }
+
+            // Since we only expect one row, we also access it like this:
+            var aggregateResult = rows[0]["sum(volume)"].Int64Value;
+            Console.Write($"sum(volume): {aggregateResult}");
+            // query-end
+
             ts.Remove();
         }
         [TestMethod]
