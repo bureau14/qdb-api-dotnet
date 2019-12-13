@@ -43,8 +43,10 @@ namespace Quasardb.TimeSeries
                 return (long)_aggregation.count;
             }
 
-            public double Value()
+            public double? Value()
             {
+                if (double.IsNaN(_aggregation.result.value))
+                    return null;
                 return _aggregation.result.value;
             }
 
@@ -68,13 +70,17 @@ namespace Quasardb.TimeSeries
                 return (long)_aggregation.count;
             }
 
-            public long Value()
+            public long? Value()
             {
+                if (_aggregation.result.value == long.MinValue)
+                    return null;
                 return _aggregation.result.value;
             }
 
-            public double ExactResult()
+            public double? ExactResult()
             {
+                if (double.IsNaN(_aggregation.exact_result))
+                    return null;
                 return _aggregation.exact_result;
             }
 
@@ -98,8 +104,10 @@ namespace Quasardb.TimeSeries
                 return (long)_aggregation.count;
             }
 
-            public DateTime Value()
+            public DateTime? Value()
             {
+                if (TimeConverter.IsNull(_aggregation.result.value))
+                    return null;
                 return TimeConverter.ToDateTime(_aggregation.result.value);
             }
 
@@ -148,10 +156,15 @@ namespace Quasardb.TimeSeries
                     yield return (long)agg.count;
             }
 
-            public IEnumerable<double> Value()
+            public IEnumerable<double?> Value()
             {
                 foreach (var agg in _aggregations)
-                    yield return agg.result.value;
+                {
+                    if (double.IsNaN(agg.result.value))
+                        yield return null;
+                    else
+                        yield return agg.result.value;
+                }
             }
 
             public IEnumerable<QdbDoublePoint> AsPoint()
@@ -178,16 +191,26 @@ namespace Quasardb.TimeSeries
                     yield return (long)agg.count;
             }
 
-            public IEnumerable<long> Value()
+            public IEnumerable<long?> Value()
             {
                 foreach (var agg in _aggregations)
-                    yield return (long)agg.result.value;
+                {
+                    if (agg.result.value == long.MinValue)
+                        yield return null;
+                    else
+                        yield return agg.result.value;
+                }
             }
 
-            public IEnumerable<double> ExactResult()
+            public IEnumerable<double?> ExactResult()
             {
                 foreach (var agg in _aggregations)
-                    yield return agg.exact_result;
+                {
+                    if (double.IsNaN(agg.exact_result))
+                        yield return null;
+                    else
+                        yield return agg.exact_result;
+                }
             }
 
             public IEnumerable<QdbInt64Point> AsPoint()
@@ -214,10 +237,15 @@ namespace Quasardb.TimeSeries
                     yield return (long)agg.count;
             }
 
-            public IEnumerable<DateTime> Value()
+            public IEnumerable<DateTime?> Value()
             {
                 foreach (var agg in _aggregations)
-                    yield return TimeConverter.ToDateTime(agg.result.value);
+                {
+                    if (TimeConverter.IsNull(agg.result.value))
+                        yield return null;
+                    else
+                        yield return TimeConverter.ToDateTime(agg.result.value);
+                }
             }
 
             public IEnumerable<QdbTimestampPoint> AsPoint()

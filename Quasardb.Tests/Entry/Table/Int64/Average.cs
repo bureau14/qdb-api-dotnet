@@ -70,7 +70,7 @@ namespace Quasardb.Tests.Entry.Table.Int64
             var interval = new QdbTimeInterval(_points[0].Time, _points[2].Time);
             var result = col.Average(interval);
 
-            Assert.AreEqual((long)42 / 2, result);
+            Assert.AreEqual((long)(42 / 2), result);
         }
 
         [TestMethod]
@@ -91,6 +91,7 @@ namespace Quasardb.Tests.Entry.Table.Int64
             Assert.AreEqual(3, results.Length);
             Assert.AreEqual((long)(42 / 2), results[0]);
             Assert.AreEqual((long)((42 + 666) / 2), results[1]);
+            Assert.IsNull(results[2]);
         }
     }
 }

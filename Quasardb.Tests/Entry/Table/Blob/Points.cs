@@ -14,7 +14,8 @@ namespace Quasardb.Tests.Entry.Table.Blob
         {
             new QdbBlobPoint(new DateTime(2012, 11, 02), Encoding.UTF8.GetBytes("Hello World!")),
             new QdbBlobPoint(new DateTime(2014, 06, 30), RandomGenerator.CreateRandomContent()),
-            new QdbBlobPoint(new DateTime(2016, 02, 04), RandomGenerator.CreateRandomContent())
+            new QdbBlobPoint(new DateTime(2016, 02, 04), RandomGenerator.CreateRandomContent()),
+            new QdbBlobPoint(new DateTime(2019, 12, 11), null)
         };
 
         [TestMethod]
@@ -99,7 +100,8 @@ namespace Quasardb.Tests.Entry.Table.Blob
             {
                 new QdbTimeInterval(new DateTime(2014, 1, 1), new DateTime(2014, 12, 31)),
                 new QdbTimeInterval(new DateTime(2016, 1, 1), new DateTime(2016, 12, 31)),
-                new QdbTimeInterval(new DateTime(2018, 1, 1), new DateTime(2018, 12, 31))
+                new QdbTimeInterval(new DateTime(2019, 1, 1), new DateTime(2019, 12, 31)),
+                new QdbTimeInterval(new DateTime(2028, 1, 1), new DateTime(2028, 12, 31))
             };
 
             var result = col.Points(intervals);

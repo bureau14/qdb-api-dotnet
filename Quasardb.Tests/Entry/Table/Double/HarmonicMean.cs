@@ -84,7 +84,7 @@ namespace Quasardb.Tests.Entry.Table.Double
             var interval = new QdbTimeInterval(new DateTime(3000, 1, 1), new DateTime(4000, 1, 1));
             var result = col.HarmonicMean(interval);
 
-            Assert.IsTrue(double.IsNaN(result));
+            Assert.IsNull(result);
         }
 
         [TestMethod]
@@ -105,7 +105,7 @@ namespace Quasardb.Tests.Entry.Table.Double
             Assert.AreEqual(3, results.Length);
             Assert.AreEqual(1.9534883720930234, results[0]);
             Assert.AreEqual(152.1056184158698, results[1]);
-            Assert.IsTrue(double.IsNaN(results[2]));
+            Assert.IsNull(results[2]);
         }
     }
 }

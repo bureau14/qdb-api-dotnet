@@ -92,7 +92,6 @@
     <Compile Include="Batch\IOperation.cs" />
     <Compile Include="QdbUnknownEntry.cs" />
     <Compile Include="Query\QdbCell.cs" />
-    <Compile Include="QdbNone.cs" />
     <Compile Include="Query\QdbColumnNameCollection.cs" />
     <Compile Include="Query\QdbRowCollection.cs" />
     <Compile Include="Query\QdbValueType.cs" />

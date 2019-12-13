@@ -84,7 +84,7 @@ namespace Quasardb.Tests.Entry.Table.Double
             var interval = new QdbTimeInterval(new DateTime(3000, 1, 1), new DateTime(4000, 1, 1));
             var result = col.Skewness(interval);
 
-            Assert.IsTrue(double.IsNaN(result));
+            Assert.IsNull(result);
         }
 
         [TestMethod]
@@ -105,7 +105,7 @@ namespace Quasardb.Tests.Entry.Table.Double
             Assert.AreEqual(3, results.Length);
             Assert.AreEqual(0.69749030004661439, results[0]);
             Assert.AreEqual(-0.057460816522297134, results[1]);
-            Assert.IsTrue(double.IsNaN(results[2]));
+            Assert.IsNull(results[2]);
         }
     }
 }

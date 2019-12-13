@@ -34,7 +34,7 @@ namespace Quasardb.Query
                 switch (Type)
                 {
                     case QdbValueType.None:
-                        return NoneValue;
+                        return null;
                     case QdbValueType.Double:
                         return DoubleValue;
                     case QdbValueType.Blob:
@@ -53,25 +53,13 @@ namespace Quasardb.Query
         /// <summary>
         /// Gets the result value.
         /// </summary>
-        /// <exception cref="InvalidCastException">The result value is not of type <see cref="QdbValueType.None" /> </exception>
-        public QdbNone NoneValue
-        {
-            get
-            {
-                if (Type != QdbValueType.None)
-                    throw new InvalidCastException();
-                return QdbNone.Instance;
-            }
-        }
-
-        /// <summary>
-        /// Gets the result value.
-        /// </summary>
         /// <exception cref="InvalidCastException">The result value is not of type <see cref="QdbValueType.Double" /> </exception>
-        public double DoubleValue
+        public double? DoubleValue
         {
             get
             {
+                if (Type == QdbValueType.None)
+                    return null;
                 if (Type != QdbValueType.Double)
                     throw new InvalidCastException();
                 return _result.double_payload.value;
@@ -82,10 +70,12 @@ namespace Quasardb.Query
         /// Gets the result value.
         /// </summary>
         /// <exception cref="InvalidCastException">The result value is not of type <see cref="QdbValueType.Int64" /> </exception>
-        public long Int64Value
+        public long? Int64Value
         {
             get
             {
+                if (Type == QdbValueType.None)
+                    return null;
                 if (Type != QdbValueType.Int64)
                     throw new InvalidCastException();
                 return _result.int64_payload.value;
@@ -100,6 +90,8 @@ namespace Quasardb.Query
         {
             get
             {
+                if (Type == QdbValueType.None)
+                    return null;
                 if (Type != QdbValueType.Blob)
                     throw new InvalidCastException();
                 // TODO: limited to 32-bit
@@ -117,7 +109,8 @@ namespace Quasardb.Query
         {
             get
             {
-                return System.Text.Encoding.UTF8.GetString(BlobValue);
+                var value = BlobValue;
+                return value != null ? System.Text.Encoding.UTF8.GetString(BlobValue) : null;
             }
         }
 
@@ -125,10 +118,12 @@ namespace Quasardb.Query
         /// Gets the result value.
         /// </summary>
         /// <exception cref="InvalidCastException">The result value is not of type <see cref="QdbValueType.Timestamp" /> </exception>
-        public DateTime TimestampValue
+        public DateTime? TimestampValue
         {
             get
             {
+                if (Type == QdbValueType.None)
+                    return null;
                 if (Type != QdbValueType.Timestamp)
                     throw new InvalidCastException();
                 return TimeConverter.ToDateTime(_result.timestamp_payload.value);
@@ -139,10 +134,12 @@ namespace Quasardb.Query
         /// Gets the result value.
         /// </summary>
         /// <exception cref="InvalidCastException">The result value is not of type <see cref="QdbValueType.Count" /> </exception>
-        public long CountValue
+        public long? CountValue
         {
             get
             {
+                if (Type == QdbValueType.None)
+                    return null;
                 if (Type != QdbValueType.Count)
                     throw new InvalidCastException();
                 return (long)_result.count_payload.value.ToUInt64();

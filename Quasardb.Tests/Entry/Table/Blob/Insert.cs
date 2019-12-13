@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb.Exceptions;
 using Quasardb.TimeSeries;
 
-namespace Quasardb.Tests.Entry.Table.Double
+namespace Quasardb.Tests.Entry.Table.Blob
 {
     [TestClass]
     public class Insert
@@ -12,14 +12,14 @@ namespace Quasardb.Tests.Entry.Table.Double
         [TestMethod]
         public void ThrowsIncompatibleType()
         {
-            var points = new QdbDoublePointCollection
+            var points = new QdbBlobPointCollection
             {
-                {new DateTime(2000, 01, 01), 1},
-                {new DateTime(2000, 01, 02), 2},
+                {new DateTime(2000, 01, 01), new byte[]{1}},
+                {new DateTime(2000, 01, 02), new byte[]{2}},
             };
             var alias = RandomGenerator.CreateUniqueAlias();
             QdbTestCluster.CreateBlob(alias);
-            var col = QdbTestCluster.Instance.Table(alias).DoubleColumns["hello"];
+            var col = QdbTestCluster.Instance.Table(alias).BlobColumns["hello"];
 
             try
             {
@@ -35,12 +35,12 @@ namespace Quasardb.Tests.Entry.Table.Double
         [TestMethod]
         public void Ok_WithValues()
         {
-            var points = new QdbDoublePointCollection
+            var points = new QdbBlobPointCollection
             {
-                {new DateTime(2000, 01, 01), 1},
-                {new DateTime(2000, 01, 02), 2},
+                {new DateTime(2000, 01, 01), new byte[]{1}},
+                {new DateTime(2000, 01, 02), new byte[]{2}},
             };
-            var col = QdbTestCluster.CreateEmptyDoubleColumn();
+            var col = QdbTestCluster.CreateEmptyBlobColumn();
 
             col.Insert(points);
 
@@ -50,12 +50,12 @@ namespace Quasardb.Tests.Entry.Table.Double
         [TestMethod]
         public void Ok_WithNulls()
         {
-            var points = new QdbDoublePointCollection
+            var points = new QdbBlobPointCollection
             {
-                {new DateTime(2000, 01, 01), 1},
+                {new DateTime(2000, 01, 01), new byte[]{1}},
                 {new DateTime(2000, 01, 02), null},
             };
-            var col = QdbTestCluster.CreateEmptyDoubleColumn();
+            var col = QdbTestCluster.CreateEmptyBlobColumn();
 
             col.Insert(points);
 

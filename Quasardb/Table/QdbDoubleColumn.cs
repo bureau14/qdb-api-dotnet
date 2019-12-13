@@ -52,7 +52,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="time">The timestamp of the point to insert</param>
         /// <param name="value">The value of the point to insert</param>
-        public void Insert(DateTime time, double value)
+        public void Insert(DateTime time, double? value)
         {
             Insert(new Point(time, value));
         }
@@ -141,7 +141,7 @@ namespace Quasardb.TimeSeries
         /// <param name="intervals">The time intervals to erase</param>
         /// <param name="time">The timestamp of the point to insert</param>
         /// <param name="value">The value of the point to insert</param>
-        public void InsertTruncate(IEnumerable<QdbTimeInterval> intervals, DateTime time, double value)
+        public void InsertTruncate(IEnumerable<QdbTimeInterval> intervals, DateTime time, double? value)
         {
             InsertTruncate(intervals, new Point(time, value));
         }
@@ -153,14 +153,14 @@ namespace Quasardb.TimeSeries
         /// <param name="interval">The time interval to erase</param>
         /// <param name="time">The timestamp of the point to insert</param>
         /// <param name="value">The value of the point to insert</param>
-        public void InsertTruncate(QdbTimeInterval interval, DateTime time, double value)
+        public void InsertTruncate(QdbTimeInterval interval, DateTime time, double? value)
         {
             InsertTruncate(new[] { interval }, new Point(time, value));
         }
 
         #endregion
 
-        #region Points
+        #region Points()
 
         /// <summary>
         /// Gets all the points in the table
@@ -359,7 +359,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <returns>The average value of the table</returns>
         /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
-        public double Average()
+        public double? Average()
         {
             var result = _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Average);
 
@@ -373,7 +373,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="interval">The time interval to scan</param>
         /// <returns>The average value or <c>NaN</c> if there is no point in the interval</returns>
-        public double Average(QdbTimeInterval interval)
+        public double? Average(QdbTimeInterval interval)
         {
             return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Average, interval).Value();
         }
@@ -383,7 +383,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="intervals">The time intervals to scan</param>
         /// <returns>The average values (<c>NaN</c> when there is no point in an interval)</returns>
-        public IEnumerable<double> Average(IEnumerable<QdbTimeInterval> intervals)
+        public IEnumerable<double?> Average(IEnumerable<QdbTimeInterval> intervals)
         {
             return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Average, intervals).Value();
         }
@@ -397,7 +397,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <returns>The harmonic mean value of the table</returns>
         /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
-        public double HarmonicMean()
+        public double? HarmonicMean()
         {
             var result = _aggregator.DoubleAggregate(qdb_ts_aggregation_type.HarmonicMean);
 
@@ -411,7 +411,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="interval">The time interval to scan</param>
         /// <returns>The harmonic mean value or <c>NaN</c> if there is no point in the interval</returns>
-        public double HarmonicMean(QdbTimeInterval interval)
+        public double? HarmonicMean(QdbTimeInterval interval)
         {
             return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.HarmonicMean, interval).Value();
         }
@@ -421,7 +421,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="intervals">The time intervals to scan</param>
         /// <returns>The harmonic mean values (<c>NaN</c> when there is no point in an interval)</returns>
-        public IEnumerable<double> HarmonicMean(IEnumerable<QdbTimeInterval> intervals)
+        public IEnumerable<double?> HarmonicMean(IEnumerable<QdbTimeInterval> intervals)
         {
             return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.HarmonicMean, intervals).Value();
         }
@@ -435,7 +435,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <returns>The geometric mean value of the table</returns>
         /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
-        public double GeometricMean()
+        public double? GeometricMean()
         {
             var result = _aggregator.DoubleAggregate(qdb_ts_aggregation_type.GeometricMean);
 
@@ -449,7 +449,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="interval">The time interval to scan</param>
         /// <returns>The geometric mean value or <c>NaN</c> if there is no point in the interval</returns>
-        public double GeometricMean(QdbTimeInterval interval)
+        public double? GeometricMean(QdbTimeInterval interval)
         {
             return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.GeometricMean, interval).Value();
         }
@@ -459,7 +459,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="intervals">The time intervals to scan</param>
         /// <returns>The geometric mean values (<c>NaN</c> when there is no point in an interval)</returns>
-        public IEnumerable<double> GeometricMean(IEnumerable<QdbTimeInterval> intervals)
+        public IEnumerable<double?> GeometricMean(IEnumerable<QdbTimeInterval> intervals)
         {
             return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.GeometricMean, intervals).Value();
         }
@@ -473,7 +473,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <returns>The quadratic mean value of the table</returns>
         /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
-        public double QuadraticMean()
+        public double? QuadraticMean()
         {
             var result = _aggregator.DoubleAggregate(qdb_ts_aggregation_type.QuadraticMean);
 
@@ -487,7 +487,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="interval">The time interval to scan</param>
         /// <returns>The quadratic mean value or <c>NaN</c> if there is no point in the interval</returns>
-        public double QuadraticMean(QdbTimeInterval interval)
+        public double? QuadraticMean(QdbTimeInterval interval)
         {
             return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.QuadraticMean, interval).Value();
         }
@@ -497,14 +497,14 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="intervals">The time intervals to scan</param>
         /// <returns>The quadratic mean values (<c>NaN</c> when there is no point in an interval)</returns>
-        public IEnumerable<double> QuadraticMean(IEnumerable<QdbTimeInterval> intervals)
+        public IEnumerable<double?> QuadraticMean(IEnumerable<QdbTimeInterval> intervals)
         {
             return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.QuadraticMean, intervals).Value();
         }
 
         #endregion
 
-        #region Count
+        #region Count()
 
         /// <summary>
         /// Gets the number of points in the table
@@ -544,7 +544,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <returns>The sum of the table</returns>
         /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
-        public double Sum()
+        public double? Sum()
         {
             var result = _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Sum);
             if (result.Count() == 0)
@@ -557,7 +557,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="interval">The time interval to scan</param>
         /// <returns>The sum of the interval or <c>NaN</c> if there is no point in the interval</returns>
-        public double Sum(QdbTimeInterval interval)
+        public double? Sum(QdbTimeInterval interval)
         {
             return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Sum, interval).Value();
         }
@@ -567,7 +567,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="intervals">The time intervals to scan</param>
         /// <returns>The sum of each interval or <c>NaN</c> when there is no point in an interval</returns>
-        public IEnumerable<double> Sum(IEnumerable<QdbTimeInterval> intervals)
+        public IEnumerable<double?> Sum(IEnumerable<QdbTimeInterval> intervals)
         {
             return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Sum, intervals).Value();
         }
@@ -581,7 +581,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <returns>The sum of squares of the table</returns>
         /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
-        public double SumOfSquares()
+        public double? SumOfSquares()
         {
             var result = _aggregator.DoubleAggregate(qdb_ts_aggregation_type.SumOfSquares);
             if (result.Count() == 0)
@@ -594,7 +594,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="interval">The time interval to scan</param>
         /// <returns>The sum of squares of the interval or <c>NaN</c> if there is no point in the interval</returns>
-        public double SumOfSquares(QdbTimeInterval interval)
+        public double? SumOfSquares(QdbTimeInterval interval)
         {
             return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.SumOfSquares, interval).Value();
         }
@@ -604,7 +604,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="intervals">The time intervals to scan</param>
         /// <returns>The sum of squares of each interval or <c>NaN</c> when there is no point in an interval</returns>
-        public IEnumerable<double> SumOfSquares(IEnumerable<QdbTimeInterval> intervals)
+        public IEnumerable<double?> SumOfSquares(IEnumerable<QdbTimeInterval> intervals)
         {
             return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.SumOfSquares, intervals).Value();
         }
@@ -618,7 +618,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <returns>The spread of the table</returns>
         /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
-        public double Spread()
+        public double? Spread()
         {
             var result = _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Spread);
             if (result.Count() == 0)
@@ -631,7 +631,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="interval">The time interval to scan</param>
         /// <returns>The spread of the interval or <c>NaN</c> if there is no point in the interval</returns>
-        public double Spread(QdbTimeInterval interval)
+        public double? Spread(QdbTimeInterval interval)
         {
             return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Spread, interval).Value();
         }
@@ -641,7 +641,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="intervals">The time intervals to scan</param>
         /// <returns>The spread of each interval or <c>NaN</c> when there is no point in an interval</returns>
-        public IEnumerable<double> Spread(IEnumerable<QdbTimeInterval> intervals)
+        public IEnumerable<double?> Spread(IEnumerable<QdbTimeInterval> intervals)
         {
             return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Spread, intervals).Value();
         }
@@ -655,7 +655,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <returns>The sample variance of the table</returns>
         /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
-        public double SampleVariance()
+        public double? SampleVariance()
         {
             var result = _aggregator.DoubleAggregate(qdb_ts_aggregation_type.SampleVariance);
             if (result.Count() == 0)
@@ -668,7 +668,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="interval">The time interval to scan</param>
         /// <returns>The sample variance of the interval or <c>NaN</c> if there is no point in the interval</returns>
-        public double SampleVariance(QdbTimeInterval interval)
+        public double? SampleVariance(QdbTimeInterval interval)
         {
             return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.SampleVariance, interval).Value();
         }
@@ -678,7 +678,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="intervals">The time intervals to scan</param>
         /// <returns>The sample variance of each interval or <c>NaN</c> when there is no point in an interval</returns>
-        public IEnumerable<double> SampleVariance(IEnumerable<QdbTimeInterval> intervals)
+        public IEnumerable<double?> SampleVariance(IEnumerable<QdbTimeInterval> intervals)
         {
             return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.SampleVariance, intervals).Value();
         }
@@ -692,7 +692,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <returns>The sample standard deviation of the table</returns>
         /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
-        public double SampleStdDev()
+        public double? SampleStdDev()
         {
             var result = _aggregator.DoubleAggregate(qdb_ts_aggregation_type.SampleStdDev);
             if (result.Count() == 0)
@@ -705,7 +705,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="interval">The time interval to scan</param>
         /// <returns>The sample standard deviation of the interval or <c>NaN</c> if there is no point in the interval</returns>
-        public double SampleStdDev(QdbTimeInterval interval)
+        public double? SampleStdDev(QdbTimeInterval interval)
         {
             return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.SampleStdDev, interval).Value();
         }
@@ -715,7 +715,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="intervals">The time intervals to scan</param>
         /// <returns>The sample standard deviation of each interval or <c>NaN</c> when there is no point in an interval</returns>
-        public IEnumerable<double> SampleStdDev(IEnumerable<QdbTimeInterval> intervals)
+        public IEnumerable<double?> SampleStdDev(IEnumerable<QdbTimeInterval> intervals)
         {
             return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.SampleStdDev, intervals).Value();
         }
@@ -729,7 +729,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <returns>The population variance of the table</returns>
         /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
-        public double PopulationVariance()
+        public double? PopulationVariance()
         {
             var result = _aggregator.DoubleAggregate(qdb_ts_aggregation_type.PopulationVariance);
             if (result.Count() == 0)
@@ -742,7 +742,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="interval">The time interval to scan</param>
         /// <returns>The population variance of the interval or <c>NaN</c> if there is no point in the interval</returns>
-        public double PopulationVariance(QdbTimeInterval interval)
+        public double? PopulationVariance(QdbTimeInterval interval)
         {
             return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.PopulationVariance, interval).Value();
         }
@@ -752,7 +752,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="intervals">The time intervals to scan</param>
         /// <returns>The population variance of each interval or <c>NaN</c> when there is no point in an interval</returns>
-        public IEnumerable<double> PopulationVariance(IEnumerable<QdbTimeInterval> intervals)
+        public IEnumerable<double?> PopulationVariance(IEnumerable<QdbTimeInterval> intervals)
         {
             return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.PopulationVariance, intervals).Value();
         }
@@ -766,7 +766,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <returns>The population standard deviation of the table</returns>
         /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
-        public double PopulationStdDev()
+        public double? PopulationStdDev()
         {
             var result = _aggregator.DoubleAggregate(qdb_ts_aggregation_type.PopulationStdDev);
             if (result.Count() == 0)
@@ -779,7 +779,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="interval">The time interval to scan</param>
         /// <returns>The population standard deviation of the interval or <c>NaN</c> if there is no point in the interval</returns>
-        public double PopulationStdDev(QdbTimeInterval interval)
+        public double? PopulationStdDev(QdbTimeInterval interval)
         {
             return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.PopulationStdDev, interval).Value();
         }
@@ -789,7 +789,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="intervals">The time intervals to scan</param>
         /// <returns>The population standard deviation of each interval or <c>NaN</c> when there is no point in an interval</returns>
-        public IEnumerable<double> PopulationStdDev(IEnumerable<QdbTimeInterval> intervals)
+        public IEnumerable<double?> PopulationStdDev(IEnumerable<QdbTimeInterval> intervals)
         {
             return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.PopulationStdDev, intervals).Value();
         }
@@ -877,7 +877,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <returns>The product of the table</returns>
         /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
-        public double Product()
+        public double? Product()
         {
             var result = _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Product);
             if (result.Count() == 0)
@@ -890,7 +890,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="interval">The time interval to scan</param>
         /// <returns>The product of the interval or <c>NaN</c> if there is no point in the interval</returns>
-        public double Product(QdbTimeInterval interval)
+        public double? Product(QdbTimeInterval interval)
         {
             return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Product, interval).Value();
         }
@@ -900,7 +900,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="intervals">The time intervals to scan</param>
         /// <returns>The product of each interval or <c>NaN</c> when there is no point in an interval</returns>
-        public IEnumerable<double> Product(IEnumerable<QdbTimeInterval> intervals)
+        public IEnumerable<double?> Product(IEnumerable<QdbTimeInterval> intervals)
         {
             return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Product, intervals).Value();
         }
@@ -914,7 +914,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <returns>The skewness of the table</returns>
         /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
-        public double Skewness()
+        public double? Skewness()
         {
             var result = _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Skewness);
             if (result.Count() == 0)
@@ -927,7 +927,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="interval">The time interval to scan</param>
         /// <returns>The skewness of the interval or <c>NaN</c> if there is no point in the interval</returns>
-        public double Skewness(QdbTimeInterval interval)
+        public double? Skewness(QdbTimeInterval interval)
         {
             return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Skewness, interval).Value();
         }
@@ -937,7 +937,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="intervals">The time intervals to scan</param>
         /// <returns>The skewness of each interval or <c>NaN</c> when there is no point in an interval</returns>
-        public IEnumerable<double> Skewness(IEnumerable<QdbTimeInterval> intervals)
+        public IEnumerable<double?> Skewness(IEnumerable<QdbTimeInterval> intervals)
         {
             return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Skewness, intervals).Value();
         }
@@ -951,7 +951,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <returns>The kurtosis of the table</returns>
         /// <exception cref="QdbEmptyColumnException">If the column is empty</exception>
-        public double Kurtosis()
+        public double? Kurtosis()
         {
             var result = _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Kurtosis);
             if (result.Count() == 0)
@@ -964,7 +964,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="interval">The time interval to scan</param>
         /// <returns>The kurtosis of the interval or <c>NaN</c> if there is no point in the interval</returns>
-        public double Kurtosis(QdbTimeInterval interval)
+        public double? Kurtosis(QdbTimeInterval interval)
         {
             return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Kurtosis, interval).Value();
         }
@@ -974,14 +974,14 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="intervals">The time intervals to scan</param>
         /// <returns>The kurtosis of each interval or <c>NaN</c> when there is no point in an interval</returns>
-        public IEnumerable<double> Kurtosis(IEnumerable<QdbTimeInterval> intervals)
+        public IEnumerable<double?> Kurtosis(IEnumerable<QdbTimeInterval> intervals)
         {
             return _aggregator.DoubleAggregate(qdb_ts_aggregation_type.Kurtosis, intervals).Value();
         }
 
         #endregion
 
-        #region DistinctCount
+        #region DistinctCount()
 
         /// <summary>
         /// Gets the number of points with distinct values in the table

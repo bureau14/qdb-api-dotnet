@@ -90,6 +90,7 @@
     <Compile Include="Entry\Blob\Update.cs" />
     <Compile Include="Entry\DetachTag.cs" />
     <Compile Include="Entry\Table\Blob\Erase.cs" />
+    <Compile Include="Entry\Table\Blob\Insert.cs" />
     <Compile Include="Entry\Table\Blob\InsertTruncate.cs" />
     <Compile Include="Entry\Table\Blob\Timestamps.cs" />
     <Compile Include="Entry\Table\Double\AbsMax.cs" />
@@ -114,6 +115,7 @@
     <Compile Include="Entry\Table\Int64\AbsMin.cs" />
     <Compile Include="Entry\Table\Int64\DistinctCount.cs" />
     <Compile Include="Entry\Table\Int64\Erase.cs" />
+    <Compile Include="Entry\Table\Int64\Insert.cs" />
     <Compile Include="Entry\Table\Int64\Timestamps.cs" />
     <Compile Include="Entry\Table\Int64\PopulationStdDev.cs" />
     <Compile Include="Entry\Table\Int64\Kurtosis.cs" />
@@ -136,6 +138,7 @@
     <Compile Include="Entry\Table\DoubleColumns.cs" />
     <Compile Include="Entry\Table\Int64Columns.cs" />
     <Compile Include="Entry\Table\Reader.cs" />
+    <Compile Include="Entry\Table\Timestamp\Insert.cs" />
     <Compile Include="Entry\Table\Writer.cs" />
     <Compile Include="Entry\Table\TimestampColumns.cs" />
     <Compile Include="Entry\AttachTag.cs" />
@@ -182,7 +185,6 @@
     <Compile Include="Entry\Table\Int64\Min.cs" />
     <Compile Include="Entry\Table\Int64\Last.cs" />
     <Compile Include="Entry\Table\Int64\First.cs" />
-    <Compile Include="Entry\Table\Int64\Insert.cs" />
     <Compile Include="Entry\Table\ExpireBySize.cs" />
     <Compile Include="Entry\Table\Timestamps.cs" />
     <Compile Include="Entry\Table\Timestamp\DistinctCount.cs" />

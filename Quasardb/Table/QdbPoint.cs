@@ -67,14 +67,14 @@ namespace Quasardb.TimeSeries
     /// <summary>
     /// A Time/Value pair, where value is a double-precision floating point
     /// </summary>
-    public class QdbDoublePoint : QdbPoint<double>
+    public class QdbDoublePoint : QdbPoint<double?>
     {
         /// <summary>
         /// Creates a point.
         /// </summary>
         /// <param name="time">The point's time</param>
         /// <param name="value">The point's value</param>
-        public QdbDoublePoint(DateTime time, double value) : base(time, value)
+        public QdbDoublePoint(DateTime time, double? value) : base(time, value)
         {
         }
     }
@@ -95,6 +95,9 @@ namespace Quasardb.TimeSeries
 
         internal override bool ValueEquals(byte[] other)
         {
+            if (Value == null || other == null)
+                return Value == other;
+
             // TODO: replace by SequenceEquals once we drop Framework 2.0
             if (Value.Length != other.Length) return false;
             for (var i = 0; i < Value.Length; i++)
@@ -105,35 +108,33 @@ namespace Quasardb.TimeSeries
             return true;
         }
     }
-    
 
     /// <summary>
     /// A Time/Value pair, where value is an int64 point
     /// </summary>
-    public class QdbInt64Point : QdbPoint<long>
+    public class QdbInt64Point : QdbPoint<long?>
     {
         /// <summary>
         /// Creates a point.
         /// </summary>
         /// <param name="time">The point's time</param>
         /// <param name="value">The point's value</param>
-        public QdbInt64Point(DateTime time, long value) : base(time, value)
+        public QdbInt64Point(DateTime time, long? value) : base(time, value)
         {
         }
     }
-    
 
     /// <summary>
     /// A Time/Value pair, where value is a datetime point
     /// </summary>
-    public class QdbTimestampPoint : QdbPoint<DateTime>
+    public class QdbTimestampPoint : QdbPoint<DateTime?>
     {
         /// <summary>
         /// Creates a point.
         /// </summary>
         /// <param name="time">The point's time</param>
         /// <param name="value">The point's value</param>
-        public QdbTimestampPoint(DateTime time, DateTime value) : base(time, value)
+        public QdbTimestampPoint(DateTime time, DateTime? value) : base(time, value)
         {
         }
     }

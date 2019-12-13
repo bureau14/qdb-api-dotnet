@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb.Exceptions;
 using Quasardb.TimeSeries;
@@ -29,6 +30,36 @@ namespace Quasardb.Tests.Entry.Table.Int64
             {
                 Assert.AreEqual(col.Series.Alias, e.Alias);
             }
+        }
+
+        [TestMethod]
+        public void Ok_WithValues()
+        {
+            var points = new QdbInt64PointCollection
+            {
+                {new DateTime(2000, 01, 01), 1},
+                {new DateTime(2000, 01, 02), 2},
+            };
+            var col = QdbTestCluster.CreateEmptyInt64Column();
+
+            col.Insert(points);
+
+            CollectionAssert.AreEqual(points.ToArray(), col.Points().ToArray());
+        }
+
+        [TestMethod]
+        public void Ok_WithNulls()
+        {
+            var points = new QdbInt64PointCollection
+            {
+                {new DateTime(2000, 01, 01), 1},
+                {new DateTime(2000, 01, 02), null},
+            };
+            var col = QdbTestCluster.CreateEmptyInt64Column();
+
+            col.Insert(points);
+
+            CollectionAssert.AreEqual(points.ToArray(), col.Points().ToArray());
         }
     }
 }

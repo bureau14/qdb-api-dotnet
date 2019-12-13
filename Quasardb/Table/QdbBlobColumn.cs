@@ -16,7 +16,7 @@ namespace Quasardb.TimeSeries
         {
         }
 
-        #region Insert
+        #region Insert()
 
         /// <summary>
         /// Inserts one or more points in the table
@@ -61,7 +61,7 @@ namespace Quasardb.TimeSeries
 
         #endregion
 
-        #region InsertTruncate
+        #region InsertTruncate()
 
         /// <summary>
         /// Inserts one or more points in the table and erases given
@@ -168,7 +168,7 @@ namespace Quasardb.TimeSeries
 
         #endregion
 
-        #region Points
+        #region Points()
 
         /// <summary>
         /// Gets all the points in the table
@@ -284,7 +284,7 @@ namespace Quasardb.TimeSeries
 
         #endregion
 
-        #region Count
+        #region Count()
 
         /// <summary>
         /// Gets the number of points in the table

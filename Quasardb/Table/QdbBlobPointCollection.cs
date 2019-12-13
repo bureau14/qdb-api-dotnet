@@ -55,15 +55,16 @@ namespace Quasardb.TimeSeries
         /// <param name="point">The point to add</param>
         public void Add(Point point)
         {
-            GCHandle pin;
+            GCHandle? pin;
             Points.Add(point.ToNative(out pin));
-            _pins.Add(pin);
+            if (pin.HasValue)
+                _pins.Add(pin.Value);
         }
 
         /// <summary>
         /// Gets the number of points in the collection
         /// </summary>
-        public int Count => (int) Points.Count;
+        public int Count => (int)Points.Count;
 
         /// <summary>
         /// Gets or sets the total number of elements the collection can hold without resizing.
