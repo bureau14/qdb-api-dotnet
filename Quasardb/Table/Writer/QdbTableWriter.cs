@@ -60,6 +60,7 @@ namespace Quasardb.TimeSeries.Writer
         /// <summary>
         /// Start a new row to the outcoming data buffer.
         /// </summary>
+        /// <param name="timestamp">The timestamp of the new row</param>
         public unsafe void StartRow(DateTime timestamp)
         {
             qdb_timespec converted = TimeConverter.ToTimespec(timestamp);

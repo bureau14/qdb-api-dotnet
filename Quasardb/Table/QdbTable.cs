@@ -419,6 +419,8 @@ namespace Quasardb.TimeSeries
         /// <summary>
         /// Initialize a local table for reading from this table.
         /// </summary>
+        /// <returns>A <see cref="QdbTableReader"/> for reading from this table</returns>
+        /// <seealso cref="QdbTableReader"/>
         public QdbTableReader Reader()
         {
             return Reader(null, QdbTimeInterval.Everything);
@@ -428,6 +430,7 @@ namespace Quasardb.TimeSeries
         /// Initialize a local table for reading from this table.
         /// </summary>
         /// <param name="interval">The time interval to read</param>
+        /// <returns>A <see cref="QdbTableReader"/> for reading from this table</returns>
         /// <seealso cref="QdbTableReader"/>
         public QdbTableReader Reader(QdbTimeInterval interval)
         {
@@ -439,6 +442,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="intervals">The time intervals to read</param>
         /// <exception cref="QdbInvalidArgumentException">If interval list is empty.</exception>
+        /// <returns>A <see cref="QdbTableReader"/> for reading from this table</returns>
         /// <seealso cref="QdbTableReader"/>
         public QdbTableReader Reader(IEnumerable<QdbTimeInterval> intervals)
         {
@@ -449,6 +453,7 @@ namespace Quasardb.TimeSeries
         /// Initialize a local table for reading from this table.
         /// </summary>
         /// <param name="columnDefinitions">The description of the columns</param>
+        /// <returns>A <see cref="QdbTableReader"/> for reading from this table</returns>
         /// <seealso cref="QdbTableReader"/>
         public QdbTableReader Reader(IEnumerable<QdbColumnDefinition> columnDefinitions)
         {
@@ -460,6 +465,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="columnDefinitions">The description of the columns</param>
         /// <param name="interval">The time interval to read</param>
+        /// <returns>A <see cref="QdbTableReader"/> for reading from this table</returns>
         /// <seealso cref="QdbTableReader"/>
         public QdbTableReader Reader(IEnumerable<QdbColumnDefinition> columnDefinitions, QdbTimeInterval interval)
         {
@@ -472,6 +478,7 @@ namespace Quasardb.TimeSeries
         /// <param name="columnDefinitions">The description of the columns</param>
         /// <param name="intervals">The time intervals to read</param>
         /// <exception cref="QdbInvalidArgumentException">If interval list is empty.</exception>
+        /// <returns>A <see cref="QdbTableReader"/> for reading from this table</returns>
         /// <seealso cref="QdbTableReader"/>
         public QdbTableReader Reader(IEnumerable<QdbColumnDefinition> columnDefinitions, IEnumerable<QdbTimeInterval> intervals)
         {
@@ -527,6 +534,7 @@ namespace Quasardb.TimeSeries
         /// <summary>
         /// Initialize a batch table for writing to this table.
         /// </summary>
+        /// <returns>A <see cref="QdbTableWriter"/> for writing to this table</returns>
         /// <seealso cref="QdbTableWriter"/>
         public QdbTableWriter Writer()
         {
@@ -538,6 +546,7 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="columnDefinitions">The description of the columns</param>
         /// <exception cref="QdbInvalidArgumentException">If columns list is empty.</exception>
+        /// <returns>A <see cref="QdbTableWriter"/> for writing to this table</returns>
         /// <seealso cref="QdbTableWriter"/>
         public QdbTableWriter Writer(IEnumerable<QdbColumnDefinition> columnDefinitions)
         {
