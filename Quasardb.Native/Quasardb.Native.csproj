@@ -98,8 +98,6 @@
     <Compile Include="qdb_ts_timestamp_point.cs" />
     <Compile Include="qdb_operation.cs" />
     <Compile Include="qdb_operation_type.cs" />
-    <Compile Include="qdb_stream_handle.cs" />
-    <Compile Include="qdb_stream_mode.cs" />
     <Compile Include="qdb_entry_type.cs" />
     <Compile Include="qdb_api.cs" />
     <Compile Include="qdb_handle.cs" />

@@ -177,18 +177,6 @@ namespace Quasardb
         }
 
         /// <summary>
-        /// Returns a <see cref="QdbStream" /> attached to the specified alias.
-        /// </summary>
-        /// <param name="alias">The alias (i.e. key) of the stream in the database</param>
-        /// <returns>A stream attached to the specified alias.</returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        public QdbStream Stream(string alias)
-        {
-            if (alias == null) throw new ArgumentNullException(nameof(alias));
-            return new QdbStream(_handle, alias);
-        }
-
-        /// <summary>
         /// Returns a <see cref="QdbTag" /> attached to the specified alias.
         /// </summary>
         /// <remarks>No operation is performed in the database.</remarks>

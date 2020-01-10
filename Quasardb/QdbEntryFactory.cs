@@ -31,9 +31,6 @@ namespace Quasardb
                 case qdb_entry_type.qdb_entry_integer:
                     return new QdbInteger(_handle, alias);
 
-                case qdb_entry_type.qdb_entry_stream:
-                    return new QdbStream(_handle, alias);
-
                 case qdb_entry_type.qdb_entry_tag:
                     return new QdbTag(_handle, alias);
 

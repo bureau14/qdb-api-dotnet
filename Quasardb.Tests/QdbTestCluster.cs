@@ -91,30 +91,6 @@ namespace Quasardb.Tests
 
         #endregion
 
-        #region Stream
-
-        public static Stream CreateAndOpenStream()
-        {
-            return CreateEmptyStream().Open(QdbStreamMode.Append);
-        }
-
-        public static QdbStream CreateEmptyStream(string alias = null)
-        {
-            return Instance.Stream(alias ?? RandomGenerator.CreateUniqueAlias());
-        }
-
-        public static QdbStream CreateStream(string alias = null)
-        {
-            var qdbStream = CreateEmptyStream(alias);
-            using (var stream = qdbStream.Open(QdbStreamMode.Append))
-            {
-                stream.WriteByte(1);
-            }
-            return qdbStream;
-        }
-
-        #endregion
-
         #region Table
 
         public static QdbDoubleColumn CreateEmptyDoubleColumn(string alias = null, string name = null)

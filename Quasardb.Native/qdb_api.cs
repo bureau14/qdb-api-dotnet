@@ -239,74 +239,6 @@ namespace Quasardb.Native
 
         #endregion
 
-        #region Functions specific to deques
-
-        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_deque_size(
-            [In] qdb_handle handle,
-            [In] [MarshalAs(ALIAS_TYPE)] string alias,
-            [Out] out qdb_size_t size);
-
-        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_deque_back(
-            [In] qdb_handle handle,
-            [In] [MarshalAs(ALIAS_TYPE)] string alias,
-            [Out] out pointer_t buffer,
-            [Out] out size_t contentLength);
-
-        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_deque_front(
-            [In] qdb_handle handle,
-            [In] [MarshalAs(ALIAS_TYPE)] string alias,
-            [Out] out pointer_t buffer,
-            [Out] out size_t contentLength);
-
-        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_deque_pop_back(
-            [In] qdb_handle handle,
-            [In] [MarshalAs(ALIAS_TYPE)] string alias,
-            [Out] out pointer_t buffer,
-            [Out] out size_t contentLength);
-
-        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_deque_pop_front(
-            [In] qdb_handle handle,
-            [In] [MarshalAs(ALIAS_TYPE)] string alias,
-            [Out] out pointer_t buffer,
-            [Out] out size_t contentLength);
-
-        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_deque_push_front(
-            [In] qdb_handle handle,
-            [In] [MarshalAs(ALIAS_TYPE)] string alias,
-            [In] byte[] content,
-            [Out] size_t content_length);
-
-        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_deque_push_back(
-            [In] qdb_handle handle,
-            [In] [MarshalAs(ALIAS_TYPE)] string alias,
-            [In] byte[] content,
-            [Out] size_t content_length);
-
-        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_deque_get_at(
-            [In] qdb_handle handle,
-            [In] [MarshalAs(ALIAS_TYPE)] string alias,
-            [In] qdb_int_t index,
-            [Out] out pointer_t content,
-            [Out] out size_t contentLength);
-
-        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_deque_set_at(
-            [In] qdb_handle handle,
-            [In] [MarshalAs(ALIAS_TYPE)] string alias,
-            [In] qdb_int_t index,
-            [In] byte[] content,
-            [Out] size_t content_length);
-
-        #endregion
-
         #region Functions specific to tags
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
@@ -341,54 +273,6 @@ namespace Quasardb.Native
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [Out] out pointer_t tags,
             [Out] out size_t size);
-
-        #endregion
-
-        #region Functions specific to streams
-
-        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_stream_open(
-            [In] qdb_handle handle,
-            [In] [MarshalAs(ALIAS_TYPE)] string alias,
-            [In] qdb_stream_mode mode,
-            [Out] out qdb_stream_handle stream);
-
-        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
-        public static extern qdb_error qdb_stream_close(
-            [In] pointer_t stream);
-
-        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_stream_size(
-            [In] qdb_stream_handle handle,
-            [Out] out ulong size);
-
-        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_stream_write(
-            [In] qdb_stream_handle handle,
-            [In] byte* buffer,
-            [In] size_t count);
-
-        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_stream_read(
-            [In] qdb_stream_handle handle,
-            [In] byte* buffer,
-            [In, Out] ref size_t size);
-
-        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_stream_getpos(
-            [In] qdb_stream_handle handle,
-            [Out] out ulong position);
-
-        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_stream_setpos(
-            [In] qdb_stream_handle handle,
-            [In] ulong position);
-
-        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_stream_truncate(
-            [In] qdb_stream_handle handle,
-            [In] ulong position);
 
         #endregion
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <topic id="51f62749-4536-456d-abf2-27998cae62bb" revisionNumber="1">
-  <developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" 
+    xmlns:xlink="http://www.w3.org/1999/xlink">
     <introduction>
       <para>Welcome the Quasardb API for .NET.</para>
     </introduction>
@@ -73,21 +74,6 @@
     </section>
 
     <section>
-      <title>Streams</title>
-      <content>
-        <para>
-          A stream is basically a scalable blob with inifinite size. It's recommended to use a stream above 10MB.
-        </para>
-        <code language="c#">
-          Stream myStream = cluster.Stream("Aline the stream").Open(QdbStreamMode.Append);
-          // now you have a regular C# stream:
-          myStream.Write(data, 0, data.Length);
-          await myStream.WriteAsync(data, 0, data.Length);
-        </code>
-      </content>
-    </section>
-
-    <section>
       <title>Tags</title>
       <content>
         <para>
@@ -154,7 +140,6 @@
       <codeEntityReference>T:Quasardb.QdbCluster</codeEntityReference>
       <codeEntityReference>T:Quasardb.QdbBlob</codeEntityReference>
       <codeEntityReference>T:Quasardb.QdbInteger</codeEntityReference>
-      <codeEntityReference>T:Quasardb.QdbStream</codeEntityReference>
       <codeEntityReference>T:Quasardb.QdbTag</codeEntityReference>
       <codeEntityReference>T:Quasardb.QdbPrefixSelector</codeEntityReference>
       <codeEntityReference>T:Quasardb.QdbSuffixSelector</codeEntityReference>
