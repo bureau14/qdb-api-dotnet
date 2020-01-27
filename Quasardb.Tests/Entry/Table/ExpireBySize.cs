@@ -35,7 +35,7 @@ namespace Quasardb.Tests.Entry.Table
             var col = ts.Int64Columns["the_int64"];
             col.Insert(new DateTime(2017, 1, 1), 1);
 
-            ts.ExpireBySize(10);
+            ts.ExpireBySize(70);
 
             Assert.AreEqual(0L, col.Count());
         }
@@ -55,10 +55,10 @@ namespace Quasardb.Tests.Entry.Table
             col.Insert(points);
 
             // The below size limit must be greater than the size of the oldest bucket, but smaller than the size of 2 buckets.
-            ts.ExpireBySize(65);
+            ts.ExpireBySize(70);
 
             Assert.AreEqual(1L, col.Count());
-            CollectionAssert.AreEqual(points.Skip(1).ToList(), col.Points().ToList());
+            CollectionAssert.AreEqual(points.Take(1).ToList(), col.Points().ToList());
         }
     }
 }
