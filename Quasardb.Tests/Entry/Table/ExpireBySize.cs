@@ -55,7 +55,7 @@ namespace Quasardb.Tests.Entry.Table
             col.Insert(points);
 
             // The below size limit must be greater than the size of the oldest bucket, but smaller than the size of 2 buckets.
-            ts.ExpireBySize(65);
+            ts.ExpireBySize(75);
 
             Assert.AreEqual(1L, col.Count());
             CollectionAssert.AreEqual(points.Skip(1).ToList(), col.Points().ToList());
