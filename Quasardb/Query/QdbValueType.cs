@@ -38,6 +38,11 @@ namespace Quasardb.Query
         /// <summary>
         /// A result of type long that represents a count.
         /// </summary>
-        Count = 4
+        Count = 4,
+
+        /// <summary>
+        /// A result of type String />.
+        /// </summary>
+        String = 5
     }
 }

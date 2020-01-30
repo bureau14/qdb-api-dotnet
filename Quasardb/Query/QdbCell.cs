@@ -45,6 +45,8 @@ namespace Quasardb.Query
                         return TimestampValue;
                     case QdbValueType.Count:
                         return CountValue;
+                    case QdbValueType.String:
+                        return CountValue;
                 }
                 return null;
             }
@@ -104,13 +106,19 @@ namespace Quasardb.Query
         /// <summary>
         /// Gets the result value reinterpreted as a string.
         /// </summary>
-        /// <exception cref="InvalidCastException">The result value is not of type <see cref="QdbValueType.Blob" /> </exception>
-        public string StringValue
+        /// <exception cref="InvalidCastException">The result value is not of type <see cref="QdbValueType.String" /> </exception>
+        public unsafe string StringValue
         {
             get
             {
-                var value = BlobValue;
-                return value != null ? System.Text.Encoding.UTF8.GetString(BlobValue) : null;
+                if (Type == QdbValueType.None)
+                    return null;
+                if (Type != QdbValueType.String)
+                    throw new InvalidCastException();
+                // TODO: limited to 32-bit
+                var content = new byte[(int)_result.string_payload.content_size];
+                Marshal.Copy(new IntPtr(_result.string_payload.content), content, 0, (int)_result.string_payload.content_size);
+                return content != null ? System.Text.Encoding.UTF8.GetString(content) : null;
             }
         }
 

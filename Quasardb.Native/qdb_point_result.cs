@@ -39,6 +39,13 @@ namespace Quasardb.Native
         public qdb_size_t value;
     }
 
+    [StructLayout(LayoutKind.Sequential)]
+    public unsafe struct qdb_point_result_string_payload
+    {
+        public char* content;
+        public qdb_size_t content_size;
+    }
+
     [StructLayout(LayoutKind.Explicit)]
     public struct qdb_point_result
     {
@@ -54,5 +61,7 @@ namespace Quasardb.Native
         public qdb_point_result_timestamp_payload timestamp_payload;
         [System.Runtime.InteropServices.FieldOffset(8)]
         public qdb_point_result_count_payload count_payload;
+        [System.Runtime.InteropServices.FieldOffset(8)]
+        public qdb_point_result_string_payload string_payload;
     }
 }
