@@ -46,7 +46,7 @@ namespace Quasardb.Query
                     case QdbValueType.Count:
                         return CountValue;
                     case QdbValueType.String:
-                        return CountValue;
+                        return StringValue;
                 }
                 return null;
             }
