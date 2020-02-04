@@ -124,5 +124,30 @@ namespace Quasardb.Tests.Cluster
         {
             QdbTestCluster.Instance.SetCompression(Quasardb.QdbCompression.Best);
         }
+
+        [TestMethod]
+        public void GetLastErrorForNullQuery()
+        {
+            try
+            {
+                QdbTestCluster.Instance.Query(null);
+            }
+            catch (QdbQueryException)
+            {
+                Assert.AreEqual("at qdb_query: Got NULL query", QdbTestCluster.Instance.GetLastError());
+            }
+        }
+
+        [TestMethod]
+        public void GetLastErrorForInvalidQuery() {
+            try
+            {
+                QdbTestCluster.Instance.Query("a non query");
+            }
+            catch (QdbQueryException)
+            {
+                Assert.AreEqual("at qdb_query: The provided query is invalid.", QdbTestCluster.Instance.GetLastError());
+            }
+        }
     }
-}
+} // namespace Cluster
