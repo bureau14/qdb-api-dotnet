@@ -78,6 +78,18 @@ namespace Quasardb
         }
 
         /// <summary>
+        /// Gets the last API error description.
+        /// <returns>A message describing the error occurred during the last operation.</returns>
+        /// </summary>
+        public string GetLastError()
+        {
+            qdb_error error;
+            qdb_sized_string message;
+            qdb_api.qdb_get_last_error(out error, out message);
+            return message.ToString();
+        }
+
+        /// <summary>
         /// Set the compression level.
         /// </summary>
         /// <param name="level">The level of compression to be used for the current handle to cluster.</param>
