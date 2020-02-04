@@ -53,6 +53,14 @@ namespace Quasardb.Native
         qdb_e_no_space_left = 0xf3000033,
         qdb_e_quota_exceeded = 0xf2000034,
         qdb_e_alias_too_long = 0xc2000035,
-        qdb_e_column_not_found = 0xb1000039
+        qdb_e_column_not_found = 0xb1000039,
+        qdb_e_query_too_complex = 0xb2000040,
+        qdb_e_invalid_crypto_key = 0xc2000041,
+        qdb_e_invalid_query = 0xc2000042,
+        qdb_e_invalid_regex = 0xc2000043,
+        qdb_e_unknown_user = 0xc2000044,
+        qdb_e_interrupted = 0xf2000045,
+        qdb_e_network_inbuf_too_small = 0xe2000046,
+        qdb_e_network_error = 0xd2000047
     }
 }
