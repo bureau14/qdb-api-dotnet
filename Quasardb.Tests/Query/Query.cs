@@ -103,7 +103,7 @@ namespace Quasardb.Tests.Query
         #region Query failure tests
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [ExpectedException(typeof(QdbQueryException))]
         public void ThrowsForNullQuery()
         {
             _cluster.Query(null);

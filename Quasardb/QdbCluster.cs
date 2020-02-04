@@ -264,8 +264,6 @@ namespace Quasardb
         /// <seealso cref="QdbQueryResult"/>
         public QdbQueryResult Query(string query)
         {
-            if (query == null) throw new ArgumentNullException(nameof(query));
-
             return new QdbQueryResult(_handle, query);
         }
     }
