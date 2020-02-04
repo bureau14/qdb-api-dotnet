@@ -1,6 +1,7 @@
 .vs/
 bin/
 obj/
+/Quasardb*/*.exe
 *.user
 *.suo
 *.DotSettings
@@ -16,3 +17,11 @@ obj/
 
 # Ignore qdb folder
 qdb/
+
+# Ignore test cluster files
+insecure/
+secure/
+*.cfg
+*.key
+*.err.txt
+*.out.txt
