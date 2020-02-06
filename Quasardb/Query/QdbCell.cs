@@ -115,10 +115,9 @@ namespace Quasardb.Query
                     return null;
                 if (Type != QdbValueType.String)
                     throw new InvalidCastException();
-                // TODO: limited to 32-bit
-                var content = new byte[(int)_result.string_payload.content_size];
-                Marshal.Copy(new IntPtr(_result.string_payload.content), content, 0, (int)_result.string_payload.content_size);
-                return content != null ? System.Text.Encoding.UTF8.GetString(content) : null;
+                var content = new byte[(int)_result.blob_payload.content_size];
+                Marshal.Copy(new IntPtr(_result.blob_payload.content), content, 0, (int)_result.blob_payload.content_size);
+                return System.Text.Encoding.UTF8.GetString(content);
             }
         }
 

@@ -37,6 +37,15 @@ namespace Quasardb.Native
     };
 
     [StructLayout(LayoutKind.Sequential)]
+    public struct qdb_ts_string_aggregation
+    {
+        public qdb_ts_aggregation_type type;
+        public qdb_ts_range range;
+        public qdb_size_t count;
+        public qdb_ts_string_point result;
+    };
+
+    [StructLayout(LayoutKind.Sequential)]
     public struct qdb_ts_timestamp_aggregation
     {
         public qdb_ts_aggregation_type type;

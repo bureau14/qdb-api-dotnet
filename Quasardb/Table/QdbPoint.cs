@@ -125,6 +125,21 @@ namespace Quasardb.TimeSeries
     }
 
     /// <summary>
+    /// A Time/Value pair, where value is an string point
+    /// </summary>
+    public class QdbStringPoint : QdbPoint<string>
+    {
+        /// <summary>
+        /// Creates a point.
+        /// </summary>
+        /// <param name="time">The point's time</param>
+        /// <param name="value">The point's value</param>
+        public QdbStringPoint(DateTime time, string value) : base(time, value)
+        {
+        }
+    }
+
+    /// <summary>
     /// A Time/Value pair, where value is a datetime point
     /// </summary>
     public class QdbTimestampPoint : QdbPoint<DateTime?>

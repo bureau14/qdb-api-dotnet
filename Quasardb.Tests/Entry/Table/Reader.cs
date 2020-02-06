@@ -16,6 +16,7 @@ namespace Quasardb.Tests.Entry.Table
                 new QdbBlobColumnDefinition("the_blob"),
                 new QdbDoubleColumnDefinition("the_double"),
                 new QdbInt64ColumnDefinition("the_int64"),
+                new QdbStringColumnDefinition("the_string"),
                 new QdbTimestampColumnDefinition("the_ts"),
             });
             return ts;
@@ -86,6 +87,22 @@ namespace Quasardb.Tests.Entry.Table
             return r;
         }
 
+        public QdbStringPointCollection InsertStringPoints(QdbTable ts, DateTime time, int count)
+        {
+            Random random = new Random();
+            var r = new QdbStringPointCollection(count);
+
+            var column = ts.StringColumns["the_string"];
+            for (int i = 0; i < count; ++i)
+            {
+                string value = "content";
+                column.Insert(time, value);
+                r.Add(time, value);
+                time = time.AddSeconds(1);
+            }
+            return r;
+        }
+
         [TestMethod]
         public void ThrowsInvalidArgument_GivenBadRange()
         {
@@ -118,6 +135,7 @@ namespace Quasardb.Tests.Entry.Table
             var insertedBlobData = InsertBlobPoints(ts, startTime, 10);
             var insertedDoubleData = InsertDoublePoints(ts, startTime, 10);
             var insertedInt64Data = InsertInt64Points(ts, startTime, 10);
+            var insertedStringData = InsertStringPoints(ts, startTime, 10);
             var insertedTimestampData = InsertTimestampPoints(ts, startTime, 10);
 
             var reader = ts.Reader();
@@ -127,9 +145,10 @@ namespace Quasardb.Tests.Entry.Table
             {
                 Assert.AreEqual(startTime.AddSeconds(index), row.Timestamp);
 
-                Assert.AreEqual(row.Count, 4);
+                Assert.AreEqual(row.Count, 5);
                 CollectionAssert.AreEqual(insertedBlobData[index].Value, row["the_blob"].BlobValue);
                 Assert.AreEqual(insertedDoubleData[index].Value, row["the_double"].Value);
+                Assert.AreEqual(insertedStringData[index].Value, row["the_string"].Value);
                 Assert.AreEqual(insertedInt64Data[index].Value, row["the_int64"].Value);
                 Assert.AreEqual(insertedTimestampData[index].Value, row["the_ts"].Value);
                 ++index;
@@ -144,12 +163,14 @@ namespace Quasardb.Tests.Entry.Table
             var insertedBlobData = InsertBlobPoints(ts, startTime, 9);
             var insertedDoubleData = InsertDoublePoints(ts, startTime, 9);
             var insertedInt64Data = InsertInt64Points(ts, startTime, 9);
+            var insertedStringData = InsertStringPoints(ts, startTime, 9);
             var insertedTimestampData = InsertTimestampPoints(ts, startTime, 9);
 
             ts.BlobColumns["the_blob"].Insert(startTime.AddSeconds(9), new byte[] { 10 });
             insertedBlobData.Add(startTime.AddSeconds(9), new byte[] { 10 });
             insertedDoubleData.Add(startTime.AddSeconds(9), null);
             insertedInt64Data.Add(startTime.AddSeconds(9), null);
+            insertedStringData.Add(startTime.AddSeconds(9), null);
             insertedTimestampData.Add(startTime.AddSeconds(9), null);
 
             var reader = ts.Reader();
@@ -159,10 +180,11 @@ namespace Quasardb.Tests.Entry.Table
             {
                 Assert.AreEqual(startTime.AddSeconds(index), row.Timestamp);
 
-                Assert.AreEqual(row.Count, 4);
+                Assert.AreEqual(row.Count, 5);
                 CollectionAssert.AreEqual(insertedBlobData[index].Value, row["the_blob"].BlobValue);
                 Assert.AreEqual(insertedDoubleData[index].Value, row["the_double"].Value);
                 Assert.AreEqual(insertedInt64Data[index].Value, row["the_int64"].Value);
+                Assert.AreEqual(insertedStringData[index].Value, row["the_string"].Value);
                 Assert.AreEqual(insertedTimestampData[index].Value, row["the_ts"].Value);
                 ++index;
             }
@@ -204,6 +226,7 @@ namespace Quasardb.Tests.Entry.Table
             var insertedBlobData = InsertBlobPoints(ts, startTime, 10);
             var insertedDoubleData = InsertDoublePoints(ts, startTime, 10);
             var insertedInt64Data = InsertInt64Points(ts, startTime, 10);
+            var insertedStringData = InsertStringPoints(ts, startTime, 10);
             var insertedTimestampData = InsertTimestampPoints(ts, startTime, 10);
 
             var reader = ts.Reader(new QdbTimeInterval[]{
@@ -218,10 +241,11 @@ namespace Quasardb.Tests.Entry.Table
                 int index = mapping[i];
                 Assert.AreEqual(startTime.AddSeconds(index), row.Timestamp);
 
-                Assert.AreEqual(row.Count, 4);
+                Assert.AreEqual(row.Count, 5);
                 CollectionAssert.AreEqual(insertedBlobData[index].Value, row["the_blob"].BlobValue);
                 Assert.AreEqual(insertedDoubleData[index].Value, row["the_double"].Value);
                 Assert.AreEqual(insertedInt64Data[index].Value, row["the_int64"].Value);
+                Assert.AreEqual(insertedStringData[index].Value, row["the_string"].Value);
                 Assert.AreEqual(insertedTimestampData[index].Value, row["the_ts"].Value);
                 ++i;
             }

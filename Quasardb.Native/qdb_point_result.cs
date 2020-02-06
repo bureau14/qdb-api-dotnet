@@ -21,6 +21,13 @@ namespace Quasardb.Native
     }
 
     [StructLayout(LayoutKind.Sequential)]
+    public unsafe struct qdb_point_result_string_payload
+    {
+        public char* content;
+        public qdb_size_t content_size;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
     public unsafe struct qdb_point_result_blob_payload
     {
         public void* content;
@@ -39,12 +46,6 @@ namespace Quasardb.Native
         public qdb_size_t value;
     }
 
-    [StructLayout(LayoutKind.Sequential)]
-    public unsafe struct qdb_point_result_string_payload
-    {
-        public char* content;
-        public qdb_size_t content_size;
-    }
 
     [StructLayout(LayoutKind.Explicit)]
     public struct qdb_point_result

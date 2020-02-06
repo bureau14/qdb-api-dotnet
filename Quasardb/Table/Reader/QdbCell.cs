@@ -51,6 +51,8 @@ namespace Quasardb.TimeSeries.Reader
                         return BlobValue;
                     case QdbColumnType.Int64:
                         return Int64Value;
+                    case QdbColumnType.String:
+                        return StringValue;
                     case QdbColumnType.Timestamp:
                         return TimestampValue;
                 }
@@ -102,19 +104,6 @@ namespace Quasardb.TimeSeries.Reader
         }
 
         /// <summary>
-        /// Gets the value reinterpreted as a string.
-        /// </summary>
-        /// <exception cref="InvalidCastException">The value is not of type <see cref="QdbColumnType.Blob" /> </exception>
-        public string StringValue
-        {
-            get
-            {
-                var value = BlobValue;
-                return value != null ? System.Text.Encoding.UTF8.GetString(value) : null;
-            }
-        }
-
-        /// <summary>
         /// Gets the value.
         /// </summary>
         /// <exception cref="InvalidCastException">The value is not of type <see cref="QdbColumnType.Int64" /> </exception>
@@ -131,6 +120,30 @@ namespace Quasardb.TimeSeries.Reader
                     return null;
                 QdbExceptionThrower.ThrowIfNeeded(err, alias: _alias, column: _column.name);
                 return value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the value.
+        /// </summary>
+        /// <exception cref="InvalidCastException">The value is not of type <see cref="QdbColumnType.String" /> </exception>
+        public string StringValue
+        {
+            get
+            {
+                if (Type != QdbColumnType.String)
+                    throw new InvalidCastException();
+
+                var err = qdb_api.qdb_ts_row_get_string_no_copy(
+                    _table, _index,
+                    out pointer_t content, out size_t length);
+                if (err == qdb_error.qdb_e_element_not_found)
+                    return null;
+                QdbExceptionThrower.ThrowIfNeeded(err, alias: _alias, column: _column.name);
+                // TODO: limited to 32-bit
+                var value = new byte[(int)length];
+                Marshal.Copy(content, value, 0, (int)length);
+                return System.Text.Encoding.UTF8.GetString(value);
             }
         }
 

@@ -67,6 +67,20 @@ namespace Quasardb.TimeSeries
     }
 
     /// <summary>
+    /// Describes a time-series column that contains string point values.
+    /// </summary>
+    public class QdbStringColumnDefinition : QdbColumnDefinition
+    {
+        /// <summary>
+        /// Creates a column description with the specified name.
+        /// </summary>
+        /// <param name="name">The name of the column</param>
+        public QdbStringColumnDefinition(string name) : base(name, qdb_ts_column_type.qdb_ts_column_string)
+        {
+        }
+    }
+
+    /// <summary>
     /// Describes a time-series column that contains timestamp point values.
     /// </summary>
     public class QdbTimestampColumnDefinition : QdbColumnDefinition

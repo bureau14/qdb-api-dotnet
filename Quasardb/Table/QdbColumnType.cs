@@ -29,5 +29,10 @@ namespace Quasardb.TimeSeries
         /// A value of type <see cref="DateTime" />.
         /// </summary>
         Timestamp = 3,
+
+        /// <summary>
+        /// A value of type string.
+        /// </summary>
+        String = 4,
     }
 }

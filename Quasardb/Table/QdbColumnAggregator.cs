@@ -90,6 +90,28 @@ namespace Quasardb.TimeSeries
             }
         }
 
+        public struct SingleStringResult
+        {
+            readonly qdb_ts_string_aggregation _aggregation;
+
+            public SingleStringResult(qdb_ts_string_aggregation aggregation)
+            {
+                _aggregation = aggregation;
+            }
+
+            public long Count()
+            {
+                return (long)_aggregation.count;
+            }
+
+            public QdbStringPoint AsPoint()
+            {
+                return (long)_aggregation.count == 0
+                           ? null
+                           : _aggregation.result.ToManaged();
+            }
+        }
+
         public struct SingleTimestampResult
         {
             readonly qdb_ts_timestamp_aggregation _aggregation;
@@ -222,6 +244,30 @@ namespace Quasardb.TimeSeries
             }
         }
 
+        public struct MultipleStringResults
+        {
+            readonly IEnumerable<qdb_ts_string_aggregation> _aggregations;
+
+            public MultipleStringResults(IEnumerable<qdb_ts_string_aggregation> aggregations)
+            {
+                _aggregations = aggregations;
+            }
+
+            public IEnumerable<long> Count()
+            {
+                foreach (var agg in _aggregations)
+                    yield return (long)agg.count;
+            }
+
+            public IEnumerable<QdbStringPoint> AsPoint()
+            {
+                foreach (var agg in _aggregations)
+                    yield return (long)agg.count == 0
+                        ? null
+                        : agg.result.ToManaged();
+            }
+        }
+
         public struct MultipleTimestampResults
         {
             readonly IEnumerable<qdb_ts_timestamp_aggregation> _aggregations;
@@ -339,6 +385,31 @@ namespace Quasardb.TimeSeries
             return new MultipleInt64Results(aggregations);
         }
 
+        public SingleStringResult StringAggregate(qdb_ts_aggregation_type mode)
+        {
+            return StringAggregate(mode, QdbTimeInterval.Everything);
+        }
+
+        public SingleStringResult StringAggregate(qdb_ts_aggregation_type mode, QdbTimeInterval interval)
+        {
+            var aggregations = new InteropableList<qdb_ts_string_aggregation>(1) { MakeStringAggregation(mode, interval) };
+            var error = qdb_api.qdb_ts_string_aggregate(_column.Handle, _column.Series.Alias, _column.Name, aggregations.Buffer, aggregations.Count);
+            QdbExceptionThrower.ThrowIfNeeded(error, alias: _column.Series.Alias, column: _column.Name);
+            return new SingleStringResult(aggregations[0]);
+        }
+
+        public MultipleStringResults StringAggregate(qdb_ts_aggregation_type mode, IEnumerable<QdbTimeInterval> intervals)
+        {
+            var aggregations = new InteropableList<qdb_ts_string_aggregation>(Helpers.GetCountOrDefault(intervals));
+            foreach (var interval in intervals)
+                aggregations.Add(MakeStringAggregation(mode, interval));
+
+            var error = qdb_api.qdb_ts_string_aggregate(_column.Handle, _column.Series.Alias, _column.Name, aggregations.Buffer, aggregations.Count);
+            QdbExceptionThrower.ThrowIfNeeded(error, alias: _column.Series.Alias);
+
+            return new MultipleStringResults(aggregations);
+        }
+
         public SingleTimestampResult TimestampAggregate(qdb_ts_aggregation_type mode)
         {
             return TimestampAggregate(mode, QdbTimeInterval.Everything);
@@ -385,6 +456,15 @@ namespace Quasardb.TimeSeries
         static qdb_ts_int64_aggregation MakeInt64Aggregation(qdb_ts_aggregation_type mode, QdbTimeInterval interval)
         {
             return new qdb_ts_int64_aggregation
+            {
+                type = mode,
+                range = interval.ToNative()
+            };
+        }
+
+        static qdb_ts_string_aggregation MakeStringAggregation(qdb_ts_aggregation_type mode, QdbTimeInterval interval)
+        {
+            return new qdb_ts_string_aggregation
             {
                 type = mode,
                 range = interval.ToNative()

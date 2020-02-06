@@ -152,6 +152,37 @@ namespace Quasardb.TimeSeries
     }
 
     /// <summary>
+    /// A collection of columns contains string point values.
+    /// </summary>
+    public class QdbStringColumnCollection : IEnumerable<QdbStringColumn>
+    {
+        internal readonly QdbTable _series;
+
+        internal QdbStringColumnCollection(QdbTable series)
+        {
+            _series = series;
+        }
+
+        /// <summary>
+        /// Gets the columns with the specified name
+        /// </summary>
+        /// <param name="name">The name of the column</param>
+        public QdbStringColumn this[string name] => new QdbStringColumn(_series, name);
+
+        /// <inheritdoc />
+        public IEnumerator<QdbStringColumn> GetEnumerator()
+        {
+            foreach (var col in new QdbColumnCollection(_series))
+            {
+                if (col is QdbStringColumn stringColumn)
+                    yield return stringColumn;
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    }
+
+    /// <summary>
     /// A collection of columns contains timestamp point values.
     /// </summary>
     public class QdbTimestampColumnCollection : IEnumerable<QdbTimestampColumn>
@@ -193,6 +224,7 @@ namespace Quasardb.TimeSeries
             Columns = new QdbColumnCollection(this);
             BlobColumns = new QdbBlobColumnCollection(this);
             Int64Columns = new QdbInt64ColumnCollection(this);
+            StringColumns = new QdbStringColumnCollection(this);
             TimestampColumns = new QdbTimestampColumnCollection(this);
         }
 
@@ -215,6 +247,11 @@ namespace Quasardb.TimeSeries
         /// The columns of the table that contains int64 point values.
         /// </summary>
         public QdbInt64ColumnCollection Int64Columns { get; }
+
+        /// <summary>
+        /// The columns of the table that contains string point values.
+        /// </summary>
+        public QdbStringColumnCollection StringColumns { get; }
 
         /// <summary>
         /// The columns of the table that contains timestamp point values.

@@ -95,6 +95,7 @@
     <Compile Include="qdb_ts_blob_point.cs" />
     <Compile Include="qdb_ts_double_point.cs" />
     <Compile Include="qdb_ts_int64_point.cs" />
+    <Compile Include="qdb_ts_string_point.cs" />
     <Compile Include="qdb_ts_timestamp_point.cs" />
     <Compile Include="qdb_operation.cs" />
     <Compile Include="qdb_operation_type.cs" />

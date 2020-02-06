@@ -20,6 +20,7 @@ namespace Quasardb.Tests.Cluster
                 new QdbBlobColumnDefinition("the_blob"),
                 new QdbDoubleColumnDefinition("the_double"),
                 new QdbInt64ColumnDefinition("the_int64"),
+                new QdbStringColumnDefinition("the_string"),
                 new QdbTimestampColumnDefinition("the_ts"),
             });
             return ts;
@@ -66,6 +67,22 @@ namespace Quasardb.Tests.Cluster
             return r;
         }
 
+        public QdbStringPointCollection CreateStringPoints(DateTime time, int count)
+        {
+            Random random = new Random();
+            var r = new QdbStringPointCollection(count);
+
+            for (int i = 0; i < count; ++i)
+            {
+                var value = new byte[32];
+                random.NextBytes(value);
+
+                r.Add(time, System.Text.Encoding.UTF8.GetString(value));
+                time = time.AddSeconds(1);
+            }
+            return r;
+        }
+
         public QdbTimestampPointCollection CreateTimestampPoints(DateTime time, int count)
         {
             Random random = new Random();
@@ -84,12 +101,14 @@ namespace Quasardb.Tests.Cluster
             QdbBlobPointCollection blobPoints,
             QdbDoublePointCollection doublePoints,
             QdbInt64PointCollection int64Points,
+            QdbStringPointCollection stringPoints,
             QdbTimestampPointCollection timestampPoints)
         {
             var batch = _cluster.Writer(new QdbBatchColumnDefinition[]{
                 new QdbBatchColumnDefinition(ts1.Alias, "the_blob"),
                 new QdbBatchColumnDefinition(ts1.Alias, "the_double"),
                 new QdbBatchColumnDefinition(ts2.Alias, "the_int64"),
+                new QdbBatchColumnDefinition(ts2.Alias, "the_string"),
                 new QdbBatchColumnDefinition(ts2.Alias, "the_ts"),
             });
             for (int i = 0; i < 10; ++i)
@@ -98,6 +117,7 @@ namespace Quasardb.Tests.Cluster
                 batch.SetBlob("the_blob", blobPoints[i].Value);
                 batch.SetDouble("the_double", doublePoints[i].Value);
                 batch.SetInt64("the_int64", int64Points[i].Value);
+                batch.SetString("the_string", stringPoints[i].Value);
                 batch.SetTimestamp("the_ts", timestampPoints[i].Value);
             }
             return batch;
@@ -107,6 +127,7 @@ namespace Quasardb.Tests.Cluster
             QdbBlobPointCollection blobPoints,
             QdbDoublePointCollection doublePoints,
             QdbInt64PointCollection int64Points,
+            QdbStringPointCollection stringPoints,
             QdbTimestampPointCollection timestampPoints)
         {
             var blobColumn = ts1.BlobColumns["the_blob"];
@@ -117,6 +138,9 @@ namespace Quasardb.Tests.Cluster
 
             var int64Column = ts2.Int64Columns["the_int64"];
             CollectionAssert.AreEqual(int64Points.ToArray(), int64Column.Points().ToArray());
+
+            var stringColumn = ts2.StringColumns["the_string"];
+            CollectionAssert.AreEqual(stringPoints.ToArray(), stringColumn.Points().ToArray());
 
             var timestampColumn = ts2.TimestampColumns["the_ts"];
             CollectionAssert.AreEqual(timestampPoints.ToArray(), timestampColumn.Points().ToArray());
@@ -149,12 +173,13 @@ namespace Quasardb.Tests.Cluster
             var blobData = CreateBlobPoints(startTime, 10);
             var doubleData = CreateDoublePoints(startTime, 10);
             var int64Data = CreateInt64Points(startTime, 10);
+            var stringData = CreateStringPoints(startTime, 10);
             var timestampData = CreateTimestampPoints(startTime, 10);
 
-            var batch = Insert(ts1, ts2, startTime, blobData, doubleData, int64Data, timestampData);
+            var batch = Insert(ts1, ts2, startTime, blobData, doubleData, int64Data, stringData, timestampData);
             batch.Push();
 
-            CheckTables(ts1, ts2, blobData, doubleData, int64Data, timestampData);
+            CheckTables(ts1, ts2, blobData, doubleData, int64Data, stringData, timestampData);
         }
 
         [TestMethod]
@@ -166,12 +191,13 @@ namespace Quasardb.Tests.Cluster
             var blobData = CreateBlobPoints(startTime, 10);
             var doubleData = CreateDoublePoints(startTime, 10);
             var int64Data = CreateInt64Points(startTime, 10);
+            var stringData = CreateStringPoints(startTime, 10);
             var timestampData = CreateTimestampPoints(startTime, 10);
 
-            var batch = Insert(ts1, ts2, startTime, blobData, doubleData, int64Data, timestampData);
+            var batch = Insert(ts1, ts2, startTime, blobData, doubleData, int64Data, stringData, timestampData);
             batch.PushFast();
 
-            CheckTables(ts1, ts2, blobData, doubleData, int64Data, timestampData);
+            CheckTables(ts1, ts2, blobData, doubleData, int64Data, stringData, timestampData);
         }
 
         [TestMethod]
@@ -183,16 +209,17 @@ namespace Quasardb.Tests.Cluster
             var blobData = CreateBlobPoints(startTime, 10);
             var doubleData = CreateDoublePoints(startTime, 10);
             var int64Data = CreateInt64Points(startTime, 10);
+            var stringData = CreateStringPoints(startTime, 10);
             var timestampData = CreateTimestampPoints(startTime, 10);
 
-            var batch = Insert(ts1, ts2, startTime, blobData, doubleData, int64Data, timestampData);
+            var batch = Insert(ts1, ts2, startTime, blobData, doubleData, int64Data, stringData, timestampData);
             batch.PushAsync();
 
             // Wait for push_async to complete
             // Ideally we could be able to get the proper flush interval
             Thread.Sleep(8 * 1000);
 
-            CheckTables(ts1, ts2, blobData, doubleData, int64Data, timestampData);
+            CheckTables(ts1, ts2, blobData, doubleData, int64Data, stringData, timestampData);
         }
     }
 }

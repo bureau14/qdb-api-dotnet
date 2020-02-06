@@ -23,11 +23,13 @@ namespace Quasardb.Tests.Entry.Table
             ts.Create(new QdbColumnDefinition[] {
                 new QdbBlobColumnDefinition("the_blob"),
                 new QdbDoubleColumnDefinition("the_double"),
-                new QdbInt64ColumnDefinition("the_int64")
+                new QdbInt64ColumnDefinition("the_int64"),
+                new QdbStringColumnDefinition("the_string")
             });
             ts.BlobColumns["the_blob"].Insert(new QdbBlobPoint(_timestamps[0], Encoding.UTF8.GetBytes("Hello World!")));
             ts.DoubleColumns["the_double"].Insert(new QdbDoublePoint(_timestamps[1], 42));
             ts.Int64Columns["the_int64"].Insert(new QdbInt64Point(_timestamps[2], 666));
+            ts.StringColumns["the_string"].Insert(new QdbStringPoint(_timestamps[0], "Hello World!"));
             return ts;
         }
 
