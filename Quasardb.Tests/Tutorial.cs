@@ -40,6 +40,10 @@ namespace Quasardb.Tests.Tutorial
             // batch-insert-start
             // We initialize a writer our batch writer.
             var writer = ts.Writer();
+            // Alternatively we could select specific columns
+            // var writer = ts.Writer(new QdbColumnDefinition[]{
+            //    new QdbDoubleColumnDefinition("open")
+            //});
 
             // Insert the first row: to start a new row, we must provide it with a mandatory
             // timestamp that all values for this row will share. QuasarDB will use this timestamp
