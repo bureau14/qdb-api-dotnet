@@ -61,6 +61,7 @@ namespace Quasardb.Native
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error qdb_get_last_error(
+            [In] qdb_handle handle,
             [Out] out qdb_error error,
             [Out] out qdb_sized_string message);
 

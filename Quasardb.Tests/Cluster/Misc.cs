@@ -142,11 +142,12 @@ namespace Quasardb.Tests.Cluster
         public void GetLastErrorForInvalidQuery() {
             try
             {
-                QdbTestCluster.Instance.Query("a non query");
+                QdbTestCluster.Instance.SetCompression(Quasardb.QdbCompression.Best);
             }
-            catch (QdbQueryException)
+            catch (QdbRemoteSystemException)
             {
-                Assert.AreEqual("at qdb_query: The provided query is invalid.", QdbTestCluster.Instance.GetLastError());
+                Assert.AreEqual(
+                    "at qdb_option_set_compression: The requested operation is not yet available.", QdbTestCluster.Instance.GetLastError());
             }
         }
     }

@@ -85,7 +85,7 @@ namespace Quasardb
         {
             qdb_error error;
             qdb_sized_string message;
-            qdb_api.qdb_get_last_error(out error, out message);
+            qdb_api.qdb_get_last_error(_handle, out error, out message);
             return message.ToString();
         }
 
