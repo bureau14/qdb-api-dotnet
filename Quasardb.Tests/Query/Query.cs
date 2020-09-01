@@ -197,7 +197,7 @@ namespace Quasardb.Tests.Query
         }
 
         [TestMethod]
-        public void ReturnsEmptyResultWhenDeleteStatement()
+        public void ReturnsEmptyResultWhenNoResultsAreAvailable()
         {
             QdbTable ts = CreateTable();
             try
