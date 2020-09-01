@@ -197,6 +197,22 @@ namespace Quasardb.Tests.Query
         }
 
         [TestMethod]
+        public void ReturnsEmptyResultWhenDeleteStatement()
+        {
+            QdbTable ts = CreateTable();
+            try
+            {
+                var results = _cluster.Query("DROP TABLE " + ts.Alias);
+
+                var rows = results.Rows;
+                Assert.AreEqual(0, rows.Count);
+            }
+            finally
+            {
+            }
+        }
+
+        [TestMethod]
         public void ReturnsInsertedDataWithStarSelect()
         {
             var startTime = DateTime.Now;
