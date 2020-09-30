@@ -49,15 +49,15 @@ namespace Quasardb.Native
     [StructLayout(LayoutKind.Sequential)]
     public struct qdb_perf_measurement
     {
-        qdb_perf_label label;
-        qdb_time_t elapsed;
+        public qdb_perf_label label;
+        public qdb_time_t elapsed;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public unsafe struct qdb_perf_profile
     {
-        qdb_sized_string name;
-        qdb_perf_measurement* measurements;
-        qdb_size_t count;
+        public qdb_sized_string name;
+        public qdb_perf_measurement* measurements;
+        public qdb_size_t count;
     }
 }
