@@ -9,10 +9,10 @@ namespace Quasardb.Tests.Cluster
         private readonly QdbCluster _cluster = QdbTestCluster.Instance;
 
         [TestMethod]
-        [ExpectedException(typeof(QdbException))]
         public void DisabledByDefault()
         {
-            _cluster.GetPerformanceTraces();
+            var traces = _cluster.GetPerformanceTraces();
+            Assert.AreEqual(0, traces.Length);
         }
 
         [TestMethod]
