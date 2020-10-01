@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Quasardb.Exceptions;
 
 namespace Quasardb.Tests.Cluster
 {
@@ -8,27 +9,31 @@ namespace Quasardb.Tests.Cluster
         private readonly QdbCluster _cluster = QdbTestCluster.Instance;
 
         [TestMethod]
-        public void ReturnNoLabelsByDefault()
+        [ExpectedException(typeof(QdbException))]
+        public void DisabledByDefault()
         {
-            _cluster.Integer("quarante-deux").Put(42);
-            var traces = _cluster.GetPerformanceTraces();
-            Assert.AreEqual(0, traces.Length);
+            _cluster.GetPerformanceTraces();
         }
 
         [TestMethod]
         public void ReturnNoLabelsWhenEnabled()
         {
             _cluster.EnablePerformanceTraces();
+
             var traces = _cluster.GetPerformanceTraces();
             Assert.AreEqual(0, traces.Length);
+
+            _cluster.DisablePerformanceTraces();
         }
 
         [TestMethod]
         public void ReturnWriteEntryLabels()
         {
-            _cluster.EnablePerformanceTraces();
+            
+            var key = _cluster.Integer("quarante-deux");
 
-            _cluster.Integer("quarante-deux").Put(42);
+            _cluster.EnablePerformanceTraces();
+            key.Put(42);
 
             var traces = _cluster.GetPerformanceTraces();
             Assert.AreEqual(1, traces.Length);
@@ -40,16 +45,19 @@ namespace Quasardb.Tests.Cluster
             Assert.AreEqual("eik", traces[0].measures[3].label);
             Assert.AreEqual("boo", traces[0].measures[4].label);
             Assert.AreEqual("oh", traces[0].measures[5].label);
+
+            _cluster.DisablePerformanceTraces();
+            key.Remove();
         }
 
         [TestMethod]
         public void ReturnReadEntryLabels()
         {
-            _cluster.Integer("quarante-deux").Put(42);
+            var key = _cluster.Integer("quarante-deux");
+            key.Put(42);
 
             _cluster.EnablePerformanceTraces();
-
-            _cluster.Integer("quarante-deux").Get();
+            key.Get();
 
             var traces = _cluster.GetPerformanceTraces();
             Assert.AreEqual(1, traces.Length);
@@ -61,6 +69,9 @@ namespace Quasardb.Tests.Cluster
             Assert.AreEqual("eik", traces[0].measures[3].label);
             Assert.AreEqual("boo", traces[0].measures[4].label);
             Assert.AreEqual("oh", traces[0].measures[5].label);
+            
+            _cluster.DisablePerformanceTraces();
+            key.Remove();
         }
     }
 }
