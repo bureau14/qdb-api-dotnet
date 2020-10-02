@@ -53,17 +53,17 @@ namespace Quasardb.Tests.Cluster
                     "deserialization_starts",
                     "deserialization_ends",
                     "entering_chord",
-                    "processing_starts",
                     "dispatch",
-                    "dispatch1",
-                    "dispatch2",
-                    "dispatch3",
-                    "serialization_starts",
-                    "serialization_ends",
-                    "processing_ends",
-                    "replying",
-                    "replied",
-                    "replied"
+                    "deserialization_starts",
+                    "deserialization_ends",
+                    "processing_starts",
+                    "entry_trimming_starts",
+                    "entry_trimming_ends",
+                    "content_writing_starts",
+                    "content_writing_ends",
+                    "entry_writing_starts",
+                    "entry_writing_ends",
+                    "processing_ends"
                 }, labels);
                 
                 traces = _cluster.GetPerformanceTraces();
@@ -93,20 +93,18 @@ namespace Quasardb.Tests.Cluster
                 Assert.AreEqual("common.get", trace.name);
 
                 var labels = trace.measures.Select(m => m.label).ToArray();
-                var list = labels.Aggregate((s1, s2) => s1 + "," + s2);
-                Assert.AreEqual("boop", list);
                 CollectionAssert.AreEqual(new string[]{
                     "received",
                     "deserialization_starts",
                     "deserialization_ends",
                     "entering_chord",
-                    "processing_starts",
                     "dispatch",
-                    "serialization_starts",
-                    "serialization_ends",
-                    "processing_ends",
-                    "replying",
-                    "replied"
+                    "deserialization_starts",
+                    "deserialization_ends",
+                    "processing_starts",
+                    "content_reading_starts",
+                    "content_reading_ends",
+                    "processing_ends"
                 }, labels);
                 
                 traces = _cluster.GetPerformanceTraces();
