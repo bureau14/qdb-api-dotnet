@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Quasardb.Exceptions;
+using System.Linq;
 
 namespace Quasardb.Tests.Cluster
 {
@@ -42,12 +42,23 @@ namespace Quasardb.Tests.Cluster
                 var traces = _cluster.GetPerformanceTraces();
                 Assert.AreEqual(1, traces.Length);
 
+                var trace = traces[0];
                 Assert.AreEqual("integer.put", traces[0].name);
-                Assert.AreEqual("qdb_pl_received", traces[0].measures[0].label);
-                Assert.AreEqual("qdb_pl_deserialization_starts", traces[0].measures[1].label);
-                Assert.AreEqual("qdb_pl_deserialization_ends", traces[0].measures[3].label);
-                Assert.AreEqual("boo", traces[0].measures[4].label);
-                Assert.AreEqual("oh", traces[0].measures[5].label);
+                
+                var labels = trace.measures.Select(m => m.label).ToArray();
+                CollectionAssert.AreEqual(new string[]{
+                    "received",
+                    "deserialization_starts",
+                    "deserialization_ends",
+                    "entering_chord",
+                    "processing_starts",
+                    "dispatch",
+                    "serialization_starts",
+                    "serialization_ends",
+                    "processing_ends",
+                    "replying",
+                    "replied"
+                }, labels);
                 
                 traces = _cluster.GetPerformanceTraces();
                 Assert.AreEqual(0, traces.Length);
@@ -72,12 +83,23 @@ namespace Quasardb.Tests.Cluster
                 var traces = _cluster.GetPerformanceTraces();
                 Assert.AreEqual(1, traces.Length);
 
-                Assert.AreEqual("common.get", traces[0].name);
-                Assert.AreEqual("qdb_pl_received", traces[0].measures[0].label);
-                Assert.AreEqual("qdb_pl_deserialization_starts", traces[0].measures[1].label);
-                Assert.AreEqual("qdb_pl_deserialization_ends", traces[0].measures[3].label);
-                Assert.AreEqual("boo", traces[0].measures[4].label);
-                Assert.AreEqual("oh", traces[0].measures[5].label);
+                var trace = traces[0];
+                Assert.AreEqual("common.get", trace.name);
+
+                var labels = trace.measures.Select(m => m.label).ToArray();
+                CollectionAssert.AreEqual(new string[]{
+                    "received",
+                    "deserialization_starts",
+                    "deserialization_ends",
+                    "entering_chord",
+                    "processing_starts",
+                    "dispatch",
+                    "serialization_starts",
+                    "serialization_ends",
+                    "processing_ends",
+                    "replying",
+                    "replied"
+                }, labels);
                 
                 traces = _cluster.GetPerformanceTraces();
                 Assert.AreEqual(0, traces.Length);
