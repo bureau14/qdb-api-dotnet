@@ -318,20 +318,5 @@ namespace Quasardb
             var error = qdb_api.qdb_perf_clear_all_profiles(_handle);
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
-
-        /// <summary>
-        /// Returns a JSON string of the server's configuration.
-        /// </summary>
-        public unsafe string GetConfiguration(string uri) {
-            IntPtr config_data;
-            qdb_sized_string raw_config;
-            var error = qdb_api.qdb_node_config(_handle, uri, out config_data, out raw_config.length);
-            QdbExceptionThrower.ThrowIfNeeded(error);
-
-            raw_config.data = (char*)config_data;
-            var config = raw_config.ToString();
-            qdb_api.qdb_release(_handle, (IntPtr)raw_config.data);
-            return config;
-        }
     }
 }

@@ -107,17 +107,6 @@ namespace Quasardb.Native
 
         #endregion
 
-        #region Node
-
-        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
-        public static extern qdb_error qdb_node_config(
-            [In] qdb_handle handle,
-            [In] [MarshalAs(ALIAS_TYPE)] string uri,
-            [Out] out pointer_t content,
-            [Out] out size_t content_length);
-
-        #endregion
-
         #region Functions common to all entries
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]

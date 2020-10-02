@@ -18,8 +18,6 @@ namespace Quasardb.Tests.Cluster
         [TestMethod]
         public void ReturnNoLabelsWhenEnabled()
         {
-            System.Console.Write(_cluster.GetConfiguration("qdb://127.0.0.1:2836"));
-
             _cluster.EnablePerformanceTraces();
 
             var traces = _cluster.GetPerformanceTraces();
@@ -40,7 +38,7 @@ namespace Quasardb.Tests.Cluster
             var traces = _cluster.GetPerformanceTraces();
             Assert.AreEqual(1, traces.Length);
 
-            Assert.AreEqual("beep", traces[0].name);
+            Assert.AreEqual("integer.put", traces[0].name);
             Assert.AreEqual("yo", traces[0].measures[0].label);
             Assert.AreEqual("amigo", traces[0].measures[1].label);
             Assert.AreEqual("wassup", traces[0].measures[2].label);
@@ -64,7 +62,7 @@ namespace Quasardb.Tests.Cluster
             var traces = _cluster.GetPerformanceTraces();
             Assert.AreEqual(1, traces.Length);
 
-            Assert.AreEqual("beep", traces[0].name);
+            Assert.AreEqual("integer.get", traces[0].name);
             Assert.AreEqual("yo", traces[0].measures[0].label);
             Assert.AreEqual("amigo", traces[0].measures[1].label);
             Assert.AreEqual("wassup", traces[0].measures[2].label);
