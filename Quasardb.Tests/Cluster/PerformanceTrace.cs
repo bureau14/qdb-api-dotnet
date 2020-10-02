@@ -19,35 +19,42 @@ namespace Quasardb.Tests.Cluster
         public void ReturnNoLabelsWhenEnabled()
         {
             _cluster.EnablePerformanceTraces();
-
-            var traces = _cluster.GetPerformanceTraces();
-            Assert.AreEqual(0, traces.Length);
-
-            _cluster.DisablePerformanceTraces();
+            try
+            {
+                var traces = _cluster.GetPerformanceTraces();
+                Assert.AreEqual(0, traces.Length);
+            }
+            finally
+            {
+                _cluster.DisablePerformanceTraces();
+            }
         }
 
         [TestMethod]
         public void ReturnWriteEntryLabels()
         {
-            
             var key = _cluster.Integer("quarante-deux");
 
             _cluster.EnablePerformanceTraces();
             key.Put(42);
+            try
+            {
+                var traces = _cluster.GetPerformanceTraces();
+                Assert.AreEqual(1, traces.Length);
 
-            var traces = _cluster.GetPerformanceTraces();
-            Assert.AreEqual(1, traces.Length);
-
-            Assert.AreEqual("integer.put", traces[0].name);
-            Assert.AreEqual("yo", traces[0].measures[0].label);
-            Assert.AreEqual("amigo", traces[0].measures[1].label);
-            Assert.AreEqual("wassup", traces[0].measures[2].label);
-            Assert.AreEqual("eik", traces[0].measures[3].label);
-            Assert.AreEqual("boo", traces[0].measures[4].label);
-            Assert.AreEqual("oh", traces[0].measures[5].label);
-
-            _cluster.DisablePerformanceTraces();
-            key.Remove();
+                Assert.AreEqual("integer.put", traces[0].name);
+                Assert.AreEqual("yo", traces[0].measures[0].label);
+                Assert.AreEqual("amigo", traces[0].measures[1].label);
+                Assert.AreEqual("wassup", traces[0].measures[2].label);
+                Assert.AreEqual("eik", traces[0].measures[3].label);
+                Assert.AreEqual("boo", traces[0].measures[4].label);
+                Assert.AreEqual("oh", traces[0].measures[5].label);
+            }
+            finally
+            {
+                _cluster.DisablePerformanceTraces();
+                key.Remove();
+            }
         }
 
         [TestMethod]
@@ -55,23 +62,27 @@ namespace Quasardb.Tests.Cluster
         {
             var key = _cluster.Integer("quarante-deux");
             key.Put(42);
+            try
+            {
+                _cluster.EnablePerformanceTraces();
+                key.Get();
 
-            _cluster.EnablePerformanceTraces();
-            key.Get();
+                var traces = _cluster.GetPerformanceTraces();
+                Assert.AreEqual(1, traces.Length);
 
-            var traces = _cluster.GetPerformanceTraces();
-            Assert.AreEqual(1, traces.Length);
-
-            Assert.AreEqual("integer.get", traces[0].name);
-            Assert.AreEqual("yo", traces[0].measures[0].label);
-            Assert.AreEqual("amigo", traces[0].measures[1].label);
-            Assert.AreEqual("wassup", traces[0].measures[2].label);
-            Assert.AreEqual("eik", traces[0].measures[3].label);
-            Assert.AreEqual("boo", traces[0].measures[4].label);
-            Assert.AreEqual("oh", traces[0].measures[5].label);
-            
-            _cluster.DisablePerformanceTraces();
-            key.Remove();
+                Assert.AreEqual("integer.get", traces[0].name);
+                Assert.AreEqual("yo", traces[0].measures[0].label);
+                Assert.AreEqual("amigo", traces[0].measures[1].label);
+                Assert.AreEqual("wassup", traces[0].measures[2].label);
+                Assert.AreEqual("eik", traces[0].measures[3].label);
+                Assert.AreEqual("boo", traces[0].measures[4].label);
+                Assert.AreEqual("oh", traces[0].measures[5].label);
+            }
+            finally
+            {
+                _cluster.DisablePerformanceTraces();
+                key.Remove();
+            }
         }
     }
 }
