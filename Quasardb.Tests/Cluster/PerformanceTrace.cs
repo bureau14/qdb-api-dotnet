@@ -44,9 +44,9 @@ namespace Quasardb.Tests.Cluster
 
                 Assert.AreEqual("integer.put", traces[0].name);
                 Assert.AreEqual("qdb_pl_received", traces[0].measures[0].label);
-                Assert.AreEqual("amigo", traces[0].measures[1].label);
+                Assert.AreEqual("qdb_pl_deserialization_starts", traces[0].measures[1].label);
                 Assert.AreEqual("wassup", traces[0].measures[2].label);
-                Assert.AreEqual("eik", traces[0].measures[3].label);
+                Assert.AreEqual("qdb_pl_deserialization_ends", traces[0].measures[3].label);
                 Assert.AreEqual("boo", traces[0].measures[4].label);
                 Assert.AreEqual("oh", traces[0].measures[5].label);
                 
@@ -75,9 +75,9 @@ namespace Quasardb.Tests.Cluster
 
                 Assert.AreEqual("common.get", traces[0].name);
                 Assert.AreEqual("qdb_pl_received", traces[0].measures[0].label);
-                Assert.AreEqual("amigo", traces[0].measures[1].label);
+                Assert.AreEqual("qdb_pl_deserialization_starts", traces[0].measures[1].label);
                 Assert.AreEqual("wassup", traces[0].measures[2].label);
-                Assert.AreEqual("eik", traces[0].measures[3].label);
+                Assert.AreEqual("qdb_pl_deserialization_ends", traces[0].measures[3].label);
                 Assert.AreEqual("boo", traces[0].measures[4].label);
                 Assert.AreEqual("oh", traces[0].measures[5].label);
                 
