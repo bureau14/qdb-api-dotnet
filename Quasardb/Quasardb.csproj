@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -118,6 +118,7 @@
     <Compile Include="QdbEntrySelector.cs" />
     <Compile Include="QdbExpirableEntry.cs" />
     <Compile Include="QdbInteger.cs" />
+    <Compile Include="QdbPerformanceTrace.cs" />
     <Compile Include="QdbTag.cs" />
     <Compile Include="QdbBlobBuffer.cs" />
     <Compile Include="Table\Helpers.cs" />
