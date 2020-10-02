@@ -46,6 +46,7 @@ namespace Quasardb.Tests.Cluster
                 Assert.AreEqual("integer.put", traces[0].name);
                 
                 var labels = trace.measures.Select(m => m.label).ToArray();
+                Assert.AreEqual(12, labels.Length);
                 CollectionAssert.AreEqual(new string[]{
                     "received",
                     "deserialization_starts",
@@ -57,6 +58,7 @@ namespace Quasardb.Tests.Cluster
                     "serialization_ends",
                     "processing_ends",
                     "replying",
+                    "replied",
                     "replied"
                 }, labels);
                 
@@ -87,6 +89,7 @@ namespace Quasardb.Tests.Cluster
                 Assert.AreEqual("common.get", trace.name);
 
                 var labels = trace.measures.Select(m => m.label).ToArray();
+                Assert.AreEqual(10, labels.Length);
                 CollectionAssert.AreEqual(new string[]{
                     "received",
                     "deserialization_starts",
@@ -97,7 +100,6 @@ namespace Quasardb.Tests.Cluster
                     "serialization_starts",
                     "serialization_ends",
                     "processing_ends",
-                    "replying",
                     "replied"
                 }, labels);
                 
