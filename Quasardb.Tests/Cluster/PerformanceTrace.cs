@@ -18,6 +18,8 @@ namespace Quasardb.Tests.Cluster
         [TestMethod]
         public void ReturnNoLabelsWhenEnabled()
         {
+            System.Console.Write(_cluster.GetConfiguration("qdb://127.0.0.1:2836"));
+
             _cluster.EnablePerformanceTraces();
 
             var traces = _cluster.GetPerformanceTraces();
