@@ -46,8 +46,6 @@ namespace Quasardb.Tests.Cluster
                 Assert.AreEqual("integer.put", traces[0].name);
                 
                 var labels = trace.measures.Select(m => m.label).ToArray();
-                var list = labels.Aggregate((s1, s2) => s1 + "," + s2);
-                Assert.AreEqual("boop", list);
                 CollectionAssert.AreEqual(new string[]{
                     "received",
                     "deserialization_starts",
