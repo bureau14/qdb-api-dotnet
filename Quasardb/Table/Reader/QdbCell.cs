@@ -96,7 +96,7 @@ namespace Quasardb.TimeSeries.Reader
                 if (err == qdb_error.qdb_e_element_not_found)
                     return null;
                 QdbExceptionThrower.ThrowIfNeeded(err, alias: _alias, column: _column.name);
-                return Helper.GetBytes((int)length, content);
+                return Helper.GetBytes(content, (int)length);
             }
         }
 
@@ -138,7 +138,7 @@ namespace Quasardb.TimeSeries.Reader
                     return null;
                 QdbExceptionThrower.ThrowIfNeeded(err, alias: _alias, column: _column.name);
                 // TODO: limited to 32-bit
-                var value = Helper.GetBytes((int)length, content);
+                var value = Helper.GetBytes(content, (int)length);
                 if (value == null)
                     return null;
                 return System.Text.Encoding.UTF8.GetString(value);

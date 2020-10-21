@@ -11,10 +11,10 @@ namespace Quasardb
         /// <summary>
         /// Safely Get Bytes
         /// </summary>
-        public static byte[] GetBytes(int size, IntPtr Pointer)
+        public static byte[] GetBytes(IntPtr Pointer, int size)
         {
             // CAUTION: limited to 32 bits!!!
-            if (size <= 0)
+            if (size == 0)
                 return null;
             if (Pointer == null)
                 return null;

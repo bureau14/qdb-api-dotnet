@@ -11,7 +11,7 @@ namespace Quasardb
 
         public byte[] GetBytes()
         {
-            return Helper.GetBytes((int)Size, Pointer);
+            return Helper.GetBytes(Pointer, (int)Size);
         }
     }
 }

@@ -86,12 +86,12 @@ namespace Quasardb.Query
 
         private unsafe byte[] PayloadToByteArray(qdb_point_result_blob_payload payload) 
         {
-            return Helper.GetBytes((int)payload.content_size, new IntPtr(payload.content));
+            return Helper.GetBytes(new IntPtr(payload.content), (int)payload.content_size);
         }
 
         private unsafe byte[] PayloadToByteArray(qdb_point_result_string_payload payload) 
         {
-            return Helper.GetBytes((int)payload.content_size, new IntPtr(payload.content));
+            return Helper.GetBytes(new IntPtr(payload.content), (int)payload.content_size);
         }
 
         /// <summary>
