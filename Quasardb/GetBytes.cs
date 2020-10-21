@@ -16,7 +16,7 @@ namespace Quasardb
             // CAUTION: limited to 32 bits!!!
             if (size == 0)
                 return null;
-            if (Pointer == null)
+            if (Pointer == IntPtr.Zero)
                 return null;
             var buffer = new byte[size];
             Marshal.Copy(Pointer, buffer, 0, size);

@@ -123,6 +123,8 @@ namespace Quasardb.Query
                 if (Type != QdbValueType.String)
                     throw new InvalidCastException();
                 var content = PayloadToByteArray(_result.string_payload);
+                if (content == null)
+                    return null;
                 return System.Text.Encoding.UTF8.GetString(content);
             }
         }
