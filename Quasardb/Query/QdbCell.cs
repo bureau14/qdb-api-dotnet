@@ -86,26 +86,12 @@ namespace Quasardb.Query
 
         private unsafe byte[] PayloadToByteArray(qdb_point_result_blob_payload payload) 
         {
-            if ((int)payload.content_size <= 0)
-                return null;
-            if (payload.content == null)
-                return null;
-            // TODO: limited to 32-bit
-            var content = new byte[(int)payload.content_size];
-            Marshal.Copy(new IntPtr(payload.content), content, 0, (int)payload.content_size);
-            return content;
+            return Helper.GetBytes((int)payload.content_size, new IntPtr(payload.content));
         }
 
         private unsafe byte[] PayloadToByteArray(qdb_point_result_string_payload payload) 
         {
-            if ((int)payload.content_size <= 0)
-                return null;
-            if (payload.content == null)
-                return null;
-            // TODO: limited to 32-bit
-            var content = new byte[(int)payload.content_size];
-            Marshal.Copy(new IntPtr(payload.content), content, 0, (int)payload.content_size);
-            return content;
+            return Helper.GetBytes((int)payload.content_size, new IntPtr(payload.content));
         }
 
         /// <summary>
@@ -137,8 +123,6 @@ namespace Quasardb.Query
                 if (Type != QdbValueType.String)
                     throw new InvalidCastException();
                 var content = PayloadToByteArray(_result.string_payload);
-                if (content == null)
-                    return null;
                 return System.Text.Encoding.UTF8.GetString(content);
             }
         }

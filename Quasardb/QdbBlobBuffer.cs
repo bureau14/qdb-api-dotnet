@@ -11,11 +11,7 @@ namespace Quasardb
 
         public byte[] GetBytes()
         {
-            // CAUTION: limited to 32 bits!!!
-            int size = (int)Size;
-            var buffer = new byte[size];
-            Marshal.Copy(Pointer, buffer, 0, size);
-            return buffer;
+            return Helper.GetBytes((int)Size, Pointer);
         }
     }
 }
