@@ -95,6 +95,10 @@ namespace Quasardb.TimeSeries.Reader
                     out pointer_t content, out size_t length);
                 if (err == qdb_error.qdb_e_element_not_found)
                     return null;
+                if ((int)length <= 0)
+                    return null;
+                if (content == null)
+                    return null;
                 QdbExceptionThrower.ThrowIfNeeded(err, alias: _alias, column: _column.name);
                 // TODO: limited to 32-bit
                 var value = new byte[(int)length];
