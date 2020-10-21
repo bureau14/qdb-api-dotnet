@@ -88,6 +88,7 @@
     <Compile Include="Exceptions\System\QdbLocalSystemException.cs" />
     <Compile Include="Exceptions\System\QdbSystemException.cs" />
     <Compile Include="ExtensionMethodWithFramework2.cs" />
+    <Compile Include="GetBytes.cs" />
     <Compile Include="IVisitable.cs" />
     <Compile Include="Batch\IOperation.cs" />
     <Compile Include="QdbUnknownEntry.cs" />
