@@ -53,6 +53,8 @@ namespace Quasardb.TimeSeries.Reader
                         return Int64Value;
                     case QdbColumnType.String:
                         return StringValue;
+                    case QdbColumnType.Symbol:
+                        return SymbolValue;
                     case QdbColumnType.Timestamp:
                         return TimestampValue;
                 }
@@ -135,6 +137,30 @@ namespace Quasardb.TimeSeries.Reader
                     throw new InvalidCastException();
 
                 var err = qdb_api.qdb_ts_row_get_string_no_copy(
+                    _table, _index,
+                    out pointer_t content, out size_t length);
+                if (err == qdb_error.qdb_e_element_not_found)
+                    return null;
+                QdbExceptionThrower.ThrowIfNeeded(err, alias: _alias, column: _column.name);
+                // TODO: limited to 32-bit
+                var value = new byte[(int)length];
+                Marshal.Copy(content, value, 0, (int)length);
+                return System.Text.Encoding.UTF8.GetString(value);
+            }
+        }
+
+        /// <summary>
+        /// Gets the value.
+        /// </summary>
+        /// <exception cref="InvalidCastException">The value is not of type <see cref="QdbColumnType.Symbol" /> </exception>
+        public string SymbolValue
+        {
+            get
+            {
+                if (Type != QdbColumnType.Symbol)
+                    throw new InvalidCastException();
+
+                var err = qdb_api.qdb_ts_row_get_symbol_no_copy(
                     _table, _index,
                     out pointer_t content, out size_t length);
                 if (err == qdb_error.qdb_e_element_not_found)
