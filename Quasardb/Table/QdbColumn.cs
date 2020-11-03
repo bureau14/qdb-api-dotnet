@@ -19,6 +19,14 @@ namespace Quasardb.TimeSeries
             _aggregator = new QdbColumnAggregator(this);
         }
 
+        internal QdbColumn(QdbTable series, string name, string symtable)
+        {
+            Series = series;
+            Name = name;
+            Symtable = symtable;
+            _aggregator = new QdbColumnAggregator(this);
+        }
+
         /// <summary>
         /// The parent of the column
         /// </summary>
@@ -28,6 +36,11 @@ namespace Quasardb.TimeSeries
         /// The name of the column
         /// </summary>
         public string Name { get; }
+
+        /// <summary>
+        /// The symtable table name of the column
+        /// </summary>
+        public string Symtable { get; }
 
         internal qdb_handle Handle => Series.Handle;
 

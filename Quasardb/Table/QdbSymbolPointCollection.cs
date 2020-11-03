@@ -56,7 +56,7 @@ namespace Quasardb.TimeSeries
         public void Add(Point point)
         {
             GCHandle? pin;
-            Points.Add(point.ToNative(out pin));
+            Points.Add(point.ToSymbolNative(out pin));
             if (pin.HasValue)
                 _pins.Add(pin.Value);
         }

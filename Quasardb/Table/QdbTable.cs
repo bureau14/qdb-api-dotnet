@@ -26,21 +26,21 @@ namespace Quasardb.TimeSeries
             var handle = _series.Handle;
             var alias = _series.Alias;
 
-            using (var columns = new qdb_buffer<qdb_ts_column_info>(handle))
+            using (var columns = new qdb_buffer<qdb_ts_column_info_ex>(handle))
             {
-                var err = qdb_api.qdb_ts_list_columns(handle, alias, out columns.Pointer, out columns.Size);
+                var err = qdb_api.qdb_ts_list_columns_ex(handle, alias, out columns.Pointer, out columns.Size);
                 QdbExceptionThrower.ThrowIfNeeded(err, alias: alias);
 
                 foreach (var column in columns)
                 {
-                    yield return MakeColumn(column.type, column.name);
+                    yield return MakeColumn(column.type, column.name, column.symtable);
                 }
             }
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        QdbColumn MakeColumn(qdb_ts_column_type type, string name)
+        QdbColumn MakeColumn(qdb_ts_column_type type, string name, string symtable)
         {
             switch (type)
             {
@@ -52,6 +52,8 @@ namespace Quasardb.TimeSeries
                     return new QdbInt64Column(_series, name);
                 case qdb_ts_column_type.qdb_ts_column_timestamp:
                     return new QdbTimestampColumn(_series, name);
+                case qdb_ts_column_type.qdb_ts_column_symbol:
+                    return new QdbSymbolColumn(_series, name, symtable);
                 default:
                     return new QdbUnknownColumn(_series, name, type);
             }
@@ -183,6 +185,38 @@ namespace Quasardb.TimeSeries
     }
 
     /// <summary>
+    /// A collection of columns contains symbol point values.
+    /// </summary>
+    public class QdbSymbolColumnCollection : IEnumerable<QdbSymbolColumn>
+    {
+        internal readonly QdbTable _series;
+
+        internal QdbSymbolColumnCollection(QdbTable series)
+        {
+            _series = series;
+        }
+
+        /// <summary>
+        /// Gets the column with the specified name.
+        /// <warning>The symbol table is not fetched.</warning>
+        /// </summary>
+        /// <param name="name">The name of the column</param>
+        public QdbSymbolColumn this[string name] => new QdbSymbolColumn(_series, name, null);
+
+        /// <inheritdoc />
+        public IEnumerator<QdbSymbolColumn> GetEnumerator()
+        {
+            foreach (var col in new QdbColumnCollection(_series))
+            {
+                if (col is QdbSymbolColumn symbolColumn)
+                    yield return symbolColumn;
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    }
+
+    /// <summary>
     /// A collection of columns contains timestamp point values.
     /// </summary>
     public class QdbTimestampColumnCollection : IEnumerable<QdbTimestampColumn>
@@ -259,6 +293,11 @@ namespace Quasardb.TimeSeries
         public QdbTimestampColumnCollection TimestampColumns { get; }
 
         /// <summary>
+        /// The columns of the table that contains symbol point values.
+        /// </summary>
+        public QdbSymbolColumnCollection SymbolColumns { get; }
+
+        /// <summary>
         /// Returns the shard size of a table.
         /// </summary>
         public TimeSpan ShardSize
@@ -274,14 +313,14 @@ namespace Quasardb.TimeSeries
             }
         }
 
-        internal InteropableList<qdb_ts_column_info> GetColumnDefinitions()
+        internal InteropableList<qdb_ts_column_info_ex> GetColumnDefinitions()
         {
-            using (var columns = new qdb_buffer<qdb_ts_column_info>(Handle))
+            using (var columns = new qdb_buffer<qdb_ts_column_info_ex>(Handle))
             {
-                var err = qdb_api.qdb_ts_list_columns(Handle, Alias, out columns.Pointer, out columns.Size);
+                var err = qdb_api.qdb_ts_list_columns_ex(Handle, Alias, out columns.Pointer, out columns.Size);
                 QdbExceptionThrower.ThrowIfNeeded(err, alias: Alias);
 
-                var columnDefinitions = new InteropableList<qdb_ts_column_info>((int)columns.Size);
+                var columnDefinitions = new InteropableList<qdb_ts_column_info_ex>((int)columns.Size);
                 foreach (var def in columns)
                 {
                     columnDefinitions.Add(def);
@@ -338,18 +377,19 @@ namespace Quasardb.TimeSeries
         public void Create(TimeSpan shardSize, IEnumerable<QdbColumnDefinition> columnDefinitions)
         {
             var count = Helpers.GetCountOrDefault(columnDefinitions);
-            var columns = new InteropableList<qdb_ts_column_info>(count);
+            var columns = new InteropableList<qdb_ts_column_info_ex>(count);
 
             foreach (var def in columnDefinitions)
             {
-                columns.Add(new qdb_ts_column_info
+                columns.Add(new qdb_ts_column_info_ex
                 {
-                    name = def.Name,
-                    type = def.Type
+                    name     = def.Name,
+                    type     = def.Type,
+                    symtable = def.Symtable,
                 });
             }
 
-            var err = qdb_api.qdb_ts_create(
+            var err = qdb_api.qdb_ts_create_ex(
                 Handle, Alias,
                 (ulong)(shardSize.TotalMilliseconds *
                         (double)qdb_duration.qdb_d_millisecond),
@@ -375,14 +415,15 @@ namespace Quasardb.TimeSeries
         public void InsertColumns(IEnumerable<QdbColumnDefinition> columnDefinitions)
         {
             var count = Helpers.GetCountOrDefault(columnDefinitions);
-            var columns = new InteropableList<qdb_ts_column_info>(count);
+            var columns = new InteropableList<qdb_ts_column_info_ex>(count);
 
             foreach (var def in columnDefinitions)
             {
-                columns.Add(new qdb_ts_column_info
+                columns.Add(new qdb_ts_column_info_ex
                 {
-                    name = def.Name,
-                    type = def.Type
+                    name     = def.Name,
+                    type     = def.Type,
+                    symtable = def.Symtable,
                 });
             }
 
@@ -519,22 +560,30 @@ namespace Quasardb.TimeSeries
         /// <seealso cref="QdbTableReader"/>
         public QdbTableReader Reader(IEnumerable<QdbColumnDefinition> columnDefinitions, IEnumerable<QdbTimeInterval> intervals)
         {
-            var count = Helpers.GetCountOrDefault(columnDefinitions);
             InteropableList<qdb_ts_column_info> columns;
-
             if (columnDefinitions == null)
             {
-                columns = GetColumnDefinitions();
+                var defs = GetColumnDefinitions();
+                columns = new InteropableList<qdb_ts_column_info>((int)defs.Count);
+                foreach (var def in columnDefinitions)
+                {
+                    columns.Add(new qdb_ts_column_info
+                    {
+                        name = def.Name,
+                        type = def.Type,
+                    });
+                }
             }
             else
             {
+                var count = Helpers.GetCountOrDefault(columnDefinitions);
                 columns = new InteropableList<qdb_ts_column_info>(count);
                 foreach (var def in columnDefinitions)
                 {
                     columns.Add(new qdb_ts_column_info
                     {
                         name = def.Name,
-                        type = def.Type
+                        type = def.Type,
                     });
                 }
             }

@@ -12,7 +12,7 @@ namespace Quasardb.TimeSeries
     /// </summary>
     public sealed class QdbSymbolColumn : QdbColumn
     {
-        internal QdbSymbolColumn(QdbTable series, string name) : base(series, name)
+        internal QdbSymbolColumn(QdbTable series, string name, string symtable) : base(series, name, symtable)
         {
         }
 
