@@ -38,7 +38,7 @@ namespace Quasardb.TimeSeries
         public string Name { get; }
 
         /// <summary>
-        /// The symtable table name of the column
+        /// The symtable name of the column
         /// </summary>
         public string Symtable { get; }
 

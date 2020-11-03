@@ -259,6 +259,7 @@ namespace Quasardb.TimeSeries
             BlobColumns = new QdbBlobColumnCollection(this);
             Int64Columns = new QdbInt64ColumnCollection(this);
             StringColumns = new QdbStringColumnCollection(this);
+            SymbolColumns = new QdbSymbolColumnCollection(this);
             TimestampColumns = new QdbTimestampColumnCollection(this);
         }
 

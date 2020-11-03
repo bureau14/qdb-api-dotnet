@@ -201,6 +201,11 @@ namespace Quasardb.Tests.Cluster
             var timestampData = CreateTimestampPoints(startTime, 10);
             var symbolData    = CreateSymbolPoints(startTime, 10);
 
+            System.Console.WriteLine("ts1 null ? " + (ts1 != null));
+            System.Console.WriteLine("ts2 null ? " + (ts2 != null));
+            System.Console.WriteLine("blobData null ? " + (blobData != null));
+            System.Console.WriteLine("stringData null ? " + (stringData != null));
+
             var batch = Insert(ts1, ts2, startTime, blobData, doubleData, int64Data, stringData, timestampData, symbolData);
             batch.Push();
 
