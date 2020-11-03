@@ -39,9 +39,9 @@ namespace Quasardb.Tests.Entry.Table
             {
                 ts.InsertColumns(columns);
             }
-            catch (QdbException)
+            catch (QdbException e)
             {
-                Assert.Fail("Creating a table with a single column should not throw");
+                Assert.Fail("Creating a table with a single column should not throw: " + e.Message);
             }
         }
 
@@ -54,7 +54,8 @@ namespace Quasardb.Tests.Entry.Table
                 new QdbBlobColumnDefinition("Hello"),
                 new QdbDoubleColumnDefinition("World"),
                 new QdbBlobColumnDefinition("Comment"),
-                new QdbDoubleColumnDefinition("Value")};
+                new QdbDoubleColumnDefinition("Value"),
+                new QdbSymbolColumnDefinition("AAAAAH", "symtable")};
 
             ts.Create();
 
@@ -62,9 +63,9 @@ namespace Quasardb.Tests.Entry.Table
             {
                 ts.InsertColumns(columns);
             }
-            catch (QdbException)
+            catch (QdbException e)
             {
-                Assert.Fail("Creating a table with several column should not throw");
+                Assert.Fail("Creating a table with several column should not throw: " + e.Message);
             }
         }
 

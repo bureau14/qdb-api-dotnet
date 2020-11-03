@@ -558,19 +558,19 @@ namespace Quasardb.TimeSeries
         /// <exception cref="QdbInvalidArgumentException">If interval list is empty.</exception>
         /// <returns>A <see cref="QdbTableReader"/> for reading from this table</returns>
         /// <seealso cref="QdbTableReader"/>
-        public QdbTableReader Reader(IEnumerable<QdbColumnDefinition> columnDefinitions, IEnumerable<QdbTimeInterval> intervals)
+        public QdbTableReader xReader(IEnumerable<QdbColumnDefinition> columnDefinitions, IEnumerable<QdbTimeInterval> intervals)
         {
             InteropableList<qdb_ts_column_info> columns;
             if (columnDefinitions == null)
             {
                 var defs = GetColumnDefinitions();
                 columns = new InteropableList<qdb_ts_column_info>((int)defs.Count);
-                foreach (var def in columnDefinitions)
+                foreach (var def in defs)
                 {
                     columns.Add(new qdb_ts_column_info
                     {
-                        name = def.Name,
-                        type = def.Type,
+                        name = def.name,
+                        type = def.type,
                     });
                 }
             }
