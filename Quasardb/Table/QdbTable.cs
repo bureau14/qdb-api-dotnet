@@ -427,7 +427,7 @@ namespace Quasardb.TimeSeries
                 });
             }
 
-            var err = qdb_api.qdb_ts_insert_columns(
+            var err = qdb_api.qdb_ts_insert_columns_ex(
                 Handle, Alias,
                 columns.Buffer, columns.Count);
             QdbExceptionThrower.ThrowIfNeeded(err, alias: Alias);

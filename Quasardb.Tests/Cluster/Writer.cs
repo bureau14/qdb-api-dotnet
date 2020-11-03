@@ -125,7 +125,7 @@ namespace Quasardb.Tests.Cluster
             var batch = _cluster.Writer(new QdbBatchColumnDefinition[]{
                 new QdbBatchColumnDefinition(ts1.Alias, "the_blob"),
                 new QdbBatchColumnDefinition(ts1.Alias, "the_double"),
-                new QdbBatchColumnDefinition(ts2.Alias, "the_int64"),
+                new QdbBatchColumnDefinition(ts1.Alias, "the_int64"),
                 new QdbBatchColumnDefinition(ts2.Alias, "the_string"),
                 new QdbBatchColumnDefinition(ts2.Alias, "the_ts"),
                 new QdbBatchColumnDefinition(ts2.Alias, "the_symbol"),
@@ -157,7 +157,7 @@ namespace Quasardb.Tests.Cluster
             var doubleColumn = ts1.DoubleColumns["the_double"];
             CollectionAssert.AreEqual(doublePoints.ToArray(), doubleColumn.Points().ToArray());
 
-            var int64Column = ts2.Int64Columns["the_int64"];
+            var int64Column = ts1.Int64Columns["the_int64"];
             CollectionAssert.AreEqual(int64Points.ToArray(), int64Column.Points().ToArray());
 
             var stringColumn = ts2.StringColumns["the_string"];
