@@ -151,6 +151,11 @@ namespace Quasardb.Tests.Cluster
             QdbTimestampPointCollection timestampPoints,
             QdbSymbolPointCollection symbolPoints)
         {
+            System.Console.WriteLine("ts1     != null ? " + (ts1 != null));
+            System.Console.WriteLine("ts2     != null ? " + (ts2 != null));
+            System.Console.WriteLine("blobs   != null ? " + (blobPoints != null));
+            System.Console.WriteLine("symbols != null ? " + (symbolPoints != null));
+
             var blobColumn = ts1.BlobColumns["the_blob"];
             CollectionAssert.AreEqual(blobPoints.ToArray(), blobColumn.Points().ToArray());
 
@@ -200,11 +205,6 @@ namespace Quasardb.Tests.Cluster
             var stringData    = CreateStringPoints(startTime, 10);
             var timestampData = CreateTimestampPoints(startTime, 10);
             var symbolData    = CreateSymbolPoints(startTime, 10);
-
-            System.Console.WriteLine("ts1 null ? " + (ts1 != null));
-            System.Console.WriteLine("ts2 null ? " + (ts2 != null));
-            System.Console.WriteLine("blobData null ? " + (blobData != null));
-            System.Console.WriteLine("stringData null ? " + (stringData != null));
 
             var batch = Insert(ts1, ts2, startTime, blobData, doubleData, int64Data, stringData, timestampData, symbolData);
             batch.Push();
