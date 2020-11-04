@@ -201,7 +201,12 @@ namespace Quasardb.TimeSeries
                 ranges.Add(interval.ToNative());
             using (var points = new qdb_buffer<qdb_ts_symbol_point>(Handle))
             {
-                System.Console.WriteLine("get_ranges(" + Series.Alias + ", " + Name + ", " + ranges.Buffer.ToString());
+                System.Console.Write("get_ranges(" + Series.Alias + ", " + Name + ", { ");
+                foreach (var range in ranges) {
+                    System.Console.Write(range.begin.tv_sec + "." + range.begin.tv_nsec + " -> ");
+                    System.Console.Write(range.end.tv_sec + "." + range.end.tv_nsec + ", ");
+                }
+                System.Console.WriteLine(" }");
                 var error = qdb_api.qdb_ts_symbol_get_ranges(Handle, Series.Alias, Name, ranges.Buffer, ranges.Count, out points.Pointer, out points.Size);
                 QdbExceptionThrower.ThrowIfNeeded(error, alias: Series.Alias, column: Name);
                 foreach (var pt in points)
