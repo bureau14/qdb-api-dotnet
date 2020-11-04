@@ -201,6 +201,7 @@ namespace Quasardb.TimeSeries
                 ranges.Add(interval.ToNative());
             using (var points = new qdb_buffer<qdb_ts_symbol_point>(Handle))
             {
+                System.Console.WriteLine("get_ranges(" + Series.Alias + ", " + Name + ", " + ranges.Buffer.ToString());
                 var error = qdb_api.qdb_ts_symbol_get_ranges(Handle, Series.Alias, Name, ranges.Buffer, ranges.Count, out points.Pointer, out points.Size);
                 QdbExceptionThrower.ThrowIfNeeded(error, alias: Series.Alias, column: Name);
                 foreach (var pt in points)
