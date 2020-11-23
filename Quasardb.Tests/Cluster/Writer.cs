@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb.Exceptions;
@@ -152,7 +153,13 @@ namespace Quasardb.Tests.Cluster
             QdbSymbolPointCollection symbolPoints)
         {
             var blobColumn = ts1.BlobColumns["the_blob"];
-            CollectionAssert.AreEqual(blobPoints.ToArray(), blobColumn.Points().ToArray());
+            var b1 = blobPoints.ToArray();
+            var b2 = blobColumn.Points().ToArray();
+            System.Console.WriteLine("BLOB: s"+ b1.Count()
+            +" vs s"+                           b2.Count()
+            +", expected "+Encoding.UTF8.GetString(b1[0].Value.ToArray(), 0, b1[0].Value.Count())
+            +", got "+     Encoding.UTF8.GetString(b2[0].Value.ToArray(), 0, b2[0].Value.Count()));
+            CollectionAssert.AreEqual(b1, b2);
 
             var doubleColumn = ts1.DoubleColumns["the_double"];
             CollectionAssert.AreEqual(doublePoints.ToArray(), doubleColumn.Points().ToArray());
@@ -167,7 +174,13 @@ namespace Quasardb.Tests.Cluster
             CollectionAssert.AreEqual(timestampPoints.ToArray(), timestampColumn.Points().ToArray());
             
             var symbolColumn = ts2.SymbolColumns["the_symbol"];
-            CollectionAssert.AreEqual(symbolPoints.ToArray(), symbolColumn.Points().ToArray());
+            var s1 = blobPoints.ToArray();
+            var s2 = blobColumn.Points().ToArray();
+            System.Console.WriteLine("BLOB: s"+ s1.Count()
+            +" vs s"+                           s2.Count()
+            +", expected "+Encoding.UTF8.GetString(s1[0].Value.ToArray(), 0, s1[0].Value.Count())
+            +", got "+     Encoding.UTF8.GetString(s2[0].Value.ToArray(), 0, s2[0].Value.Count()));
+            CollectionAssert.AreEqual(s1, s2);
         }
 
         [TestMethod]
