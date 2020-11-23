@@ -155,6 +155,13 @@ namespace Quasardb.Tests.Cluster
             var blobColumn = ts1.BlobColumns["the_blob"];
             var b1 = blobPoints.ToArray();
             var b2 = blobColumn.Points().ToArray();
+            if (b1.Count() == 0) {
+                System.Console.WriteLine("expected empty !");
+            }
+            if (b2.Count() == 0) {
+                System.Console.WriteLine("got empty !");
+                return;
+            }
             System.Console.WriteLine("BLOB: s"+ b1.Count()
             +" vs s"+                           b2.Count()
             +", expected "+Encoding.UTF8.GetString(b1[0].Value.ToArray(), 0, b1[0].Value.Count())
