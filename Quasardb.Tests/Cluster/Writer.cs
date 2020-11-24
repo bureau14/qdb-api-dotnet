@@ -123,6 +123,8 @@ namespace Quasardb.Tests.Cluster
             QdbTimestampPointCollection timestampPoints,
             QdbSymbolPointCollection symbolPoints)
         {
+            System.Console.WriteLine("CREATE BATCH");
+
             var batch = _cluster.Writer(new QdbBatchColumnDefinition[]{
                 new QdbBatchColumnDefinition(ts1.Alias, "the_blob"),
                 new QdbBatchColumnDefinition(ts1.Alias, "the_double"),
@@ -131,6 +133,7 @@ namespace Quasardb.Tests.Cluster
                 new QdbBatchColumnDefinition(ts2.Alias, "the_ts"),
                 new QdbBatchColumnDefinition(ts2.Alias, "the_symbol"),
             });
+            System.Console.WriteLine("INSERT ROWS");
             for (int i = 0; i < 10; ++i)
             {
                 batch.StartRow(startTime.AddSeconds(i));
@@ -152,6 +155,8 @@ namespace Quasardb.Tests.Cluster
             QdbTimestampPointCollection timestampPoints,
             QdbSymbolPointCollection symbolPoints)
         {
+            System.Console.WriteLine("CHECK TABLES");
+
             var blobColumn = ts1.BlobColumns["the_blob"];
             var b1 = blobPoints.ToArray();
             var b2 = blobColumn.Points().ToArray();
@@ -222,6 +227,8 @@ namespace Quasardb.Tests.Cluster
             var symbolData    = CreateSymbolPoints(startTime, 10);
 
             var batch = Insert(ts1, ts2, startTime, blobData, doubleData, int64Data, stringData, timestampData, symbolData);
+            
+            System.Console.WriteLine("PUSH DATA");
             batch.Push();
 
             CheckTables(ts1, ts2, blobData, doubleData, int64Data, stringData, timestampData, symbolData);
@@ -241,6 +248,8 @@ namespace Quasardb.Tests.Cluster
             var symbolData    = CreateSymbolPoints(startTime, 10);
 
             var batch = Insert(ts1, ts2, startTime, blobData, doubleData, int64Data, stringData, timestampData, symbolData);
+            
+            System.Console.WriteLine("PUSH DATA");
             batch.PushFast();
 
             CheckTables(ts1, ts2, blobData, doubleData, int64Data, stringData, timestampData, symbolData);
@@ -260,6 +269,8 @@ namespace Quasardb.Tests.Cluster
             var symbolData    = CreateSymbolPoints(startTime, 10);
 
             var batch = Insert(ts1, ts2, startTime, blobData, doubleData, int64Data, stringData, timestampData, symbolData);
+            
+            System.Console.WriteLine("PUSH DATA");
             batch.PushAsync();
 
             // Wait for push_async to complete
