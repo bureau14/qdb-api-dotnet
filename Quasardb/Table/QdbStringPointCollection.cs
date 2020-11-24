@@ -94,6 +94,7 @@ namespace Quasardb.TimeSeries
 
         void Free()
         {
+            System.Console.WriteLine("DELETED " + Points.Count + "(strings)");
             foreach (var pin in _pins)
                 pin.Free();
         }
