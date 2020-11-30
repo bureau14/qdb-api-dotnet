@@ -45,6 +45,7 @@ namespace Quasardb.TimeSeries.Writer
         /// </summary>
         public void Dispose()
         {
+            System.Console.WriteLine("TABLE: [I GOT DISPOSED !]");
             qdb_api.qdb_release(_handle, _table);
         }
 

@@ -251,6 +251,7 @@ namespace Quasardb.Tests.Cluster
             
             System.Console.WriteLine("PUSH DATA");
             batch.PushFast();
+            System.Console.WriteLine("PUSHED DATA");
 
             CheckTables(ts1, ts2, blobData, doubleData, int64Data, stringData, timestampData, symbolData);
         }

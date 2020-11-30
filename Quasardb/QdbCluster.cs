@@ -105,6 +105,7 @@ namespace Quasardb
         /// </summary>
         public void Dispose()
         {
+            System.Console.WriteLine("CLUSTER: [I GOT DISPOSED !]");
             _handle.Dispose();
         }
 
