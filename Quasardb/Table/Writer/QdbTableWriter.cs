@@ -33,6 +33,8 @@ namespace Quasardb.TimeSeries.Writer
                 });
             }
 
+            System.Console.WriteLine("INIT WITH " + _columns.Count + " COLS");
+
             var err = qdb_api.qdb_ts_batch_table_init(
                 _handle,
                 _columns.Buffer, _columns.Count,
