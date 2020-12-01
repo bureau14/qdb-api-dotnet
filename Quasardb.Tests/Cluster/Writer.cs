@@ -142,7 +142,7 @@ namespace Quasardb.Tests.Cluster
                 batch.SetInt64("the_int64", int64Points[i].Value);
                 batch.SetString("the_string", stringPoints[i].Value);
                 batch.SetTimestamp("the_ts", timestampPoints[i].Value);
-            //    batch.SetSymbol("the_symbol", symbolPoints[i].Value);
+                batch.SetSymbol("the_symbol", symbolPoints[i].Value);
             }
             return batch;
         }
@@ -185,14 +185,14 @@ namespace Quasardb.Tests.Cluster
             var timestampColumn = ts2.TimestampColumns["the_ts"];
             CollectionAssert.AreEqual(timestampPoints.ToArray(), timestampColumn.Points().ToArray());
             
-            /*var symbolColumn = ts2.SymbolColumns["the_symbol"];
+            var symbolColumn = ts2.SymbolColumns["the_symbol"];
             var s1 = blobPoints.ToArray();
             var s2 = blobColumn.Points().ToArray();
             System.Console.WriteLine("BLOB: s"+ s1.Count()
             +" vs s"+                           s2.Count()
             +", expected "+Encoding.UTF8.GetString(s1[0].Value.ToArray(), 0, s1[0].Value.Count())
             +", got "+     Encoding.UTF8.GetString(s2[0].Value.ToArray(), 0, s2[0].Value.Count()));
-            CollectionAssert.AreEqual(s1, s2);*/
+            CollectionAssert.AreEqual(s1, s2);
         }
 
         [TestMethod]
