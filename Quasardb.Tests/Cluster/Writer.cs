@@ -158,12 +158,16 @@ namespace Quasardb.Tests.Cluster
         {
             var blobColumn = ts1.BlobColumns["the_blob"];
             Console.WriteLine("EXP " + blobPoints.Count + " BLOBS");
+            blobPoints.ToList().ForEach(i => Console.WriteLine("  - "+i.ToString()));
             Console.WriteLine("GOT " + blobColumn.Points().Count() + " BLOBS");
+            blobColumn.Points().ToList().ForEach(i => Console.WriteLine("  - "+i.ToString()));
             CollectionAssert.AreEqual(blobPoints.ToArray(), blobColumn.Points().ToArray());
 
             var doubleColumn = ts1.DoubleColumns["the_double"];
             Console.WriteLine("EXP " + doublePoints.Count + " DOUBLES");
+            doublePoints.ToList().ForEach(i => Console.WriteLine("  - "+i.ToString()));
             Console.WriteLine("GOT " + doubleColumn.Points().Count() + " DOUBLES");
+            doubleColumn.Points().ToList().ForEach(i => Console.WriteLine("  - "+i.ToString()));
             CollectionAssert.AreEqual(doublePoints.ToArray(), doubleColumn.Points().ToArray());
 
             var int64Column = ts1.Int64Columns["the_int64"];
@@ -171,7 +175,9 @@ namespace Quasardb.Tests.Cluster
 
             var stringColumn = ts2.StringColumns["the_string"];
             Console.WriteLine("EXP " + stringPoints.Count + " STRINGS");
+            stringPoints.ToList().ForEach(i => Console.WriteLine("  - "+i.ToString()));
             Console.WriteLine("GOT " + stringColumn.Points().Count() + " STRINGS");
+            stringColumn.Points().ToList().ForEach(i => Console.WriteLine("  - "+i.ToString()));
             CollectionAssert.AreEqual(stringPoints.ToArray(), stringColumn.Points().ToArray());
 
             var timestampColumn = ts2.TimestampColumns["the_ts"];
@@ -179,7 +185,9 @@ namespace Quasardb.Tests.Cluster
             
             var symbolColumn = ts2.SymbolColumns["the_symbol"];
             Console.WriteLine("EXP " + symbolPoints.Count + " SYMBOLS");
+            symbolPoints.ToList().ForEach(i => Console.WriteLine("  - "+i.ToString()));
             Console.WriteLine("GOT " + symbolColumn.Points().Count() + " SYMBOLS");
+            symbolColumn.Points().ToList().ForEach(i => Console.WriteLine("  - "+i.ToString()));
             CollectionAssert.AreEqual(symbolPoints.ToArray(), symbolColumn.Points().ToArray());
         }
 
