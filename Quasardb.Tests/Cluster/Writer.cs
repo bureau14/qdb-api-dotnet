@@ -105,10 +105,11 @@ namespace Quasardb.Tests.Cluster
 
             for (int i = 0; i < count; ++i)
             {
-                var value = new byte[32];
+                /*var value = new byte[32];
                 random.NextBytes(value);
 
-                r.Add(time, System.Text.Encoding.UTF8.GetString(value));
+                r.Add(time, System.Text.Encoding.UTF8.GetString(value));*/
+                r.Add(time, "sym_" + i);
                 time = time.AddSeconds(1);
             }
             return r;
