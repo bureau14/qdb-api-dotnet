@@ -71,10 +71,9 @@ namespace Quasardb.Tests.Cluster
         
         public static string RandomString(int length, Random r)
         {
-            /*const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            return new string(Enumerable.Repeat(chars, length)
-                .Select(s => s[r.Next(s.Length)]).ToArray());*/
-            return "derp";
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return Encoding.UTF8.GetString(Enumerable.Repeat(chars, length)
+                .Select(s => (byte)s[r.Next(s.Length)]).ToArray());
         }
 
         public QdbStringPointCollection CreateStringPoints(DateTime time, int count)
