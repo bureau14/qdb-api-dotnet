@@ -5,6 +5,7 @@ using Quasardb.Native;
 using Quasardb.TimeSeries;
 using Quasardb.Query;
 using Quasardb.TimeSeries.Writer;
+using System.Runtime.InteropServices;
 
 namespace Quasardb
 {
@@ -85,7 +86,7 @@ namespace Quasardb
         {
             qdb_error error;
             qdb_sized_string message;
-            qdb_api.qdb_get_last_error(out error, out message);
+            qdb_api.qdb_get_last_error(_handle, out error, out message);
             return message.ToString();
         }
 
@@ -277,6 +278,45 @@ namespace Quasardb
         public QdbQueryResult Query(string query)
         {
             return new QdbQueryResult(_handle, query);
+        }
+
+        /// <summary>
+        /// The client will store performance measures from the server.
+        /// Disabled by default.
+        /// </summary>
+        public void EnablePerformanceTraces() {
+            var error = qdb_api.qdb_perf_enable_client_tracking(_handle);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+        }
+        
+        /// <summary>
+        /// The client will stop storing performance measures from the server.
+        /// </summary>
+        public void DisablePerformanceTraces() {
+            var error = qdb_api.qdb_perf_disable_client_tracking(_handle);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+        }
+        
+        /// <summary>
+        /// Returns all new performance traces since the last call to this function.
+        /// </summary>
+        public unsafe QdbPerformanceTrace[] GetPerformanceTraces() {
+            qdb_perf_profile* profiles;
+            UIntPtr profile_count;
+            var error = qdb_api.qdb_perf_get_profiles(_handle, out profiles, out profile_count);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+
+            var traces = QdbPerformanceTrace.CreateTraces(profiles, (int)profile_count);
+            qdb_api.qdb_release(_handle, (IntPtr)profiles);
+            return traces;
+        }
+
+        /// <summary>
+        /// Releases all performances traces currently stored by the client.
+        /// </summary>
+        public void ClearPerformanceTraces() {
+            var error = qdb_api.qdb_perf_clear_all_profiles(_handle);
+            QdbExceptionThrower.ThrowIfNeeded(error);
         }
     }
 }

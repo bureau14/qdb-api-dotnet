@@ -27,11 +27,7 @@ namespace Quasardb
                 },
                 (ref qdb_operation op) =>
                 {
-                    if (op.args.blob_get.content == IntPtr.Zero) return null;
-
-                    var result = new byte[(int)op.args.blob_get.content_size];
-                    Marshal.Copy(op.args.blob_get.content, result, 0, result.Length);
-                    return result;
+                    return Helper.GetBytes(op.args.blob_get.content, (int)op.args.blob_get.content_size);
                 });
         }
 
@@ -107,11 +103,7 @@ namespace Quasardb
                     newContentPin.Free();
                     comparandPin.Free();
 
-                    if (op.args.blob_cas.original_content == IntPtr.Zero) return null;
-
-                    var result = new byte[(int)op.args.blob_cas.original_content_size];
-                    Marshal.Copy(op.args.blob_cas.original_content, result, 0, result.Length);
-                    return result;
+                    return Helper.GetBytes(op.args.blob_cas.original_content, (int)op.args.blob_cas.original_content_size);
                 });
         }
 
@@ -138,11 +130,7 @@ namespace Quasardb
                 {
                     newContentPin.Free();
 
-                    if (op.args.blob_get_and_update.original_content == IntPtr.Zero) return null;
-
-                    var result = new byte[(int)op.args.blob_get_and_update.original_content_size];
-                    Marshal.Copy(op.args.blob_get_and_update.original_content, result, 0, result.Length);
-                    return result;
+                    return Helper.GetBytes(op.args.blob_get_and_update.original_content, (int)op.args.blob_get_and_update.original_content_size);
                 });
         }
     }

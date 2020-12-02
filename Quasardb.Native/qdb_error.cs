@@ -61,6 +61,7 @@ namespace Quasardb.Native
         qdb_e_unknown_user = 0xc2000044,
         qdb_e_interrupted = 0xf2000045,
         qdb_e_network_inbuf_too_small = 0xe2000046,
-        qdb_e_network_error = 0xd2000047
+        qdb_e_network_error = 0xd2000047,
+        qdb_e_data_corruption = 0xf3000048
     }
 }

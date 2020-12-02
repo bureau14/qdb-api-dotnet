@@ -31,8 +31,16 @@ namespace Quasardb.Query
                 throw new QdbQueryException(error_message ?? qdb_api.qdb_error(error));
             }
 
-            ColumnNames = new QdbColumnNameCollection(_result->column_names, _result->column_count);
-            Rows = new QdbRowCollection(_result->rows, _result->row_count, ColumnNames);
+            if (_result != null)
+            {
+                ColumnNames = new QdbColumnNameCollection(_result->column_names, _result->column_count);
+                Rows = new QdbRowCollection(_result->rows, _result->row_count, ColumnNames);
+            }
+            else
+            {
+                ColumnNames = new QdbColumnNameCollection();
+                Rows = new QdbRowCollection();
+            }
         }
 
         /// <summary>
