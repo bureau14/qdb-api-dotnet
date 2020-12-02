@@ -82,7 +82,6 @@ namespace Quasardb.TimeSeries
             }
 
             pin = GCHandle.Alloc(pt.Value, GCHandleType.Pinned);
-            Console.WriteLine("ADD STR " + pin.Value);
             return new qdb_ts_string_point
             {
                 timestamp = TimeConverter.ToTimespec(pt.Time),
@@ -123,6 +122,14 @@ namespace Quasardb.TimeSeries
             }
 
             pin = GCHandle.Alloc(pt.Value, GCHandleType.Pinned);
+
+            var c = (char*)pin.Value.AddrOfPinnedObject();
+            var ret = new byte[pt.Value.Length];
+            System.Runtime.InteropServices.Marshal.Copy(pin.Value.AddrOfPinnedObject(), ret, 0, ret.Length);
+            Console.WriteLine("Native sym1 = " + new string(c));
+            Console.WriteLine("Native sym2 = " + new string((sbyte*)c, 0, pt.Value.Length, System.Text.UTF8Encoding.UTF8));
+            Console.WriteLine("Native sym3 = " + System.Text.Encoding.UTF8.GetString(ret));
+
             return new qdb_ts_symbol_point
             {
                 timestamp = TimeConverter.ToTimespec(pt.Time),
@@ -146,7 +153,10 @@ namespace Quasardb.TimeSeries
             // TODO: limited to 32-bit
             var content = new byte[(int)pt.content_size];
             Marshal.Copy(new IntPtr(pt.content), content, 0, (int)pt.content_size);
-            return new QdbSymbolPoint(TimeConverter.ToDateTime(pt.timestamp), System.Text.Encoding.UTF8.GetString(content));
+            var p = new QdbSymbolPoint(TimeConverter.ToDateTime(pt.timestamp), System.Text.Encoding.UTF8.GetString(content));
+            
+            Console.WriteLine("ToManaged SYMBOL = " + p.Value);
+            return p;
         }
 
         public static qdb_ts_int64_point ToNative(this QdbPoint<long?> pt)
