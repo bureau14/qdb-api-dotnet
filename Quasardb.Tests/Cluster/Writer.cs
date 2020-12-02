@@ -222,6 +222,11 @@ namespace Quasardb.Tests.Cluster
             var stringData    = CreateStringPoints(startTime, 10);
             var timestampData = CreateTimestampPoints(startTime, 10);
             var symbolData    = CreateSymbolPoints(startTime, 10);
+            
+            Console.WriteLine("stored symbols:");
+            foreach (var s in symbolData) {
+                Console.WriteLine("  - " + s.Value);
+            }
 
             var batch = Insert(ts1, ts2, startTime, blobData, doubleData, int64Data, stringData, timestampData, symbolData);
             
