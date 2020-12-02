@@ -124,8 +124,6 @@ namespace Quasardb.Tests.Cluster
             QdbTimestampPointCollection timestampPoints,
             QdbSymbolPointCollection symbolPoints)
         {
-            System.Console.WriteLine("CREATE BATCH");
-
             var batch = _cluster.Writer(new QdbBatchColumnDefinition[]{
                 new QdbBatchColumnDefinition(ts1.Alias, "the_blob"),
                 new QdbBatchColumnDefinition(ts1.Alias, "the_double"),
@@ -134,7 +132,6 @@ namespace Quasardb.Tests.Cluster
                 new QdbBatchColumnDefinition(ts2.Alias, "the_ts"),
                 new QdbBatchColumnDefinition(ts2.Alias, "the_symbol"),
             });
-            System.Console.WriteLine("INSERT ROWS");
             for (int i = 0; i < 10; ++i)
             {
                 batch.StartRow(startTime.AddSeconds(i));
@@ -156,23 +153,8 @@ namespace Quasardb.Tests.Cluster
             QdbTimestampPointCollection timestampPoints,
             QdbSymbolPointCollection symbolPoints)
         {
-            System.Console.WriteLine("CHECK TABLES");
-
             var blobColumn = ts1.BlobColumns["the_blob"];
-            var b1 = blobPoints.ToArray();
-            var b2 = blobColumn.Points().ToArray();
-            if (b1.Count() == 0) {
-                System.Console.WriteLine("expected empty !");
-            }
-            if (b2.Count() == 0) {
-                System.Console.WriteLine("got empty !");
-                return;
-            }
-            System.Console.WriteLine("BLOB: s"+ b1.Count()
-            +" vs s"+                           b2.Count()
-            +", expected "+Encoding.UTF8.GetString(b1[0].Value.ToArray(), 0, b1[0].Value.Count())
-            +", got "+     Encoding.UTF8.GetString(b2[0].Value.ToArray(), 0, b2[0].Value.Count()));
-            CollectionAssert.AreEqual(b1, b2);
+            CollectionAssert.AreEqual(blobPoints.ToArray(), blobColumn.Points().ToArray());
 
             var doubleColumn = ts1.DoubleColumns["the_double"];
             CollectionAssert.AreEqual(doublePoints.ToArray(), doubleColumn.Points().ToArray());
@@ -187,13 +169,7 @@ namespace Quasardb.Tests.Cluster
             CollectionAssert.AreEqual(timestampPoints.ToArray(), timestampColumn.Points().ToArray());
             
             var symbolColumn = ts2.SymbolColumns["the_symbol"];
-            var s1 = blobPoints.ToArray();
-            var s2 = blobColumn.Points().ToArray();
-            System.Console.WriteLine("BLOB: s"+ s1.Count()
-            +" vs s"+                           s2.Count()
-            +", expected "+Encoding.UTF8.GetString(s1[0].Value.ToArray(), 0, s1[0].Value.Count())
-            +", got "+     Encoding.UTF8.GetString(s2[0].Value.ToArray(), 0, s2[0].Value.Count()));
-            CollectionAssert.AreEqual(s1, s2);
+            CollectionAssert.AreEqual(symbolPoints.ToArray(), symbolColumn.Points().ToArray());
         }
 
         [TestMethod]
@@ -229,9 +205,7 @@ namespace Quasardb.Tests.Cluster
 
             var batch = Insert(ts1, ts2, startTime, blobData, doubleData, int64Data, stringData, timestampData, symbolData);
             
-            System.Console.WriteLine("PUSH DATA");
             batch.Push();
-            System.Console.WriteLine("PUSHED TRANSACTIONAL DATA");
 
             CheckTables(ts1, ts2, blobData, doubleData, int64Data, stringData, timestampData, symbolData);
         }
@@ -251,9 +225,7 @@ namespace Quasardb.Tests.Cluster
 
             var batch = Insert(ts1, ts2, startTime, blobData, doubleData, int64Data, stringData, timestampData, symbolData);
             
-            System.Console.WriteLine("PUSH DATA");
             batch.PushFast();
-            System.Console.WriteLine("PUSHED FAST DATA");
 
             CheckTables(ts1, ts2, blobData, doubleData, int64Data, stringData, timestampData, symbolData);
         }
@@ -273,9 +245,7 @@ namespace Quasardb.Tests.Cluster
 
             var batch = Insert(ts1, ts2, startTime, blobData, doubleData, int64Data, stringData, timestampData, symbolData);
             
-            System.Console.WriteLine("PUSH DATA");
             batch.PushAsync();
-            System.Console.WriteLine("PUSHED ASYNC DATA");
 
             // Wait for push_async to complete
             // Ideally we could be able to get the proper flush interval
