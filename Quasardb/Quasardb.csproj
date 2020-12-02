@@ -1,40 +1,166 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-	  <TargetFrameworks>net20;net35;net40;net45;netstandard2.0;netcoreapp2.0;netcoreapp3.0</TargetFrameworks>
-	  <RootNamespace>Quasardb</RootNamespace>
-	  <AssemblyName>Quasardb</AssemblyName>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D8232795-82C5-405E-A081-0F03F158B036}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Quasardb</RootNamespace>
+    <AssemblyName>Quasardb</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <Prefer32Bit>false</Prefer32Bit>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '.NET Framework 2.0|AnyCPU'">
+    <OutputPath>bin\.NET Framework 2.0\</OutputPath>
+    <DocumentationFile>bin\.NET Framework 2.0\Quasardb.xml</DocumentationFile>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '.NET Framework 3.5|AnyCPU'">
+    <OutputPath>bin\.NET Framework 3.5\</OutputPath>
+    <DocumentationFile>bin\.NET Framework 3.5\Quasardb.xml</DocumentationFile>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net20|AnyCPU'">
-    <DocumentationFile>bin\Debug\Quasardb.xml</DocumentationFile>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '.NET Framework 4|AnyCPU'">
+    <OutputPath>bin\.NET Framework 4\</OutputPath>
+    <DocumentationFile>bin\.NET Framework 4\Quasardb.xml</DocumentationFile>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '.NET Framework 4.5|AnyCPU'">
+    <OutputPath>bin\.NET Framework 4.5\</OutputPath>
+    <DocumentationFile>bin\.NET Framework 4.5\Quasardb.xml</DocumentationFile>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <DefineConstants>
+    </DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>bin\.NET Framework 4.5\Quasardb.xml</DocumentationFile>
+    <Optimize>false</Optimize>
     <DebugType>pdbonly</DebugType>
-    <DebugSymbols>true</DebugSymbols>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net20|AnyCPU'">
-    <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>bin\Release\Quasardb.xml</DocumentationFile>
-    <DebugType>pdbonly</DebugType>
-    <DebugSymbols>true</DebugSymbols>
-    <WarningLevel>2</WarningLevel>
-  </PropertyGroup>
-
   <ItemGroup>
-    <None Remove="Quasardb.nuspec" />
+    <Compile Include="Batch\QdbNativeBatch.cs" />
+    <Compile Include="QdbTimeSeries.cs" />
+    <Compile Include="Exceptions\Connection\QdbConnectionException.cs" />
+    <Compile Include="Query\QdbQueryException.cs" />
+    <Compile Include="Exceptions\Input\QdbInputException.cs" />
+    <Compile Include="Exceptions\Input\QdbOutOfBoundsException.cs" />
+    <Compile Include="Exceptions\Operation\Column\QdbColumnException.cs" />
+    <Compile Include="Exceptions\Operation\Column\QdbEmptyColumnException.cs" />
+    <Compile Include="Exceptions\Operation\QdbAliasAlreadyExistsException.cs" />
+    <Compile Include="Exceptions\Operation\Column\QdbColumnNotFoundException.cs" />
+    <Compile Include="Exceptions\Operation\QdbAliasNotFoundException.cs" />
+    <Compile Include="Exceptions\Operation\QdbOperationException.cs" />
+    <Compile Include="Exceptions\Protocol\QdbProtocolException.cs" />
+    <Compile Include="Exceptions\QdbException.cs" />
+    <Compile Include="Exceptions\QdbExceptionFactory.cs" />
+    <Compile Include="Exceptions\Operation\QdbIncompatibleTypeException.cs" />
+    <Compile Include="Exceptions\Input\QdbInvalidArgumentException.cs" />
+    <Compile Include="Exceptions\Operation\QdbResourceLockedException.cs" />
+    <Compile Include="Exceptions\System\QdbRemoteSystemException.cs" />
+    <Compile Include="Exceptions\System\QdbLocalSystemException.cs" />
+    <Compile Include="Exceptions\System\QdbSystemException.cs" />
+    <Compile Include="ExtensionMethodWithFramework2.cs" />
+    <Compile Include="GetBytes.cs" />
+    <Compile Include="IVisitable.cs" />
+    <Compile Include="Batch\IOperation.cs" />
+    <Compile Include="QdbUnknownEntry.cs" />
+    <Compile Include="Query\QdbCell.cs" />
+    <Compile Include="Query\QdbColumnNameCollection.cs" />
+    <Compile Include="Query\QdbRowCollection.cs" />
+    <Compile Include="Query\QdbValueType.cs" />
+    <Compile Include="Query\QdbQueryResult.cs" />
+    <Compile Include="Query\QdbRow.cs" />
+    <Compile Include="Table\PointConverter.cs" />
+    <Compile Include="Table\QdbBlobPointCollection.cs" />
+    <Compile Include="Table\QdbBlobColumn.cs" />
+    <Compile Include="Table\QdbBatchColumnDefinition.cs" />
+    <Compile Include="Table\QdbColumnType.cs" />
+    <Compile Include="Table\QdbColumnDefinition.cs" />
+    <Compile Include="Exceptions\QdbExceptionThrower.cs" />
+    <Compile Include="Batch\QdbBatch.cs" />
+    <Compile Include="Batch\QdbBatchEntry.cs" />
+    <Compile Include="Batch\QdbBatchInteger.cs" />
+    <Compile Include="Batch\QdbBatchBlob.cs" />
+    <Compile Include="Batch\QdbBatchOperation.cs" />
+    <Compile Include="QdbBlob.cs" />
+    <Compile Include="QdbBlobSelector.cs" />
+    <Compile Include="QdbCluster.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QdbEntry.cs" />
+    <Compile Include="QdbEntryFactory.cs" />
+    <Compile Include="QdbEntrySelector.cs" />
+    <Compile Include="QdbExpirableEntry.cs" />
+    <Compile Include="QdbInteger.cs" />
+    <Compile Include="QdbPerformanceTrace.cs" />
+    <Compile Include="QdbTag.cs" />
+    <Compile Include="QdbBlobBuffer.cs" />
+    <Compile Include="Table\Helpers.cs" />
+    <Compile Include="Table\QdbColumn.cs" />
+    <Compile Include="Table\QdbColumnAggregator.cs" />
+    <Compile Include="Table\Writer\QdbTableWriter.cs" />
+    <Compile Include="Table\Reader\QdbCell.cs" />
+    <Compile Include="Table\Reader\QdbRow.cs" />
+    <Compile Include="Table\Reader\QdbTableReader.cs" />
+    <Compile Include="Table\QdbTimeInterval.cs" />
+    <Compile Include="Table\QdbDoublePointCollection.cs" />
+    <Compile Include="Table\QdbInt64PointCollection.cs" />
+    <Compile Include="Table\QdbStringPointCollection.cs" />
+    <Compile Include="Table\QdbTimestampPointCollection.cs" />
+    <Compile Include="Table\QdbPoint.cs" />
+    <Compile Include="Table\QdbDoubleColumn.cs" />
+    <Compile Include="Table\QdbInt64Column.cs" />
+    <Compile Include="Table\QdbStringColumn.cs" />
+    <Compile Include="Table\QdbTimestampColumn.cs" />
+    <Compile Include="Table\QdbTable.cs" />
+    <Compile Include="TimeConverter.cs" />
   </ItemGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\Quasardb.Native\Quasardb.Native.csproj" />
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Quasardb.Native\Quasardb.Native.csproj">
+      <Project>{2655de6c-82a8-4acf-a9c1-15dcc49094a0}</Project>
+      <Name>Quasardb.Native</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
 </Project>
