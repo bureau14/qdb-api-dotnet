@@ -61,6 +61,7 @@ namespace Quasardb.Native
 
         [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
         public static extern qdb_error qdb_get_last_error(
+            [In] qdb_handle handle,
             [Out] out qdb_error error,
             [Out] out qdb_sized_string message);
 
@@ -667,6 +668,28 @@ namespace Quasardb.Native
             [In] qdb_handle handle,
             [In] [MarshalAs(ALIAS_TYPE)] string query,
             [Out] out qdb_query_result* result);
+
+        #endregion
+        
+        #region Performance trace functions
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_perf_enable_client_tracking(
+            [In] qdb_handle handle);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_perf_disable_client_tracking(
+            [In] qdb_handle handle);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_perf_get_profiles(
+            [In] qdb_handle handle,
+            [Out] out qdb_perf_profile* profiles,
+            [Out] out qdb_size_t count);
+
+        [DllImport(DLL_NAME, CallingConvention = CALL_CONV)]
+        public static extern qdb_error qdb_perf_clear_all_profiles(
+            [In] qdb_handle handle);
 
         #endregion
     }

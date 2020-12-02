@@ -15,6 +15,10 @@ namespace Quasardb.Query
     {
         private readonly string[] _columns;
 
+        internal unsafe QdbColumnNameCollection()
+        {
+        }
+
         internal unsafe QdbColumnNameCollection(qdb_sized_string* pointer, UIntPtr size)
         {
             _columns = new string[size.ToUInt64()];

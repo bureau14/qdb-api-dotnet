@@ -26,6 +26,13 @@ namespace Quasardb.Query
             _columns = columns;
         }
 
+        internal unsafe QdbRowCollection()
+        {
+            _pointer = new IntPtr(null);
+            _size = new UIntPtr(0);
+            _columns = new QdbColumnNameCollection();
+        }
+
         /// <summary>
         /// Gets the number of result rows in the collection.
         /// </summary>

@@ -166,8 +166,8 @@ namespace Quasardb.Tests.Entry.Table
             var insertedStringData = InsertStringPoints(ts, startTime, 9);
             var insertedTimestampData = InsertTimestampPoints(ts, startTime, 9);
 
-            ts.BlobColumns["the_blob"].Insert(startTime.AddSeconds(9), new byte[] { 10 });
-            insertedBlobData.Add(startTime.AddSeconds(9), new byte[] { 10 });
+            ts.BlobColumns["the_blob"].Insert(startTime.AddSeconds(9), null);
+            insertedBlobData.Add(startTime.AddSeconds(9), null);
             insertedDoubleData.Add(startTime.AddSeconds(9), null);
             insertedInt64Data.Add(startTime.AddSeconds(9), null);
             insertedStringData.Add(startTime.AddSeconds(9), null);

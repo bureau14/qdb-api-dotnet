@@ -197,7 +197,55 @@ namespace Quasardb.Tests.Query
         }
 
         [TestMethod]
-        public void ReturnsInsertedDataWithStarSelect()
+        public void ReturnsEmptyResultWhenNoResultsAreAvailable()
+        {
+            QdbTable ts = CreateTable();
+            try
+            {
+                var results = _cluster.Query("DROP TABLE " + ts.Alias);
+
+                var rows = results.Rows;
+                Assert.AreEqual(0, rows.Count);
+            }
+            finally
+            {
+            }
+        }
+
+        [TestMethod]
+        public void ReturnsInsertedDataWithStarSelect_NonNullBlob()
+        {
+            var startTime = DateTime.Now;
+            QdbTable ts = CreateTable();
+            var insertedBlobData = InsertBlobPoints(ts, startTime, 10);
+            try
+            {
+                var results = _cluster.Query("select * from " + ts.Alias);
+                CheckColumns(results.ColumnNames);
+
+                var rows = results.Rows;
+                Assert.AreEqual(10L, rows.Count);
+                for (int i = 0; i < 10L; ++i)
+                {
+                    var row = rows[i];
+                    //Assert.AreEqual(insertedBlobData[i].Value, (byte[])row["the_blob"].Value);
+                    Assert.AreEqual(System.Text.Encoding.Default.GetString(insertedBlobData[i].Value),
+                        System.Text.Encoding.Default.GetString((byte[])row["the_blob"].Value));
+                    Assert.AreEqual(null, row["the_double"].Value);
+                    Assert.AreEqual(null, row["the_int64"].Value);
+                    Assert.AreEqual(null, row["the_string"].Value);
+                    Assert.AreEqual(null, row["the_ts"].Value);
+                    Assert.AreEqual(ts.Alias, row["$table"].StringValue);
+                }
+            }
+            finally
+            {
+                ts.Remove();
+            }
+        }
+
+        [TestMethod]
+        public void ReturnsInsertedDataWithStarSelect_NonNullDouble()
         {
             var startTime = DateTime.Now;
             QdbTable ts = CreateTable();
@@ -214,6 +262,68 @@ namespace Quasardb.Tests.Query
                     var row = rows[i];
                     Assert.AreEqual(null, row["the_blob"].Value);
                     Assert.AreEqual(insertedDoubleData[i].Value, row["the_double"].Value);
+                    Assert.AreEqual(null, row["the_int64"].Value);
+                    Assert.AreEqual(null, row["the_string"].Value);
+                    Assert.AreEqual(null, row["the_ts"].Value);
+                    Assert.AreEqual(ts.Alias, row["$table"].StringValue);
+                }
+            }
+            finally
+            {
+                ts.Remove();
+            }
+        }
+
+        [TestMethod]
+        public void ReturnsInsertedDataWithStarSelect_NonNullInt64()
+        {
+            var startTime = DateTime.Now;
+            QdbTable ts = CreateTable();
+            var insertedInt64Data = InsertInt64Points(ts, startTime, 10);
+            try
+            {
+                var results = _cluster.Query("select * from " + ts.Alias);
+                CheckColumns(results.ColumnNames);
+
+                var rows = results.Rows;
+                Assert.AreEqual(10L, rows.Count);
+                for (int i = 0; i < 10L; ++i)
+                {
+                    var row = rows[i];
+                    Assert.AreEqual(null, row["the_blob"].Value);
+                    Assert.AreEqual(null, row["the_double"].Value);
+                    Assert.AreEqual(insertedInt64Data[i].Value, row["the_int64"].Value);
+                    Assert.AreEqual(null, row["the_string"].Value);
+                    Assert.AreEqual(null, row["the_ts"].Value);
+                    Assert.AreEqual(ts.Alias, row["$table"].StringValue);
+                }
+            }
+            finally
+            {
+                ts.Remove();
+            }
+        }
+
+        [TestMethod]
+        public void ReturnsNullValues()
+        {
+            QdbTable ts = CreateTable();
+            for (int i = 0; i < 10L; ++i)
+            {
+                _cluster.Query($"INSERT INTO {ts.Alias} ($timestamp, the_blob, the_double, the_int64, the_string, the_ts) VALUES (now(), NULL, NULL, NULL, NULL, NULL)");
+            }
+            try
+            {
+                var results = _cluster.Query("select * from " + ts.Alias);
+                CheckColumns(results.ColumnNames);
+
+                var rows = results.Rows;
+                Assert.AreEqual(10L, rows.Count);
+                for (int i = 0; i < 10L; ++i)
+                {
+                    var row = rows[i];
+                    Assert.AreEqual(null, row["the_blob"].Value);
+                    Assert.AreEqual(null, row["the_double"].Value);
                     Assert.AreEqual(null, row["the_int64"].Value);
                     Assert.AreEqual(null, row["the_string"].Value);
                     Assert.AreEqual(null, row["the_ts"].Value);
