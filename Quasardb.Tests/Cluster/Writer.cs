@@ -68,6 +68,13 @@ namespace Quasardb.Tests.Cluster
             }
             return r;
         }
+        
+        public static string RandomString(int length, Random r)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[r.Next(s.Length)]).ToArray());
+        }
 
         public QdbStringPointCollection CreateStringPoints(DateTime time, int count)
         {
@@ -79,7 +86,7 @@ namespace Quasardb.Tests.Cluster
                 var value = new byte[32];
                 random.NextBytes(value);
 
-                r.Add(time, System.Text.Encoding.UTF8.GetString(value));
+                r.Add(time, RandomString(32, random));
                 time = time.AddSeconds(1);
             }
             return r;
@@ -105,11 +112,7 @@ namespace Quasardb.Tests.Cluster
 
             for (int i = 0; i < count; ++i)
             {
-                /*var value = new byte[32];
-                random.NextBytes(value);
-
-                r.Add(time, System.Text.Encoding.UTF8.GetString(value));*/
-                r.Add(time, "sym_" + i);
+                r.Add(time, RandomString(32, random));
                 time = time.AddSeconds(1);
             }
             return r;
@@ -154,21 +157,29 @@ namespace Quasardb.Tests.Cluster
             QdbSymbolPointCollection symbolPoints)
         {
             var blobColumn = ts1.BlobColumns["the_blob"];
+            Console.WriteLine("EXP " + blobPoints.Count + " BLOBS");
+            Console.WriteLine("GOT " + blobColumn.Points().Count() + " BLOBS");
             CollectionAssert.AreEqual(blobPoints.ToArray(), blobColumn.Points().ToArray());
 
             var doubleColumn = ts1.DoubleColumns["the_double"];
+            Console.WriteLine("EXP " + doublePoints.Count + " DOUBLES");
+            Console.WriteLine("GOT " + doubleColumn.Points().Count() + " DOUBLES");
             CollectionAssert.AreEqual(doublePoints.ToArray(), doubleColumn.Points().ToArray());
 
             var int64Column = ts1.Int64Columns["the_int64"];
             CollectionAssert.AreEqual(int64Points.ToArray(), int64Column.Points().ToArray());
 
             var stringColumn = ts2.StringColumns["the_string"];
+            Console.WriteLine("EXP " + stringPoints.Count + " STRINGS");
+            Console.WriteLine("GOT " + stringColumn.Points().Count() + " STRINGS");
             CollectionAssert.AreEqual(stringPoints.ToArray(), stringColumn.Points().ToArray());
 
             var timestampColumn = ts2.TimestampColumns["the_ts"];
             CollectionAssert.AreEqual(timestampPoints.ToArray(), timestampColumn.Points().ToArray());
             
             var symbolColumn = ts2.SymbolColumns["the_symbol"];
+            Console.WriteLine("EXP " + symbolPoints.Count + " SYMBOLS");
+            Console.WriteLine("GOT " + symbolColumn.Points().Count() + " SYMBOLS");
             CollectionAssert.AreEqual(symbolPoints.ToArray(), symbolColumn.Points().ToArray());
         }
 
