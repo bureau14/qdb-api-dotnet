@@ -82,6 +82,7 @@ namespace Quasardb.TimeSeries
             }
 
             pin = GCHandle.Alloc(pt.Value, GCHandleType.Pinned);
+            Console.WriteLine("ADD STR " + pin.Value);
             return new qdb_ts_string_point
             {
                 timestamp = TimeConverter.ToTimespec(pt.Time),
