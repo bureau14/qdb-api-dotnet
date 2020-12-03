@@ -10,5 +10,6 @@ namespace Quasardb.Native
         qdb_ts_column_int64 = 2,
         qdb_ts_column_timestamp = 3,
         qdb_ts_column_string = 4,
+        qdb_ts_column_symbol = 5,
     }
 }

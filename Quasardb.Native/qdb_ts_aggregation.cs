@@ -53,4 +53,13 @@ namespace Quasardb.Native
         public qdb_size_t count;
         public qdb_ts_timestamp_point result;
     };
+    
+    [StructLayout(LayoutKind.Sequential)]
+    public struct qdb_ts_symbol_aggregation
+    {
+        public qdb_ts_aggregation_type type;
+        public qdb_ts_range range;
+        public qdb_size_t count;
+        public qdb_ts_symbol_point result;
+    };
 }
