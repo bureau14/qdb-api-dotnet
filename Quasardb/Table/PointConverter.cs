@@ -81,7 +81,8 @@ namespace Quasardb.TimeSeries
                 };
             }
 
-            pin = GCHandle.Alloc(pt.Value, GCHandleType.Pinned);
+            byte[] str = System.Text.Encoding.UTF8.GetBytes(pt.Value);
+            pin = GCHandle.Alloc(str, GCHandleType.Pinned);
             return new qdb_ts_string_point
             {
                 timestamp = TimeConverter.ToTimespec(pt.Time),
@@ -121,7 +122,8 @@ namespace Quasardb.TimeSeries
                 };
             }
 
-            pin = GCHandle.Alloc(pt.Value, GCHandleType.Pinned);
+            byte[] str = System.Text.Encoding.UTF8.GetBytes(pt.Value);
+            pin = GCHandle.Alloc(str, GCHandleType.Pinned);
 
             var c = (char*)pin.Value.AddrOfPinnedObject();
             var ret = new byte[pt.Value.Length];
