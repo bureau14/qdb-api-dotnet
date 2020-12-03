@@ -133,11 +133,13 @@
     <Compile Include="Table\QdbDoublePointCollection.cs" />
     <Compile Include="Table\QdbInt64PointCollection.cs" />
     <Compile Include="Table\QdbStringPointCollection.cs" />
+    <Compile Include="Table\QdbSymbolPointCollection.cs" />
     <Compile Include="Table\QdbTimestampPointCollection.cs" />
     <Compile Include="Table\QdbPoint.cs" />
     <Compile Include="Table\QdbDoubleColumn.cs" />
     <Compile Include="Table\QdbInt64Column.cs" />
     <Compile Include="Table\QdbStringColumn.cs" />
+    <Compile Include="Table\QdbSymbolColumn.cs" />
     <Compile Include="Table\QdbTimestampColumn.cs" />
     <Compile Include="Table\QdbTable.cs" />
     <Compile Include="TimeConverter.cs" />

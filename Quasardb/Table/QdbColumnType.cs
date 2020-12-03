@@ -34,5 +34,10 @@ namespace Quasardb.TimeSeries
         /// A value of type string.
         /// </summary>
         String = 4,
+
+        /// <summary>
+        /// A value of type symbol.
+        /// </summary>
+        Symbol = 5,
     }
 }

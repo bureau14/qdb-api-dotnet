@@ -17,10 +17,20 @@ namespace Quasardb.TimeSeries
 
         internal qdb_ts_column_type Type { get; }
 
+        internal string Symtable { get; }
+
+
         internal QdbColumnDefinition(string name, qdb_ts_column_type type)
         {
             Name = name;
             Type = type;
+        }
+        
+        internal QdbColumnDefinition(string name, qdb_ts_column_type type, string symtable)
+        {
+            Name     = name;
+            Type     = type;
+            Symtable = symtable;
         }
     }
 
@@ -90,6 +100,21 @@ namespace Quasardb.TimeSeries
         /// </summary>
         /// <param name="name">The name of the column</param>
         public QdbTimestampColumnDefinition(string name) : base(name, qdb_ts_column_type.qdb_ts_column_timestamp)
+        {
+        }
+    }
+    
+    /// <summary>
+    /// Describes a time-series column that contains symbol point values.
+    /// </summary>
+    public class QdbSymbolColumnDefinition : QdbColumnDefinition
+    {
+        /// <summary>
+        /// Creates a column description with the specified name.
+        /// </summary>
+        /// <param name="name">The name of the column</param>
+        /// <param name="symtable">The symbol table name</param>
+        public QdbSymbolColumnDefinition(string name, string symtable) : base(name, qdb_ts_column_type.qdb_ts_column_symbol, symtable)
         {
         }
     }

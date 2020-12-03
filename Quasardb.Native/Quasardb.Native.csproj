@@ -83,6 +83,7 @@
     <Compile Include="qdb_query_result_value_type.cs" />
     <Compile Include="qdb_ts_batch_column_info.cs" />
     <Compile Include="qdb_ts_column_info.cs" />
+    <Compile Include="qdb_ts_column_info_ex.cs" />
     <Compile Include="qdb_ts_range.cs" />
     <Compile Include="qdb_ts_aggregation_type.cs" />
     <Compile Include="ConstCharPtrMarshaler.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="qdb_ts_double_point.cs" />
     <Compile Include="qdb_ts_int64_point.cs" />
     <Compile Include="qdb_ts_string_point.cs" />
+    <Compile Include="qdb_ts_symbol_point.cs" />
     <Compile Include="qdb_ts_timestamp_point.cs" />
     <Compile Include="qdb_operation.cs" />
     <Compile Include="qdb_operation_type.cs" />
