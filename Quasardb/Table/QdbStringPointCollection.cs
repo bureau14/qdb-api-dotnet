@@ -55,7 +55,6 @@ namespace Quasardb.TimeSeries
         /// <param name="point">The point to add</param>
         public void Add(Point point)
         {
-            Console.WriteLine("ADD PT  " + point.Value);
             GCHandle? pin;
             Points.Add(point.ToNative(out pin));
             if (pin.HasValue)

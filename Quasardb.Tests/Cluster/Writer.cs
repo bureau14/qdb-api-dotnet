@@ -72,12 +72,8 @@ namespace Quasardb.Tests.Cluster
         public static string RandomString(int length, Random r)
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            var str = Encoding.UTF8.GetString(Enumerable.Repeat(chars, length)
-                .Select(s => (byte)s[r.Next(s.Length)]).ToArray());
-            Console.Write("MK STR = ");
-            Console.Write(str);
-            Console.WriteLine(" / " + str);
-            return str;
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[r.Next(s.Length)]).ToArray());
         }
 
         public QdbStringPointCollection CreateStringPoints(DateTime time, int count)
@@ -158,37 +154,21 @@ namespace Quasardb.Tests.Cluster
             QdbSymbolPointCollection symbolPoints)
         {
             var blobColumn = ts1.BlobColumns["the_blob"];
-            Console.WriteLine("EXP " + blobPoints.Count + " BLOBS");
-            blobPoints.ToList().ForEach(i => Console.WriteLine("  - "+i.ToString()));
-            Console.WriteLine("GOT " + blobColumn.Points().Count() + " BLOBS");
-            blobColumn.Points().ToList().ForEach(i => Console.WriteLine("  - "+i.ToString()));
             CollectionAssert.AreEqual(blobPoints.ToArray(), blobColumn.Points().ToArray());
 
             var doubleColumn = ts1.DoubleColumns["the_double"];
-            Console.WriteLine("EXP " + doublePoints.Count + " DOUBLES");
-            doublePoints.ToList().ForEach(i => Console.WriteLine("  - "+i.ToString()));
-            Console.WriteLine("GOT " + doubleColumn.Points().Count() + " DOUBLES");
-            doubleColumn.Points().ToList().ForEach(i => Console.WriteLine("  - "+i.ToString()));
             CollectionAssert.AreEqual(doublePoints.ToArray(), doubleColumn.Points().ToArray());
 
             var int64Column = ts1.Int64Columns["the_int64"];
             CollectionAssert.AreEqual(int64Points.ToArray(), int64Column.Points().ToArray());
 
             var stringColumn = ts2.StringColumns["the_string"];
-            Console.WriteLine("EXP " + stringPoints.Count + " STRINGS");
-            stringPoints.ToList().ForEach(i => Console.WriteLine("  - "+i.ToString()));
-            Console.WriteLine("GOT " + stringColumn.Points().Count() + " STRINGS");
-            stringColumn.Points().ToList().ForEach(i => Console.WriteLine("  - "+i.ToString()));
             CollectionAssert.AreEqual(stringPoints.ToArray(), stringColumn.Points().ToArray());
 
             var timestampColumn = ts2.TimestampColumns["the_ts"];
             CollectionAssert.AreEqual(timestampPoints.ToArray(), timestampColumn.Points().ToArray());
             
             var symbolColumn = ts2.SymbolColumns["the_symbol"];
-            Console.WriteLine("EXP " + symbolPoints.Count + " SYMBOLS");
-            symbolPoints.ToList().ForEach(i => Console.WriteLine("  - "+i.ToString()));
-            Console.WriteLine("GOT " + symbolColumn.Points().Count() + " SYMBOLS");
-            symbolColumn.Points().ToList().ForEach(i => Console.WriteLine("  - "+i.ToString()));
             CollectionAssert.AreEqual(symbolPoints.ToArray(), symbolColumn.Points().ToArray());
         }
 
@@ -223,11 +203,6 @@ namespace Quasardb.Tests.Cluster
             var timestampData = CreateTimestampPoints(startTime, 10);
             var symbolData    = CreateSymbolPoints(startTime, 10);
             
-            Console.WriteLine("stored symbols:");
-            foreach (var s in symbolData) {
-                Console.WriteLine("  - " + s.Value);
-            }
-
             var batch = Insert(ts1, ts2, startTime, blobData, doubleData, int64Data, stringData, timestampData, symbolData);
             
             batch.Push();
