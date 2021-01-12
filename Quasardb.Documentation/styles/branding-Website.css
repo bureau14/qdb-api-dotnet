@@ -121,7 +121,7 @@ div#tocNav > div {
 }
 div#leftNav a, div#leftNav a:link, div#leftNav a:visited {
 	/* quasardb */
-	color: #FFFFFF;
+	color: #434343;
 	
 	text-decoration: none;
 }
@@ -135,7 +135,7 @@ div#tocNav > div > a, div#tocNav > div > a:link, div#tocNav > div > a:visited {
 }
 div#tocNav > div.current > a, div#tocNav > div.current > a:link, div#tocNav > div.current > a:visited {
 	/* quasardb */
-	color: #FFFFFF;
+	color: #434343;
 	font-weight: bold;
 	text-decoration: none;
 }
