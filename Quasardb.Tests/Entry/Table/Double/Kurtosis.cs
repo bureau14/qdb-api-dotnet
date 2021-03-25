@@ -60,7 +60,8 @@ namespace Quasardb.Tests.Entry.Table.Double
 
             var result = col.Kurtosis();
 
-            Assert.AreEqual(0.021815331452089914, result);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(0.021815331452089914, result.Value, /*delta=*/1e-5);
         }
 
         [TestMethod]
@@ -72,7 +73,8 @@ namespace Quasardb.Tests.Entry.Table.Double
             var interval = new QdbTimeInterval(_points[0].Time, _points[4].Time);
             var result = col.Kurtosis(interval);
 
-            Assert.AreEqual(-1.4424596911530097, result);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(-1.4424596911530097, result.Value, /*delta=*/1e-5);
         }
 
         [TestMethod]
@@ -103,8 +105,10 @@ namespace Quasardb.Tests.Entry.Table.Double
             var results = col.Kurtosis(intervals).ToArray();
 
             Assert.AreEqual(3, results.Length);
-            Assert.AreEqual(-2, results[0]);
-            Assert.AreEqual(-1.5000000000000004, results[1]);
+            Assert.IsNotNull(results[0]);
+            Assert.AreEqual(-2, results[0].Value, /*delta=*/1e-5);
+            Assert.IsNotNull(results[1]);
+            Assert.AreEqual(-1.5000000000000004, results[1].Value, /*delta=*/1e-5);
             Assert.IsNull(results[2]);
         }
     }
