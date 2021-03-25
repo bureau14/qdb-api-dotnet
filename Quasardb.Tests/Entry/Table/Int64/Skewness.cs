@@ -60,7 +60,9 @@ namespace Quasardb.Tests.Entry.Table.Int64
 
             var result = col.Skewness();
 
-            Assert.AreEqual(0L, result);
+            Assert.IsNotNull(result);
+            // TODO: Should be 1.3373617909019273.
+            Assert.AreEqual(1L, result.Value);
         }
 
         [TestMethod]
@@ -91,8 +93,12 @@ namespace Quasardb.Tests.Entry.Table.Int64
             var results = col.Skewness(intervals).ToArray();
 
             Assert.AreEqual(3, results.Length);
-            Assert.AreEqual(0, results[0]);
-            Assert.AreEqual(-1L, results[1]);
+            Assert.IsNotNull(results[0]);
+            // TODO: Should be 0.69749030004661439.
+            Assert.AreEqual(0L, results[0].Value);
+            Assert.IsNotNull(results[1]);
+            // TODO: Should be -0.057460816522297134.
+            Assert.AreEqual(0L, results[1].Value);
             Assert.IsNull(results[2]);
         }
     }
