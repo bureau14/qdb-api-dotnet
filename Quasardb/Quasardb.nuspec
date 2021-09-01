@@ -26,6 +26,15 @@
         <file src="bin\.NET Framework 4.5\Quasardb.dll" target="lib\net45\Quasardb.dll" />
         <file src="bin\.NET Framework 4.5\Quasardb.Native.dll" target="lib\net45\Quasardb.Native.dll" />
         <file src="bin\.NET Framework 4.5\Quasardb.xml" target="lib\net45\Quasardb.xml" />
+        <file src="bin\.NET Framework 4.6\Quasardb.dll" target="lib\net46\Quasardb.dll" />
+        <file src="bin\.NET Framework 4.6\Quasardb.Native.dll" target="lib\net46\Quasardb.Native.dll" />
+        <file src="bin\.NET Framework 4.6\Quasardb.xml" target="lib\net46\Quasardb.xml" />
+        <file src="bin\.NET Framework 4.7\Quasardb.dll" target="lib\net47\Quasardb.dll" />
+        <file src="bin\.NET Framework 4.7\Quasardb.Native.dll" target="lib\net47\Quasardb.Native.dll" />
+        <file src="bin\.NET Framework 4.7\Quasardb.xml" target="lib\net47\Quasardb.xml" />
+        <file src="bin\.NET Framework 4.8\Quasardb.dll" target="lib\net48\Quasardb.dll" />
+        <file src="bin\.NET Framework 4.8\Quasardb.Native.dll" target="lib\net48\Quasardb.Native.dll" />
+        <file src="bin\.NET Framework 4.8\Quasardb.xml" target="lib\net48\Quasardb.xml" />
         <file src="bin\.NET Framework 2.0\win32\qdb_api.dll" target="win32\qdb_api.dll" />
         <file src="bin\.NET Framework 2.0\win64\qdb_api.dll" target="win64\qdb_api.dll" />
     </files>
