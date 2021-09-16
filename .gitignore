@@ -9,7 +9,6 @@ obj/
 /packages/
 
 /Quasardb/win*/*.dll
-/Quasardb.Tests/qdbd.exe
 /Quasardb.Tests/db/
 /QuasardbTests/db/
 /UpgradeLog.htm
@@ -25,3 +24,10 @@ secure/
 *.key
 *.err.txt
 *.out.txt
+
+Quasardb/win32/*
+!Quasardb/win32/README.md
+Quasardb/win64/*
+!Quasardb/win64/README.md
+Quasardb/linux/*
+!Quasardb/linux/README.md

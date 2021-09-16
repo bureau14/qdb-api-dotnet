@@ -1,6 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.Web.Script.Serialization;
+using System.Runtime.Serialization.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+public class UserKey
+{
+    public string username { get; set; }
+    public string secret_key { get; set; }
+}
 
 namespace Quasardb.Tests
 {
@@ -16,8 +22,8 @@ namespace Quasardb.Tests
         public const string InsecureClusterUrl = "qdb://127.0.0.1:2836";
         public const string SecureClusterUrl = "qdb://127.0.0.1:2838";
 
-        public const string ClusterPublicKeyFile = "../../../cluster_public.key";
-        public const string UserCredentialsFile = "../../../user_private.key";
+        public const string ClusterPublicKeyFile = "../../../../cluster_public.key";
+        public const string UserCredentialsFile = "../../../../user_private.key";
 
         [AssemblyInitialize]
         public static void StartDaemon(TestContext testContext)
@@ -26,10 +32,13 @@ namespace Quasardb.Tests
             ClusterUrl = UseSecurity ? SecureClusterUrl : InsecureClusterUrl;
 
             ClusterPublicKey = System.IO.File.ReadAllText(ClusterPublicKeyFile);
-            var credentials = new JavaScriptSerializer().Deserialize<Dictionary<string, string>>(System.IO.File.ReadAllText(UserCredentialsFile));
+            var credentials = new UserKey();
+            var ms = new System.IO.MemoryStream(System.IO.File.ReadAllBytes(UserCredentialsFile));
+            var ser = new DataContractJsonSerializer(credentials.GetType());
+            credentials = ser.ReadObject(ms) as UserKey;
 
-            UserName = credentials["username"];
-            UserPrivateKey = credentials["secret_key"];
+            UserName = credentials.username;
+            UserPrivateKey = credentials.secret_key;
         }
     }
 }

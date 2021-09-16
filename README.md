@@ -32,8 +32,8 @@ Create and update an atomic integer:
 
 Download the following files to your local copy of the repository:
 
-* `Quasardb.Native\win32\qdb_api.dll` from [qdb-X.X.X-windows-32bit-c-api.zip](https://download.quasardb.net/quasardb/)
-* `Quasardb.Native\win64\qdb_api.dll` from [qdb-X.X.X-windows-64bit-c-api.zip](https://download.quasardb.net/quasardb/)
-* `Quasardb.Tests\qdbd.exe` from [qdb-X.X.X-windows-32bit-server.zip](https://download.quasardb.net/quasardb/) or [qdb-X.X.X-windows-64bit-server.zip](https://download.quasardb.net/quasardb/)
+* `Quasardb\linux\libqdb_api.so` from [qdb-X.X.X-linux-64bit-c-api.zip](https://download.quasardb.net/quasardb/)
+* `Quasardb\win32\qdb_api.dll` from [qdb-X.X.X-windows-32bit-c-api.zip](https://download.quasardb.net/quasardb/)
+* `Quasardb\win64\qdb_api.dll` from [qdb-X.X.X-windows-64bit-c-api.zip](https://download.quasardb.net/quasardb/)
 
 Open the solution `Quasardb.sln` in Visual Studio.
