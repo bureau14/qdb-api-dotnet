@@ -11,6 +11,8 @@ namespace Quasardb.TimeSeries.Reader
     /// </summary>
     public sealed class QdbTableReader : IEnumerable<QdbRow>, IDisposable
     {
+        private bool disposed = false;
+
         private readonly qdb_handle _handle;
         private readonly string _alias;
         private readonly IntPtr _table;
@@ -24,12 +26,22 @@ namespace Quasardb.TimeSeries.Reader
             _row = new QdbRow(_table, alias, columns);
         }
 
+        void Free()
+        {
+            qdb_api.qdb_release(_handle, _table);
+        }
+
         /// <summary>
         /// Release the table reader.
         /// </summary>
         public void Dispose()
         {
-            qdb_api.qdb_release(_handle, _table);
+            if(!this.disposed)
+            {
+                Free();
+                GC.SuppressFinalize(this);
+                this.disposed = true;
+            }
         }
 
         private bool NextRow()

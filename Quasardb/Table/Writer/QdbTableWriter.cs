@@ -13,6 +13,8 @@ namespace Quasardb.TimeSeries.Writer
     /// </summary>
     public sealed class QdbTableWriter : IDisposable
     {
+        private bool disposed = false;
+
         private readonly qdb_handle _handle;
         private readonly IntPtr _table;
         private readonly InteropableList<qdb_ts_batch_column_info> _columns;
@@ -40,12 +42,22 @@ namespace Quasardb.TimeSeries.Writer
             QdbExceptionThrower.ThrowIfNeeded(err);
         }
 
+        void Free()
+        {
+            qdb_api.qdb_release(_handle, _table);
+        }
+
         /// <summary>
         /// Release the batch table.
         /// </summary>
         public void Dispose()
         {
-            qdb_api.qdb_release(_handle, _table);
+            if(!this.disposed)
+            {
+                Free();
+                GC.SuppressFinalize(this);
+                this.disposed = true;
+            }
         }
 
         internal long IndexOf(string column)

@@ -7,6 +7,8 @@ namespace Quasardb
 {
     class QdbNativeBatch : IDisposable
     {
+        private bool disposed = false;
+
         readonly qdb_handle _handle;
         readonly List<IOperation> _operations;
         readonly qdb_operation[] _batch;
@@ -19,6 +21,11 @@ namespace Quasardb
 
             var err = qdb_api.qdb_init_operations(_batch, Size);
             QdbExceptionThrower.ThrowIfNeeded(err);
+        }
+
+        ~QdbNativeBatch()
+        {
+            Dispose();
         }
 
         UIntPtr Size => (UIntPtr)_batch.Length;
@@ -34,9 +41,19 @@ namespace Quasardb
                 _operations[i].UnmarshalFrom(ref _batch[i]);
         }
 
+        void Free()
+        {
+                qdb_api.qdb_release(_handle, _batch);
+        }
+
         public void Dispose()
         {
-            qdb_api.qdb_release(_handle, _batch);
+            if(!this.disposed)
+            {
+                Free();
+                GC.SuppressFinalize(this);
+                this.disposed = true;
+            }
         }
     }
 }

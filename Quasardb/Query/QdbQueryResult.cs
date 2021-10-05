@@ -11,6 +11,8 @@ namespace Quasardb.Query
     /// </summary>
     public unsafe sealed class QdbQueryResult : IDisposable
     {
+        private bool disposed = false;
+
         readonly qdb_handle _handle;
         readonly qdb_query_result* _result;
 
@@ -43,12 +45,22 @@ namespace Quasardb.Query
             }
         }
 
+        void Free()
+        {
+            qdb_api.qdb_release(_handle, new IntPtr(_result));
+        }
+
         /// <summary>
         /// Release the query result.
         /// </summary>
         public void Dispose()
         {
-            qdb_api.qdb_release(_handle, new IntPtr(_result));
+            if(!this.disposed)
+            {
+                Free();
+                GC.SuppressFinalize(this);
+                this.disposed = true;
+            }
         }
 
         /// <summary>

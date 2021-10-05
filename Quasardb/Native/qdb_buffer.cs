@@ -10,6 +10,8 @@ namespace Quasardb.Native
 {
     internal abstract class qdb_buffer : CriticalFinalizerObject, IDisposable
     {
+        private bool disposed = false;
+
         protected readonly qdb_handle _handle;
 
         public IntPtr Pointer;
@@ -22,13 +24,19 @@ namespace Quasardb.Native
 
         ~qdb_buffer()
         {
+            Dispose();
         }
 
         public void Dispose()
         {
-            Free();
-            GC.SuppressFinalize(this);
-            Pointer = IntPtr.Zero;
+            // Check to see if Dispose has already been called.
+            if(!this.disposed)
+            {
+                Free();
+                GC.SuppressFinalize(this);
+                Pointer = IntPtr.Zero;
+                this.disposed = true;
+            }
         }
 
         void Free()

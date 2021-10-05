@@ -13,6 +13,8 @@ namespace Quasardb.TimeSeries
     /// </summary>
     public sealed class QdbSymbolPointCollection : IEnumerable<Point>, IDisposable
     {
+        private bool disposed = false;
+
         internal readonly InteropableList<qdb_ts_symbol_point> Points;
         readonly List<GCHandle> _pins;
 
@@ -101,8 +103,12 @@ namespace Quasardb.TimeSeries
         /// <inheritdoc />
         public void Dispose()
         {
-            Free();
-            GC.SuppressFinalize(this);
+            if(!this.disposed)
+            {
+                Free();
+                GC.SuppressFinalize(this);
+                this.disposed = true;
+            }
         }
 
         /// <inheritdoc />
