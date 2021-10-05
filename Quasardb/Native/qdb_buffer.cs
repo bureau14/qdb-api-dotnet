@@ -41,7 +41,7 @@ namespace Quasardb.Native
 
         void Free()
         {
-            if (!_handle.IsInvalid)
+            if (!_handle.IsClosed)
             {
                 qdb_api.qdb_release(_handle, Pointer);
             }
