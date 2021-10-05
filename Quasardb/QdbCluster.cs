@@ -80,6 +80,12 @@ namespace Quasardb
             _factory = new QdbEntryFactory(_handle);
         }
 
+        /// <inheritdoc />
+        ~QdbCluster()
+        {
+            Dispose();
+        }
+
         /// <summary>
         /// Gets the last API error description.
         /// <returns>A message describing the error occurred during the last operation.</returns>
@@ -107,7 +113,10 @@ namespace Quasardb
         /// </summary>
         public void Dispose()
         {
-            _handle.Dispose();
+            if (!this.disposed)
+            {
+                _handle.Dispose();
+            }
         }
 
         /// <summary>

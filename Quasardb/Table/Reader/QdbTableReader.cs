@@ -26,6 +26,12 @@ namespace Quasardb.TimeSeries.Reader
             _row = new QdbRow(_table, alias, columns);
         }
 
+        /// <inheritdoc />
+        ~QdbTableReader()
+        {
+            Dispose();
+        }
+
         void Free()
         {
             qdb_api.qdb_release(_handle, _table);

@@ -41,6 +41,12 @@ namespace Quasardb.TimeSeries
                 Add(point);
         }
 
+        /// <inheritdoc />
+        ~QdbStringPointCollection()
+        {
+            Dispose();
+        }
+
         /// <summary>
         /// Adds a point to the collection
         /// </summary>
@@ -110,12 +116,6 @@ namespace Quasardb.TimeSeries
                 GC.SuppressFinalize(this);
                 this.disposed = true;
             }
-        }
-
-        /// <inheritdoc />
-        ~QdbStringPointCollection()
-        {
-            Free();
         }
     }
 }

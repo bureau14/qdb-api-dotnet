@@ -42,6 +42,12 @@ namespace Quasardb.TimeSeries.Writer
             QdbExceptionThrower.ThrowIfNeeded(err);
         }
 
+        /// <inheritdoc />
+        ~QdbTableWriter()
+        {
+            Dispose();
+        }
+
         void Free()
         {
             qdb_api.qdb_release(_handle, _table);
