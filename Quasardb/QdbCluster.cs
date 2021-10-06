@@ -35,11 +35,11 @@ namespace Quasardb
     /// </summary>
     public sealed class QdbCluster : IDisposable
     {
+        private bool disposed = false;
+
         readonly qdb_handle _handle;
         readonly QdbEntryFactory _factory;
         
-        private bool disposed = false;
-
         /// <summary>
         /// Connects to a quasardb database.
         /// </summary>
@@ -113,7 +113,7 @@ namespace Quasardb
         /// </summary>
         public void Dispose()
         {
-            if (!this.disposed && _handle != IntPtr.Zero)
+            if (!this.disposed)
             {
                 _handle.Dispose();
                 this.disposed = true;
