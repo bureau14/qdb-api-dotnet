@@ -33,7 +33,7 @@ namespace Quasardb.TimeSeries.Reader
 
         void Free()
         {
-            if (_handle.IsClosed)
+            if (!_handle.IsClosed)
             {
                 qdb_api.qdb_release(_handle, _table);
             }
