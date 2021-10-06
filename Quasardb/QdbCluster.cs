@@ -113,7 +113,7 @@ namespace Quasardb
         /// </summary>
         public void Dispose()
         {
-            if (!this.disposed)
+            if (!this.disposed && _handle != null)
             {
                 _handle.Dispose();
                 this.disposed = true;
