@@ -27,6 +27,14 @@ namespace Quasardb.Native
             Dispose();
         }
 
+        void Free()
+        {
+            if (!_handle.IsClosed)
+            {
+                qdb_api.qdb_release(_handle, Pointer);
+            }
+        }
+
         public void Dispose()
         {
             // Check to see if Dispose has already been called.
@@ -36,14 +44,6 @@ namespace Quasardb.Native
                 GC.SuppressFinalize(this);
                 Pointer = IntPtr.Zero;
                 this.disposed = true;
-            }
-        }
-
-        void Free()
-        {
-            if (!_handle.IsClosed)
-            {
-                qdb_api.qdb_release(_handle, Pointer);
             }
         }
     }

@@ -45,12 +45,18 @@ namespace Quasardb.TimeSeries.Writer
         /// <inheritdoc />
         ~QdbTableWriter()
         {
-            Dispose();
+            if (!_handle.IsClosed)
+            {
+                Dispose();
+            }
         }
 
         void Free()
         {
-            qdb_api.qdb_release(_handle, _table);
+            if (_handle.IsClosed)
+            {
+                qdb_api.qdb_release(_handle, _table);
+            }
         }
 
         /// <summary>
