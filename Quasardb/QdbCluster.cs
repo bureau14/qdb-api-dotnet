@@ -116,6 +116,7 @@ namespace Quasardb
             if (!this.disposed)
             {
                 _handle.Dispose();
+                this.disposed = true;
             }
         }
 
