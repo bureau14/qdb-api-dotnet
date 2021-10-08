@@ -45,6 +45,7 @@ namespace Quasardb.Query
             }
         }
 
+        /// <inheritdoc />
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
         protected override bool ReleaseHandle()
         {
@@ -52,6 +53,7 @@ namespace Quasardb.Query
             return true;
         }
 
+        /// <inheritdoc />
         public override bool IsInvalid
         {
             get { return _handle == null || _handle.IsInvalid; }

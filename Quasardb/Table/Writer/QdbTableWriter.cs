@@ -42,13 +42,18 @@ namespace Quasardb.TimeSeries.Writer
             QdbExceptionThrower.ThrowIfNeeded(err);
         }
 
+        /// <inheritdoc />
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
         protected override bool ReleaseHandle()
         {
-            qdb_api.qdb_release(_handle, _table);
+            if (!_handle.IsClosed)
+            {
+                qdb_api.qdb_release(_handle, _table);
+            }
             return true;
         }
 
+        /// <inheritdoc />
         public override bool IsInvalid
         {
             get { return _handle == null || _handle.IsInvalid; }

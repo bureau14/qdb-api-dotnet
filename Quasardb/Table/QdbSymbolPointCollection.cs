@@ -40,6 +40,7 @@ namespace Quasardb.TimeSeries
                 Add(point);
         }
 
+        /// <inheritdoc />
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
         protected override bool ReleaseHandle()
         {
@@ -48,6 +49,7 @@ namespace Quasardb.TimeSeries
             return true;
         }
 
+        /// <inheritdoc />
         public override bool IsInvalid
         {
             get { return false; }
