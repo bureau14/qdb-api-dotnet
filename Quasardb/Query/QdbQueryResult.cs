@@ -49,7 +49,10 @@ namespace Quasardb.Query
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
         protected override bool ReleaseHandle()
         {
-            qdb_api.qdb_release(_handle, new IntPtr(_result));
+            if (!_handle.IsClosed)
+            {
+                qdb_api.qdb_release(_handle, new IntPtr(_result));
+            }
             return true;
         }
 
