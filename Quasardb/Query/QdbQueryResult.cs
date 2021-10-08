@@ -1,6 +1,8 @@
 ﻿using System;
 using Quasardb.Exceptions;
 using Quasardb.Native;
+using System.Runtime.ConstrainedExecution;
+using System.Runtime.InteropServices;
 
 // ReSharper disable InconsistentNaming
 
@@ -9,14 +11,12 @@ namespace Quasardb.Query
     /// <summary>
     /// Holds the result of a query.
     /// </summary>
-    public unsafe sealed class QdbQueryResult : IDisposable
+    public unsafe sealed class QdbQueryResult : SafeHandle
     {
-        private bool disposed = false;
-
         readonly qdb_handle _handle;
         readonly qdb_query_result* _result;
 
-        internal QdbQueryResult(qdb_handle handle, string query)
+        internal QdbQueryResult(qdb_handle handle, string query) : base(IntPtr.Zero, true)
         {
             _handle = handle;
 
@@ -45,22 +45,16 @@ namespace Quasardb.Query
             }
         }
 
-        void Free()
+        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
+        protected override bool ReleaseHandle()
         {
             qdb_api.qdb_release(_handle, new IntPtr(_result));
+            return true;
         }
 
-        /// <summary>
-        /// Release the query result.
-        /// </summary>
-        public void Dispose()
+        public override bool IsInvalid
         {
-            if(!this.disposed)
-            {
-                Free();
-                GC.SuppressFinalize(this);
-                this.disposed = true;
-            }
+            get { return _handle == null || _handle.IsInvalid; }
         }
 
         /// <summary>

@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.ConstrainedExecution;
+using System.Runtime.InteropServices;
 using Quasardb.Exceptions;
 using Quasardb.Native;
 
 namespace Quasardb
 {
-    class QdbNativeBatch : IDisposable
+    class QdbNativeBatch : SafeHandle
     {
-        private bool disposed = false;
-
         readonly qdb_handle _handle;
         readonly List<IOperation> _operations;
         readonly qdb_operation[] _batch;
 
-        public QdbNativeBatch(qdb_handle handle, List<IOperation> operations)
+        public QdbNativeBatch(qdb_handle handle, List<IOperation> operations) : base(IntPtr.Zero, true)
         {
             _handle = handle;
             _operations = operations;
@@ -23,9 +23,16 @@ namespace Quasardb
             QdbExceptionThrower.ThrowIfNeeded(err);
         }
 
-        ~QdbNativeBatch()
+        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
+        protected override bool ReleaseHandle()
         {
-            Dispose();
+            qdb_api.qdb_release(_handle, _batch);
+            return true;
+        }
+
+        public override bool IsInvalid
+        {
+            get { return _handle == null || _handle.IsInvalid; }
         }
 
         UIntPtr Size => (UIntPtr)_batch.Length;
@@ -39,24 +46,6 @@ namespace Quasardb
 
             for (var i = 0; i < _operations.Count; i++)
                 _operations[i].UnmarshalFrom(ref _batch[i]);
-        }
-
-        void Free()
-        {
-            if (!_handle.IsClosed)
-            {
-                qdb_api.qdb_release(_handle, _batch);
-            }
-        }
-
-        public void Dispose()
-        {
-            if(!this.disposed)
-            {
-                Free();
-                GC.SuppressFinalize(this);
-                this.disposed = true;
-            }
         }
     }
 }
