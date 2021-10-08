@@ -38,7 +38,7 @@ namespace Quasardb
     {
         readonly qdb_handle _handle;
         readonly QdbEntryFactory _factory;
-        
+
         /// <summary>
         /// Connects to a quasardb database.
         /// </summary>
