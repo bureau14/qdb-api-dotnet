@@ -8,33 +8,31 @@ using System.Runtime.InteropServices;
 
 namespace Quasardb.Native
 {
-    internal abstract class qdb_buffer : CriticalFinalizerObject, IDisposable
+    internal abstract class qdb_buffer : SafeHandle
     {
         protected readonly qdb_handle _handle;
 
         public IntPtr Pointer;
         public UIntPtr Size;
 
-        protected qdb_buffer(qdb_handle handle)
+        protected qdb_buffer(qdb_handle handle) : base(IntPtr.Zero, true)
         {
             _handle = handle;
         }
 
-        ~qdb_buffer()
+        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
+        protected override bool ReleaseHandle()
         {
-            // Free();
+            if (!_handle.IsClosed)
+            {
+                qdb_api.qdb_release(_handle, Pointer);
+            }
+            return true;
         }
 
-        public void Dispose()
+        public override bool IsInvalid
         {
-            Free();
-            GC.SuppressFinalize(this);
-            Pointer = IntPtr.Zero;
-        }
-
-        void Free()
-        {
-            qdb_api.qdb_release(_handle, Pointer);
+            get { return _handle == null || _handle.IsInvalid; }
         }
     }
 
