@@ -153,6 +153,11 @@ namespace Quasardb.Native
             [In] qdb_handle handle,
             [In] qdb_compression compression_level);
 
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_option_set_client_max_in_buf_size(
+            [In] qdb_handle handle,
+            [In] qdb_int_t max_size);
+
         #endregion
 
         #region Functions common to all entries
