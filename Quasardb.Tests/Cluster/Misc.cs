@@ -126,6 +126,19 @@ namespace Quasardb.Tests.Cluster
         }
 
         [TestMethod]
+        [ExpectedException(typeof(QdbInvalidArgumentException))]
+        public void SetMaxInBufferSize_BelowThreshold_ThrowsQdbInvalidArgumentException()
+        {
+            QdbTestCluster.Instance.SetMaxInBufferSize(1);
+        }
+
+        [TestMethod]
+        public void SetMaxInBufferSize_Works()
+        {
+            QdbTestCluster.Instance.SetMaxInBufferSize(128*1024*1024);
+        }
+
+        [TestMethod]
         public void GetLastErrorForNullQuery()
         {
             try

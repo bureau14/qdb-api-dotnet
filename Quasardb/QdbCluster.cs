@@ -124,6 +124,16 @@ namespace Quasardb
         }
 
         /// <summary>
+        /// Sets the maximum incoming buffer size for all network operations of the client.
+        /// </summary>
+        /// <param name="max_size">The maximum input size in bytes</param>
+        public void SetMaxInBufferSize(int max_size)
+        {
+            var error = qdb_api.qdb_option_set_client_max_in_buf_size(_handle, max_size);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+        }
+
+        /// <summary>
         /// Returns a <see cref="QdbBlob" /> attached to the specified alias.
         /// </summary>
         /// <remarks>No operation is performed in the database.</remarks>
