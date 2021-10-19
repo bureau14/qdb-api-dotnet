@@ -3,20 +3,22 @@ using Quasardb.Native;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.ConstrainedExecution;
+using System.Runtime.InteropServices;
 
 namespace Quasardb.TimeSeries.Reader
 {
     /// <summary>
     /// A local table used for reading from a table.
     /// </summary>
-    public sealed class QdbTableReader : IEnumerable<QdbRow>, IDisposable
+    public sealed class QdbTableReader : SafeHandle, IEnumerable<QdbRow>
     {
         private readonly qdb_handle _handle;
         private readonly string _alias;
         private readonly IntPtr _table;
         private QdbRow _row;
 
-        internal QdbTableReader(qdb_handle handle, string alias, IntPtr table, InteropableList<qdb_ts_column_info> columns)
+        internal QdbTableReader(qdb_handle handle, string alias, IntPtr table, InteropableList<qdb_ts_column_info> columns) : base(IntPtr.Zero, true)
         {
             _handle = handle;
             _alias = alias;
@@ -24,12 +26,21 @@ namespace Quasardb.TimeSeries.Reader
             _row = new QdbRow(_table, alias, columns);
         }
 
-        /// <summary>
-        /// Release the table reader.
-        /// </summary>
-        public void Dispose()
+        /// <inheritdoc />
+        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
+        protected override bool ReleaseHandle()
         {
-            qdb_api.qdb_release(_handle, _table);
+            if (!_handle.IsClosed)
+            {
+                qdb_api.qdb_release(_handle, _table);
+            }
+            return true;
+        }
+
+        /// <inheritdoc />
+        public override bool IsInvalid
+        {
+            get { return _handle == null || _handle.IsInvalid; }
         }
 
         private bool NextRow()

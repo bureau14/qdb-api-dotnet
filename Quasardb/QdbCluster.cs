@@ -5,6 +5,7 @@ using Quasardb.Native;
 using Quasardb.TimeSeries;
 using Quasardb.Query;
 using Quasardb.TimeSeries.Writer;
+using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 
 namespace Quasardb
@@ -33,7 +34,7 @@ namespace Quasardb
     /// <summary>
     /// A connection to a quasardb database.
     /// </summary>
-    public sealed class QdbCluster : IDisposable
+    public sealed class QdbCluster : SafeHandle
     {
         readonly qdb_handle _handle;
         readonly QdbEntryFactory _factory;
@@ -42,7 +43,7 @@ namespace Quasardb
         /// Connects to a quasardb database.
         /// </summary>
         /// <param name="uri">The URI of the quasardb database.</param>
-        public QdbCluster(string uri)
+        public QdbCluster(string uri) : base(IntPtr.Zero, true)
         {
             if (uri == null) throw new ArgumentNullException(nameof(uri));
 
@@ -60,7 +61,7 @@ namespace Quasardb
         /// <param name="clusterPublicKey">Cluster public key used for database authentication.</param>
         /// <param name="userName">User name used for connection.</param>
         /// <param name="userPrivateKey">User private key used for connection.</param>
-        public QdbCluster(string uri, string clusterPublicKey, string userName, string userPrivateKey)
+        public QdbCluster(string uri, string clusterPublicKey, string userName, string userPrivateKey) : base(IntPtr.Zero, true)
         {
             if (uri == null) throw new ArgumentNullException(nameof(uri));
 
@@ -76,6 +77,28 @@ namespace Quasardb
             QdbExceptionThrower.ThrowIfNeeded(error);
 
             _factory = new QdbEntryFactory(_handle);
+        }
+
+        /// <inheritdoc />
+        ~QdbCluster()
+        {
+            this.Dispose();
+        }
+
+        /// <summary>
+        /// Close the connection to the database.
+        /// </summary>
+        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
+        protected override bool ReleaseHandle()
+        {
+            _handle.Dispose();
+            return true;
+        }
+
+        /// <inheritdoc />
+        public override bool IsInvalid
+        {
+            get { return _handle == null || _handle.IsInvalid; }
         }
 
         /// <summary>
@@ -98,14 +121,6 @@ namespace Quasardb
         {
             var error = qdb_api.qdb_option_set_compression(_handle, (qdb_compression)level);
             QdbExceptionThrower.ThrowIfNeeded(error);
-        }
-
-        /// <summary>
-        /// Close the connection to the database.
-        /// </summary>
-        public void Dispose()
-        {
-            _handle.Dispose();
         }
 
         /// <summary>

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.ConstrainedExecution;
+using System.Runtime.InteropServices;
 using System.Text;
 using Quasardb.Exceptions;
 using Quasardb.Native;
@@ -11,13 +13,13 @@ namespace Quasardb.TimeSeries.Writer
     /// <summary>
     /// A batch table for bulk insertion into tables.
     /// </summary>
-    public sealed class QdbTableWriter : IDisposable
+    public sealed class QdbTableWriter : SafeHandle
     {
         private readonly qdb_handle _handle;
         private readonly IntPtr _table;
         private readonly InteropableList<qdb_ts_batch_column_info> _columns;
 
-        internal QdbTableWriter(qdb_handle handle, IEnumerable<QdbBatchColumnDefinition> columnDefinitions)
+        internal QdbTableWriter(qdb_handle handle, IEnumerable<QdbBatchColumnDefinition> columnDefinitions) : base(IntPtr.Zero, true)
         {
             _handle = handle;
 
@@ -40,12 +42,21 @@ namespace Quasardb.TimeSeries.Writer
             QdbExceptionThrower.ThrowIfNeeded(err);
         }
 
-        /// <summary>
-        /// Release the batch table.
-        /// </summary>
-        public void Dispose()
+        /// <inheritdoc />
+        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
+        protected override bool ReleaseHandle()
         {
-            qdb_api.qdb_release(_handle, _table);
+            if (!_handle.IsClosed)
+            {
+                qdb_api.qdb_release(_handle, _table);
+            }
+            return true;
+        }
+
+        /// <inheritdoc />
+        public override bool IsInvalid
+        {
+            get { return _handle == null || _handle.IsInvalid; }
         }
 
         internal long IndexOf(string column)

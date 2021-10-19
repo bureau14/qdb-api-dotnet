@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using Quasardb.Native;
 
@@ -11,7 +12,7 @@ namespace Quasardb.TimeSeries
     /// <summary>
     /// A collection of point
     /// </summary>
-    public sealed class QdbSymbolPointCollection : IEnumerable<Point>, IDisposable
+    public sealed class QdbSymbolPointCollection : SafeHandle, IEnumerable<Point>
     {
         internal readonly InteropableList<qdb_ts_symbol_point> Points;
         readonly List<GCHandle> _pins;
@@ -20,7 +21,7 @@ namespace Quasardb.TimeSeries
         /// Creates an empty collection
         /// </summary>
         /// <param name="initialCapacity">The initial capacity of the collection</param>
-        public QdbSymbolPointCollection(int initialCapacity = 1024)
+        public QdbSymbolPointCollection(int initialCapacity = 1024) : base(IntPtr.Zero, true)
         {
             Points = new InteropableList<qdb_ts_symbol_point>(initialCapacity);
             _pins = new List<GCHandle>(initialCapacity);
@@ -30,13 +31,28 @@ namespace Quasardb.TimeSeries
         /// Creates the collection from an existing one
         /// </summary>
         /// <param name="source">The collection of point to duplicate</param>
-        public QdbSymbolPointCollection(IEnumerable<Point> source)
+        public QdbSymbolPointCollection(IEnumerable<Point> source) : base(IntPtr.Zero, true)
         {
             var initialCapacity = Helpers.GetCountOrDefault(source, 1024);
             _pins = new List<GCHandle>(initialCapacity);
             Points = new InteropableList<qdb_ts_symbol_point>(initialCapacity);
             foreach (var point in source)
                 Add(point);
+        }
+
+        /// <inheritdoc />
+        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
+        protected override bool ReleaseHandle()
+        {
+            foreach (var pin in _pins)
+                pin.Free();
+            return true;
+        }
+
+        /// <inheritdoc />
+        public override bool IsInvalid
+        {
+            get { return false; }
         }
 
         /// <summary>
@@ -91,24 +107,5 @@ namespace Quasardb.TimeSeries
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        void Free()
-        {
-            foreach (var pin in _pins)
-                pin.Free();
-        }
-
-        /// <inheritdoc />
-        public void Dispose()
-        {
-            Free();
-            GC.SuppressFinalize(this);
-        }
-
-        /// <inheritdoc />
-        ~QdbSymbolPointCollection()
-        {
-            Free();
-        }
     }
 }
