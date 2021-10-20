@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb.Exceptions;
 using Quasardb.Query;
@@ -74,18 +75,43 @@ namespace Quasardb.Tests.Query
             return r;
         }
 
+        public static string GenerateRandomAlphanumericString(int length = 10)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+            var random = new Random();
+            var randomString = new string(Enumerable.Repeat(chars, length)
+                                                    .Select(s => s[random.Next(s.Length)]).ToArray());
+            return randomString;
+        }
+
         public QdbStringPointCollection InsertStringPoints(QdbTable ts, DateTime time, int count)
         {
-            Random random = new Random();
             var r = new QdbStringPointCollection(count);
 
             var column = ts.StringColumns["the_string"];
             for (int i = 0; i < count; ++i)
             {
-                var bytes = new byte[32];
-                random.NextBytes(bytes);
-                var value = System.Text.Encoding.UTF8.GetString(bytes);
+                var value = GenerateRandomAlphanumericString(32);
 
+                column.Insert(time, value);
+                r.Add(time, value);
+                time = time.AddSeconds(1);
+            }
+            return r;
+        }
+
+        public QdbStringPointCollection InsertInvalidStringPoints(QdbTable ts, DateTime time, int count)
+        {
+            var r = new QdbStringPointCollection(count);
+
+            var column = ts.StringColumns["the_string"];
+
+            byte[] bytes = { (byte)'\xfe', (byte)'\xfe', (byte)'\xff', (byte)'\xff' };
+            var value = Encoding.UTF8.GetString(bytes);
+
+            for (int i = 0; i < count; ++i)
+            {
                 column.Insert(time, value);
                 r.Add(time, value);
                 time = time.AddSeconds(1);
@@ -167,6 +193,33 @@ namespace Quasardb.Tests.Query
             try
             {
                 _cluster.Query("select this_column_doesnt_exist from " + ts.Alias + " in range(2017, +10d)");
+            }
+            finally
+            {
+                ts.Remove();
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(DecoderFallbackException))]
+        public void ThrowsWhenInvalidString()
+        {
+            var startTime = DateTime.Now;
+            QdbTable ts = CreateTable();
+            var insertedStringData = InsertInvalidStringPoints(ts, startTime, 10);
+            try
+            {
+                var results = _cluster.Query("select * from " + ts.Alias);
+                CheckColumns(results.ColumnNames);
+
+                var rows = results.Rows;
+                Assert.AreEqual(10L, rows.Count);
+                for (int i = 0; i < 10L; ++i)
+                {
+                    var row = rows[i];
+                    Assert.AreEqual(insertedStringData[i].Value, row["the_string"].Value);
+                    Assert.AreEqual(ts.Alias, row["$table"].StringValue);
+                }
             }
             finally
             {

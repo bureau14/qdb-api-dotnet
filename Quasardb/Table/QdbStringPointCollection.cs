@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
+using System.Text;
 using Quasardb.Native;
 
 using Point = Quasardb.TimeSeries.QdbStringPoint;
@@ -62,7 +63,14 @@ namespace Quasardb.TimeSeries
         /// <param name="content">The value of the new point</param>
         public void Add(DateTime timestamp, string content)
         {
-            Add(new Point(timestamp, content));
+            if (string.IsNullOrEmpty(content))
+            {
+                Add(new Point(timestamp, content));
+            }
+            else
+            {
+                Add(new Point(timestamp, Encoding.UTF8.GetString(Encoding.Default.GetBytes(content))));
+            }
         }
 
         /// <summary>
