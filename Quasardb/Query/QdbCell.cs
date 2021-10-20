@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Runtime.InteropServices;
+using System.Text;
 using Quasardb.Native;
 
 // ReSharper disable InconsistentNaming
@@ -118,6 +118,7 @@ namespace Quasardb.Query
         {
             get
             {
+                Encoding enc = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true);
                 if (Type == QdbValueType.None)
                     return null;
                 if (Type != QdbValueType.String)
@@ -125,7 +126,7 @@ namespace Quasardb.Query
                 var content = PayloadToByteArray(_result.string_payload);
                 if (content == null)
                     return null;
-                return System.Text.Encoding.UTF8.GetString(content);
+                return enc.GetString(content);
             }
         }
 

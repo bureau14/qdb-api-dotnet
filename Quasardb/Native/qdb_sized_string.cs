@@ -11,14 +11,14 @@ namespace Quasardb.Native
     [StructLayout(LayoutKind.Sequential)]
     internal unsafe struct qdb_sized_string
     {
-        internal Char* data;
+        internal byte* data;
         internal qdb_size_t length;
 
         public override string ToString()
         {
             if (length.ToUInt64() == 0UL) return string.Empty;
-            // TODO: limited to 32-bit
-            // TODO: should be UTF8, not ANSI
+            // Allocates a managed String, copies a specified number of characters from an unmanaged ANSI or UTF-8 string into it,
+            // and widens each character to UTF-16.
             return Marshal.PtrToStringAnsi(new IntPtr(data), (int)length);
         }
 
