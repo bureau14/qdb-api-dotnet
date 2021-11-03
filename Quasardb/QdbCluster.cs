@@ -4,6 +4,7 @@ using Quasardb.Exceptions;
 using Quasardb.Native;
 using Quasardb.TimeSeries;
 using Quasardb.Query;
+using Quasardb.TimeSeries.ExpWriter;
 using Quasardb.TimeSeries.Writer;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
@@ -290,6 +291,17 @@ namespace Quasardb
         public QdbTableWriter Writer(IEnumerable<QdbBatchColumnDefinition> columnDefinitions)
         {
             return new QdbTableWriter(_handle, columnDefinitions);
+        }
+
+        /// <summary>
+        /// Returns a <see cref="QdbTableExpWriter" /> attached to the specified columns.
+        /// </summary>
+        /// <param name="table">The table name you wish to write to</param>
+        /// <returns>A batch table for bulk insertion associated with the table.</returns>
+        /// <seealso cref="QdbTableExpWriter"/>
+        public QdbTableExpWriter ExpWriter(string table)
+        {
+            return new QdbTableExpWriter(_handle, table);
         }
 
         /// <summary>
