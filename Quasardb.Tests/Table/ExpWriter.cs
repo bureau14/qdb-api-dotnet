@@ -7,7 +7,7 @@ using Quasardb.Exceptions;
 using Quasardb.TimeSeries;
 using Quasardb.TimeSeries.ExpWriter;
 
-namespace Quasardb.Tests.Timeseries
+namespace Quasardb.Tests.Table
 {
     [TestClass]
     public class ExpWriter
@@ -160,6 +160,46 @@ namespace Quasardb.Tests.Timeseries
             var batch = Insert(ts.Alias, blobs, doubles, int64s, strings, timestamps);
 
             batch.Push();
+
+            CheckTables(ts, blobs, doubles, int64s, strings, timestamps);
+        }
+
+        [TestMethod]
+        public void Ok_BulkRowInsertFast()
+        {
+            QdbTable ts = CreateTable();
+
+            var blobs = MakeBlobArray(10);
+            var doubles = MakeDoubleArray(10);
+            var int64s = MakeInt64Array(10);
+            var strings = MakeStringArray(10);
+            var timestamps = MakeTimestamps(10);
+
+            var batch = Insert(ts.Alias, blobs, doubles, int64s, strings, timestamps);
+
+            batch.PushFast();
+
+            CheckTables(ts, blobs, doubles, int64s, strings, timestamps);
+        }
+
+        [TestMethod]
+        public void Ok_BulkRowInsertASync()
+        {
+            QdbTable ts = CreateTable();
+
+            var blobs = MakeBlobArray(10);
+            var doubles = MakeDoubleArray(10);
+            var int64s = MakeInt64Array(10);
+            var strings = MakeStringArray(10);
+            var timestamps = MakeTimestamps(10);
+
+            var batch = Insert(ts.Alias, blobs, doubles, int64s, strings, timestamps);
+
+            batch.PushAsync();
+
+            // Wait for push_async to complete
+            // Ideally we could be able to get the proper flush interval
+            Thread.Sleep(8 * 1000);
 
             CheckTables(ts, blobs, doubles, int64s, strings, timestamps);
         }
