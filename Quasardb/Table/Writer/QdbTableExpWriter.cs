@@ -47,14 +47,18 @@ namespace Quasardb.TimeSeries.ExpWriter
             return column;
         }
 
-        qdb_exp_batch_push_column[] convert_columns(qdb_ts_column_info_ex[] infos, qdb_exp_batch_push_column_data[] data)
+        qdb_exp_batch_push_column[] convert_columns(qdb_ts_column_info_ex[] infos, qdb_exp_batch_push_column_data[] data, ref qdb_size_t columnCount)
         {
-            var columns = new qdb_exp_batch_push_column[infos.Length];
+            var columns = new List<qdb_exp_batch_push_column>();
             for (int index = 0; index < infos.Length; index++)
             {
-                columns[index] = convert_column(infos[index], data[index]);
+                if (data[index].blobs != null)
+                {
+                    columns.Add(convert_column(infos[index], data[index]));
+                }
             }
-            return columns;
+            columnCount = (qdb_size_t)columns.Count;
+            return columns.ToArray();
         }
 
         qdb_exp_batch_push_table_data convert_data(qdb_ts_column_info_ex[] infos, qdb_exp_batch_push_column_data[] data)
@@ -64,7 +68,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             d.row_count = (qdb_size_t)_timestamps.Length;
             d.column_count = (qdb_size_t)infos.Length;
             d.timestamps = (qdb_timespec*)convert_array(_timestamps);
-            d.columns = (qdb_exp_batch_push_column*)convert_array(convert_columns(infos, data));
+            d.columns = (qdb_exp_batch_push_column*)convert_array(convert_columns(infos, data, ref d.column_count));
             return d;
         }
 
@@ -95,6 +99,7 @@ namespace Quasardb.TimeSeries.ExpWriter
                 foreach (var column in columns)
                 {
                     _columns[index] = column;
+                    _data[index].blobs = null;
                     index++;
                 }
             }
