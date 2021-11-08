@@ -144,7 +144,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// Set a blob column.
         /// </summary>
         /// <param name="index">The index to the column you want to modify</param>
-        /// <param name="values">The values as byte arrays</param>
+        /// <param name="values">The values as an array of byte arrays</param>
         public unsafe void SetBlobColumn(long index, byte[][] values)
         {
             qdb_blob[] blobs = new qdb_blob[values.Length];
@@ -162,6 +162,16 @@ namespace Quasardb.TimeSeries.ExpWriter
         }
 
         /// <summary>
+        /// Set a blob column.
+        /// </summary>
+        /// <param name="name">The name to the column you want to modify</param>
+        /// <param name="values">The values as an array of byte arrays</param>
+        public unsafe void SetBlobColumn(string name, byte[][] values)
+        {
+            SetBlobColumn(IndexOf(name), values);
+        }
+
+        /// <summary>
         /// Set a double column.
         /// </summary>
         /// <param name="index">The index to the column you want to modify</param>
@@ -172,6 +182,16 @@ namespace Quasardb.TimeSeries.ExpWriter
         }
 
         /// <summary>
+        /// Set a double column.
+        /// </summary>
+        /// <param name="name">The name to the column you want to modify</param>
+        /// <param name="values">The values as a double array</param>
+        public unsafe void SetDoubleColumn(string name, double[] values)
+        {
+            SetDoubleColumn(IndexOf(name), values);
+        }
+
+        /// <summary>
         /// Set an integer column.
         /// </summary>
         /// <param name="index">The index to the column you want to modify</param>
@@ -179,6 +199,16 @@ namespace Quasardb.TimeSeries.ExpWriter
         public void SetInt64Column(long index, long[] values)
         {
             _data[index].ints = (long*)convert_array<long>(values);
+        }
+
+        /// <summary>
+        /// Set an integer column.
+        /// </summary>
+        /// <param name="name">The name to the column you want to modify</param>
+        /// <param name="values">The values as an int64 array</param>
+        public unsafe void SetInt64Column(string name, long[] values)
+        {
+            SetInt64Column(IndexOf(name), values);
         }
 
         /// <summary>
@@ -203,6 +233,16 @@ namespace Quasardb.TimeSeries.ExpWriter
         }
 
         /// <summary>
+        /// Set a string column.
+        /// </summary>
+        /// <param name="name">The name to the column you want to modify</param>
+        /// <param name="values">The values as a utf8 string array</param>
+        public unsafe void SetStringColumn(string name, string[] values)
+        {
+            SetStringColumn(IndexOf(name), values);
+        }
+
+        /// <summary>
         /// Set a timestamp column.
         /// </summary>
         /// <param name="index">The index to the column you want to modify</param>
@@ -217,6 +257,16 @@ namespace Quasardb.TimeSeries.ExpWriter
                 idx++;
             }
             _data[index].timestamps = (qdb_timespec*)convert_array<qdb_timespec>(timestamps);
+        }
+
+        /// <summary>
+        /// Set a timestamp column.
+        /// </summary>
+        /// <param name="name">The name to the column you want to modify</param>
+        /// <param name="values">The values as a DateTime array</param>
+        public unsafe void SetTimestampColumn(string name, DateTime[] values)
+        {
+            SetTimestampColumn(IndexOf(name), values);
         }
 
         /// <summary>

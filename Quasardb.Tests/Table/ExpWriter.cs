@@ -103,6 +103,24 @@ namespace Quasardb.Tests.Table
             return ts;
         }
 
+        public QdbTableExpWriter InsertByName(string ts,
+            byte[][] blobs,
+            double[] doubles,
+            long[] int64s,
+            string[] strings,
+            DateTime[] timestamps)
+        {
+            var batch = _cluster.ExpWriter(ts);
+            batch.SetTimestamps(timestamps);
+            batch.SetBlobColumn("the_blob", blobs);
+            batch.SetDoubleColumn("the_double", doubles);
+            batch.SetInt64Column("the_int64", int64s);
+            batch.SetStringColumn("the_string", strings);
+            batch.SetTimestampColumn("the_ts", timestamps);
+            batch.SetStringColumn("the_symbol", strings);
+            return batch;
+        }
+
         public QdbTableExpWriter Insert(string ts,
             byte[][] blobs,
             double[] doubles,
@@ -165,6 +183,24 @@ namespace Quasardb.Tests.Table
         }
 
         [TestMethod]
+        public void Ok_BulkRowInsertByName()
+        {
+            QdbTable ts = CreateTable();
+
+            var blobs      = MakeBlobArray(10);
+            var doubles    = MakeDoubleArray(10);
+            var int64s     = MakeInt64Array(10);
+            var strings    = MakeStringArray(10);
+            var timestamps = MakeTimestamps(10);
+
+            var batch = InsertByName(ts.Alias, blobs, doubles, int64s, strings, timestamps);
+
+            batch.Push();
+
+            CheckTables(ts, blobs, doubles, int64s, strings, timestamps);
+        }
+
+        [TestMethod]
         public void Ok_BulkRowInsertFast()
         {
             QdbTable ts = CreateTable();
@@ -183,6 +219,24 @@ namespace Quasardb.Tests.Table
         }
 
         [TestMethod]
+        public void Ok_BulkRowInsertFastByName()
+        {
+            QdbTable ts = CreateTable();
+
+            var blobs = MakeBlobArray(10);
+            var doubles = MakeDoubleArray(10);
+            var int64s = MakeInt64Array(10);
+            var strings = MakeStringArray(10);
+            var timestamps = MakeTimestamps(10);
+
+            var batch = InsertByName(ts.Alias, blobs, doubles, int64s, strings, timestamps);
+
+            batch.PushFast();
+
+            CheckTables(ts, blobs, doubles, int64s, strings, timestamps);
+        }
+
+        [TestMethod]
         public void Ok_BulkRowInsertASync()
         {
             QdbTable ts = CreateTable();
@@ -194,6 +248,28 @@ namespace Quasardb.Tests.Table
             var timestamps = MakeTimestamps(10);
 
             var batch = Insert(ts.Alias, blobs, doubles, int64s, strings, timestamps);
+
+            batch.PushAsync();
+
+            // Wait for push_async to complete
+            // Ideally we could be able to get the proper flush interval
+            Thread.Sleep(8 * 1000);
+
+            CheckTables(ts, blobs, doubles, int64s, strings, timestamps);
+        }
+
+        [TestMethod]
+        public void Ok_BulkRowInsertASyncByName()
+        {
+            QdbTable ts = CreateTable();
+
+            var blobs = MakeBlobArray(10);
+            var doubles = MakeDoubleArray(10);
+            var int64s = MakeInt64Array(10);
+            var strings = MakeStringArray(10);
+            var timestamps = MakeTimestamps(10);
+
+            var batch = InsertByName(ts.Alias, blobs, doubles, int64s, strings, timestamps);
 
             batch.PushAsync();
 
