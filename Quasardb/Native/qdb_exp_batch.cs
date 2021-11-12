@@ -9,15 +9,15 @@ namespace Quasardb.Native
 {
     internal enum qdb_exp_batch_push_mode : int
     {
-        qdb_exp_batch_push_transactional = 0,
-        qdb_exp_batch_push_truncate = 1,
-        qdb_exp_batch_push_fast = 2,
-        qdb_exp_batch_push_async = 3,
+        transactional = 0,
+        truncate = 1,
+        fast = 2,
+        async = 3,
     }
     internal enum qdb_exp_batch_push_options : int
     {
-        qdb_exp_batch_option_standard = 0,
-        qdb_exp_batch_option_unique = 1,
+        standard = 0,
+        unique = 1,
     }
 
     [StructLayout(LayoutKind.Explicit)]

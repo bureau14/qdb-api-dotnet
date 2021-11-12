@@ -4,13 +4,14 @@ using System.Text;
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb.Exceptions;
+using Quasardb;
 using Quasardb.TimeSeries;
 using Quasardb.TimeSeries.ExpWriter;
 
 namespace Quasardb.Tests.Table
 {
     [TestClass]
-    public class ExpWriter
+    public class ExpWriterTests
     {
         private readonly QdbCluster _cluster = QdbTestCluster.Instance;
 
@@ -102,13 +103,14 @@ namespace Quasardb.Tests.Table
         }
 
         public QdbTableExpWriter InsertByName(string ts,
+            QdbTableExpWriterOptions options,
             byte[][] blobs,
             double[] doubles,
             long[] int64s,
             string[] strings,
             DateTime[] timestamps)
         {
-            var batch = _cluster.ExpWriter(ts);
+            var batch = _cluster.ExpWriter(ts, options);
             batch.SetTimestamps(timestamps);
             batch.SetBlobColumn("the_blob", blobs);
             batch.SetDoubleColumn("the_double", doubles);
@@ -120,13 +122,15 @@ namespace Quasardb.Tests.Table
         }
 
         public QdbTableExpWriter Insert(string ts,
+            QdbTableExpWriterOptions options,
             byte[][] blobs,
             double[] doubles,
             long[] int64s,
             string[] strings,
             DateTime[] timestamps)
         {
-            var batch = _cluster.ExpWriter(ts);
+            var batch = _cluster.ExpWriter(ts, options);
+
             batch.SetTimestamps(timestamps);
             batch.SetBlobColumn(0, blobs);
             batch.SetDoubleColumn(1, doubles);
@@ -138,60 +142,66 @@ namespace Quasardb.Tests.Table
         }
 
         public QdbTableExpWriter Insert(string ts,
+            QdbTableExpWriterOptions options,
             byte[][] values,
             DateTime[] timestamps)
         {
-            var batch = _cluster.ExpWriter(ts);
+            var batch = _cluster.ExpWriter(ts, options);
             batch.SetTimestamps(timestamps);
             batch.SetBlobColumn(0, values);
             return batch;
         }
 
         public QdbTableExpWriter Insert(string ts,
+            QdbTableExpWriterOptions options,
             double[] values,
             DateTime[] timestamps)
         {
-            var batch = _cluster.ExpWriter(ts);
+            var batch = _cluster.ExpWriter(ts, options);
             batch.SetTimestamps(timestamps);
             batch.SetDoubleColumn(1, values);
             return batch;
         }
 
         public QdbTableExpWriter Insert(string ts,
+            QdbTableExpWriterOptions options,
             long[] values,
             DateTime[] timestamps)
         {
-            var batch = _cluster.ExpWriter(ts);
+            var batch = _cluster.ExpWriter(ts, options);
             batch.SetTimestamps(timestamps);
             batch.SetInt64Column(2, values);
             return batch;
         }
 
         public QdbTableExpWriter Insert(string ts,
+            QdbTableExpWriterOptions options,
             string[] values,
             DateTime[] timestamps)
         {
-            var batch = _cluster.ExpWriter(ts);
+            var batch = _cluster.ExpWriter(ts, options);
             batch.SetTimestamps(timestamps);
             batch.SetStringColumn(3, values);
             return batch;
         }
 
         public QdbTableExpWriter Insert(string ts,
+            QdbTableExpWriterOptions options,
             DateTime[] values,
             DateTime[] timestamps)
         {
-            var batch = _cluster.ExpWriter(ts);
+            var batch = _cluster.ExpWriter(ts, options);
             batch.SetTimestamps(timestamps);
             batch.SetTimestampColumn(4, values);
             return batch;
         }
 
         public QdbTableExpWriter InsertSymbol(string ts,
+            QdbTableExpWriterOptions options,
             string[] values,
             DateTime[] timestamps)
         {
-            var batch = _cluster.ExpWriter(ts);
+            var batch = _cluster.ExpWriter(ts, options);
             batch.SetTimestamps(timestamps);
             batch.SetStringColumn(5, values);
             return batch;
@@ -305,7 +315,7 @@ namespace Quasardb.Tests.Table
             var strings    = MakeStringArray(10);
             var timestamps = MakeTimestamps(10);
 
-            var batch = Insert(ts.Alias, blobs, doubles, int64s, strings, timestamps);
+            var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Transactional(), blobs, doubles, int64s, strings, timestamps);
 
             batch.Push();
 
@@ -320,7 +330,7 @@ namespace Quasardb.Tests.Table
             var values     = MakeBlobArray(10);
             var timestamps = MakeTimestamps(10);
 
-            var batch = Insert(ts.Alias, values, timestamps);
+            var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Transactional(), values, timestamps);
 
             batch.Push();
 
@@ -335,7 +345,7 @@ namespace Quasardb.Tests.Table
             var values      = MakeDoubleArray(10);
             var timestamps = MakeTimestamps(10);
 
-            var batch = Insert(ts.Alias, values, timestamps);
+            var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Transactional(), values, timestamps);
 
             batch.Push();
 
@@ -350,7 +360,7 @@ namespace Quasardb.Tests.Table
             var values     = MakeInt64Array(10);
             var timestamps = MakeTimestamps(10);
 
-            var batch = Insert(ts.Alias, values, timestamps);
+            var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Transactional(), values, timestamps);
 
             batch.Push();
 
@@ -365,7 +375,7 @@ namespace Quasardb.Tests.Table
             var values      = MakeStringArray(10);
             var timestamps = MakeTimestamps(10);
 
-            var batch = Insert(ts.Alias, values, timestamps);
+            var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Transactional(), values, timestamps);
 
             batch.Push();
 
@@ -380,7 +390,7 @@ namespace Quasardb.Tests.Table
             var values     = MakeTimestamps(10);
             var timestamps = MakeTimestamps(10);
 
-            var batch = Insert(ts.Alias, values, timestamps);
+            var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Transactional(), values, timestamps);
 
             batch.Push();
 
@@ -395,7 +405,7 @@ namespace Quasardb.Tests.Table
             var values      = MakeStringArray(10);
             var timestamps = MakeTimestamps(10);
 
-            var batch = InsertSymbol(ts.Alias, values, timestamps);
+            var batch = InsertSymbol(ts.Alias, new QdbTableExpWriterOptions().Transactional(), values, timestamps);
 
             batch.Push();
 
@@ -413,7 +423,7 @@ namespace Quasardb.Tests.Table
             var strings    = MakeStringArray(10);
             var timestamps = MakeTimestamps(10);
 
-            var batch = InsertByName(ts.Alias, blobs, doubles, int64s, strings, timestamps);
+            var batch = InsertByName(ts.Alias, new QdbTableExpWriterOptions().Transactional(), blobs, doubles, int64s, strings, timestamps);
 
             batch.Push();
 
@@ -431,9 +441,9 @@ namespace Quasardb.Tests.Table
             var strings = MakeStringArray(10);
             var timestamps = MakeTimestamps(10);
 
-            var batch = Insert(ts.Alias, blobs, doubles, int64s, strings, timestamps);
+            var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Fast(), blobs, doubles, int64s, strings, timestamps);
 
-            batch.PushFast();
+            batch.Push();
 
             CheckTables(ts, blobs, doubles, int64s, strings, timestamps);
         }
@@ -449,9 +459,9 @@ namespace Quasardb.Tests.Table
             var strings = MakeStringArray(10);
             var timestamps = MakeTimestamps(10);
 
-            var batch = InsertByName(ts.Alias, blobs, doubles, int64s, strings, timestamps);
+            var batch = InsertByName(ts.Alias, new QdbTableExpWriterOptions().Fast(), blobs, doubles, int64s, strings, timestamps);
 
-            batch.PushFast();
+            batch.Push();
 
             CheckTables(ts, blobs, doubles, int64s, strings, timestamps);
         }
@@ -467,9 +477,9 @@ namespace Quasardb.Tests.Table
             var strings = MakeStringArray(10);
             var timestamps = MakeTimestamps(10);
 
-            var batch = Insert(ts.Alias, blobs, doubles, int64s, strings, timestamps);
+            var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Async(), blobs, doubles, int64s, strings, timestamps);
 
-            batch.PushAsync();
+            batch.Push();
 
             // Wait for push_async to complete
             // Ideally we could be able to get the proper flush interval
@@ -489,9 +499,9 @@ namespace Quasardb.Tests.Table
             var strings = MakeStringArray(10);
             var timestamps = MakeTimestamps(10);
 
-            var batch = InsertByName(ts.Alias, blobs, doubles, int64s, strings, timestamps);
+            var batch = InsertByName(ts.Alias, new QdbTableExpWriterOptions().Async(), blobs, doubles, int64s, strings, timestamps);
 
-            batch.PushAsync();
+            batch.Push();
 
             // Wait for push_async to complete
             // Ideally we could be able to get the proper flush interval

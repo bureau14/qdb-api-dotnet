@@ -39,6 +39,11 @@ namespace Quasardb.TimeSeries
         /// </summary>
         public static readonly QdbTimeInterval Everything = new QdbTimeInterval(DateTime.MinValue, DateTime.MaxValue);
 
+        /// <summary>
+        /// A instance of QdbTimeInterval that include nothing
+        /// </summary>
+        public static readonly QdbTimeInterval Nothing = new QdbTimeInterval(DateTime.MinValue, DateTime.MinValue);
+
         internal qdb_ts_range ToNative()
         {
             return new qdb_ts_range

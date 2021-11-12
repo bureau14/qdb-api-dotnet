@@ -11,13 +11,95 @@ using qdb_size_t = System.UIntPtr;
 namespace Quasardb.TimeSeries.ExpWriter
 {
     /// <summary>
+    /// Push options
+    /// </summary>
+    public sealed class QdbTableExpWriterOptions
+    {
+        private qdb_exp_batch_push_mode _mode = qdb_exp_batch_push_mode.transactional;
+        private qdb_exp_batch_push_options _option = qdb_exp_batch_push_options.standard;
+        private QdbTimeInterval _interval = QdbTimeInterval.Nothing;
+
+        /// <summary>
+        /// Provides information about the push.
+        /// </summary>
+        public QdbTableExpWriterOptions()
+        {
+        }
+
+        /// <summary>
+        /// Sets the push mode to transactional.
+        /// </summary>
+        public QdbTableExpWriterOptions Transactional()
+        {
+            _mode = qdb_exp_batch_push_mode.transactional;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the push mode to fast.
+        /// </summary>
+        public QdbTableExpWriterOptions Fast()
+        {
+            _mode = qdb_exp_batch_push_mode.fast;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the push mode to asynchronous.
+        /// </summary>
+        public QdbTableExpWriterOptions Async()
+        {
+            _mode = qdb_exp_batch_push_mode.async;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the push mode to truncate, will truncate the range provided then insert data.
+        /// </summary>
+        /// <param name="interval">The interval truncated during the push.</param>
+        public QdbTableExpWriterOptions Truncate(QdbTimeInterval interval)
+        {
+            _mode = qdb_exp_batch_push_mode.truncate;
+            _interval = interval;
+            return this;
+        }
+
+        /// <summary>
+        /// Removes duplicate found while inserting.
+        /// </summary>
+        public QdbTableExpWriterOptions RemoveDuplicate()
+        {
+            _option = qdb_exp_batch_push_options.unique;
+            return this;
+        }
+
+        internal qdb_exp_batch_push_mode Mode()
+        {
+            return _mode;
+        }
+
+        internal qdb_exp_batch_push_options Option()
+        {
+            return _option;
+        }
+
+        internal QdbTimeInterval Interval()
+        {
+            return _interval;
+        }
+    }
+
+    /// <summary>
     /// A batch table for bulk insertion into tables.
     /// </summary>
     public unsafe sealed class QdbTableExpWriter : SafeHandle
     {
         private readonly qdb_handle _handle;
         readonly List<GCHandle> _pins;
-        private string _table;
+
+        string _table;
+        QdbTableExpWriterOptions _options;
+
         private qdb_timespec[] _timestamps;
         private qdb_ts_column_info_ex[] _columns;
         private qdb_exp_batch_push_column_data[] _data;
@@ -79,19 +161,20 @@ namespace Quasardb.TimeSeries.ExpWriter
             table.data = convert_data(infos, data);
             table.truncate_ranges = null;
             table.truncate_range_count = (qdb_size_t)0;
-            table.options = qdb_exp_batch_push_options.qdb_exp_batch_option_standard;
+            table.options = _options.Option();
             return table;
         }
 
-        internal QdbTableExpWriter(qdb_handle handle, string table) : base(IntPtr.Zero, true)
+        internal QdbTableExpWriter(qdb_handle handle, string table, QdbTableExpWriterOptions options) : base(IntPtr.Zero, true)
         {
             _handle = handle;
             _pins = new List<GCHandle>(1024);
             _table = table;
+            _options = options;
 
             using (var columns = new qdb_buffer<qdb_ts_column_info_ex>(handle))
             {
-                var err = qdb_api.qdb_ts_list_columns_ex(handle, table, out columns.Pointer, out columns.Size);
+                var err = qdb_api.qdb_ts_list_columns_ex(handle, _table, out columns.Pointer, out columns.Size);
                 QdbExceptionThrower.ThrowIfNeeded(err, alias: table);
 
                 long index = 0;
@@ -282,29 +365,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         {
             var tables = new qdb_exp_batch_push_table[1];
             tables[0] = convert_table(_table, _timestamps, _columns, _data);
-            var err = qdb_api.qdb_exp_batch_push(_handle, qdb_exp_batch_push_mode.qdb_exp_batch_push_transactional, tables, null, 1);
-            QdbExceptionThrower.ThrowIfNeeded(err);
-        }
-
-        /// <summary>
-        /// Fast, in-place batch push that is efficient when doing lots of small, incremental pushes.
-        /// </summary>
-        public void PushFast()
-        {
-            var tables = new qdb_exp_batch_push_table[1];
-            tables[0] = convert_table(_table, _timestamps, _columns, _data);
-            var err = qdb_api.qdb_exp_batch_push(_handle, qdb_exp_batch_push_mode.qdb_exp_batch_push_fast, tables, null, 1);
-            QdbExceptionThrower.ThrowIfNeeded(err);
-        }
-
-        /// <summary>
-        /// Asynchronous batch push that buffers data inside the QuasarDB daemon.
-        /// </summary>
-        public void PushAsync()
-        {
-            var tables = new qdb_exp_batch_push_table[1];
-            tables[0] = convert_table(_table, _timestamps, _columns, _data);
-            var err = qdb_api.qdb_exp_batch_push(_handle, qdb_exp_batch_push_mode.qdb_exp_batch_push_async, tables, null, 1);
+            var err = qdb_api.qdb_exp_batch_push(_handle, _options.Mode(), tables, null, 1);
             QdbExceptionThrower.ThrowIfNeeded(err);
         }
     }
