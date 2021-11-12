@@ -79,6 +79,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             table.data = convert_data(infos, data);
             table.truncate_ranges = null;
             table.truncate_range_count = (qdb_size_t)0;
+            table.options = qdb_exp_batch_push_options.qdb_exp_batch_option_standard;
             return table;
         }
 

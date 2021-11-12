@@ -14,6 +14,11 @@ namespace Quasardb.Native
         qdb_exp_batch_push_fast = 2,
         qdb_exp_batch_push_async = 3,
     }
+    internal enum qdb_exp_batch_push_options : int
+    {
+        qdb_exp_batch_option_standard = 0,
+        qdb_exp_batch_option_unique = 1,
+    }
 
     [StructLayout(LayoutKind.Explicit)]
     internal unsafe struct qdb_exp_batch_push_column_data
@@ -74,6 +79,8 @@ namespace Quasardb.Native
         //! Field used by \ref qdb_exp_batch_push_truncate. The number of
         //! truncated ranges.
         internal qdb_size_t truncate_range_count;
+
+        internal qdb_exp_batch_push_options options;
     };
     
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
