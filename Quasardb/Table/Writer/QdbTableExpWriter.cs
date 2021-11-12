@@ -159,8 +159,19 @@ namespace Quasardb.TimeSeries.ExpWriter
             qdb_exp_batch_push_table table;
             table.name = convert_string(name);
             table.data = convert_data(infos, data);
-            table.truncate_ranges = null;
-            table.truncate_range_count = (qdb_size_t)0;
+
+            if (_options.Mode() == qdb_exp_batch_push_mode.truncate)
+            {
+                qdb_ts_range[] ranges = new qdb_ts_range[1];
+                ranges[0] = _options.Interval().ToNative();
+                table.truncate_ranges = (qdb_ts_range*)convert_array(ranges);
+                table.truncate_range_count = (qdb_size_t)1;
+            }
+            else
+            {
+                table.truncate_ranges = null;
+                table.truncate_range_count = (qdb_size_t)0;
+            }
             table.options = _options.Option();
             return table;
         }

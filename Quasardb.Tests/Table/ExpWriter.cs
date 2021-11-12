@@ -509,5 +509,33 @@ namespace Quasardb.Tests.Table
 
             CheckTables(ts, blobs, doubles, int64s, strings, timestamps);
         }
+
+        [TestMethod]
+        public void Ok_BulkRowInsertTruncate()
+        {
+            QdbTable ts = CreateTable();
+            var timestamps = MakeTimestamps(10);
+
+            {
+                var values = MakeBlobArray(10);
+
+                var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Transactional(), values, timestamps);
+                batch.Push();
+
+                CheckColumn(ts, values, timestamps);
+            }
+
+            {
+                var values = MakeBlobArray(10);
+
+                var begin = timestamps[0];
+                var end = timestamps[timestamps.Length - 1].AddSeconds(1);
+                QdbTimeInterval interval = new QdbTimeInterval(begin, end);
+                var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Truncate(interval), values, timestamps);
+                batch.Push();
+
+                CheckColumn(ts, values, timestamps);
+            }
+        }
     }
 }
