@@ -110,14 +110,16 @@ namespace Quasardb.Tests.Table
             string[] strings,
             DateTime[] timestamps)
         {
-            var batch = _cluster.ExpWriter(ts, options);
+            string[] tables = new string[1];
+            tables[0] = ts;
+            var batch = _cluster.ExpWriter(tables, options);
             batch.SetTimestamps(timestamps);
-            batch.SetBlobColumn("the_blob", blobs);
-            batch.SetDoubleColumn("the_double", doubles);
-            batch.SetInt64Column("the_int64", int64s);
-            batch.SetStringColumn("the_string", strings);
-            batch.SetTimestampColumn("the_ts", timestamps);
-            batch.SetStringColumn("the_symbol", strings);
+            batch.SetBlobColumn(ts, "the_blob", blobs);
+            batch.SetDoubleColumn(ts, "the_double", doubles);
+            batch.SetInt64Column(ts, "the_int64", int64s);
+            batch.SetStringColumn(ts, "the_string", strings);
+            batch.SetTimestampColumn(ts, "the_ts", timestamps);
+            batch.SetStringColumn(ts, "the_symbol", strings);
             return batch;
         }
 
@@ -129,15 +131,17 @@ namespace Quasardb.Tests.Table
             string[] strings,
             DateTime[] timestamps)
         {
-            var batch = _cluster.ExpWriter(ts, options);
+            string[] tables = new string[1];
+            tables[0] = ts;
+            var batch = _cluster.ExpWriter(tables, options);
 
             batch.SetTimestamps(timestamps);
-            batch.SetBlobColumn(0, blobs);
-            batch.SetDoubleColumn(1, doubles);
-            batch.SetInt64Column(2, int64s);
-            batch.SetStringColumn(3, strings);
-            batch.SetTimestampColumn(4, timestamps);
-            batch.SetStringColumn(5, strings);
+            batch.SetBlobColumn(0, 0, blobs);
+            batch.SetDoubleColumn(0, 1, doubles);
+            batch.SetInt64Column(0, 2, int64s);
+            batch.SetStringColumn(0, 3, strings);
+            batch.SetTimestampColumn(0, 4, timestamps);
+            batch.SetStringColumn(0, 5, strings);
             return batch;
         }
 
@@ -146,9 +150,11 @@ namespace Quasardb.Tests.Table
             byte[][] values,
             DateTime[] timestamps)
         {
-            var batch = _cluster.ExpWriter(ts, options);
+            string[] tables = new string[1];
+            tables[0] = ts;
+            var batch = _cluster.ExpWriter(tables, options);
             batch.SetTimestamps(timestamps);
-            batch.SetBlobColumn(0, values);
+            batch.SetBlobColumn(0, 0, values);
             return batch;
         }
 
@@ -157,9 +163,11 @@ namespace Quasardb.Tests.Table
             double[] values,
             DateTime[] timestamps)
         {
-            var batch = _cluster.ExpWriter(ts, options);
+            string[] tables = new string[1];
+            tables[0] = ts;
+            var batch = _cluster.ExpWriter(tables, options);
             batch.SetTimestamps(timestamps);
-            batch.SetDoubleColumn(1, values);
+            batch.SetDoubleColumn(0, 1, values);
             return batch;
         }
 
@@ -168,9 +176,11 @@ namespace Quasardb.Tests.Table
             long[] values,
             DateTime[] timestamps)
         {
-            var batch = _cluster.ExpWriter(ts, options);
+            string[] tables = new string[1];
+            tables[0] = ts;
+            var batch = _cluster.ExpWriter(tables, options);
             batch.SetTimestamps(timestamps);
-            batch.SetInt64Column(2, values);
+            batch.SetInt64Column(0, 2, values);
             return batch;
         }
 
@@ -179,9 +189,11 @@ namespace Quasardb.Tests.Table
             string[] values,
             DateTime[] timestamps)
         {
-            var batch = _cluster.ExpWriter(ts, options);
+            string[] tables = new string[1];
+            tables[0] = ts;
+            var batch = _cluster.ExpWriter(tables, options);
             batch.SetTimestamps(timestamps);
-            batch.SetStringColumn(3, values);
+            batch.SetStringColumn(0, 3, values);
             return batch;
         }
 
@@ -190,9 +202,11 @@ namespace Quasardb.Tests.Table
             DateTime[] values,
             DateTime[] timestamps)
         {
-            var batch = _cluster.ExpWriter(ts, options);
+            string[] tables = new string[1];
+            tables[0] = ts;
+            var batch = _cluster.ExpWriter(tables, options);
             batch.SetTimestamps(timestamps);
-            batch.SetTimestampColumn(4, values);
+            batch.SetTimestampColumn(0, 4, values);
             return batch;
         }
 
@@ -201,9 +215,11 @@ namespace Quasardb.Tests.Table
             string[] values,
             DateTime[] timestamps)
         {
-            var batch = _cluster.ExpWriter(ts, options);
+            string[] tables = new string[1];
+            tables[0] = ts;
+            var batch = _cluster.ExpWriter(tables, options);
             batch.SetTimestamps(timestamps);
-            batch.SetStringColumn(5, values);
+            batch.SetStringColumn(0, 5, values);
             return batch;
         }
 
@@ -331,9 +347,12 @@ namespace Quasardb.Tests.Table
             var blobs = MakeBlobArray(10);
             var timestamps = MakeTimestamps(10);
 
-            var batch = _cluster.ExpWriter(ts.Alias, new QdbTableExpWriterOptions().Transactional());
+            string[] tables = new string[1];
+            tables[0] = ts.Alias;
+
+            var batch = _cluster.ExpWriter(tables, new QdbTableExpWriterOptions().Transactional());
             batch.SetTimestamps(timestamps);
-            batch.SetBlobColumn("the_wrong_blob", blobs);
+            batch.SetBlobColumn(ts.Alias, "the_wrong_blob", blobs);
 
             batch.Push();
         }

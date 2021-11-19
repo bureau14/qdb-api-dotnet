@@ -296,13 +296,13 @@ namespace Quasardb
         /// <summary>
         /// Returns a <see cref="QdbTableExpWriter" /> attached to the specified columns.
         /// </summary>
-        /// <param name="table">The table name you wish to write to</param>
+        /// <param name="tables">The table names you wish to write to</param>
         /// <param name="options">The options used for the push</param>
         /// <returns>A batch table for bulk insertion associated with the table.</returns>
         /// <seealso cref="QdbTableExpWriter"/>
-        public QdbTableExpWriter ExpWriter(string table, QdbTableExpWriterOptions options)
+        public QdbTableExpWriter ExpWriter(string[] tables, QdbTableExpWriterOptions options)
         {
-            return new QdbTableExpWriter(_handle, table, options);
+            return new QdbTableExpWriter(_handle, tables, options);
         }
 
         /// <summary>

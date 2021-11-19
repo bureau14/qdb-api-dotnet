@@ -88,6 +88,13 @@ namespace Quasardb.TimeSeries.ExpWriter
             return _interval;
         }
     }
+    internal unsafe sealed class QdbTableExpWriterData
+    {
+        public qdb_ts_column_info_ex[] columns;
+        public qdb_exp_batch_push_column_data[] data;
+        public Dictionary<string, long> column_name_to_index;
+    }
+
 
     /// <summary>
     /// A batch table for bulk insertion into tables.
@@ -97,39 +104,49 @@ namespace Quasardb.TimeSeries.ExpWriter
         private readonly qdb_handle _handle;
         private List<GCHandle> _pins;
 
-        string _table;
+        string[] _tables;
         QdbTableExpWriterOptions _options;
 
         private qdb_timespec[] _timestamps;
-        private qdb_ts_column_info_ex[] _columns;
-        private qdb_exp_batch_push_column_data[] _data;
+        private QdbTableExpWriterData[] _data;
         private qdb_exp_batch_push_table_schema* _schemas = null;
-        private Dictionary<string, long> _column_name_to_index;
+        private Dictionary<string, long> _table_name_to_index;
 
 
-        internal QdbTableExpWriter(qdb_handle handle, string table, QdbTableExpWriterOptions options) : base(IntPtr.Zero, true)
+        internal QdbTableExpWriter(qdb_handle handle, string[] tables, QdbTableExpWriterOptions options) : base(IntPtr.Zero, true)
         {
             _handle = handle;
             _pins = new List<GCHandle>(1024);
-            _table = table;
+            _tables = tables;
             _options = options;
-            _column_name_to_index = new Dictionary<string, long>();
+            _data = new QdbTableExpWriterData[tables.Length];
+            _table_name_to_index = new Dictionary<string, long>();
 
-            using (var columns = new qdb_buffer<qdb_ts_column_info_ex>(handle))
+
+            _table_name_to_index = new Dictionary<string, long>();
+            long table_index = 0;
+            foreach (var table in tables)
             {
-                var err = qdb_api.qdb_ts_list_columns_ex(handle, _table, out columns.Pointer, out columns.Size);
-                QdbExceptionThrower.ThrowIfNeeded(err, alias: table);
-
-                long index = 0;
-                _columns = new qdb_ts_column_info_ex[(int)columns.Size];
-                _data = new qdb_exp_batch_push_column_data[(int)columns.Size];
-                foreach (var column in columns)
+                _table_name_to_index[table] = table_index;
+                using (var columns = new qdb_buffer<qdb_ts_column_info_ex>(handle))
                 {
-                    _columns[index] = column;
-                    _column_name_to_index[column.name] = index;
-                    _data[index].blobs = null;
-                    index++;
+                    var err = qdb_api.qdb_ts_list_columns_ex(handle, table, out columns.Pointer, out columns.Size);
+                    QdbExceptionThrower.ThrowIfNeeded(err, alias: table);
+
+                    long column_index = 0;
+                    _data[table_index] = new QdbTableExpWriterData();
+                    _data[table_index].data = new qdb_exp_batch_push_column_data[(int)columns.Size];
+                    _data[table_index].columns = new qdb_ts_column_info_ex[(int)columns.Size];
+                    _data[table_index].column_name_to_index = new Dictionary<string, long>();
+                    foreach (var column in columns)
+                    {
+                        _data[table_index].columns[column_index] = column;
+                        _data[table_index].column_name_to_index[column.name] = column_index;
+                        _data[table_index].data[column_index].blobs = null;
+                        column_index++;
+                    }
                 }
+                table_index++;
             }
         }
 
@@ -153,15 +170,27 @@ namespace Quasardb.TimeSeries.ExpWriter
             get { return _handle == null || _handle.IsInvalid; }
         }
 
-        internal long IndexOf(string column)
+        internal long IndexOfTable(string table)
         {
             try
             {
-                return _column_name_to_index[column];
+                return _table_name_to_index[table];
             }
             catch (KeyNotFoundException /*e*/)
             {
-                throw new QdbException(String.Format("Column '{0}' not found in '{1}'.", column, _table));
+                throw new QdbException(String.Format("Table '{0}' not found.", table));
+            }
+        }
+
+        internal long IndexOfColumn(long table_index, string column)
+        {
+            try
+            {
+                return _data[table_index].column_name_to_index[column];
+            }
+            catch (KeyNotFoundException /*e*/)
+            {
+                throw new QdbException(String.Format("Column '{0}' not found in '{1}'.", column, _tables[table_index]));
             }
         }
 
@@ -183,9 +212,10 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// <summary>
         /// Set a blob column.
         /// </summary>
-        /// <param name="index">The index to the column you want to modify</param>
+        /// <param name="table_index">The index to the table you want to modify</param>
+        /// <param name="column_index">The index to the column you want to modify</param>
         /// <param name="values">The values as an array of byte arrays</param>
-        public unsafe void SetBlobColumn(long index, byte[][] values)
+        public unsafe void SetBlobColumn(long table_index, long column_index, byte[][] values)
         {
             qdb_blob[] blobs = new qdb_blob[values.Length];
             long idx = 0;
@@ -197,66 +227,75 @@ namespace Quasardb.TimeSeries.ExpWriter
                 blobs[idx].content_size = (qdb_size_t)content.Length;
                 idx++;
             }
-            _data[index].blobs = (qdb_blob*)ExpWriterHelper.convert_array<qdb_blob>(blobs, ref _pins);
+            _data[table_index].data[column_index].blobs = (qdb_blob*)ExpWriterHelper.convert_array<qdb_blob>(blobs, ref _pins);
 
         }
 
         /// <summary>
         /// Set a blob column.
         /// </summary>
-        /// <param name="name">The name to the column you want to modify</param>
+        /// <param name="table_name">The name to the table you want to modify</param>
+        /// <param name="column_name">The name to the column you want to modify</param>
         /// <param name="values">The values as an array of byte arrays</param>
-        public unsafe void SetBlobColumn(string name, byte[][] values)
+        public unsafe void SetBlobColumn(string table_name, string column_name, byte[][] values)
         {
-            SetBlobColumn(IndexOf(name), values);
+            long table_index = IndexOfTable(table_name);
+            SetBlobColumn(table_index, IndexOfColumn(table_index, column_name), values);
         }
 
         /// <summary>
         /// Set a double column.
         /// </summary>
-        /// <param name="index">The index to the column you want to modify</param>
+        /// <param name="table_index">The index to the table you want to modify</param>
+        /// <param name="column_index">The index to the column you want to modify</param>
         /// <param name="values">The values as a double array</param>
-        public void SetDoubleColumn(long index, double[] values)
+        public void SetDoubleColumn(long table_index, long column_index, double[] values)
         {
-            _data[index].doubles = (double*)ExpWriterHelper.convert_array<double>(values, ref _pins);
+            _data[table_index].data[column_index].doubles = (double*)ExpWriterHelper.convert_array<double>(values, ref _pins);
         }
 
         /// <summary>
         /// Set a double column.
         /// </summary>
-        /// <param name="name">The name to the column you want to modify</param>
+        /// <param name="table_name">The name to the table you want to modify</param>
+        /// <param name="column_name">The name to the column you want to modify</param>
         /// <param name="values">The values as a double array</param>
-        public unsafe void SetDoubleColumn(string name, double[] values)
+        public unsafe void SetDoubleColumn(string table_name, string column_name, double[] values)
         {
-            SetDoubleColumn(IndexOf(name), values);
+            long table_index = IndexOfTable(table_name);
+            SetDoubleColumn(table_index, IndexOfColumn(table_index, column_name), values);
         }
 
         /// <summary>
         /// Set an integer column.
         /// </summary>
-        /// <param name="index">The index to the column you want to modify</param>
+        /// <param name="table_index">The index to the table you want to modify</param>
+        /// <param name="column_index">The index to the column you want to modify</param>
         /// <param name="values">The values as an int64 array</param>
-        public void SetInt64Column(long index, long[] values)
+        public void SetInt64Column(long table_index, long column_index, long[] values)
         {
-            _data[index].ints = (long*)ExpWriterHelper.convert_array<long>(values, ref _pins);
+            _data[table_index].data[column_index].ints = (long*)ExpWriterHelper.convert_array<long>(values, ref _pins);
         }
 
         /// <summary>
         /// Set an integer column.
         /// </summary>
-        /// <param name="name">The name to the column you want to modify</param>
+        /// <param name="table_name">The name to the table you want to modify</param>
+        /// <param name="column_name">The name to the column you want to modify</param>
         /// <param name="values">The values as an int64 array</param>
-        public unsafe void SetInt64Column(string name, long[] values)
+        public unsafe void SetInt64Column(string table_name, string column_name, long[] values)
         {
-            SetInt64Column(IndexOf(name), values);
+            long table_index = IndexOfTable(table_name);
+            SetInt64Column(table_index, IndexOfColumn(table_index, column_name), values);
         }
 
         /// <summary>
         /// Set a string column.
         /// </summary>
-        /// <param name="index">The index to the column you want to modify</param>
+        /// <param name="table_index">The index to the table you want to modify</param>
+        /// <param name="column_index">The index to the column you want to modify</param>
         /// <param name="values">The values as a utf8 string array</param>
-        public unsafe void SetStringColumn(long index, string[] values)
+        public unsafe void SetStringColumn(long table_index, long column_index, string[] values)
         {
             qdb_sized_string[] strings = new qdb_sized_string[values.Length];
             long idx = 0;
@@ -269,25 +308,28 @@ namespace Quasardb.TimeSeries.ExpWriter
                 strings[idx].length = (qdb_size_t)str.Length;
                 idx++;
             }
-            _data[index].strings = (qdb_sized_string*)ExpWriterHelper.convert_array<qdb_sized_string>(strings, ref _pins);
+            _data[table_index].data[column_index].strings = (qdb_sized_string*)ExpWriterHelper.convert_array<qdb_sized_string>(strings, ref _pins);
         }
 
         /// <summary>
         /// Set a string column.
         /// </summary>
-        /// <param name="name">The name to the column you want to modify</param>
+        /// <param name="table_name">The name to the table you want to modify</param>
+        /// <param name="column_name">The name to the column you want to modify</param>
         /// <param name="values">The values as a utf8 string array</param>
-        public unsafe void SetStringColumn(string name, string[] values)
+        public unsafe void SetStringColumn(string table_name, string column_name, string[] values)
         {
-            SetStringColumn(IndexOf(name), values);
+            long table_index = IndexOfTable(table_name);
+            SetStringColumn(table_index, IndexOfColumn(table_index, column_name), values);
         }
 
         /// <summary>
         /// Set a timestamp column.
         /// </summary>
-        /// <param name="index">The index to the column you want to modify</param>
+        /// <param name="table_index">The index to the table you want to modify</param>
+        /// <param name="column_index">The index to the column you want to modify</param>
         /// <param name="values">The values as a DateTime array</param>
-        public unsafe void SetTimestampColumn(long index, DateTime[] values)
+        public unsafe void SetTimestampColumn(long table_index, long column_index, DateTime[] values)
         {
             qdb_timespec[] timestamps = new qdb_timespec[values.Length];
             long idx = 0;
@@ -296,17 +338,19 @@ namespace Quasardb.TimeSeries.ExpWriter
                 timestamps[idx] = TimeConverter.ToTimespec(timestamp);
                 idx++;
             }
-            _data[index].timestamps = (qdb_timespec*)ExpWriterHelper.convert_array<qdb_timespec>(timestamps, ref _pins);
+            _data[table_index].data[column_index].timestamps = (qdb_timespec*)ExpWriterHelper.convert_array<qdb_timespec>(timestamps, ref _pins);
         }
 
         /// <summary>
         /// Set a timestamp column.
         /// </summary>
-        /// <param name="name">The name to the column you want to modify</param>
+        /// <param name="table_name">The name to the table you want to modify</param>
+        /// <param name="column_name">The name to the column you want to modify</param>
         /// <param name="values">The values as a DateTime array</param>
-        public unsafe void SetTimestampColumn(string name, DateTime[] values)
+        public unsafe void SetTimestampColumn(string table_name, string column_name, DateTime[] values)
         {
-            SetTimestampColumn(IndexOf(name), values);
+            long table_index = IndexOfTable(table_name);
+            SetTimestampColumn(table_index, IndexOfColumn(table_index, column_name), values);
         }
 
         /// <summary>
@@ -314,9 +358,14 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// </summary>
         public void Push()
         {
-            var tables = new qdb_exp_batch_push_table[1];
-            tables[0] = ExpWriterHelper.convert_table(_table, _options, _timestamps, _columns, _data, ref _pins);
-            var err = qdb_api.qdb_exp_batch_push(_handle, _options.Mode(), tables, null, 1);
+            var tables = new qdb_exp_batch_push_table[_tables.Length];
+            long index = 0;
+            foreach (var table in _tables)
+            {
+                tables[index] = ExpWriterHelper.convert_table(table, _options, _timestamps, _data[index].columns, _data[index].data, ref _pins);
+                index++;
+            }
+            var err = qdb_api.qdb_exp_batch_push(_handle, _options.Mode(), tables, null, _tables.Length);
             Free();
             QdbExceptionThrower.ThrowIfNeeded(err);
         }
