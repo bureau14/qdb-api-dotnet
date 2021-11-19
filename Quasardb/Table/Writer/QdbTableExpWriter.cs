@@ -203,12 +203,17 @@ namespace Quasardb.TimeSeries.ExpWriter
             }
         }
 
+        private void Free()
+        {
+            foreach (var pin in _pins)
+                pin.Free();
+        }
+
         /// <inheritdoc />
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
         protected override bool ReleaseHandle()
         {
-            foreach (var pin in _pins)
-                pin.Free();
+            Free();
             return true;
         }
 
@@ -382,6 +387,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             var tables = new qdb_exp_batch_push_table[1];
             tables[0] = convert_table(_table, _timestamps, _columns, _data);
             var err = qdb_api.qdb_exp_batch_push(_handle, _options.Mode(), tables, null, 1);
+            Free();
             QdbExceptionThrower.ThrowIfNeeded(err);
         }
     }
