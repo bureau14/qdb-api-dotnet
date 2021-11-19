@@ -95,7 +95,7 @@ namespace Quasardb.TimeSeries.ExpWriter
     public unsafe sealed class QdbTableExpWriter : SafeHandle
     {
         private readonly qdb_handle _handle;
-        readonly List<GCHandle> _pins;
+        private List<GCHandle> _pins;
 
         string _table;
         QdbTableExpWriterOptions _options;
@@ -106,76 +106,6 @@ namespace Quasardb.TimeSeries.ExpWriter
         private qdb_exp_batch_push_table_schema* _schemas = null;
         private Dictionary<string, long> _column_name_to_index;
 
-        qdb_sized_string convert_string(string str)
-        {
-            GCHandle pin;
-            var ss = new qdb_sized_string(str, ref pin);
-            _pins.Add(pin);
-            return ss;
-        }
-
-        unsafe IntPtr convert_array<T>(T[] array)
-        {
-            GCHandle pin = GCHandle.Alloc(array, GCHandleType.Pinned);
-            _pins.Add(pin);
-            return pin.AddrOfPinnedObject();
-        }
-
-        qdb_exp_batch_push_column convert_column(qdb_ts_column_info_ex info, qdb_exp_batch_push_column_data data)
-        {
-            var column = new qdb_exp_batch_push_column();
-            column.name = convert_string(info.name);
-            column.data_type = (info.type == qdb_ts_column_type.qdb_ts_column_symbol ? qdb_ts_column_type.qdb_ts_column_string : info.type);
-            column.data = data;
-            return column;
-        }
-
-        qdb_exp_batch_push_column[] convert_columns(qdb_ts_column_info_ex[] infos, qdb_exp_batch_push_column_data[] data, ref qdb_size_t columnCount)
-        {
-            var columns = new List<qdb_exp_batch_push_column>();
-            for (int index = 0; index < infos.Length; index++)
-            {
-                if (data[index].blobs != null)
-                {
-                    columns.Add(convert_column(infos[index], data[index]));
-                }
-            }
-            columnCount = (qdb_size_t)columns.Count;
-            return columns.ToArray();
-        }
-
-        qdb_exp_batch_push_table_data convert_data(qdb_ts_column_info_ex[] infos, qdb_exp_batch_push_column_data[] data)
-        {
-            qdb_exp_batch_push_table_data d;
-
-            d.row_count = (qdb_size_t)_timestamps.Length;
-            d.column_count = (qdb_size_t)infos.Length;
-            d.timestamps = (qdb_timespec*)convert_array(_timestamps);
-            d.columns = (qdb_exp_batch_push_column*)convert_array(convert_columns(infos, data, ref d.column_count));
-            return d;
-        }
-
-        qdb_exp_batch_push_table convert_table(string name, qdb_timespec[] timestamps, qdb_ts_column_info_ex[] infos, qdb_exp_batch_push_column_data[] data)
-        {
-            qdb_exp_batch_push_table table;
-            table.name = convert_string(name);
-            table.data = convert_data(infos, data);
-
-            if (_options.Mode() == qdb_exp_batch_push_mode.truncate)
-            {
-                qdb_ts_range[] ranges = new qdb_ts_range[1];
-                ranges[0] = _options.Interval().ToNative();
-                table.truncate_ranges = (qdb_ts_range*)convert_array(ranges);
-                table.truncate_range_count = (qdb_size_t)1;
-            }
-            else
-            {
-                table.truncate_ranges = null;
-                table.truncate_range_count = (qdb_size_t)0;
-            }
-            table.options = _options.Option();
-            return table;
-        }
 
         internal QdbTableExpWriter(qdb_handle handle, string table, QdbTableExpWriterOptions options) : base(IntPtr.Zero, true)
         {
@@ -229,7 +159,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             {
                 return _column_name_to_index[column];
             }
-            catch (KeyNotFoundException e)
+            catch (KeyNotFoundException /*e*/)
             {
                 throw new QdbException(String.Format("Column '{0}' not found in '{1}'.", column, _table));
             }
@@ -267,7 +197,7 @@ namespace Quasardb.TimeSeries.ExpWriter
                 blobs[idx].content_size = (qdb_size_t)content.Length;
                 idx++;
             }
-            _data[index].blobs = (qdb_blob*)convert_array<qdb_blob>(blobs);
+            _data[index].blobs = (qdb_blob*)ExpWriterHelper.convert_array<qdb_blob>(blobs, ref _pins);
 
         }
 
@@ -288,7 +218,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// <param name="values">The values as a double array</param>
         public void SetDoubleColumn(long index, double[] values)
         {
-            _data[index].doubles = (double*)convert_array<double>(values);
+            _data[index].doubles = (double*)ExpWriterHelper.convert_array<double>(values, ref _pins);
         }
 
         /// <summary>
@@ -308,7 +238,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// <param name="values">The values as an int64 array</param>
         public void SetInt64Column(long index, long[] values)
         {
-            _data[index].ints = (long*)convert_array<long>(values);
+            _data[index].ints = (long*)ExpWriterHelper.convert_array<long>(values, ref _pins);
         }
 
         /// <summary>
@@ -339,7 +269,7 @@ namespace Quasardb.TimeSeries.ExpWriter
                 strings[idx].length = (qdb_size_t)str.Length;
                 idx++;
             }
-            _data[index].strings = (qdb_sized_string*)convert_array<qdb_sized_string>(strings);
+            _data[index].strings = (qdb_sized_string*)ExpWriterHelper.convert_array<qdb_sized_string>(strings, ref _pins);
         }
 
         /// <summary>
@@ -366,7 +296,7 @@ namespace Quasardb.TimeSeries.ExpWriter
                 timestamps[idx] = TimeConverter.ToTimespec(timestamp);
                 idx++;
             }
-            _data[index].timestamps = (qdb_timespec*)convert_array<qdb_timespec>(timestamps);
+            _data[index].timestamps = (qdb_timespec*)ExpWriterHelper.convert_array<qdb_timespec>(timestamps, ref _pins);
         }
 
         /// <summary>
@@ -385,10 +315,84 @@ namespace Quasardb.TimeSeries.ExpWriter
         public void Push()
         {
             var tables = new qdb_exp_batch_push_table[1];
-            tables[0] = convert_table(_table, _timestamps, _columns, _data);
+            tables[0] = ExpWriterHelper.convert_table(_table, _options, _timestamps, _columns, _data, ref _pins);
             var err = qdb_api.qdb_exp_batch_push(_handle, _options.Mode(), tables, null, 1);
             Free();
             QdbExceptionThrower.ThrowIfNeeded(err);
+        }
+    }
+
+    unsafe class ExpWriterHelper
+    {
+        private static qdb_sized_string convert_string(string str, ref List<GCHandle> pins)
+        {
+            GCHandle pin;
+            var ss = new qdb_sized_string(str, ref pin);
+            pins.Add(pin);
+            return ss;
+        }
+        
+        internal unsafe static IntPtr convert_array<T>(T[] array, ref List<GCHandle> pins)
+        {
+            GCHandle pin = GCHandle.Alloc(array, GCHandleType.Pinned);
+            pins.Add(pin);
+            return pin.AddrOfPinnedObject();
+        }
+
+        static qdb_exp_batch_push_column convert_column(qdb_ts_column_info_ex info, qdb_exp_batch_push_column_data data, ref List<GCHandle> pins)
+        {
+            var column = new qdb_exp_batch_push_column();
+            column.name = convert_string(info.name, ref pins);
+            column.data_type = (info.type == qdb_ts_column_type.qdb_ts_column_symbol ? qdb_ts_column_type.qdb_ts_column_string : info.type);
+            column.data = data;
+            return column;
+        }
+
+        static qdb_exp_batch_push_column[] convert_columns(qdb_ts_column_info_ex[] infos, qdb_exp_batch_push_column_data[] data, ref qdb_size_t columnCount, ref List<GCHandle> pins)
+        {
+            var columns = new List<qdb_exp_batch_push_column>();
+            for (int index = 0; index < infos.Length; index++)
+            {
+                if (data[index].blobs != null)
+                {
+                    columns.Add(convert_column(infos[index], data[index], ref pins));
+                }
+            }
+            columnCount = (qdb_size_t)columns.Count;
+            return columns.ToArray();
+        }
+
+        static qdb_exp_batch_push_table_data convert_data(qdb_ts_column_info_ex[] infos, qdb_timespec[] timestamps, qdb_exp_batch_push_column_data[] data, ref List<GCHandle> pins)
+        {
+            qdb_exp_batch_push_table_data d;
+
+            d.row_count = (qdb_size_t)timestamps.Length;
+            d.column_count = (qdb_size_t)infos.Length;
+            d.timestamps = (qdb_timespec*)convert_array(timestamps, ref pins);
+            d.columns = (qdb_exp_batch_push_column*)convert_array(convert_columns(infos, data, ref d.column_count, ref pins), ref pins);
+            return d;
+        }
+
+        internal static qdb_exp_batch_push_table convert_table(string name, QdbTableExpWriterOptions options, qdb_timespec[] timestamps, qdb_ts_column_info_ex[] infos, qdb_exp_batch_push_column_data[] data, ref List<GCHandle> pins)
+        {
+            qdb_exp_batch_push_table table;
+            table.name = convert_string(name, ref pins);
+            table.data = convert_data(infos, timestamps, data, ref pins);
+
+            if (options.Mode() == qdb_exp_batch_push_mode.truncate)
+            {
+                qdb_ts_range[] ranges = new qdb_ts_range[1];
+                ranges[0] = options.Interval().ToNative();
+                table.truncate_ranges = (qdb_ts_range*)convert_array(ranges, ref pins);
+                table.truncate_range_count = (qdb_size_t)1;
+            }
+            else
+            {
+                table.truncate_ranges = null;
+                table.truncate_range_count = (qdb_size_t)0;
+            }
+            table.options = options.Option();
+            return table;
         }
     }
 }
