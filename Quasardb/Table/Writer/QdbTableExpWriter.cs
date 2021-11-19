@@ -104,6 +104,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         private qdb_ts_column_info_ex[] _columns;
         private qdb_exp_batch_push_column_data[] _data;
         private qdb_exp_batch_push_table_schema* _schemas = null;
+        private Dictionary<string, long> _column_name_to_index;
 
         qdb_sized_string convert_string(string str)
         {
@@ -182,6 +183,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             _pins = new List<GCHandle>(1024);
             _table = table;
             _options = options;
+            _column_name_to_index = new Dictionary<string, long>();
 
             using (var columns = new qdb_buffer<qdb_ts_column_info_ex>(handle))
             {
@@ -194,6 +196,7 @@ namespace Quasardb.TimeSeries.ExpWriter
                 foreach (var column in columns)
                 {
                     _columns[index] = column;
+                    _column_name_to_index[column.name] = index;
                     _data[index].blobs = null;
                     index++;
                 }
@@ -217,12 +220,14 @@ namespace Quasardb.TimeSeries.ExpWriter
 
         internal long IndexOf(string column)
         {
-            for (int i = 0; i < _columns.Length; ++i)
+            try
             {
-                if (_columns[i].name == column)
-                    return i;
+                return _column_name_to_index[column];
             }
-            return -1;
+            catch (KeyNotFoundException e)
+            {
+                throw new QdbException(String.Format("Column '{0}' not found in '{1}'.", column, _table));
+            }
         }
 
         /// <summary>

@@ -323,6 +323,22 @@ namespace Quasardb.Tests.Table
         }
 
         [TestMethod]
+        [ExpectedException(typeof(QdbException))]
+        public void Ok_BulkRowInsertWithWrongName()
+        {
+            QdbTable ts = CreateTable();
+
+            var blobs = MakeBlobArray(10);
+            var timestamps = MakeTimestamps(10);
+
+            var batch = _cluster.ExpWriter(ts.Alias, new QdbTableExpWriterOptions().Transactional());
+            batch.SetTimestamps(timestamps);
+            batch.SetBlobColumn("the_wrong_blob", blobs);
+
+            batch.Push();
+        }
+
+        [TestMethod]
         public void Ok_BulkRowInsertBlobs()
         {
             QdbTable ts = CreateTable();
