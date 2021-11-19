@@ -7,6 +7,7 @@ using qdb_size_t = System.UIntPtr;
 
 namespace Quasardb.Native
 {
+    // this matches qdb_exp_batch_push_mode_t enum type in ts.h
     internal enum qdb_exp_batch_push_mode : int
     {
         transactional = 0,
@@ -14,6 +15,8 @@ namespace Quasardb.Native
         fast = 2,
         async = 3,
     }
+
+    // this matches qdb_exp_batch_push_options_t enum type in ts.h
     internal enum qdb_exp_batch_push_options : int
     {
         standard = 0,
