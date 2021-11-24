@@ -222,7 +222,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             {
                 return qdb_ts_column_type.qdb_ts_column_timestamp;
             }
-            return qdb_ts_column_uninitialized;
+            return qdb_ts_column_type.qdb_ts_column_uninitialized;
         }
 
         internal void CheckType(long table_index, long column_index, qdb_ts_column_type type)
