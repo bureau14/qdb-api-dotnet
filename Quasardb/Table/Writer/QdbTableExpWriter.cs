@@ -380,10 +380,10 @@ namespace Quasardb.TimeSeries.ExpWriter
                 byte[] str = System.Text.Encoding.UTF8.GetBytes(content);
                 GCHandle pin = GCHandle.Alloc(str, GCHandleType.Pinned);
                 _pins.Add(pin);
-                qdb_sized_string str;
-                str.data = (byte*)pin.AddrOfPinnedObject();
-                str.length = (qdb_size_t)str.Length;
-                _data[table_index].data[column_index].strings.Add(str);
+                qdb_sized_string sized_str;
+                sized_str.data = (byte*)pin.AddrOfPinnedObject();
+                sized_str.length = (qdb_size_t)str.Length;
+                _data[table_index].data[column_index].strings.Add(sized_str);
                 idx++;
             }
         }
