@@ -106,7 +106,7 @@ namespace Quasardb.TimeSeries.ExpWriter
 
     internal unsafe sealed class QdbTableExpWriterData
     {
-        public qdb_timespec[] timestamps;
+        public List<qdb_timespec> timestamps;
         public qdb_ts_column_info_ex[] columns;
         public QdbColumnData[] data;
         public Dictionary<string, long> column_name_to_index;
@@ -256,12 +256,10 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// <param name="timestamps">The timestamps </param>
         public unsafe void SetTimestamps(long table_index, DateTime[] timestamps)
         {
-            _data[table_index].timestamps = new qdb_timespec[timestamps.Length];
-            long index = 0;
+            _data[table_index].timestamps = new List<qdb_timespec>(timestamps.Length);
             foreach (var timestamp in timestamps)
             {
-                _data[table_index].timestamps[index] = TimeConverter.ToTimespec(timestamp);
-                index++;
+                _data[table_index].timestamps.Add(TimeConverter.ToTimespec(timestamp));
             }
         }
         
@@ -287,16 +285,16 @@ namespace Quasardb.TimeSeries.ExpWriter
         {
             CheckType(table_index, column_index, qdb_ts_column_type.qdb_ts_column_blob);
             _data[table_index].data[column_index].blobs = new List<qdb_blob>(values.Length);
-            long idx = 0;
             foreach (byte[] content in values)
             {
                 GCHandle pin = GCHandle.Alloc(content, GCHandleType.Pinned);
                 _pins.Add(pin);
+
                 qdb_blob blob;
                 blob.content = (byte*)pin.AddrOfPinnedObject();
                 blob.content_size = (qdb_size_t)content.Length;
+
                 _data[table_index].data[column_index].blobs.Add(blob);
-                idx++;
             }
 
         }
@@ -374,17 +372,17 @@ namespace Quasardb.TimeSeries.ExpWriter
         {
             CheckType(table_index, column_index, qdb_ts_column_type.qdb_ts_column_string);
             _data[table_index].data[column_index].strings = new List<qdb_sized_string>(values.Length);
-            long idx = 0;
             foreach (string content in values)
             {
                 byte[] str = System.Text.Encoding.UTF8.GetBytes(content);
                 GCHandle pin = GCHandle.Alloc(str, GCHandleType.Pinned);
                 _pins.Add(pin);
+
                 qdb_sized_string sized_str;
                 sized_str.data = (byte*)pin.AddrOfPinnedObject();
                 sized_str.length = (qdb_size_t)str.Length;
+
                 _data[table_index].data[column_index].strings.Add(sized_str);
-                idx++;
             }
         }
 
@@ -410,14 +408,11 @@ namespace Quasardb.TimeSeries.ExpWriter
         public unsafe void SetTimestampColumn(long table_index, long column_index, DateTime[] values)
         {
             CheckType(table_index, column_index, qdb_ts_column_type.qdb_ts_column_timestamp);
-            qdb_timespec[] timestamps = new qdb_timespec[values.Length];
-            long idx = 0;
+            _data[table_index].data[column_index].timestamps = new List<qdb_timespec>(values.Length);
             foreach (var timestamp in values)
             {
-                timestamps[idx] = TimeConverter.ToTimespec(timestamp);
-                idx++;
+                _data[table_index].data[column_index].timestamps.Add(TimeConverter.ToTimespec(timestamp));
             }
-            _data[table_index].data[column_index].timestamps = new List<qdb_timespec>(timestamps);
         }
 
         /// <summary>
@@ -434,6 +429,75 @@ namespace Quasardb.TimeSeries.ExpWriter
         }
 
         /// <summary>
+        /// Set a timestamp column.
+        /// </summary>
+        /// <param name="table_index">The index of the table you want to modify</param>
+        /// <param name="timestamp">The timestamp of the row</param>
+        /// <param name="values">The values for each column in the row</param>
+        public unsafe void Append(long table_index, DateTime timestamp, object[] values)
+        {
+            long column_index = 0;
+            foreach (var val in values)
+            {
+                var type = ObjectTypeToColumnType(val);
+                CheckType(table_index, column_index, type);
+                switch (type)
+                {
+                    case qdb_ts_column_type.qdb_ts_column_double:
+                        _data[table_index].data[column_index].doubles.Add((double)val);
+                        break;
+                    case qdb_ts_column_type.qdb_ts_column_blob:
+                    {
+                        var content = (byte[])val;
+                        GCHandle pin = GCHandle.Alloc(content, GCHandleType.Pinned);
+                        _pins.Add(pin);
+
+                        qdb_blob blob;
+                        blob.content = (byte*)pin.AddrOfPinnedObject();
+                        blob.content_size = (qdb_size_t)content.Length;
+
+                        _data[table_index].data[column_index].blobs.Add(blob);
+                        break;
+                    }
+                    case qdb_ts_column_type.qdb_ts_column_int64:
+                        _data[table_index].data[column_index].ints.Add((long)val);
+                        break;
+                    case qdb_ts_column_type.qdb_ts_column_timestamp:
+                        _data[table_index].data[column_index].timestamps.Add(TimeConverter.ToTimespec((DateTime)val));
+                        break;
+                    case qdb_ts_column_type.qdb_ts_column_string:
+                    case qdb_ts_column_type.qdb_ts_column_symbol:
+                    {
+                        byte[] str = System.Text.Encoding.UTF8.GetBytes((string)val);
+                        GCHandle pin = GCHandle.Alloc(str, GCHandleType.Pinned);
+                        _pins.Add(pin);
+
+                        qdb_sized_string sized_str;
+                        sized_str.data = (byte*)pin.AddrOfPinnedObject();
+                        sized_str.length = (qdb_size_t)str.Length;
+
+                        _data[table_index].data[column_index].strings.Add(sized_str);
+                        break;
+                    }
+                }
+                column_index++;
+            }
+            _data[table_index].timestamps.Add(TimeConverter.ToTimespec(timestamp));
+        }
+
+        /// <summary>
+        /// Set a timestamp column.
+        /// </summary>
+        /// <param name="table_name">The name of the table you want to modify</param>
+        /// <param name="timestamp">The timestamp of the row</param>
+        /// <param name="values">The values for each column in the row</param>
+        public unsafe void Append(string table_name, DateTime timestamp, object[] values)
+        {
+            long table_index = IndexOfTable(table_name);
+            Append(table_index, timestamp, values);
+        }
+
+        /// <summary>
         /// Regular batch push.
         /// </summary>
         public void Push()
@@ -442,7 +506,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             long index = 0;
             foreach (var table in _tables)
             {
-                tables[index] = ExpWriterHelper.convert_table(table, _options, _data[index].timestamps, _data[index].columns, _data[index].data, ref _pins);
+                tables[index] = ExpWriterHelper.convert_table(table, _options, _data[index].timestamps.ToArray(), _data[index].columns, _data[index].data, ref _pins);
                 index++;
             }
             var err = qdb_api.qdb_exp_batch_push(_handle, _options.Mode(), tables, null, _tables.Length);
