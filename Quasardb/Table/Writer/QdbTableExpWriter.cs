@@ -286,17 +286,18 @@ namespace Quasardb.TimeSeries.ExpWriter
         public unsafe void SetBlobColumn(long table_index, long column_index, byte[][] values)
         {
             CheckType(table_index, column_index, qdb_ts_column_type.qdb_ts_column_blob);
-            qdb_blob[] blobs = new qdb_blob[values.Length];
+            _data[table_index].data[column_index].blobs = new List<qdb_blob>(values.Length);
             long idx = 0;
             foreach (byte[] content in values)
             {
                 GCHandle pin = GCHandle.Alloc(content, GCHandleType.Pinned);
                 _pins.Add(pin);
-                blobs[idx].content = (byte*)pin.AddrOfPinnedObject();
-                blobs[idx].content_size = (qdb_size_t)content.Length;
+                qdb_blob blob;
+                blob.content = (byte*)pin.AddrOfPinnedObject();
+                blob.content_size = (qdb_size_t)content.Length;
+                _data[table_index].data[column_index].blobs.Add(blob);
                 idx++;
             }
-            _data[table_index].data[column_index].blobs = new List<qdb_blob>(blobs);
 
         }
 
@@ -372,18 +373,19 @@ namespace Quasardb.TimeSeries.ExpWriter
         public unsafe void SetStringColumn(long table_index, long column_index, string[] values)
         {
             CheckType(table_index, column_index, qdb_ts_column_type.qdb_ts_column_string);
-            qdb_sized_string[] strings = new qdb_sized_string[values.Length];
+            _data[table_index].data[column_index].strings = new List<qdb_sized_string>(values.Length);
             long idx = 0;
             foreach (string content in values)
             {
                 byte[] str = System.Text.Encoding.UTF8.GetBytes(content);
                 GCHandle pin = GCHandle.Alloc(str, GCHandleType.Pinned);
                 _pins.Add(pin);
-                strings[idx].data = (byte*)pin.AddrOfPinnedObject();
-                strings[idx].length = (qdb_size_t)str.Length;
+                qdb_sized_string str;
+                str.data = (byte*)pin.AddrOfPinnedObject();
+                str.length = (qdb_size_t)str.Length;
+                _data[table_index].data[column_index].strings.Add(str);
                 idx++;
             }
-            _data[table_index].data[column_index].strings = new List<qdb_sized_string>(strings);
         }
 
         /// <summary>
