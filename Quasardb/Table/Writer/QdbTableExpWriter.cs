@@ -419,6 +419,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             var column = new qdb_exp_batch_push_column();
             column.name = convert_string(info.name, ref pins);
             column.data_type = (info.type == qdb_ts_column_type.qdb_ts_column_symbol ? qdb_ts_column_type.qdb_ts_column_string : info.type);
+            column.data = new qdb_exp_batch_push_column_data();
             switch (info.type)
             {
                 case qdb_ts_column_type.qdb_ts_column_double:
