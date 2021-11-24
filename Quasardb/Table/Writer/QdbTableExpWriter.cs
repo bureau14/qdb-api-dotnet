@@ -244,8 +244,7 @@ namespace Quasardb.TimeSeries.ExpWriter
                 blobs[idx].content_size = (qdb_size_t)content.Length;
                 idx++;
             }
-            _data[table_index].data[column_index].blobs = new List<qdb_blob>();
-            _data[table_index].data[column_index].blobs.AddRange(blobs);
+            _data[table_index].data[column_index].blobs = new List<qdb_blob>(blobs);
 
         }
 
@@ -269,8 +268,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// <param name="values">The values as a double array</param>
         public void SetDoubleColumn(long table_index, long column_index, double[] values)
         {
-            _data[table_index].data[column_index].doubles = new List<double>();
-            _data[table_index].data[column_index].doubles.AddRange(values);
+            _data[table_index].data[column_index].doubles = new List<double>(values);
         }
 
         /// <summary>
@@ -293,8 +291,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// <param name="values">The values as an int64 array</param>
         public void SetInt64Column(long table_index, long column_index, long[] values)
         {
-            _data[table_index].data[column_index].ints = new List<long>();
-            _data[table_index].data[column_index].ints.AddRange(values);
+            _data[table_index].data[column_index].ints = new List<long>(values);
         }
 
         /// <summary>
@@ -328,8 +325,7 @@ namespace Quasardb.TimeSeries.ExpWriter
                 strings[idx].length = (qdb_size_t)str.Length;
                 idx++;
             }
-            _data[table_index].data[column_index].strings = new List<qdb_sized_string>();
-            _data[table_index].data[column_index].strings.AddRange(strings);
+            _data[table_index].data[column_index].strings = new List<qdb_sized_string>(strings);
         }
 
         /// <summary>
@@ -359,8 +355,7 @@ namespace Quasardb.TimeSeries.ExpWriter
                 timestamps[idx] = TimeConverter.ToTimespec(timestamp);
                 idx++;
             }
-            _data[table_index].data[column_index].timestamps = new List<qdb_timespec>();
-            _data[table_index].data[column_index].timestamps.AddRange(timestamps);
+            _data[table_index].data[column_index].timestamps = new List<qdb_timespec>(timestamps);
         }
 
         /// <summary>
