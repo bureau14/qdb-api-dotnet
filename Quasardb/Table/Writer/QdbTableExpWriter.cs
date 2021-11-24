@@ -228,7 +228,6 @@ namespace Quasardb.TimeSeries.ExpWriter
         internal void CheckType(long table_index, long column_index, qdb_ts_column_type type)
         {
             var column_type = _data[table_index].columns[column_index].type;
-            if (type == qdb_ts_column_string && (column_type != qdb_ts_column_string || column_type != qdb_ts_column_symbol))
             if (column_type != type)
             {
                 if (!(type == qdb_ts_column_type.qdb_ts_column_string && column_type == qdb_ts_column_type.qdb_ts_column_symbol))
