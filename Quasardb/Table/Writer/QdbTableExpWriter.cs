@@ -151,7 +151,7 @@ namespace Quasardb.TimeSeries.ExpWriter
 
                     long column_index = 0;
                     _data[table_index] = new QdbTableExpWriterData();
-                    _data[table_index].data = new qdb_exp_batch_push_column_data[(int)columns.Size];
+                    _data[table_index].data = new QdbColumnData[(int)columns.Size];
                     _data[table_index].columns = new qdb_ts_column_info_ex[(int)columns.Size];
                     _data[table_index].column_name_to_index = new Dictionary<string, long>();
                     foreach (var column in columns)
@@ -328,7 +328,7 @@ namespace Quasardb.TimeSeries.ExpWriter
                 idx++;
             }
             _data[table_index].data[column_index].strings = new List<qdb_sized_string>();
-            _data[table_index].data[column_index].strings.AddRange(values);
+            _data[table_index].data[column_index].strings.AddRange(strings);
         }
 
         /// <summary>
@@ -417,20 +417,20 @@ namespace Quasardb.TimeSeries.ExpWriter
             switch (info.type)
             {
                 case qdb_ts_column_type.qdb_ts_column_double:
-                    column.data.blobs = (double*)convert_array<double>(data.doubles.ToArray(), ref pins);
+                    column.data.doubles = (double*)convert_array<double>(data.doubles.ToArray(), ref pins);
                     break;
                 case qdb_ts_column_type.qdb_ts_column_blob:
                     column.data.blobs = (qdb_blob*)convert_array<qdb_blob>(data.blobs.ToArray(), ref pins);
                     break;
                 case qdb_ts_column_type.qdb_ts_column_int64:
-                    column.data.blobs = (long*)convert_array<long>(data.ints.ToArray(), ref pins);
+                    column.data.ints = (long*)convert_array<long>(data.ints.ToArray(), ref pins);
                     break;
                 case qdb_ts_column_type.qdb_ts_column_timestamp:
                     column.data.timestamps = (qdb_timespec*)convert_array<qdb_timespec>(data.timestamps.ToArray(), ref pins);
                     break;
                 case qdb_ts_column_type.qdb_ts_column_string:
                 case qdb_ts_column_type.qdb_ts_column_symbol:
-                    column.data.strings = (qdb_string*)convert_array<qdb_string>(data.strings.ToArray(), ref pins);
+                    column.data.strings = (qdb_sized_string*)convert_array<qdb_sized_string>(data.strings.ToArray(), ref pins);
                     break;
             }
             return column;
