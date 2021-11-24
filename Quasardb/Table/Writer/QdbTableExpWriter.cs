@@ -230,7 +230,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             var column_type = _data[table_index].columns[column_index].type;
             if (column_type != type)
             {
-                throw QdbException(String.Format("Invalid type for column {0} of table {1}", _tables[table_index], _data[table_index].columns[column_index].name.ToString()));
+                throw new QdbException(String.Format("Invalid type for column {0} of table {1}", _tables[table_index], _data[table_index].columns[column_index].name.ToString()));
             }
         }
 
@@ -269,7 +269,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// <param name="values">The values as an array of byte arrays</param>
         public unsafe void SetBlobColumn(long table_index, long column_index, byte[][] values)
         {
-            CheckType(table_index, column_index, qdb_ts_column_blob);
+            CheckType(table_index, column_index, qdb_ts_column_type.qdb_ts_column_blob);
             qdb_blob[] blobs = new qdb_blob[values.Length];
             long idx = 0;
             foreach (byte[] content in values)
@@ -294,7 +294,6 @@ namespace Quasardb.TimeSeries.ExpWriter
         {
             long table_index = IndexOfTable(table_name);
             long column_index = IndexOfColumn(table_index, column_name);
-            CheckType(table_index, column_index, qdb_ts_column_blob);
             SetBlobColumn(table_index, column_index, values);
         }
 
@@ -306,6 +305,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// <param name="values">The values as a double array</param>
         public void SetDoubleColumn(long table_index, long column_index, double[] values)
         {
+            CheckType(table_index, column_index, qdb_ts_column_type.qdb_ts_column_double);
             _data[table_index].data[column_index].doubles = new List<double>(values);
         }
 
@@ -319,7 +319,6 @@ namespace Quasardb.TimeSeries.ExpWriter
         {
             long table_index = IndexOfTable(table_name);
             long column_index = IndexOfColumn(table_index, column_name);
-            CheckType(table_index, column_index, qdb_ts_column_double);
             SetDoubleColumn(table_index, column_index, values);
         }
 
@@ -331,6 +330,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// <param name="values">The values as an int64 array</param>
         public void SetInt64Column(long table_index, long column_index, long[] values)
         {
+            CheckType(table_index, column_index, qdb_ts_column_type.qdb_ts_column_int64);
             _data[table_index].data[column_index].ints = new List<long>(values);
         }
 
@@ -344,7 +344,6 @@ namespace Quasardb.TimeSeries.ExpWriter
         {
             long table_index = IndexOfTable(table_name);
             long column_index = IndexOfColumn(table_index, column_name);
-            CheckType(table_index, column_index, qdb_ts_column_int64);
             SetInt64Column(table_index, column_index, values);
         }
 
@@ -356,6 +355,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// <param name="values">The values as a utf8 string array</param>
         public unsafe void SetStringColumn(long table_index, long column_index, string[] values)
         {
+            CheckType(table_index, column_index, qdb_ts_column_type.qdb_ts_column_string);
             qdb_sized_string[] strings = new qdb_sized_string[values.Length];
             long idx = 0;
             foreach (string content in values)
@@ -380,7 +380,6 @@ namespace Quasardb.TimeSeries.ExpWriter
         {
             long table_index = IndexOfTable(table_name);
             long column_index = IndexOfColumn(table_index, column_name);
-            CheckType(table_index, column_index, qdb_ts_column_string);
             SetStringColumn(table_index, column_index, values);
         }
 
@@ -392,6 +391,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// <param name="values">The values as a DateTime array</param>
         public unsafe void SetTimestampColumn(long table_index, long column_index, DateTime[] values)
         {
+            CheckType(table_index, column_index, qdb_ts_column_type.qdb_ts_column_timestamp);
             qdb_timespec[] timestamps = new qdb_timespec[values.Length];
             long idx = 0;
             foreach (var timestamp in values)
@@ -412,7 +412,6 @@ namespace Quasardb.TimeSeries.ExpWriter
         {
             long table_index = IndexOfTable(table_name);
             long column_index = IndexOfColumn(table_index, column_name);
-            CheckType(table_index, column_index, qdb_ts_column_timestamp);
             SetTimestampColumn(table_index, column_index, values);
         }
 
