@@ -106,6 +106,7 @@ namespace Quasardb.TimeSeries.ExpWriter
 
     internal unsafe sealed class QdbTableExpWriterData
     {
+        public qdb_timespec[] timestamps;
         public qdb_ts_column_info_ex[] columns;
         public QdbColumnData[] data;
         public Dictionary<string, long> column_name_to_index;
@@ -123,7 +124,6 @@ namespace Quasardb.TimeSeries.ExpWriter
         string[] _tables;
         QdbTableExpWriterOptions _options;
 
-        private qdb_timespec[] _timestamps;
         private QdbTableExpWriterData[] _data;
         private qdb_exp_batch_push_table_schema* _schemas = null;
         private Dictionary<string, long> _table_name_to_index;
@@ -253,13 +253,13 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// Set all timestamps.
         /// </summary>
         /// <param name="timestamps">The timestamps </param>
-        public unsafe void SetTimestamps(DateTime[] timestamps)
+        public unsafe void SetTimestamps(long table_index, DateTime[] timestamps)
         {
-            _timestamps = new qdb_timespec[timestamps.Length];
+            _data[table_index].timestamps = new qdb_timespec[timestamps.Length];
             long index = 0;
             foreach (var timestamp in timestamps)
             {
-                _timestamps[index] = TimeConverter.ToTimespec(timestamp);
+                _data[table_index].timestamps[index] = TimeConverter.ToTimespec(timestamp);
                 index++;
             }
         }
@@ -427,7 +427,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             long index = 0;
             foreach (var table in _tables)
             {
-                tables[index] = ExpWriterHelper.convert_table(table, _options, _timestamps, _data[index].columns, _data[index].data, ref _pins);
+                tables[index] = ExpWriterHelper.convert_table(table, _options, _data[index].timestamps, _data[index].columns, _data[index].data, ref _pins);
                 index++;
             }
             var err = qdb_api.qdb_exp_batch_push(_handle, _options.Mode(), tables, null, _tables.Length);
