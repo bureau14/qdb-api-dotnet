@@ -252,6 +252,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// <summary>
         /// Set all timestamps.
         /// </summary>
+        /// <param name="table_index">The index to the table you want to modify</param>
         /// <param name="timestamps">The timestamps </param>
         public unsafe void SetTimestamps(long table_index, DateTime[] timestamps)
         {
@@ -262,6 +263,18 @@ namespace Quasardb.TimeSeries.ExpWriter
                 _data[table_index].timestamps[index] = TimeConverter.ToTimespec(timestamp);
                 index++;
             }
+        }
+        
+
+        /// <summary>
+        /// Set all timestamps.
+        /// </summary>
+        /// <param name="table_name">The name to the table you want to modify</param>
+        /// <param name="timestamps">The timestamps </param>
+        public unsafe void SetTimestamps(string table_name, DateTime[] timestamps)
+        {
+            long table_index = IndexOfTable(table_name);
+            SetTimestamps(table_index, timestamps);
         }
 
         /// <summary>
