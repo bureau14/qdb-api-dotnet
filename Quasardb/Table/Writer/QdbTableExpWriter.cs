@@ -89,18 +89,12 @@ namespace Quasardb.TimeSeries.ExpWriter
         }
     }
 
-    [StructLayout(LayoutKind.Explicit)]
     internal unsafe sealed class QdbColumnData
     {
-        [System.Runtime.InteropServices.FieldOffset(0)]
         internal List<qdb_timespec> timestamps;
-        [System.Runtime.InteropServices.FieldOffset(0)]
         internal List<qdb_sized_string> strings;
-        [System.Runtime.InteropServices.FieldOffset(0)]
         internal List<qdb_blob> blobs;
-        [System.Runtime.InteropServices.FieldOffset(0)]
         internal List<long> ints;
-        [System.Runtime.InteropServices.FieldOffset(0)]
         internal List<double> doubles;
     }
 
