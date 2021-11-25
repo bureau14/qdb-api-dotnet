@@ -91,6 +91,7 @@ namespace Quasardb.TimeSeries.ExpWriter
 
     internal unsafe sealed class QdbColumnData
     {
+        internal long Count = 0;
         internal List<qdb_timespec> timestamps;
         internal List<qdb_sized_string> strings;
         internal List<qdb_blob> blobs;
@@ -152,7 +153,6 @@ namespace Quasardb.TimeSeries.ExpWriter
                         _data[table_index].columns[column_index] = column;
                         _data[table_index].column_name_to_index[column.name] = column_index;
                         _data[table_index].data[column_index] = new QdbColumnData();
-                        _data[table_index].data[column_index].blobs = null;
                         column_index++;
                     }
                 }
@@ -300,6 +300,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         {
             CheckType(table_index, column_index, qdb_ts_column_type.qdb_ts_column_blob);
             _data[table_index].data[column_index].blobs = new List<qdb_blob>(values.Length);
+            _data[table_index].data[column_index].Count = values.Length;
             foreach (byte[] content in values)
             {
                 GCHandle pin = GCHandle.Alloc(content, GCHandleType.Pinned);
@@ -337,6 +338,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         {
             CheckType(table_index, column_index, qdb_ts_column_type.qdb_ts_column_double);
             _data[table_index].data[column_index].doubles = new List<double>(values);
+            _data[table_index].data[column_index].Count = values.Length;
         }
 
         /// <summary>
@@ -362,6 +364,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         {
             CheckType(table_index, column_index, qdb_ts_column_type.qdb_ts_column_int64);
             _data[table_index].data[column_index].ints = new List<long>(values);
+            _data[table_index].data[column_index].Count = values.Length;
         }
 
         /// <summary>
@@ -387,6 +390,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         {
             CheckType(table_index, column_index, qdb_ts_column_type.qdb_ts_column_string);
             _data[table_index].data[column_index].strings = new List<qdb_sized_string>(values.Length);
+            _data[table_index].data[column_index].Count = values.Length;
             foreach (string content in values)
             {
                 byte[] str = System.Text.Encoding.UTF8.GetBytes(content);
@@ -424,6 +428,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         {
             CheckType(table_index, column_index, qdb_ts_column_type.qdb_ts_column_timestamp);
             _data[table_index].data[column_index].timestamps = new List<qdb_timespec>(values.Length);
+            _data[table_index].data[column_index].Count = values.Length;
             foreach (var timestamp in values)
             {
                 _data[table_index].data[column_index].timestamps.Add(TimeConverter.ToTimespec(timestamp));
@@ -462,6 +467,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             {
                 var type = ObjectTypeToColumnType(val);
                 CheckType(table_index, column_index, type);
+                _data[table_index].data[column_index].Count++;
                 switch (type)
                 {
                     case qdb_ts_column_type.qdb_ts_column_double:
@@ -586,7 +592,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             var columns = new List<qdb_exp_batch_push_column>();
             for (int index = 0; index < infos.Length; index++)
             {
-                if (data[index].blobs != null)
+                if (data[index] != null && data[index].Count > 0)
                 {
                     columns.Add(convert_column(infos[index], data[index], ref pins));
                 }
