@@ -198,6 +198,27 @@ namespace Quasardb.TimeSeries.ExpWriter
             }
         }
 
+        internal string ColumnTypeName(qdb_ts_column_type type)
+        {
+            switch (info.type)
+            {
+                case qdb_ts_column_type.qdb_ts_column_double:
+                    return "double";
+                case qdb_ts_column_type.qdb_ts_column_blob:
+                    return "blob";
+                case qdb_ts_column_type.qdb_ts_column_int64:
+                    return "int64";
+                case qdb_ts_column_type.qdb_ts_column_timestamp:
+                    return "timestamp";
+                case qdb_ts_column_type.qdb_ts_column_string:
+                case qdb_ts_column_type.qdb_ts_column_symbol:
+                    return "string";
+                case qdb_ts_column_type.qdb_ts_column_uninitialized:
+                    return "unknown";
+            }
+            return "unknown";
+        }
+
         internal qdb_ts_column_type ObjectTypeToColumnType(object obj)
         {
             Type objType = obj.GetType();
@@ -232,7 +253,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             {
                 if (!(type == qdb_ts_column_type.qdb_ts_column_string && column_type == qdb_ts_column_type.qdb_ts_column_symbol))
                 {
-                    throw new QdbException(String.Format("Invalid type for column {0} of table {1}", _tables[table_index], _data[table_index].columns[column_index].name.ToString()));
+                    throw new QdbException(String.Format("Invalid type for column {0} of table {1}. Expected {2} got {3}", _tables[table_index], _data[table_index].columns[column_index].name.ToString(), ColumnTypeName(column_type), ColumnTypeName(type)));
                 }
             }
         }
@@ -436,6 +457,12 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// <param name="values">The values for each column in the row</param>
         public unsafe void Append(long table_index, DateTime timestamp, object[] values)
         {
+            long valueCount = values.Length;
+            long columnCount = _data[table_index].columns.Length;
+            if (valueCount != columnCount)
+            {
+                throw new QdbException(String.Format("Number of values provided {0} does not match the number of columns {1}", valueCount, columnCount))
+            }
             long column_index = 0;
             foreach (var val in values)
             {
