@@ -200,7 +200,7 @@ namespace Quasardb.TimeSeries.ExpWriter
 
         internal string ColumnTypeName(qdb_ts_column_type type)
         {
-            switch (info.type)
+            switch (type)
             {
                 case qdb_ts_column_type.qdb_ts_column_double:
                     return "double";
@@ -461,7 +461,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             long columnCount = _data[table_index].columns.Length;
             if (valueCount != columnCount)
             {
-                throw new QdbException(String.Format("Number of values provided {0} does not match the number of columns {1}", valueCount, columnCount))
+                throw new QdbException(String.Format("Number of values provided {0} does not match the number of columns {1}", valueCount, columnCount));
             }
             long column_index = 0;
             foreach (var val in values)
