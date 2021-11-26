@@ -1,6 +1,4 @@
 using System;
-using System.Text;
-using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Quasardb.Tests.Batch.Blob
@@ -13,22 +11,21 @@ namespace Quasardb.Tests.Batch.Blob
         [TestMethod]
         public void GivenMatchingComparandAlias_UpdatesContent()
         {
+            if (Type.GetType("Mono.Runtime") != null)
+            {
+                Assert.Inconclusive("Skip on linux");
+            }
             var batch = new QdbBatch();
             var alias = RandomGenerator.CreateUniqueAlias();
-            var initialContent = Encoding.UTF8.GetBytes("initial_value");
-            var newContent = Encoding.UTF8.GetBytes("updated_value");
+            var initialContent = RandomGenerator.CreateRandomContent();
+            var newContent = RandomGenerator.CreateRandomContent();
             var expiry = new DateTime(2200, 12, 25);
 
             _cluster.Blob(alias).Put(initialContent);
             var future = batch.Blob(alias).CompareAndSwap(newContent, initialContent, expiry);
             _cluster.RunBatch(batch);
-            Thread.Sleep(1 * 1000);
-
             var actualContent = _cluster.Blob(alias).Get();
             var actualExpiry = _cluster.Blob(alias).GetExpiryTime();
-            Console.WriteLine("GivenMatchingComparandAlias_UpdatesContent values:");
-            Console.WriteLine(Encoding.UTF8.GetString(newContent));
-            Console.WriteLine(Encoding.UTF8.GetString(actualContent));
             CollectionAssert.AreEqual(newContent, actualContent);
             Assert.AreEqual(expiry, actualExpiry);
             Assert.IsNull(future.Result);
