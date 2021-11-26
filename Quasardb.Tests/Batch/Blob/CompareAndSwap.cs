@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Quasardb.Tests.Batch.Blob
@@ -21,6 +22,8 @@ namespace Quasardb.Tests.Batch.Blob
             _cluster.Blob(alias).Put(initialContent);
             var future = batch.Blob(alias).CompareAndSwap(newContent, initialContent, expiry);
             _cluster.RunBatch(batch);
+            Thread.Sleep(1 * 1000);
+
             var actualContent = _cluster.Blob(alias).Get();
             var actualExpiry = _cluster.Blob(alias).GetExpiryTime();
             Console.WriteLine("GivenMatchingComparandAlias_UpdatesContent values:");
