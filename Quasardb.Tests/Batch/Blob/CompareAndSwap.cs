@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Quasardb.Tests.Batch.Blob
@@ -11,7 +12,7 @@ namespace Quasardb.Tests.Batch.Blob
         [TestMethod]
         public void GivenMatchingComparandAlias_UpdatesContent()
         {
-            if (Type.GetType("Mono.Runtime") != null)
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 Assert.Inconclusive("Skip on linux");
             }
