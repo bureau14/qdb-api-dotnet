@@ -372,80 +372,80 @@ namespace Quasardb.Tests.Table
             CheckColumn(ts, values, timestamps);
         }
 
-        [TestMethod]
-        public void Ok_BulkRowInsertDoubles()
-        {
-            QdbTable ts = CreateTable();
+        //[TestMethod]
+        //public void Ok_BulkRowInsertDoubles()
+        //{
+        //    QdbTable ts = CreateTable();
 
-            var values = MakeDoubleArray(10);
-            var timestamps = MakeTimestamps(10);
+        //    var values = MakeDoubleArray(10);
+        //    var timestamps = MakeTimestamps(10);
 
-            var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Transactional(), values, timestamps);
+        //    var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Transactional(), values, timestamps);
 
-            batch.Push();
+        //    batch.Push();
 
-            CheckColumn(ts, values, timestamps);
-        }
+        //    CheckColumn(ts, values, timestamps);
+        //}
 
-        [TestMethod]
-        public void Ok_BulkRowInsertInts()
-        {
-            QdbTable ts = CreateTable();
+        //[TestMethod]
+        //public void Ok_BulkRowInsertInts()
+        //{
+        //    QdbTable ts = CreateTable();
 
-            var values = MakeInt64Array(10);
-            var timestamps = MakeTimestamps(10);
+        //    var values = MakeInt64Array(10);
+        //    var timestamps = MakeTimestamps(10);
 
-            var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Transactional(), values, timestamps);
+        //    var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Transactional(), values, timestamps);
 
-            batch.Push();
+        //    batch.Push();
 
-            CheckColumn(ts, values, timestamps);
-        }
+        //    CheckColumn(ts, values, timestamps);
+        //}
 
-        [TestMethod]
-        public void Ok_BulkRowInsertStrings()
-        {
-            QdbTable ts = CreateTable();
+        //[TestMethod]
+        //public void Ok_BulkRowInsertStrings()
+        //{
+        //    QdbTable ts = CreateTable();
 
-            var values = MakeStringArray(10);
-            var timestamps = MakeTimestamps(10);
+        //    var values = MakeStringArray(10);
+        //    var timestamps = MakeTimestamps(10);
 
-            var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Transactional(), values, timestamps);
+        //    var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Transactional(), values, timestamps);
 
-            batch.Push();
+        //    batch.Push();
 
-            CheckColumn(ts, values, timestamps);
-        }
+        //    CheckColumn(ts, values, timestamps);
+        //}
 
-        [TestMethod]
-        public void Ok_BulkRowInsertTimestamps()
-        {
-            QdbTable ts = CreateTable();
+        //[TestMethod]
+        //public void Ok_BulkRowInsertTimestamps()
+        //{
+        //    QdbTable ts = CreateTable();
 
-            var values = MakeTimestamps(10);
-            var timestamps = MakeTimestamps(10);
+        //    var values = MakeTimestamps(10);
+        //    var timestamps = MakeTimestamps(10);
 
-            var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Transactional(), values, timestamps);
+        //    var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Transactional(), values, timestamps);
 
-            batch.Push();
+        //    batch.Push();
 
-            CheckColumn(ts, values, timestamps);
-        }
+        //    CheckColumn(ts, values, timestamps);
+        //}
 
-        [TestMethod]
-        public void Ok_BulkRowInsertSymbols()
-        {
-            QdbTable ts = CreateTable();
+        //[TestMethod]
+        //public void Ok_BulkRowInsertSymbols()
+        //{
+        //    QdbTable ts = CreateTable();
 
-            var values = MakeStringArray(10);
-            var timestamps = MakeTimestamps(10);
+        //    var values = MakeStringArray(10);
+        //    var timestamps = MakeTimestamps(10);
 
-            var batch = InsertSymbol(ts.Alias, new QdbTableExpWriterOptions().Transactional(), values, timestamps);
+        //    var batch = InsertSymbol(ts.Alias, new QdbTableExpWriterOptions().Transactional(), values, timestamps);
 
-            batch.Push();
+        //    batch.Push();
 
-            CheckSymbolColumn(ts, values, timestamps);
-        }
+        //    CheckSymbolColumn(ts, values, timestamps);
+        //}
 
         [TestMethod]
         public void Ok_BulkRowInsertByName()
