@@ -631,8 +631,9 @@ namespace Quasardb.TimeSeries.ExpWriter
             qdb_exp_batch_push_table_data d;
 
             d.row_count = (qdb_size_t)timestamps.Length;
-            d.column_count = (qdb_size_t)infos.Length;
             d.timestamps = (qdb_timespec*)convert_array(timestamps, ref pins);
+
+            d.column_count = (qdb_size_t)0;
             d.columns = (qdb_exp_batch_push_column*)convert_array(convert_columns(infos, data, ref d.column_count, ref pins), ref pins);
             return d;
         }
