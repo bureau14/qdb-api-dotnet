@@ -153,10 +153,12 @@ namespace Quasardb.TimeSeries.ExpWriter
                     _table_data[table_index].data = new QdbColumnData[(int)columns.Size];
                     _table_data[table_index].columns = new qdb_ts_column_info_ex[(int)columns.Size];
                     _table_data[table_index].column_name_to_index = new Dictionary<string, long>();
+                    _table_data[table_index].timestamps = new List<qdb_timespec>();
                     foreach (var column in columns)
                     {
                         _table_data[table_index].columns[column_index] = column;
                         _table_data[table_index].column_name_to_index[column.name] = column_index;
+                        ExpWriterHelper.initialize_column(column.type, ref _table_data[table_index].data[column_index]);
                         column_index++;
                     }
                 }
@@ -174,6 +176,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             Free();
             foreach (var data in _table_data)
             {
+                data.timestamps.Clear();
                 ExpWriterHelper.reset_data(data.columns, ref data.data);
             }
         }
@@ -204,54 +207,6 @@ namespace Quasardb.TimeSeries.ExpWriter
             }
         }
 
-        internal string ColumnTypeName(qdb_ts_column_type type)
-        {
-            switch (type)
-            {
-                case qdb_ts_column_type.qdb_ts_column_double:
-                    return "double";
-                case qdb_ts_column_type.qdb_ts_column_blob:
-                    return "blob";
-                case qdb_ts_column_type.qdb_ts_column_int64:
-                    return "int64";
-                case qdb_ts_column_type.qdb_ts_column_timestamp:
-                    return "timestamp";
-                case qdb_ts_column_type.qdb_ts_column_string:
-                case qdb_ts_column_type.qdb_ts_column_symbol:
-                    return "string";
-                case qdb_ts_column_type.qdb_ts_column_uninitialized:
-                    return "unknown";
-            }
-            return "unknown";
-        }
-
-        internal qdb_ts_column_type ObjectTypeToColumnType(object obj)
-        {
-            Type objType = obj.GetType();
-
-            if (objType.Equals(typeof(byte[])))
-            {
-                return qdb_ts_column_type.qdb_ts_column_blob;
-            }
-            else if (objType.Equals(typeof(string)))
-            {
-                return qdb_ts_column_type.qdb_ts_column_string;
-            }
-            else if (objType.Equals(typeof(double)))
-            {
-                return qdb_ts_column_type.qdb_ts_column_double;
-            }
-            else if (objType.Equals(typeof(long)))
-            {
-                return qdb_ts_column_type.qdb_ts_column_int64;
-            }
-            else if (objType.Equals(typeof(DateTime)))
-            {
-                return qdb_ts_column_type.qdb_ts_column_timestamp;
-            }
-            return qdb_ts_column_type.qdb_ts_column_uninitialized;
-        }
-
         internal void CheckType(long table_index, long column_index, qdb_ts_column_type type)
         {
             var column_type = _table_data[table_index].columns[column_index].type;
@@ -259,190 +214,9 @@ namespace Quasardb.TimeSeries.ExpWriter
             {
                 if (!(type == qdb_ts_column_type.qdb_ts_column_string && column_type == qdb_ts_column_type.qdb_ts_column_symbol))
                 {
-                    throw new QdbException(String.Format("Invalid type for column {0} of table {1}. Expected {2} got {3}", _tables[table_index], _table_data[table_index].columns[column_index].name.ToString(), ColumnTypeName(column_type), ColumnTypeName(type)));
+                    throw new QdbException(String.Format("Invalid type for column {0} of table {1}. Expected {2} got {3}", _tables[table_index], _table_data[table_index].columns[column_index].name.ToString(), ExpWriterHelper.column_type_name(column_type), ExpWriterHelper.column_type_name(type)));
                 }
             }
-        }
-
-        internal long IndexOfColumn(long table_index, string column)
-        {
-            try
-            {
-                return _table_data[table_index].column_name_to_index[column];
-            }
-            catch (KeyNotFoundException /*e*/)
-            {
-                throw new QdbException(String.Format("Column '{0}' not found in '{1}'.", column, _tables[table_index]));
-            }
-        }
-
-        /// <summary>
-        /// Set all timestamps.
-        /// </summary>
-        /// <param name="table_index">The index to the table you want to modify</param>
-        /// <param name="timestamps">The timestamps </param>
-        public unsafe void SetTimestamps(long table_index, DateTime[] timestamps)
-        {
-            _table_data[table_index].timestamps = new List<qdb_timespec>(timestamps.Length);
-            foreach (var timestamp in timestamps)
-            {
-                _table_data[table_index].timestamps.Add(TimeConverter.ToTimespec(timestamp));
-            }
-        }
-        
-
-        /// <summary>
-        /// Set all timestamps.
-        /// </summary>
-        /// <param name="table_name">The name to the table you want to modify</param>
-        /// <param name="timestamps">The timestamps </param>
-        public unsafe void SetTimestamps(string table_name, DateTime[] timestamps)
-        {
-            long table_index = IndexOfTable(table_name);
-            SetTimestamps(table_index, timestamps);
-        }
-
-        /// <summary>
-        /// Set a blob column.
-        /// </summary>
-        /// <param name="table_index">The index to the table you want to modify</param>
-        /// <param name="column_index">The index to the column you want to modify</param>
-        /// <param name="values">The values as an array of byte arrays</param>
-        public unsafe void SetBlobColumn(long table_index, long column_index, byte[][] values)
-        {
-            CheckType(table_index, column_index, qdb_ts_column_type.qdb_ts_column_blob);
-            _table_data[table_index].data[column_index] = new QdbColumnData();
-            _table_data[table_index].data[column_index].blobs = new List<qdb_blob>(values.Length);
-            foreach (byte[] content in values)
-            {
-                _table_data[table_index].data[column_index].blobs.Add(ExpWriterHelper.convert_blob(content, ref _pins));
-            }
-
-        }
-
-        /// <summary>
-        /// Set a blob column.
-        /// </summary>
-        /// <param name="table_name">The name to the table you want to modify</param>
-        /// <param name="column_name">The name to the column you want to modify</param>
-        /// <param name="values">The values as an array of byte arrays</param>
-        public unsafe void SetBlobColumn(string table_name, string column_name, byte[][] values)
-        {
-            long table_index = IndexOfTable(table_name);
-            long column_index = IndexOfColumn(table_index, column_name);
-            SetBlobColumn(table_index, column_index, values);
-        }
-
-        /// <summary>
-        /// Set a double column.
-        /// </summary>
-        /// <param name="table_index">The index to the table you want to modify</param>
-        /// <param name="column_index">The index to the column you want to modify</param>
-        /// <param name="values">The values as a double array</param>
-        public void SetDoubleColumn(long table_index, long column_index, double[] values)
-        {
-            CheckType(table_index, column_index, qdb_ts_column_type.qdb_ts_column_double);
-            _table_data[table_index].data[column_index] = new QdbColumnData();
-            _table_data[table_index].data[column_index].doubles = new List<double>(values);
-        }
-
-        /// <summary>
-        /// Set a double column.
-        /// </summary>
-        /// <param name="table_name">The name to the table you want to modify</param>
-        /// <param name="column_name">The name to the column you want to modify</param>
-        /// <param name="values">The values as a double array</param>
-        public unsafe void SetDoubleColumn(string table_name, string column_name, double[] values)
-        {
-            long table_index = IndexOfTable(table_name);
-            long column_index = IndexOfColumn(table_index, column_name);
-            SetDoubleColumn(table_index, column_index, values);
-        }
-
-        /// <summary>
-        /// Set an integer column.
-        /// </summary>
-        /// <param name="table_index">The index to the table you want to modify</param>
-        /// <param name="column_index">The index to the column you want to modify</param>
-        /// <param name="values">The values as an int64 array</param>
-        public void SetInt64Column(long table_index, long column_index, long[] values)
-        {
-            CheckType(table_index, column_index, qdb_ts_column_type.qdb_ts_column_int64);
-            _table_data[table_index].data[column_index] = new QdbColumnData();
-            _table_data[table_index].data[column_index].ints = new List<long>(values);
-        }
-
-        /// <summary>
-        /// Set an integer column.
-        /// </summary>
-        /// <param name="table_name">The name to the table you want to modify</param>
-        /// <param name="column_name">The name to the column you want to modify</param>
-        /// <param name="values">The values as an int64 array</param>
-        public unsafe void SetInt64Column(string table_name, string column_name, long[] values)
-        {
-            long table_index = IndexOfTable(table_name);
-            long column_index = IndexOfColumn(table_index, column_name);
-            SetInt64Column(table_index, column_index, values);
-        }
-
-        /// <summary>
-        /// Set a string column.
-        /// </summary>
-        /// <param name="table_index">The index to the table you want to modify</param>
-        /// <param name="column_index">The index to the column you want to modify</param>
-        /// <param name="values">The values as a utf8 string array</param>
-        public unsafe void SetStringColumn(long table_index, long column_index, string[] values)
-        {
-            CheckType(table_index, column_index, qdb_ts_column_type.qdb_ts_column_string);
-            _table_data[table_index].data[column_index] = new QdbColumnData();
-            _table_data[table_index].data[column_index].strings = new List<qdb_sized_string>(values.Length);
-            foreach (string content in values)
-            {
-                _table_data[table_index].data[column_index].strings.Add(ExpWriterHelper.convert_string(content, ref _pins));
-            }
-        }
-
-        /// <summary>
-        /// Set a string column.
-        /// </summary>
-        /// <param name="table_name">The name to the table you want to modify</param>
-        /// <param name="column_name">The name to the column you want to modify</param>
-        /// <param name="values">The values as a utf8 string array</param>
-        public unsafe void SetStringColumn(string table_name, string column_name, string[] values)
-        {
-            long table_index = IndexOfTable(table_name);
-            long column_index = IndexOfColumn(table_index, column_name);
-            SetStringColumn(table_index, column_index, values);
-        }
-
-        /// <summary>
-        /// Set a timestamp column.
-        /// </summary>
-        /// <param name="table_index">The index to the table you want to modify</param>
-        /// <param name="column_index">The index to the column you want to modify</param>
-        /// <param name="values">The values as a DateTime array</param>
-        public unsafe void SetTimestampColumn(long table_index, long column_index, DateTime[] values)
-        {
-            CheckType(table_index, column_index, qdb_ts_column_type.qdb_ts_column_timestamp);
-            _table_data[table_index].data[column_index] = new QdbColumnData();
-            _table_data[table_index].data[column_index].timestamps = new List<qdb_timespec>(values.Length);
-            foreach (var timestamp in values)
-            {
-                _table_data[table_index].data[column_index].timestamps.Add(TimeConverter.ToTimespec(timestamp));
-            }
-        }
-
-        /// <summary>
-        /// Set a timestamp column.
-        /// </summary>
-        /// <param name="table_name">The name to the table you want to modify</param>
-        /// <param name="column_name">The name to the column you want to modify</param>
-        /// <param name="values">The values as a DateTime array</param>
-        public unsafe void SetTimestampColumn(string table_name, string column_name, DateTime[] values)
-        {
-            long table_index = IndexOfTable(table_name);
-            long column_index = IndexOfColumn(table_index, column_name);
-            SetTimestampColumn(table_index, column_index, values);
         }
 
         /// <summary>
@@ -453,8 +227,8 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// <param name="values">The values for each column in the row</param>
         public unsafe void Append(long table_index, DateTime timestamp, object[] values)
         {
-            long valueCount = values.Length;
-            long columnCount = _table_data[table_index].columns.Length;
+            var columnCount = _table_data[table_index].columns.Length;
+            var valueCount = values.Length;
             if (valueCount != columnCount)
             {
                 throw new QdbException(String.Format("Number of values provided {0} does not match the number of columns {1}", valueCount, columnCount));
@@ -462,11 +236,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             long column_index = 0;
             foreach (var val in values)
             {
-                if (_table_data[table_index].data[column_index] == null)
-                {
-                    _table_data[table_index].data[column_index] = new QdbColumnData();
-                }
-                var type = ObjectTypeToColumnType(val);
+                var type = ExpWriterHelper.object_type_to_column_type(val);
                 CheckType(table_index, column_index, type);
                 switch (type)
                 {
@@ -524,13 +294,106 @@ namespace Quasardb.TimeSeries.ExpWriter
 
     unsafe class ExpWriterHelper
     {
+        internal static string column_type_name(qdb_ts_column_type type)
+        {
+            switch (type)
+            {
+                case qdb_ts_column_type.qdb_ts_column_double:
+                    return "double";
+                case qdb_ts_column_type.qdb_ts_column_blob:
+                    return "blob";
+                case qdb_ts_column_type.qdb_ts_column_int64:
+                    return "int64";
+                case qdb_ts_column_type.qdb_ts_column_timestamp:
+                    return "timestamp";
+                case qdb_ts_column_type.qdb_ts_column_string:
+                case qdb_ts_column_type.qdb_ts_column_symbol:
+                    return "string";
+                case qdb_ts_column_type.qdb_ts_column_uninitialized:
+                    return "unknown";
+            }
+            return "unknown";
+        }
+
+        internal static qdb_ts_column_type object_type_to_column_type(object obj)
+        {
+            Type objType = obj.GetType();
+
+            if (objType.Equals(typeof(byte[])))
+            {
+                return qdb_ts_column_type.qdb_ts_column_blob;
+            }
+            else if (objType.Equals(typeof(string)))
+            {
+                return qdb_ts_column_type.qdb_ts_column_string;
+            }
+            else if (objType.Equals(typeof(double)))
+            {
+                return qdb_ts_column_type.qdb_ts_column_double;
+            }
+            else if (objType.Equals(typeof(long)))
+            {
+                return qdb_ts_column_type.qdb_ts_column_int64;
+            }
+            else if (objType.Equals(typeof(DateTime)))
+            {
+                return qdb_ts_column_type.qdb_ts_column_timestamp;
+            }
+            return qdb_ts_column_type.qdb_ts_column_uninitialized;
+        }
+
+        internal static void initialize_column(qdb_ts_column_type type, ref QdbColumnData data)
+        {
+            data = new QdbColumnData();
+            switch (type)
+            {
+                case qdb_ts_column_type.qdb_ts_column_double:
+                    data.doubles = new List<double>();
+                    break;
+                case qdb_ts_column_type.qdb_ts_column_blob:
+                    data.blobs = new List<qdb_blob>();
+                    break;
+                case qdb_ts_column_type.qdb_ts_column_int64:
+                    data.ints = new List<long>();
+                    break;
+                case qdb_ts_column_type.qdb_ts_column_timestamp:
+                    data.timestamps = new List<qdb_timespec>();
+                    break;
+                case qdb_ts_column_type.qdb_ts_column_string:
+                case qdb_ts_column_type.qdb_ts_column_symbol:
+                    data.strings = new List<qdb_sized_string>();
+                    break;
+                case qdb_ts_column_type.qdb_ts_column_uninitialized:
+                    break;
+            }
+        }
 
         internal static void reset_data(qdb_ts_column_info_ex[] columns, ref QdbColumnData[] data)
         {
             long column_index = 0;
             foreach (var column in columns)
             {
-                data[column_index] = null;
+                switch (column.type)
+                {
+                    case qdb_ts_column_type.qdb_ts_column_double:
+                        data[column_index].doubles.Clear();
+                        break;
+                    case qdb_ts_column_type.qdb_ts_column_blob:
+                        data[column_index].blobs.Clear();
+                        break;
+                    case qdb_ts_column_type.qdb_ts_column_int64:
+                        data[column_index].ints.Clear();
+                        break;
+                    case qdb_ts_column_type.qdb_ts_column_timestamp:
+                        data[column_index].timestamps.Clear();
+                        break;
+                    case qdb_ts_column_type.qdb_ts_column_string:
+                    case qdb_ts_column_type.qdb_ts_column_symbol:
+                        data[column_index].strings.Clear();
+                        break;
+                    case qdb_ts_column_type.qdb_ts_column_uninitialized:
+                        break;
+                }
                 column_index++;
             }
         }
