@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Quasardb.Tests.Batch.Blob
@@ -23,8 +24,8 @@ namespace Quasardb.Tests.Batch.Blob
             var actualContent = _cluster.Blob(alias).Get();
             var actualExpiry = _cluster.Blob(alias).GetExpiryTime();
             Console.WriteLine("GivenMatchingComparandAlias_UpdatesContent values:");
-            Console.WriteLine(newContent.ToString());
-            Console.WriteLine(actualContent.ToString());
+            Console.WriteLine(Encoding.UTF8.GetString(newContent));
+            Console.WriteLine(Encoding.UTF8.GetString(actualContent));
             CollectionAssert.AreEqual(newContent, actualContent);
             Assert.AreEqual(expiry, actualExpiry);
             Assert.IsNull(future.Result);
