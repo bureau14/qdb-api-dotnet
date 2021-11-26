@@ -318,14 +318,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             _table_data[table_index].data[column_index].Count = values.Length;
             foreach (byte[] content in values)
             {
-                GCHandle pin = GCHandle.Alloc(content, GCHandleType.Pinned);
-                _pins.Add(pin);
-
-                qdb_blob blob;
-                blob.content = (byte*)pin.AddrOfPinnedObject();
-                blob.content_size = (qdb_size_t)content.Length;
-
-                _table_data[table_index].data[column_index].blobs.Add(blob);
+                _table_data[table_index].data[column_index].blobs.Add(ExpWriterHelper.convert_blob(content, ref _pins));
             }
 
         }
@@ -408,15 +401,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             _table_data[table_index].data[column_index].Count = values.Length;
             foreach (string content in values)
             {
-                byte[] str = System.Text.Encoding.UTF8.GetBytes(content);
-                GCHandle pin = GCHandle.Alloc(str, GCHandleType.Pinned);
-                _pins.Add(pin);
-
-                qdb_sized_string sized_str;
-                sized_str.data = (byte*)pin.AddrOfPinnedObject();
-                sized_str.length = (qdb_size_t)str.Length;
-
-                _table_data[table_index].data[column_index].strings.Add(sized_str);
+                _table_data[table_index].data[column_index].strings.Add(ExpWriterHelper.convert_string(content, ref _pins));
             }
         }
 
@@ -490,15 +475,7 @@ namespace Quasardb.TimeSeries.ExpWriter
                         break;
                     case qdb_ts_column_type.qdb_ts_column_blob:
                     {
-                        var content = (byte[])val;
-                        GCHandle pin = GCHandle.Alloc(content, GCHandleType.Pinned);
-                        _pins.Add(pin);
-
-                        qdb_blob blob;
-                        blob.content = (byte*)pin.AddrOfPinnedObject();
-                        blob.content_size = (qdb_size_t)content.Length;
-
-                        _table_data[table_index].data[column_index].blobs.Add(blob);
+                        _table_data[table_index].data[column_index].blobs.Add(ExpWriterHelper.convert_blob((byte[])val, ref _pins));
                         break;
                     }
                     case qdb_ts_column_type.qdb_ts_column_int64:
@@ -510,15 +487,7 @@ namespace Quasardb.TimeSeries.ExpWriter
                     case qdb_ts_column_type.qdb_ts_column_string:
                     case qdb_ts_column_type.qdb_ts_column_symbol:
                     {
-                        byte[] str = System.Text.Encoding.UTF8.GetBytes((string)val);
-                        GCHandle pin = GCHandle.Alloc(str, GCHandleType.Pinned);
-                        _pins.Add(pin);
-
-                        qdb_sized_string sized_str;
-                        sized_str.data = (byte*)pin.AddrOfPinnedObject();
-                        sized_str.length = (qdb_size_t)str.Length;
-
-                        _table_data[table_index].data[column_index].strings.Add(sized_str);
+                        _table_data[table_index].data[column_index].strings.Add(ExpWriterHelper.convert_string((string)val, ref _pins));
                         break;
                     }
                 }
@@ -569,7 +538,16 @@ namespace Quasardb.TimeSeries.ExpWriter
                 column_index++;
             }
         }
-        private static qdb_sized_string convert_string(string str, ref List<GCHandle> pins)
+
+        internal static qdb_blob convert_blob(byte[] arr, ref List<GCHandle> pins)
+        {
+            GCHandle pin;
+            var b = new qdb_blob(arr, ref pin);
+            pins.Add(pin);
+            return b;
+        }
+
+        internal static qdb_sized_string convert_string(string str, ref List<GCHandle> pins)
         {
             GCHandle pin;
             var ss = new qdb_sized_string(str, ref pin);
