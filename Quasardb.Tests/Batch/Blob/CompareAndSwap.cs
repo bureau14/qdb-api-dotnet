@@ -15,8 +15,8 @@ namespace Quasardb.Tests.Batch.Blob
         {
             var batch = new QdbBatch();
             var alias = RandomGenerator.CreateUniqueAlias();
-            var initialContent = RandomGenerator.CreateRandomContent();
-            var newContent = RandomGenerator.CreateRandomContent();
+            var initialContent = Encoding.UTF8.GetBytes("initial_value");
+            var newContent = Encoding.UTF8.GetBytes("updated_value");
             var expiry = new DateTime(2200, 12, 25);
 
             _cluster.Blob(alias).Put(initialContent);
