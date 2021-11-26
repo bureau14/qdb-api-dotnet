@@ -23,8 +23,8 @@ namespace Quasardb.Tests.Batch.Blob
             var actualContent = _cluster.Blob(alias).Get();
             var actualExpiry = _cluster.Blob(alias).GetExpiryTime();
             Console.WriteLine("GivenMatchingComparandAlias_UpdatesContent values:");
-            Console.WriteLine(newContent);
-            Console.WriteLine(actualContent);
+            Console.WriteLine(newContent.ToString());
+            Console.WriteLine(actualContent.ToString());
             CollectionAssert.AreEqual(newContent, actualContent);
             Assert.AreEqual(expiry, actualExpiry);
             Assert.IsNull(future.Result);
