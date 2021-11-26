@@ -357,20 +357,20 @@ namespace Quasardb.Tests.Table
             batch.Push();
         }
 
-        [TestMethod]
-        public void Ok_BulkRowInsertBlobs()
-        {
-            QdbTable ts = CreateTable();
+        //[TestMethod]
+        //public void Ok_BulkRowInsertBlobs()
+        //{
+        //    QdbTable ts = CreateTable();
 
-            var values = MakeBlobArray(10);
-            var timestamps = MakeTimestamps(10);
+        //    var values = MakeBlobArray(10);
+        //    var timestamps = MakeTimestamps(10);
 
-            var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Transactional(), values, timestamps);
+        //    var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Transactional(), values, timestamps);
 
-            batch.Push();
+        //    batch.Push();
 
-            CheckColumn(ts, values, timestamps);
-        }
+        //    CheckColumn(ts, values, timestamps);
+        //}
 
         //[TestMethod]
         //public void Ok_BulkRowInsertDoubles()
@@ -417,20 +417,20 @@ namespace Quasardb.Tests.Table
         //    CheckColumn(ts, values, timestamps);
         //}
 
-        //[TestMethod]
-        //public void Ok_BulkRowInsertTimestamps()
-        //{
-        //    QdbTable ts = CreateTable();
+        [TestMethod]
+        public void Ok_BulkRowInsertTimestamps()
+        {
+            QdbTable ts = CreateTable();
 
-        //    var values = MakeTimestamps(10);
-        //    var timestamps = MakeTimestamps(10);
+            var values = MakeTimestamps(10);
+            var timestamps = MakeTimestamps(10);
 
-        //    var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Transactional(), values, timestamps);
+            var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Transactional(), values, timestamps);
 
-        //    batch.Push();
+            batch.Push();
 
-        //    CheckColumn(ts, values, timestamps);
-        //}
+            CheckColumn(ts, values, timestamps);
+        }
 
         //[TestMethod]
         //public void Ok_BulkRowInsertSymbols()
