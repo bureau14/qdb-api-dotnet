@@ -372,20 +372,20 @@ namespace Quasardb.Tests.Table
         //    CheckColumn(ts, values, timestamps);
         //}
 
-        //[TestMethod]
-        //public void Ok_BulkRowInsertDoubles()
-        //{
-        //    QdbTable ts = CreateTable();
+        [TestMethod]
+        public void Ok_BulkRowInsertDoubles()
+        {
+            QdbTable ts = CreateTable();
 
-        //    var values      = MakeDoubleArray(10);
-        //    var timestamps = MakeTimestamps(10);
+            var values = MakeDoubleArray(10);
+            var timestamps = MakeTimestamps(10);
 
-        //    var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Transactional(), values, timestamps);
+            var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Transactional(), values, timestamps);
 
-        //    batch.Push();
+            batch.Push();
 
-        //    CheckColumn(ts, values, timestamps);
-        //}
+            CheckColumn(ts, values, timestamps);
+        }
 
         //[TestMethod]
         //public void Ok_BulkRowInsertInts()
