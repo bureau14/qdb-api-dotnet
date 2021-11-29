@@ -7,7 +7,7 @@ using Quasardb.Exceptions;
 using Quasardb.TimeSeries;
 using Quasardb.TimeSeries.Writer;
 
-namespace Quasardb.Tests.Cluster
+namespace Quasardb.Tests.Table
 {
     [TestClass]
     public class Writer

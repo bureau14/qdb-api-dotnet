@@ -626,6 +626,14 @@ namespace Quasardb.Native
             [In] [MarshalAs(ALIAS_TYPE)] string alias,
             [In] qdb_uint_t size);
 
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_exp_batch_push(
+            [In] qdb_handle handle,
+            [In] qdb_exp_batch_push_mode mode,
+            [In] qdb_exp_batch_push_table[] tables,
+            [In] qdb_exp_batch_push_table_schema* schemas,
+            [In] long table_count);
+
         #region Functions specific to local tables
 
         [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
