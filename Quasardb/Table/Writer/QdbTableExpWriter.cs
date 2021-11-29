@@ -120,7 +120,6 @@ namespace Quasardb.TimeSeries.ExpWriter
     {
         private readonly qdb_handle _handle;
         private List<GCHandle> _pins;
-        private List<GCHandle> _value_pins;
 
         QdbTableExpWriterOptions _options;
 
@@ -132,7 +131,6 @@ namespace Quasardb.TimeSeries.ExpWriter
         {
             _handle = handle;
             _pins = new List<GCHandle>(1024);
-            _value_pins = new List<GCHandle>(1024);
             _options = options;
             _table_data = new QdbTableExpWriterData[tables.Length];
             _table_name_to_index = new Dictionary<string, long>();
@@ -168,10 +166,13 @@ namespace Quasardb.TimeSeries.ExpWriter
 
         private void Free()
         {
-            //foreach (var pin in _value_pins)
-            //    pin.Free();
-            //foreach (var pin in _pins)
-            //    pin.Free();
+            foreach (var pin in _pins)
+            {
+                if (pin != null && pin.IsAllocated)
+                {
+                    pin.Free();
+                }
+            }
         }
 
         private void Reset()
@@ -244,7 +245,7 @@ namespace Quasardb.TimeSeries.ExpWriter
                         _table_data[table_index].data[column_index].doubles.Add((double)val);
                         break;
                     case qdb_ts_column_type.qdb_ts_column_blob:
-                        _table_data[table_index].data[column_index].blobs.Add(ExpWriterHelper.convert_blob((byte[])val, ref _value_pins));
+                        _table_data[table_index].data[column_index].blobs.Add(ExpWriterHelper.convert_blob((byte[])val, ref _pins));
                         break;
                     case qdb_ts_column_type.qdb_ts_column_int64:
                         _table_data[table_index].data[column_index].ints.Add((long)val);
@@ -253,7 +254,7 @@ namespace Quasardb.TimeSeries.ExpWriter
                         _table_data[table_index].data[column_index].timestamps.Add(TimeConverter.ToTimespec((DateTime)val));
                         break;
                     case qdb_ts_column_type.qdb_ts_column_string:
-                        _table_data[table_index].data[column_index].strings.Add(ExpWriterHelper.convert_string((string)val, ref _value_pins));
+                        _table_data[table_index].data[column_index].strings.Add(ExpWriterHelper.convert_string((string)val, ref _pins));
                         break;
                     default:
                         throw new QdbException(String.Format("Unkown type for column {0} in table {1}.", ExpWriterHelper.column_type_name(type), _table_data[table_index].name));
@@ -398,9 +399,8 @@ namespace Quasardb.TimeSeries.ExpWriter
 
         internal static qdb_blob convert_blob(byte[] arr, ref List<GCHandle> pins)
         {
-            GCHandle pin;
+            var pin = GCHandle.Alloc(arr, GCHandleType.Pinned);
             qdb_blob b;
-            pin = GCHandle.Alloc(arr, GCHandleType.Pinned);
             b.content = (byte*)pin.AddrOfPinnedObject();
             b.content_size = (qdb_size_t)arr.Length;
             pins.Add(pin);
