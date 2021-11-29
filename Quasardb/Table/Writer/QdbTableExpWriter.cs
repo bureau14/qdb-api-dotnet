@@ -145,7 +145,7 @@ namespace Quasardb.TimeSeries.ExpWriter
                 _table_name_to_index[table] = table_index;
                 using (var columns = new qdb_buffer<qdb_ts_column_info_ex>(handle))
                 {
-                    var err = qdb_api.qdb_ts_list_columns_ex(handle, table, out columns.Pointer, out columns.Size);
+                    var err = qdb_api.qdb_ts_list_columns(handle, table, out columns.Pointer, out columns.Size);
                     QdbExceptionThrower.ThrowIfNeeded(err, alias: table);
 
                     long column_index = 0;
