@@ -137,8 +137,6 @@ namespace Quasardb.TimeSeries.ExpWriter
             _table_data = new QdbTableExpWriterData[tables.Length];
             _table_name_to_index = new Dictionary<string, long>();
 
-
-            _table_name_to_index = new Dictionary<string, long>();
             long table_index = 0;
             foreach (var table in tables)
             {
@@ -252,6 +250,8 @@ namespace Quasardb.TimeSeries.ExpWriter
                     case qdb_ts_column_type.qdb_ts_column_string:
                         _table_data[table_index].data[column_index].strings.Add(ExpWriterHelper.convert_string((string)val, ref _pins));
                         break;
+                    default:
+                        throw new QdbException(String.Format("Unkown type for column {0} in table {1}.", ExpWriterHelper.column_type_name(type), _tables[table_index]));
                 }
                 column_index++;
             }
