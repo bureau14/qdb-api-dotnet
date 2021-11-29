@@ -193,7 +193,7 @@ namespace Quasardb.Tests.Table
             tables[0] = ts.Alias;
 
             var batch = _cluster.ExpWriter(tables, new QdbTableExpWriterOptions().Transactional());
-            batch.Append("the_wrong_name", timestamps[0], new object[] {});
+            batch.Append("the_wrong_name", timestamps[0], new object[] { });
 
             batch.Push();
         }
@@ -203,10 +203,10 @@ namespace Quasardb.Tests.Table
         {
             QdbTable ts = CreateTable();
 
-            var blobs      = MakeBlobArray(10);
-            var doubles    = MakeDoubleArray(10);
-            var int64s     = MakeInt64Array(10);
-            var strings    = MakeStringArray(10);
+            var blobs = MakeBlobArray(10);
+            var doubles = MakeDoubleArray(10);
+            var int64s = MakeInt64Array(10);
+            var strings = MakeStringArray(10);
             var timestamps = MakeTimestamps(10);
 
             var batch = InsertByName(ts.Alias, new QdbTableExpWriterOptions().Transactional(), blobs, doubles, int64s, strings, timestamps);
