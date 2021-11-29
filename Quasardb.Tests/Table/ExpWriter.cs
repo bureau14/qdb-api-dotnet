@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Linq;
-using System.Text;
+using System.Collections.Generic;
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb.Exceptions;
-using Quasardb;
 using Quasardb.TimeSeries;
 using Quasardb.TimeSeries.ExpWriter;
 
@@ -28,16 +27,16 @@ namespace Quasardb.Tests.Table
             return r;
         }
 
-        public byte[][] MakeBlobArray(int count)
+        public List<byte[]> MakeBlobArray(int count)
         {
             Random random = new Random();
-            var r = new byte[count][];
+            var r = new List<byte[]>();
 
             for (int i = 0; i < count; ++i)
             {
                 var value = new byte[32];
                 random.NextBytes(value);
-                r[i] = value;
+                r.Add(value);
             }
             return r;
         }
@@ -103,17 +102,15 @@ namespace Quasardb.Tests.Table
 
         public QdbTableExpWriter Insert(string ts,
             QdbTableExpWriterOptions options,
-            byte[][] blobs,
+            List<byte[]> blobs,
             double[] doubles,
             long[] int64s,
             string[] strings,
             DateTime[] timestamps)
         {
-            string[] tables = new string[1];
-            tables[0] = ts;
-            var batch = _cluster.ExpWriter(tables, options);
+            var batch = _cluster.ExpWriter(new string[] { ts }, options);
 
-            for (long index = 0 ; index < doubles.Length ; index++)
+            for (int index = 0 ; index < doubles.Length ; index++)
             {
                 batch.Append(ts, timestamps[index], new object[] { blobs[index], doubles[index], int64s[index], strings[index], timestamps[index] });
             }
@@ -122,17 +119,15 @@ namespace Quasardb.Tests.Table
 
         public QdbTableExpWriter InsertByName(string ts,
             QdbTableExpWriterOptions options,
-            byte[][] blobs,
+            List<byte[]> blobs,
             double[] doubles,
             long[] int64s,
             string[] strings,
             DateTime[] timestamps)
         {
-            string[] tables = new string[1];
-            tables[0] = ts;
-            var batch = _cluster.ExpWriter(tables, options);
+            var batch = _cluster.ExpWriter(new string[] { ts }, options);
 
-            for (long index = 0; index < doubles.Length; index++)
+            for (int index = 0; index < doubles.Length; index++)
             {
                 batch.Append(ts, timestamps[index], new object[] { blobs[index], doubles[index], int64s[index], strings[index], timestamps[index] });
             }
@@ -140,7 +135,7 @@ namespace Quasardb.Tests.Table
         }
 
         public void CheckTables(QdbTable ts,
-            byte[][] blobs,
+            List<byte[]> blobs,
             double[] doubles,
             long[] ints,
             string[] strings,
