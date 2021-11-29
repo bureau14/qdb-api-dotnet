@@ -168,10 +168,10 @@ namespace Quasardb.TimeSeries.ExpWriter
 
         private void Free()
         {
-            foreach (var pin in _value_pins)
-                pin.Free();
-            foreach (var pin in _pins)
-                pin.Free();
+            //foreach (var pin in _value_pins)
+            //    pin.Free();
+            //foreach (var pin in _pins)
+            //    pin.Free();
         }
 
         private void Reset()
