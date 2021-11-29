@@ -215,7 +215,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         }
 
         /// <summary>
-        /// Set a timestamp column.
+        /// Append to a row.
         /// </summary>
         /// <param name="table_index">The index of the table you want to modify</param>
         /// <param name="timestamp">The timestamp of the row</param>
@@ -259,7 +259,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         }
 
         /// <summary>
-        /// Set a timestamp column.
+        /// Append to a row.
         /// </summary>
         /// <param name="table_name">The name of the table you want to modify</param>
         /// <param name="timestamp">The timestamp of the row</param>
