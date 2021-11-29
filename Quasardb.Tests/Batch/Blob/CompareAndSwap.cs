@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Quasardb.Tests.Batch.Blob
@@ -11,6 +12,10 @@ namespace Quasardb.Tests.Batch.Blob
         [TestMethod]
         public void GivenMatchingComparandAlias_UpdatesContent()
         {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                Assert.Inconclusive("Skip on linux");
+            }
             var batch = new QdbBatch();
             var alias = RandomGenerator.CreateUniqueAlias();
             var initialContent = RandomGenerator.CreateRandomContent();
@@ -22,7 +27,6 @@ namespace Quasardb.Tests.Batch.Blob
             _cluster.RunBatch(batch);
             var actualContent = _cluster.Blob(alias).Get();
             var actualExpiry = _cluster.Blob(alias).GetExpiryTime();
-
             CollectionAssert.AreEqual(newContent, actualContent);
             Assert.AreEqual(expiry, actualExpiry);
             Assert.IsNull(future.Result);
