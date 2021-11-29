@@ -115,9 +115,7 @@ namespace Quasardb.Tests.Table
 
             for (long index = 0 ; index < doubles.Length ; index++)
             {
-                object[] objArr = new object[] { blobs[index], doubles[index], int64s[index], strings[index], timestamps[index], strings[index] };
-                Assert.AreEqual(objArr.Length, 6);
-                batch.Append(0, timestamps[index], objArr);
+                batch.Append(ts, timestamps[index], new object[] { blobs[index], doubles[index], int64s[index], strings[index], timestamps[index] });
             }
             return batch;
         }
@@ -136,7 +134,7 @@ namespace Quasardb.Tests.Table
 
             for (long index = 0; index < doubles.Length; index++)
             {
-                batch.Append(ts, timestamps[index], new object[] { blobs[index], doubles[index], int64s[index], strings[index], timestamps[index], strings[index] });
+                batch.Append(ts, timestamps[index], new object[] { blobs[index], doubles[index], int64s[index], strings[index], timestamps[index] });
             }
             return batch;
         }
