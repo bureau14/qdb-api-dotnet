@@ -394,7 +394,10 @@ namespace Quasardb.TimeSeries.ExpWriter
         internal static qdb_blob convert_blob(byte[] arr, ref List<GCHandle> pins)
         {
             GCHandle pin;
-            var b = new qdb_blob(arr, ref pin);
+            qdb_blob b;
+            pin = GCHandle.Alloc(arr, GCHandleType.Pinned);
+            b.content = (byte*)pin.AddrOfPinnedObject();
+            b.content_size = (qdb_size_t)arr.Length;
             pins.Add(pin);
             return b;
         }
@@ -406,7 +409,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             pins.Add(pin);
             return ss;
         }
-        
+
         internal unsafe static IntPtr convert_array<T>(T[] array, ref List<GCHandle> pins)
         {
             GCHandle pin = GCHandle.Alloc(array, GCHandleType.Pinned);

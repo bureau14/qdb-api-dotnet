@@ -91,7 +91,7 @@ namespace Quasardb.Tests.Table
         {
             var ts = _cluster.Table(alias ?? RandomGenerator.CreateUniqueAlias());
             ts.Create(new QdbColumnDefinition[] {
-                 new QdbBlobColumnDefinition("the_blob"),
+                new QdbBlobColumnDefinition("the_blob"),
                 new QdbDoubleColumnDefinition("the_double"),
                 new QdbInt64ColumnDefinition("the_int64"),
                 new QdbStringColumnDefinition("the_string"),
