@@ -296,38 +296,38 @@ namespace Quasardb.Tests.Table
             CheckTables(ts, blobs, doubles, int64s, strings, timestamps);
         }
 
-        [TestMethod]
-        public void Ok_BulkRowInsertTruncate()
-        {
-            QdbTable ts = CreateTable();
-            var timestamps = MakeTimestamps(10);
+        //[TestMethod]
+        //public void Ok_BulkRowInsertTruncate()
+        //{
+        //    QdbTable ts = CreateTable();
+        //    var timestamps = MakeTimestamps(10);
 
-            {
-                var blobs = MakeBlobArray(10);
-                var doubles = MakeDoubleArray(10);
-                var int64s = MakeInt64Array(10);
-                var strings = MakeStringArray(10);
+        //    {
+        //        var blobs = MakeBlobArray(10);
+        //        var doubles = MakeDoubleArray(10);
+        //        var int64s = MakeInt64Array(10);
+        //        var strings = MakeStringArray(10);
 
-                var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Transactional(), blobs, doubles, int64s, strings, timestamps);
-                batch.Push();
+        //        var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Transactional(), blobs, doubles, int64s, strings, timestamps);
+        //        batch.Push();
 
-                CheckTables(ts, blobs, doubles, int64s, strings, timestamps);
-            }
+        //        CheckTables(ts, blobs, doubles, int64s, strings, timestamps);
+        //    }
 
-            {
-                var blobs = MakeBlobArray(10);
-                var doubles = MakeDoubleArray(10);
-                var int64s = MakeInt64Array(10);
-                var strings = MakeStringArray(10);
+        //    {
+        //        var blobs = MakeBlobArray(10);
+        //        var doubles = MakeDoubleArray(10);
+        //        var int64s = MakeInt64Array(10);
+        //        var strings = MakeStringArray(10);
 
-                var begin = timestamps[0];
-                var end = timestamps[timestamps.Length - 1].AddSeconds(1);
-                QdbTimeInterval interval = new QdbTimeInterval(begin, end);
-                var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Truncate(interval), blobs, doubles, int64s, strings, timestamps);
-                batch.Push();
+        //        var begin = timestamps[0];
+        //        var end = timestamps[timestamps.Length - 1].AddSeconds(1);
+        //        QdbTimeInterval interval = new QdbTimeInterval(begin, end);
+        //        var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Truncate(interval), blobs, doubles, int64s, strings, timestamps);
+        //        batch.Push();
 
-                CheckTables(ts, blobs, doubles, int64s, strings, timestamps);
-            }
-        }
+        //        CheckTables(ts, blobs, doubles, int64s, strings, timestamps);
+        //    }
+        //}
     }
 }
