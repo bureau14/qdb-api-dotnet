@@ -175,23 +175,23 @@ namespace Quasardb.Tests.Table
             CheckTables(ts, blobs, doubles, int64s, strings, timestamps);
         }
 
-        //[TestMethod]
-        //[ExpectedException(typeof(QdbException))]
-        //public void Ok_BulkRowInsertWithWrongName()
-        //{
-        //    QdbTable ts = CreateTable();
+        [TestMethod]
+        [ExpectedException(typeof(QdbException))]
+        public void Ok_BulkRowInsertWithWrongName()
+        {
+           QdbTable ts = CreateTable();
 
-        //    var blobs = MakeBlobArray(10);
-        //    var timestamps = MakeTimestamps(10);
+           var blobs = MakeBlobArray(10);
+           var timestamps = MakeTimestamps(10);
 
-        //    string[] tables = new string[1];
-        //    tables[0] = ts.Alias;
+           string[] tables = new string[1];
+           tables[0] = ts.Alias;
 
-        //    var batch = _cluster.ExpWriter(tables, new QdbTableExpWriterOptions().Transactional());
-        //    batch.Add("the_wrong_name", timestamps[0], new object[] { });
+           var batch = _cluster.ExpWriter(tables, new QdbTableExpWriterOptions().Transactional());
+           batch.Add("the_wrong_name", timestamps[0], new object[] { });
 
-        //    batch.Push();
-        //}
+           batch.Push();
+        }
 
         [TestMethod]
         public void Ok_BulkRowInsertByName()
