@@ -191,23 +191,22 @@ namespace Quasardb.Tests.Table
             var count = 10000000;
 
             var blobs = MakeBlobArray(count);
-            var qdb_blobs = new Quasardb.Native.qdb_blob[count];
+            var qdb_blobs = new List<Quasardb.Native.qdb_blob>();
 
-            List<GCHandle> pins = new List<GCHandle>(count);
-            List<GCHandle> value_pins = new List<GCHandle>(count);
+            List<GCHandle> pins = new List<GCHandle>(1024);
+            List<GCHandle> value_pins = new List<GCHandle>(1024);
 
             for (var index = 0 ; index < blobs.Count ; index++)
             {
-                qdb_blobs[index] = Quasardb.TimeSeries.ExpWriter.ExpWriterHelper.convert_blob(blobs[index], ref value_pins);
+                qdb_blobs.Add(Quasardb.TimeSeries.ExpWriter.ExpWriterHelper.convert_blob(blobs[index], ref value_pins));
             }
 
-            var blob_array = blobs.ToArray();
-            var qdb_blob_array = Quasardb.TimeSeries.ExpWriter.ExpWriterHelper.convert_array(qdb_blobs, ref pins);
-            foreach (var pin in value_pins)
+            var qdb_blob_array = Quasardb.TimeSeries.ExpWriter.ExpWriterHelper.convert_array(qdb_blobs.ToArray(), ref pins);
+            foreach (var pin in pins)
             {
                 pin.Free();
             }
-            foreach (var pin in pins)
+            foreach (var pin in value_pins)
             {
                 pin.Free();
             }
