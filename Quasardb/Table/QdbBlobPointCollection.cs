@@ -45,7 +45,12 @@ namespace Quasardb.TimeSeries
         protected override bool ReleaseHandle()
         {
             foreach (var pin in _pins)
+            {
                 pin.Free();
+            }
+            // you need to clear the List
+            // otherwise you might run into some nasty double free errors
+            _pins.Clear();
             return true;
         }
 
