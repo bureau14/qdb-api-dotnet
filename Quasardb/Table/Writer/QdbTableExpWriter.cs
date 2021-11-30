@@ -168,13 +168,21 @@ namespace Quasardb.TimeSeries.ExpWriter
 
         private void Free()
         {
-            foreach (var addr in _pins)
+            for (int idx = 0; idx < _pins.Count; idx++)
             {
-                Marshal.FreeHGlobal(addr);
+                if (_pins[idx] != IntPtr.Zero)
+                {
+                    Marshal.FreeHGlobal(_pins[idx]);
+                    _pins[idx] = IntPtr.Zero;
+                }
             }
-            foreach (var addr in _value_pins)
+            for (int idx = 0; idx < _value_pins.Count; idx++)
             {
-                Marshal.FreeHGlobal(addr);
+                if (_value_pins[idx] != IntPtr.Zero)
+                {
+                    Marshal.FreeHGlobal(_value_pins[idx]);
+                    _value_pins[idx] = IntPtr.Zero;
+                }
             }
         }
 
