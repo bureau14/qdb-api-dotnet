@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Linq;
-using System.Text;
+using System.Collections.Generic;
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb.Exceptions;
-using Quasardb;
 using Quasardb.TimeSeries;
 using Quasardb.TimeSeries.ExpWriter;
+
+using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
 
 namespace Quasardb.Tests.Table
 {
     [TestClass]
-    public class ExpWriterTests
+    unsafe public class ExpWriterTests
     {
         private readonly QdbCluster _cluster = QdbTestCluster.Instance;
 
@@ -30,14 +32,11 @@ namespace Quasardb.Tests.Table
 
         public byte[][] MakeBlobArray(int count)
         {
-            Random random = new Random();
             var r = new byte[count][];
 
             for (int i = 0; i < count; ++i)
             {
-                var value = new byte[32];
-                random.NextBytes(value);
-                r[i] = value;
+                r[i] = System.Text.Encoding.UTF8.GetBytes("Running 🏃 is faster than swimming 🏊.");
             }
             return r;
         }
@@ -92,7 +91,7 @@ namespace Quasardb.Tests.Table
         {
             var ts = _cluster.Table(alias ?? RandomGenerator.CreateUniqueAlias());
             ts.Create(new QdbColumnDefinition[] {
-                 new QdbBlobColumnDefinition("the_blob"),
+                new QdbBlobColumnDefinition("the_blob"),
                 new QdbDoubleColumnDefinition("the_double"),
                 new QdbInt64ColumnDefinition("the_int64"),
                 new QdbStringColumnDefinition("the_string"),
@@ -109,15 +108,11 @@ namespace Quasardb.Tests.Table
             string[] strings,
             DateTime[] timestamps)
         {
-            string[] tables = new string[1];
-            tables[0] = ts;
-            var batch = _cluster.ExpWriter(tables, options);
+            var batch = _cluster.ExpWriter(new string[] { ts }, options);
 
-            for (long index = 0 ; index < doubles.Length ; index++)
+            for (int index = 0 ; index < doubles.Length ; index++)
             {
-                object[] objArr = new object[] { blobs[index], doubles[index], int64s[index], strings[index], timestamps[index], strings[index] };
-                Assert.AreEqual(objArr.Length, 6);
-                batch.Append(0, timestamps[index], objArr);
+                batch.Add(ts, timestamps[index], new object[] { blobs[index], doubles[index], int64s[index], strings[index], timestamps[index] });
             }
             return batch;
         }
@@ -130,13 +125,11 @@ namespace Quasardb.Tests.Table
             string[] strings,
             DateTime[] timestamps)
         {
-            string[] tables = new string[1];
-            tables[0] = ts;
-            var batch = _cluster.ExpWriter(tables, options);
+            var batch = _cluster.ExpWriter(new string[] { ts }, options);
 
-            for (long index = 0; index < doubles.Length; index++)
+            for (int index = 0; index < doubles.Length; index++)
             {
-                batch.Append(ts, timestamps[index], new object[] { blobs[index], doubles[index], int64s[index], strings[index], timestamps[index], strings[index] });
+                batch.Add(ts, timestamps[index], new object[] { blobs[index], doubles[index], int64s[index], strings[index], timestamps[index] });
             }
             return batch;
         }
@@ -164,6 +157,36 @@ namespace Quasardb.Tests.Table
             }
         }
 
+        public static bool IsBlittable(Type type)
+        {
+            if (type.IsArray)
+            {
+                var elem = type.GetElementType();
+                return elem.IsValueType && IsBlittable(elem);
+            }
+            try
+            {
+                object instance = FormatterServices.GetUninitializedObject(type);
+                GCHandle.Alloc(instance, GCHandleType.Pinned).Free();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        [TestMethod]
+        public unsafe void Ok_AllBlittable()
+        {
+            //Assert.IsTrue(IsBlittable(typeof(string)));
+            Assert.IsTrue(IsBlittable(typeof(byte[])));
+            Assert.IsTrue(IsBlittable(typeof(Quasardb.Native.qdb_blob)));
+            Assert.IsTrue(IsBlittable(typeof(Quasardb.Native.qdb_sized_string)));
+            Assert.IsTrue(IsBlittable(typeof(Quasardb.Native.qdb_blob[])));
+            Assert.IsTrue(IsBlittable(typeof(Quasardb.Native.qdb_sized_string[])));
+        }
+
         [TestMethod]
         public void Ok_BulkRowInsert()
         {
@@ -186,18 +209,15 @@ namespace Quasardb.Tests.Table
         [ExpectedException(typeof(QdbException))]
         public void Ok_BulkRowInsertWithWrongName()
         {
-            QdbTable ts = CreateTable();
+           QdbTable ts = CreateTable();
 
-            var blobs = MakeBlobArray(10);
-            var timestamps = MakeTimestamps(10);
+           var blobs = MakeBlobArray(10);
+           var timestamps = MakeTimestamps(10);
 
-            string[] tables = new string[1];
-            tables[0] = ts.Alias;
+           var batch = _cluster.ExpWriter(new string[] { ts.Alias }, new QdbTableExpWriterOptions().Transactional());
+           batch.Add("the_wrong_name", timestamps[0], new object[] { });
 
-            var batch = _cluster.ExpWriter(tables, new QdbTableExpWriterOptions().Transactional());
-            batch.Append("the_wrong_name", timestamps[0], new object[] {});
-
-            batch.Push();
+           batch.Push();
         }
 
         [TestMethod]
@@ -205,10 +225,10 @@ namespace Quasardb.Tests.Table
         {
             QdbTable ts = CreateTable();
 
-            var blobs      = MakeBlobArray(10);
-            var doubles    = MakeDoubleArray(10);
-            var int64s     = MakeInt64Array(10);
-            var strings    = MakeStringArray(10);
+            var blobs = MakeBlobArray(10);
+            var doubles = MakeDoubleArray(10);
+            var int64s = MakeInt64Array(10);
+            var strings = MakeStringArray(10);
             var timestamps = MakeTimestamps(10);
 
             var batch = InsertByName(ts.Alias, new QdbTableExpWriterOptions().Transactional(), blobs, doubles, int64s, strings, timestamps);

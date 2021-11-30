@@ -106,12 +106,12 @@ namespace Quasardb.TimeSeries.ExpWriter
 
     internal unsafe sealed class QdbTableExpWriterData
     {
+        public string name;
         public List<qdb_timespec> timestamps;
-        public qdb_ts_column_info_ex[] columns;
+        public qdb_ts_column_info[] columns;
         public QdbColumnData[] data;
         public Dictionary<string, long> column_name_to_index;
     }
-
 
     /// <summary>
     /// A batch table for bulk insertion into tables.
@@ -121,7 +121,6 @@ namespace Quasardb.TimeSeries.ExpWriter
         private readonly qdb_handle _handle;
         private List<GCHandle> _pins;
 
-        string[] _tables;
         QdbTableExpWriterOptions _options;
 
         private QdbTableExpWriterData[] _table_data;
@@ -131,29 +130,28 @@ namespace Quasardb.TimeSeries.ExpWriter
         internal QdbTableExpWriter(qdb_handle handle, string[] tables, QdbTableExpWriterOptions options) : base(IntPtr.Zero, true)
         {
             _handle = handle;
-            _pins = new List<GCHandle>(1024);
-            _tables = tables;
+            _pins = new List<GCHandle>();
             _options = options;
             _table_data = new QdbTableExpWriterData[tables.Length];
             _table_name_to_index = new Dictionary<string, long>();
 
-
-            _table_name_to_index = new Dictionary<string, long>();
             long table_index = 0;
             foreach (var table in tables)
             {
+                _table_data[table_index] = new QdbTableExpWriterData();
+                _table_data[table_index].name = tables[table_index];
                 _table_name_to_index[table] = table_index;
-                using (var columns = new qdb_buffer<qdb_ts_column_info_ex>(handle))
+                using (var columns = new qdb_buffer<qdb_ts_column_info>(handle))
                 {
-                    var err = qdb_api.qdb_ts_list_columns_ex(handle, table, out columns.Pointer, out columns.Size);
+                    var err = qdb_api.qdb_ts_list_columns(handle, table, out columns.Pointer, out columns.Size);
                     QdbExceptionThrower.ThrowIfNeeded(err, alias: table);
 
-                    long column_index = 0;
-                    _table_data[table_index] = new QdbTableExpWriterData();
                     _table_data[table_index].data = new QdbColumnData[(int)columns.Size];
-                    _table_data[table_index].columns = new qdb_ts_column_info_ex[(int)columns.Size];
+                    _table_data[table_index].columns = new qdb_ts_column_info[(int)columns.Size];
                     _table_data[table_index].column_name_to_index = new Dictionary<string, long>();
                     _table_data[table_index].timestamps = new List<qdb_timespec>();
+
+                    long column_index = 0;
                     foreach (var column in columns)
                     {
                         _table_data[table_index].columns[column_index] = column;
@@ -169,8 +167,12 @@ namespace Quasardb.TimeSeries.ExpWriter
         private void Free()
         {
             foreach (var pin in _pins)
+            {
                 pin.Free();
+            }
+            _pins.Clear();
         }
+
         private void Reset()
         {
             Free();
@@ -212,17 +214,17 @@ namespace Quasardb.TimeSeries.ExpWriter
             var column_type = _table_data[table_index].columns[column_index].type;
             if (column_type != type)
             {
-                throw new QdbException(String.Format("Invalid type for column {0} of table {1}. Expected {2} got {3}", _tables[table_index], _table_data[table_index].columns[column_index].name.ToString(), ExpWriterHelper.column_type_name(column_type), ExpWriterHelper.column_type_name(type)));
+                throw new QdbException(String.Format("Invalid type for column {0} of table {1}. Expected {2} got {3}", _table_data[table_index].name, _table_data[table_index].columns[column_index].name.ToString(), ExpWriterHelper.column_type_name(column_type), ExpWriterHelper.column_type_name(type)));
             }
         }
 
         /// <summary>
-        /// Set a timestamp column.
+        /// Append to a row.
         /// </summary>
         /// <param name="table_index">The index of the table you want to modify</param>
         /// <param name="timestamp">The timestamp of the row</param>
         /// <param name="values">The values for each column in the row</param>
-        public unsafe void Append(long table_index, DateTime timestamp, object[] values)
+        public unsafe void Add(long table_index, DateTime timestamp, object[] values)
         {
             var columnCount = _table_data[table_index].columns.Length;
             var valueCount = values.Length;
@@ -252,6 +254,8 @@ namespace Quasardb.TimeSeries.ExpWriter
                     case qdb_ts_column_type.qdb_ts_column_string:
                         _table_data[table_index].data[column_index].strings.Add(ExpWriterHelper.convert_string((string)val, ref _pins));
                         break;
+                    default:
+                        throw new QdbException(String.Format("Unkown type for column {0} in table {1}.", ExpWriterHelper.column_type_name(type), _table_data[table_index].name));
                 }
                 column_index++;
             }
@@ -259,15 +263,15 @@ namespace Quasardb.TimeSeries.ExpWriter
         }
 
         /// <summary>
-        /// Set a timestamp column.
+        /// Append to a row.
         /// </summary>
         /// <param name="table_name">The name of the table you want to modify</param>
         /// <param name="timestamp">The timestamp of the row</param>
         /// <param name="values">The values for each column in the row</param>
-        public unsafe void Append(string table_name, DateTime timestamp, object[] values)
+        public unsafe void Add(string table_name, DateTime timestamp, object[] values)
         {
             long table_index = IndexOfTable(table_name);
-            Append(table_index, timestamp, values);
+            Add(table_index, timestamp, values);
         }
 
         /// <summary>
@@ -275,20 +279,20 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// </summary>
         public void Push()
         {
-            var tables = new qdb_exp_batch_push_table[_tables.Length];
+            var tables = new qdb_exp_batch_push_table[_table_data.Length];
             long index = 0;
-            foreach (var table in _tables)
+            foreach (var table in _table_data)
             {
-                tables[index] = ExpWriterHelper.convert_table(table, _options, _table_data[index].timestamps.ToArray(), _table_data[index].columns, _table_data[index].data, ref _pins);
+                tables[index] = ExpWriterHelper.convert_table(_table_data[index], _options, ref _pins);
                 index++;
             }
-            var err = qdb_api.qdb_exp_batch_push(_handle, _options.Mode(), tables, null, _tables.Length);
-            Reset();
+            var err = qdb_api.qdb_exp_batch_push(_handle, _options.Mode(), tables, null, _table_data.Length);
             QdbExceptionThrower.ThrowIfNeeded(err);
+            Reset();
         }
     }
 
-    unsafe class ExpWriterHelper
+    internal unsafe class ExpWriterHelper
     {
         internal static string column_type_name(qdb_ts_column_type type)
         {
@@ -362,7 +366,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             }
         }
 
-        internal static void reset_data(qdb_ts_column_info_ex[] columns, ref QdbColumnData[] data)
+        internal static void reset_data(qdb_ts_column_info[] columns, ref QdbColumnData[] data)
         {
             long column_index = 0;
             foreach (var column in columns)
@@ -394,27 +398,27 @@ namespace Quasardb.TimeSeries.ExpWriter
         internal static qdb_blob convert_blob(byte[] arr, ref List<GCHandle> pins)
         {
             GCHandle pin;
-            var b = new qdb_blob(arr, ref pin);
+            var val = new qdb_blob(arr, ref pin);
             pins.Add(pin);
-            return b;
+            return val;
         }
 
         internal static qdb_sized_string convert_string(string str, ref List<GCHandle> pins)
         {
             GCHandle pin;
-            var ss = new qdb_sized_string(str, ref pin);
+            var val = new qdb_sized_string(str, ref pin);
             pins.Add(pin);
-            return ss;
+            return val;
         }
-        
+
         internal unsafe static IntPtr convert_array<T>(T[] array, ref List<GCHandle> pins)
         {
-            GCHandle pin = GCHandle.Alloc(array, GCHandleType.Pinned);
+            var pin = GCHandle.Alloc(array, GCHandleType.Pinned);
             pins.Add(pin);
             return pin.AddrOfPinnedObject();
         }
 
-        static qdb_exp_batch_push_column convert_column(qdb_ts_column_info_ex info, QdbColumnData data, ref List<GCHandle> pins)
+        static qdb_exp_batch_push_column convert_column(qdb_ts_column_info info, QdbColumnData data, ref List<GCHandle> pins)
         {
             var column = new qdb_exp_batch_push_column();
             column.name = convert_string(info.name, ref pins);
@@ -441,7 +445,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             return column;
         }
 
-        static qdb_exp_batch_push_column[] convert_columns(qdb_ts_column_info_ex[] infos, QdbColumnData[] data, ref qdb_size_t columnCount, ref List<GCHandle> pins)
+        static qdb_exp_batch_push_column[] convert_columns(qdb_ts_column_info[] infos, QdbColumnData[] data, ref qdb_size_t columnCount, ref List<GCHandle> pins)
         {
             var columns = new List<qdb_exp_batch_push_column>();
             for (int index = 0; index < infos.Length; index++)
@@ -455,7 +459,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             return columns.ToArray();
         }
 
-        static qdb_exp_batch_push_table_data convert_data(qdb_ts_column_info_ex[] infos, qdb_timespec[] timestamps, QdbColumnData[] data, ref List<GCHandle> pins)
+        static qdb_exp_batch_push_table_data convert_data(qdb_ts_column_info[] infos, qdb_timespec[] timestamps, QdbColumnData[] data, ref List<GCHandle> pins)
         {
             qdb_exp_batch_push_table_data d;
 
@@ -467,11 +471,11 @@ namespace Quasardb.TimeSeries.ExpWriter
             return d;
         }
 
-        internal static qdb_exp_batch_push_table convert_table(string name, QdbTableExpWriterOptions options, qdb_timespec[] timestamps, qdb_ts_column_info_ex[] infos, QdbColumnData[] data, ref List<GCHandle> pins)
+        internal static qdb_exp_batch_push_table convert_table(QdbTableExpWriterData tbl, QdbTableExpWriterOptions options, ref List<GCHandle> pins)
         {
             qdb_exp_batch_push_table table;
-            table.name = convert_string(name, ref pins);
-            table.data = convert_data(infos, timestamps, data, ref pins);
+            table.name = convert_string(tbl.name, ref pins);
+            table.data = convert_data(tbl.columns, tbl.timestamps.ToArray(), tbl.data, ref pins);
 
             if (options.Mode() == qdb_exp_batch_push_mode.truncate)
             {
