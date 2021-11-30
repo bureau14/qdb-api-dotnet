@@ -434,6 +434,7 @@ namespace Quasardb.TimeSeries.ExpWriter
                 Marshal.StructureToPtr(t, address + size_of_type * index, false);
                 index++;
             }
+            pins.Add(address);
             return address;
         }
 
