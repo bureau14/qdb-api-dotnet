@@ -403,7 +403,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         internal static qdb_blob convert_blob(byte[] arr, ref List<GCHandle> pins)
         {
             var pin = GCHandle.Alloc(arr, GCHandleType.Pinned);
-            qdb_blob b;
+            qdb_blob b = new qdb_blob();
             b.content = (byte*)pin.AddrOfPinnedObject();
             b.content_size = (qdb_size_t)arr.Length;
             pins.Add(pin);
