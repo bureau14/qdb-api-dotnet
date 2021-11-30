@@ -30,13 +30,13 @@ namespace Quasardb.Tests.Table
             return r;
         }
 
-        public List<byte[]> MakeBlobArray(int count)
+        public byte[][] MakeBlobArray(int count)
         {
-            var r = new List<byte[]>();
+            var r = new byte[count][];
 
             for (int i = 0; i < count; ++i)
             {
-                r.Add(System.Text.Encoding.UTF8.GetBytes("Running 🏃 is faster than swimming 🏊."));
+                r[i] = System.Text.Encoding.UTF8.GetBytes("Running 🏃 is faster than swimming 🏊.");
             }
             return r;
         }
@@ -102,7 +102,7 @@ namespace Quasardb.Tests.Table
 
         public QdbTableExpWriter Insert(string ts,
             QdbTableExpWriterOptions options,
-            List<byte[]> blobs,
+            byte[][] blobs,
             double[] doubles,
             long[] int64s,
             string[] strings,
@@ -119,7 +119,7 @@ namespace Quasardb.Tests.Table
 
         public QdbTableExpWriter InsertByName(string ts,
             QdbTableExpWriterOptions options,
-            List<byte[]> blobs,
+            byte[][] blobs,
             double[] doubles,
             long[] int64s,
             string[] strings,
@@ -135,7 +135,7 @@ namespace Quasardb.Tests.Table
         }
 
         public void CheckTables(QdbTable ts,
-            List<byte[]> blobs,
+            byte[][] blobs,
             double[] doubles,
             long[] ints,
             string[] strings,
@@ -148,15 +148,14 @@ namespace Quasardb.Tests.Table
             var ts_arr = ts.TimestampColumns["the_ts"].Points().ToArray();
             for (int idx = 0; idx < timestamps.Length; idx++)
             {
-                //Assert.AreEqual(blob_arr[idx].Time, timestamps[idx]);
-                //CollectionAssert.AreEqual(blob_arr[idx].Value, blobs[idx]);
-                //Assert.AreEqual(double_arr[idx].Value, doubles[idx]);
-                //Assert.AreEqual(int_arr[idx].Value, ints[idx]);
-                //Assert.AreEqual(string_arr[idx].Value, strings[idx]);
-                //Assert.AreEqual(ts_arr[idx].Value, timestamps[idx]);
+                Assert.AreEqual(blob_arr[idx].Time, timestamps[idx]);
+                CollectionAssert.AreEqual(blob_arr[idx].Value, blobs[idx]);
+                Assert.AreEqual(double_arr[idx].Value, doubles[idx]);
+                Assert.AreEqual(int_arr[idx].Value, ints[idx]);
+                Assert.AreEqual(string_arr[idx].Value, strings[idx]);
+                Assert.AreEqual(ts_arr[idx].Value, timestamps[idx]);
             }
         }
-
 
         public static bool IsBlittable(Type type)
         {
@@ -215,10 +214,7 @@ namespace Quasardb.Tests.Table
            var blobs = MakeBlobArray(10);
            var timestamps = MakeTimestamps(10);
 
-           string[] tables = new string[1];
-           tables[0] = ts.Alias;
-
-           var batch = _cluster.ExpWriter(tables, new QdbTableExpWriterOptions().Transactional());
+           var batch = _cluster.ExpWriter(new string[] { ts.Alias }, new QdbTableExpWriterOptions().Transactional());
            batch.Add("the_wrong_name", timestamps[0], new object[] { });
 
            batch.Push();
