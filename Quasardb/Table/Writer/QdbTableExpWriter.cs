@@ -171,6 +171,7 @@ namespace Quasardb.TimeSeries.ExpWriter
                 if (_pins[idx] != IntPtr.Zero)
                 {
                     Marshal.FreeHGlobal(_pins[idx]);
+                    _pins[idx] = IntPtr.Zero;
                 }
                 else
                 {
