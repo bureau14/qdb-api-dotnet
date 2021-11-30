@@ -178,6 +178,7 @@ namespace Quasardb.TimeSeries.ExpWriter
                     throw new QdbException("Cannot free null pointer.");
                 }
             }
+            _pins.Clear();
         }
 
         private void Reset()
