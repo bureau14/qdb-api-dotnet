@@ -169,7 +169,10 @@ namespace Quasardb.TimeSeries.ExpWriter
         private void Free()
         {
             foreach (var pin in _pins)
+            {
                 pin.Free();
+            }
+            _pins.Clear();
         }
         private void Reset()
         {
@@ -225,7 +228,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// <param name="table_index">The index of the table you want to modify</param>
         /// <param name="timestamp">The timestamp of the row</param>
         /// <param name="values">The values for each column in the row</param>
-        public unsafe void Append(long table_index, DateTime timestamp, object[] values)
+        public unsafe void Add(long table_index, DateTime timestamp, object[] values)
         {
             var columnCount = _table_data[table_index].columns.Length;
             var valueCount = values.Length;
@@ -268,10 +271,10 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// <param name="table_name">The name of the table you want to modify</param>
         /// <param name="timestamp">The timestamp of the row</param>
         /// <param name="values">The values for each column in the row</param>
-        public unsafe void Append(string table_name, DateTime timestamp, object[] values)
+        public unsafe void Add(string table_name, DateTime timestamp, object[] values)
         {
             long table_index = IndexOfTable(table_name);
-            Append(table_index, timestamp, values);
+            Add(table_index, timestamp, values);
         }
 
         /// <summary>
@@ -287,8 +290,8 @@ namespace Quasardb.TimeSeries.ExpWriter
                 index++;
             }
             var err = qdb_api.qdb_exp_batch_push(_handle, _options.Mode(), tables, null, _tables.Length);
-            Reset();
             QdbExceptionThrower.ThrowIfNeeded(err);
+            Reset();
         }
     }
 
