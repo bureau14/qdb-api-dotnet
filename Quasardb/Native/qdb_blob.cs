@@ -8,7 +8,7 @@ using qdb_size_t = System.UIntPtr;
 namespace Quasardb.Native
 {
     [StructLayout(LayoutKind.Sequential)]
-    internal unsafe struct qdb_blob
+    public unsafe struct qdb_blob
     {
         internal byte* content;
         internal qdb_size_t content_size;

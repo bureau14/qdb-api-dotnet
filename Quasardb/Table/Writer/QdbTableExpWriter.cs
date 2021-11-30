@@ -291,13 +291,13 @@ namespace Quasardb.TimeSeries.ExpWriter
                 tables[index] = ExpWriterHelper.convert_table(_table_data[index], _options, ref _pins, ref _value_pins);
                 index++;
             }
-            //var err = qdb_api.qdb_exp_batch_push(_handle, _options.Mode(), tables, null, _table_data.Length);
-            //QdbExceptionThrower.ThrowIfNeeded(err);
+            var err = qdb_api.qdb_exp_batch_push(_handle, _options.Mode(), tables, null, _table_data.Length);
+            QdbExceptionThrower.ThrowIfNeeded(err);
             Reset();
         }
     }
 
-    unsafe class ExpWriterHelper
+    public unsafe class ExpWriterHelper
     {
         internal static string column_type_name(qdb_ts_column_type type)
         {
@@ -400,7 +400,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             }
         }
 
-        internal static qdb_blob convert_blob(byte[] arr, ref List<GCHandle> pins)
+        public static qdb_blob convert_blob(byte[] arr, ref List<GCHandle> pins)
         {
             var pin = GCHandle.Alloc(arr, GCHandleType.Pinned);
             qdb_blob b = new qdb_blob();
@@ -418,7 +418,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             return ss;
         }
 
-        internal unsafe static IntPtr convert_array<T>(T[] array, ref List<GCHandle> pins)
+        public unsafe static IntPtr convert_array<T>(T[] array, ref List<GCHandle> pins)
         {
             GCHandle pin = GCHandle.Alloc(array, GCHandleType.Pinned);
             pins.Add(pin);

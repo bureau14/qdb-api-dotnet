@@ -7,10 +7,13 @@ using Quasardb.Exceptions;
 using Quasardb.TimeSeries;
 using Quasardb.TimeSeries.ExpWriter;
 
+using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
+
 namespace Quasardb.Tests.Table
 {
     [TestClass]
-    public class ExpWriterTests
+    unsafe public class ExpWriterTests
     {
         private readonly QdbCluster _cluster = QdbTestCluster.Instance;
 
@@ -151,6 +154,62 @@ namespace Quasardb.Tests.Table
                 //Assert.AreEqual(int_arr[idx].Value, ints[idx]);
                 //Assert.AreEqual(string_arr[idx].Value, strings[idx]);
                 //Assert.AreEqual(ts_arr[idx].Value, timestamps[idx]);
+            }
+        }
+
+
+        public static bool IsBlittable(Type type)
+        {
+            if (type.IsArray)
+            {
+                var elem = type.GetElementType();
+                return elem.IsValueType && IsBlittable(elem);
+            }
+            try
+            {
+                object instance = FormatterServices.GetUninitializedObject(type);
+                GCHandle.Alloc(instance, GCHandleType.Pinned).Free();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        [TestMethod]
+        public unsafe void Ok_AllBlittable()
+        {
+            //Assert.IsTrue(IsBlittable(typeof(string)));
+            Assert.IsTrue(IsBlittable(typeof(byte[])));
+            Assert.IsTrue(IsBlittable(typeof(Quasardb.Native.qdb_blob)));
+            Assert.IsTrue(IsBlittable(typeof(Quasardb.Native.qdb_sized_string)));
+            Assert.IsTrue(IsBlittable(typeof(Quasardb.Native.qdb_blob[])));
+            Assert.IsTrue(IsBlittable(typeof(Quasardb.Native.qdb_sized_string[])));
+
+
+            var count = 10000000;
+
+            var blobs = MakeBlobArray(count);
+            var qdb_blobs = new Quasardb.Native.qdb_blob[count];
+
+            List<GCHandle> pins = new List<GCHandle>(count);
+            List<GCHandle> value_pins = new List<GCHandle>(count);
+
+            for (var index = 0 ; index < blobs.Count ; index++)
+            {
+                qdb_blobs[index] = Quasardb.TimeSeries.ExpWriter.ExpWriterHelper.convert_blob(blobs[index], ref value_pins);
+            }
+
+            var blob_array = blobs.ToArray();
+            var qdb_blob_array = Quasardb.TimeSeries.ExpWriter.ExpWriterHelper.convert_array(qdb_blobs, ref pins);
+            foreach (var pin in value_pins)
+            {
+                pin.Free();
+            }
+            foreach (var pin in pins)
+            {
+                pin.Free();
             }
         }
 
