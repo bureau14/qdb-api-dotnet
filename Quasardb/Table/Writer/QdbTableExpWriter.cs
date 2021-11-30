@@ -168,7 +168,14 @@ namespace Quasardb.TimeSeries.ExpWriter
         {
             for (int idx = 0; idx < _pins.Count; idx++)
             {
-                Marshal.FreeHGlobal(_pins[idx]);
+                if (_pins[idx] != IntPtr.Zero)
+                {
+                    Marshal.FreeHGlobal(_pins[idx]);
+                }
+                else
+                {
+                    throw new QdbException("Cannot free null pointer.");
+                }
             }
         }
 
@@ -418,10 +425,6 @@ namespace Quasardb.TimeSeries.ExpWriter
             qdb_sized_string b = new qdb_sized_string();
             b.data = (byte*)address;
             b.length = (qdb_size_t)arr.Length;
-            if (address == null)
-            {
-                throw new QdbException("Could not allocate!");
-            }
             pins.Add(address);
             return b;
         }
@@ -436,11 +439,7 @@ namespace Quasardb.TimeSeries.ExpWriter
                 Marshal.StructureToPtr(t, address + size_of_type * index, false);
                 index++;
             }
-            if (address == null)
-            {
-                throw new QdbException("Could not allocate!");
-            }
-            // pins.Add(address);
+            pins.Add(address);
             return address;
         }
 
