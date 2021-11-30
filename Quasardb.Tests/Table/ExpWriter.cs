@@ -29,12 +29,11 @@ namespace Quasardb.Tests.Table
 
         public List<byte[]> MakeBlobArray(int count)
         {
-            Random random = new Random();
             var r = new List<byte[]>();
 
             for (int i = 0; i < count; ++i)
             {
-                r.Add(System.Text.Encoding.UTF8.GetBytes(RandomString(32, random)));
+                r.Add(System.Text.Encoding.UTF8.GetBytes("Running 🏃 is faster than swimming 🏊."));
             }
             return r;
         }
