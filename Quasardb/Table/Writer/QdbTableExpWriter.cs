@@ -401,7 +401,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             qdb_blob b = new qdb_blob();
             b.content = (byte*)address;
             b.content_size = (qdb_size_t)arr.Length;
-            pins.Add(address);
+            // pins.Add(address);
             return b;
         }
 
@@ -414,7 +414,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             qdb_sized_string b = new qdb_sized_string();
             b.data = (byte*)address;
             b.length = (qdb_size_t)arr.Length;
-            pins.Add(address);
+            // pins.Add(address);
             return b;
         }
 
