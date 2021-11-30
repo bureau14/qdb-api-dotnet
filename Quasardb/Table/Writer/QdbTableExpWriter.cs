@@ -401,7 +401,11 @@ namespace Quasardb.TimeSeries.ExpWriter
             qdb_blob b = new qdb_blob();
             b.content = (byte*)address;
             b.content_size = (qdb_size_t)arr.Length;
-            // pins.Add(address);
+            if (address == null)
+            {
+                throw new QdbException("Could not allocate!");
+            }
+            pins.Add(address);
             return b;
         }
 
@@ -414,7 +418,11 @@ namespace Quasardb.TimeSeries.ExpWriter
             qdb_sized_string b = new qdb_sized_string();
             b.data = (byte*)address;
             b.length = (qdb_size_t)arr.Length;
-            // pins.Add(address);
+            if (address == null)
+            {
+                throw new QdbException("Could not allocate!");
+            }
+            pins.Add(address);
             return b;
         }
 
@@ -428,7 +436,11 @@ namespace Quasardb.TimeSeries.ExpWriter
                 Marshal.StructureToPtr(t, address + size_of_type * index, false);
                 index++;
             }
-            pins.Add(address);
+            if (address == null)
+            {
+                throw new QdbException("Could not allocate!");
+            }
+            // pins.Add(address);
             return address;
         }
 
