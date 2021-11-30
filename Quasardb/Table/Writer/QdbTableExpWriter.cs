@@ -291,8 +291,8 @@ namespace Quasardb.TimeSeries.ExpWriter
                 tables[index] = ExpWriterHelper.convert_table(_table_data[index], _options, ref _pins);
                 index++;
             }
-            var err = qdb_api.qdb_exp_batch_push(_handle, _options.Mode(), tables, null, _table_data.Length);
-            QdbExceptionThrower.ThrowIfNeeded(err);
+            //var err = qdb_api.qdb_exp_batch_push(_handle, _options.Mode(), tables, null, _table_data.Length);
+            //QdbExceptionThrower.ThrowIfNeeded(err);
             Reset();
         }
     }
