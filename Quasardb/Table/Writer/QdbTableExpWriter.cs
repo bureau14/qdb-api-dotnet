@@ -172,6 +172,8 @@ namespace Quasardb.TimeSeries.ExpWriter
             {
                 pin.Free();
             }
+            // you need to clear the List
+            // otherwise you might run into some nasty double free errors
             _pins.Clear();
         }
         private void Reset()
