@@ -119,7 +119,7 @@ namespace Quasardb.TimeSeries.ExpWriter
     public unsafe sealed class QdbTableExpWriter : SafeHandle
     {
         private readonly qdb_handle _handle;
-        private List<IntPtr> _pins;
+        private List<GCHandle> _pins;
 
         QdbTableExpWriterOptions _options;
 
@@ -395,7 +395,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             }
         }
 
-        internal static qdb_blob convert_blob(byte[] arr, ref List<IntPtr> pins)
+        internal static qdb_blob convert_blob(byte[] arr, ref List<GCHandle> pins)
         {
             GCHandle pin;
             var val = new qdb_blob(arr, ref pin);
@@ -403,7 +403,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             return val;
         }
 
-        internal static qdb_sized_string convert_string(string str, ref List<IntPtr> pins)
+        internal static qdb_sized_string convert_string(string str, ref List<GCHandle> pins)
         {
             GCHandle pin;
             var val = new qdb_sized_string(str, ref pin);
@@ -411,14 +411,14 @@ namespace Quasardb.TimeSeries.ExpWriter
             return val;
         }
 
-        internal unsafe static IntPtr convert_array<T>(T[] array, ref List<IntPtr> pins)
+        internal unsafe static IntPtr convert_array<T>(T[] array, ref List<GCHandle> pins)
         {
             var pin = GCHandle.Alloc(array, GCHandleType.Pinned);
             pins.Add(pin);
             return pin.AddrOfPinnedObject();
         }
 
-        static qdb_exp_batch_push_column convert_column(qdb_ts_column_info info, QdbColumnData data, ref List<IntPtr> pins)
+        static qdb_exp_batch_push_column convert_column(qdb_ts_column_info info, QdbColumnData data, ref List<GCHandle> pins)
         {
             var column = new qdb_exp_batch_push_column();
             column.name = convert_string(info.name, ref pins);
@@ -445,7 +445,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             return column;
         }
 
-        static qdb_exp_batch_push_column[] convert_columns(qdb_ts_column_info[] infos, QdbColumnData[] data, ref qdb_size_t columnCount, ref List<IntPtr> pins)
+        static qdb_exp_batch_push_column[] convert_columns(qdb_ts_column_info[] infos, QdbColumnData[] data, ref qdb_size_t columnCount, ref List<GCHandle> pins)
         {
             var columns = new List<qdb_exp_batch_push_column>();
             for (int index = 0; index < infos.Length; index++)
@@ -459,7 +459,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             return columns.ToArray();
         }
 
-        static qdb_exp_batch_push_table_data convert_data(qdb_ts_column_info[] infos, qdb_timespec[] timestamps, QdbColumnData[] data, ref List<IntPtr> pins)
+        static qdb_exp_batch_push_table_data convert_data(qdb_ts_column_info[] infos, qdb_timespec[] timestamps, QdbColumnData[] data, ref List<GCHandle> pins)
         {
             qdb_exp_batch_push_table_data d;
 
@@ -471,7 +471,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             return d;
         }
 
-        internal static qdb_exp_batch_push_table convert_table(QdbTableExpWriterData tbl, QdbTableExpWriterOptions options, ref List<IntPtr> pins)
+        internal static qdb_exp_batch_push_table convert_table(QdbTableExpWriterData tbl, QdbTableExpWriterOptions options, ref List<GCHandle> pins)
         {
             qdb_exp_batch_push_table table;
             table.name = convert_string(tbl.name, ref pins);
