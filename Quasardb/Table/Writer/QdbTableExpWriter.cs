@@ -130,7 +130,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         internal QdbTableExpWriter(qdb_handle handle, string[] tables, QdbTableExpWriterOptions options) : base(IntPtr.Zero, true)
         {
             _handle = handle;
-            _pins = new List<IntPtr>();
+            _pins = new List<GCHandle>();
             _options = options;
             _table_data = new QdbTableExpWriterData[tables.Length];
             _table_name_to_index = new Dictionary<string, long>();
@@ -166,17 +166,9 @@ namespace Quasardb.TimeSeries.ExpWriter
 
         private void Free()
         {
-            for (int idx = 0; idx < _pins.Count; idx++)
+            foreach (var pin in _pins)
             {
-                if (_pins[idx] != IntPtr.Zero)
-                {
-                    Marshal.FreeHGlobal(_pins[idx]);
-                    _pins[idx] = IntPtr.Zero;
-                }
-                else
-                {
-                    throw new QdbException("Cannot free null pointer.");
-                }
+                pin.Free();
             }
             _pins.Clear();
         }
@@ -405,44 +397,25 @@ namespace Quasardb.TimeSeries.ExpWriter
 
         internal static qdb_blob convert_blob(byte[] arr, ref List<IntPtr> pins)
         {
-            var address = Marshal.AllocHGlobal(arr.Length);
-            Marshal.Copy(arr, 0, address, arr.Length);
-            qdb_blob b = new qdb_blob();
-            b.content = (byte*)address;
-            b.content_size = (qdb_size_t)arr.Length;
-            if (address == null)
-            {
-                throw new QdbException("Could not allocate!");
-            }
-            pins.Add(address);
-            return b;
+            GCHandle pin;
+            var val = new qdb_blob(arr, ref pin);
+            pins.Add(pin);
+            return val;
         }
 
         internal static qdb_sized_string convert_string(string str, ref List<IntPtr> pins)
         {
-            byte[] arr = Encoding.UTF8.GetBytes(str);
-
-            var address = Marshal.AllocHGlobal(arr.Length);
-            Marshal.Copy(arr, 0, address, arr.Length);
-            qdb_sized_string b = new qdb_sized_string();
-            b.data = (byte*)address;
-            b.length = (qdb_size_t)arr.Length;
-            pins.Add(address);
-            return b;
+            GCHandle pin;
+            var val = new qdb_sized_string(str, ref pin);
+            pins.Add(pin);
+            return val;
         }
 
         internal unsafe static IntPtr convert_array<T>(T[] array, ref List<IntPtr> pins)
         {
-            var size_of_type = Marshal.SizeOf(default(T));
-            var address = Marshal.AllocHGlobal(size_of_type * array.Length);
-            var index = 0;
-            foreach (T t in array)
-            {
-                Marshal.StructureToPtr(t, address + size_of_type * index, false);
-                index++;
-            }
-            pins.Add(address);
-            return address;
+            var pin = GCHandle.Alloc(array, GCHandleType.Pinned);
+            pins.Add(pin);
+            return pin.AddrOfPinnedObject();
         }
 
         static qdb_exp_batch_push_column convert_column(qdb_ts_column_info info, QdbColumnData data, ref List<IntPtr> pins)
