@@ -34,9 +34,7 @@ namespace Quasardb.Tests.Table
 
             for (int i = 0; i < count; ++i)
             {
-                var value = new byte[32];
-                random.NextBytes(value);
-                r.Add(value);
+                r.Add(System.Text.Encoding.UTF8.GetBytes(RandomString(32, random)));
             }
             return r;
         }
