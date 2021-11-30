@@ -119,7 +119,7 @@ namespace Quasardb.TimeSeries.ExpWriter
     public unsafe sealed class QdbTableExpWriter : SafeHandle
     {
         private readonly qdb_handle _handle;
-        private List<GCHandle> _pins;
+        private List<IntPtr> _pins;
         private List<IntPtr> _value_pins;
 
         QdbTableExpWriterOptions _options;
@@ -131,7 +131,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         internal QdbTableExpWriter(qdb_handle handle, string[] tables, QdbTableExpWriterOptions options) : base(IntPtr.Zero, true)
         {
             _handle = handle;
-            _pins = new List<GCHandle>(1024);
+            _pins = new List<IntPtr>(1024);
             _value_pins = new List<IntPtr>(1024);
             _options = options;
             _table_data = new QdbTableExpWriterData[tables.Length];
@@ -168,9 +168,9 @@ namespace Quasardb.TimeSeries.ExpWriter
 
         private void Free()
         {
-            foreach (var pin in _pins)
+            foreach (var addr in _pins)
             {
-               pin.Free();
+                Marshal.FreeHGlobal(addr);
             }
             foreach (var addr in _value_pins)
             {
@@ -424,14 +424,20 @@ namespace Quasardb.TimeSeries.ExpWriter
             return b;
         }
 
-        public unsafe static IntPtr convert_array<T>(T[] array, ref List<GCHandle> pins)
+        public unsafe static IntPtr convert_array<T>(T[] array, ref List<IntPtr> pins)
         {
-            GCHandle pin = GCHandle.Alloc(array, GCHandleType.Pinned);
-            pins.Add(pin);
-            return pin.AddrOfPinnedObject();
+            var size_of_type = Marshal.SizeOf(default(T));
+            var address = Marshal.AllocHGlobal(size_of_type * array.Length);
+            var index = 0;
+            foreach (T t in array)
+            {
+                Marshal.StructureToPtr(t, address + size_of_type * index, false);
+                index++;
+            }
+            return address;
         }
 
-        static qdb_exp_batch_push_column convert_column(qdb_ts_column_info info, QdbColumnData data, ref List<GCHandle> pins, ref List<IntPtr> value_pins)
+        static qdb_exp_batch_push_column convert_column(qdb_ts_column_info info, QdbColumnData data, ref List<IntPtr> pins, ref List<IntPtr> value_pins)
         {
             var column = new qdb_exp_batch_push_column();
             column.name = convert_string(info.name, ref value_pins);
@@ -458,7 +464,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             return column;
         }
 
-        static qdb_exp_batch_push_column[] convert_columns(qdb_ts_column_info[] infos, QdbColumnData[] data, ref qdb_size_t columnCount, ref List<GCHandle> pins, ref List<IntPtr> value_pins)
+        static qdb_exp_batch_push_column[] convert_columns(qdb_ts_column_info[] infos, QdbColumnData[] data, ref qdb_size_t columnCount, ref List<IntPtr> pins, ref List<IntPtr> value_pins)
         {
             var columns = new List<qdb_exp_batch_push_column>();
             for (int index = 0; index < infos.Length; index++)
@@ -472,7 +478,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             return columns.ToArray();
         }
 
-        static qdb_exp_batch_push_table_data convert_data(qdb_ts_column_info[] infos, qdb_timespec[] timestamps, QdbColumnData[] data, ref List<GCHandle> pins, ref List<IntPtr> value_pins)
+        static qdb_exp_batch_push_table_data convert_data(qdb_ts_column_info[] infos, qdb_timespec[] timestamps, QdbColumnData[] data, ref List<IntPtr> pins, ref List<IntPtr> value_pins)
         {
             qdb_exp_batch_push_table_data d;
 
@@ -484,7 +490,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             return d;
         }
 
-        internal static qdb_exp_batch_push_table convert_table(QdbTableExpWriterData tbl, QdbTableExpWriterOptions options, ref List<GCHandle> pins, ref List<IntPtr> value_pins)
+        internal static qdb_exp_batch_push_table convert_table(QdbTableExpWriterData tbl, QdbTableExpWriterOptions options, ref List<IntPtr> pins, ref List<IntPtr> value_pins)
         {
             qdb_exp_batch_push_table table;
             table.name = convert_string(tbl.name, ref value_pins);
