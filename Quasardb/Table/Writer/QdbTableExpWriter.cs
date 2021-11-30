@@ -168,14 +168,14 @@ namespace Quasardb.TimeSeries.ExpWriter
 
         private void Free()
         {
-            foreach (var pin in _value_pins)
-            {
-                pin.Free();
-            }
             foreach (var pin in _pins)
             {
                 pin.Free();
             }
+            //foreach (var pin in _value_pins)
+            //{
+            //    pin.Free();
+            //}
         }
 
         private void Reset()
@@ -288,7 +288,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             long index = 0;
             foreach (var table in _table_data)
             {
-                tables[index] = ExpWriterHelper.convert_table(_table_data[index], _options, ref _pins);
+                tables[index] = ExpWriterHelper.convert_table(_table_data[index], _options, ref _pins, ref _value_pins);
                 index++;
             }
             //var err = qdb_api.qdb_exp_batch_push(_handle, _options.Mode(), tables, null, _table_data.Length);
@@ -425,10 +425,10 @@ namespace Quasardb.TimeSeries.ExpWriter
             return pin.AddrOfPinnedObject();
         }
 
-        static qdb_exp_batch_push_column convert_column(qdb_ts_column_info info, QdbColumnData data, ref List<GCHandle> pins)
+        static qdb_exp_batch_push_column convert_column(qdb_ts_column_info info, QdbColumnData data, ref List<GCHandle> pins, ref List<GCHandle> value_pins)
         {
             var column = new qdb_exp_batch_push_column();
-            column.name = convert_string(info.name, ref pins);
+            column.name = convert_string(info.name, ref value_pins);
             column.data_type = info.type;
             column.data = new qdb_exp_batch_push_column_data();
             switch (info.type)
@@ -452,21 +452,21 @@ namespace Quasardb.TimeSeries.ExpWriter
             return column;
         }
 
-        static qdb_exp_batch_push_column[] convert_columns(qdb_ts_column_info[] infos, QdbColumnData[] data, ref qdb_size_t columnCount, ref List<GCHandle> pins)
+        static qdb_exp_batch_push_column[] convert_columns(qdb_ts_column_info[] infos, QdbColumnData[] data, ref qdb_size_t columnCount, ref List<GCHandle> pins, ref List<GCHandle> value_pins)
         {
             var columns = new List<qdb_exp_batch_push_column>();
             for (int index = 0; index < infos.Length; index++)
             {
                 if (data[index] != null)
                 {
-                    columns.Add(convert_column(infos[index], data[index], ref pins));
+                    columns.Add(convert_column(infos[index], data[index], ref pins, ref value_pins));
                 }
             }
             columnCount = (qdb_size_t)columns.Count;
             return columns.ToArray();
         }
 
-        static qdb_exp_batch_push_table_data convert_data(qdb_ts_column_info[] infos, qdb_timespec[] timestamps, QdbColumnData[] data, ref List<GCHandle> pins)
+        static qdb_exp_batch_push_table_data convert_data(qdb_ts_column_info[] infos, qdb_timespec[] timestamps, QdbColumnData[] data, ref List<GCHandle> pins, ref List<GCHandle> value_pins)
         {
             qdb_exp_batch_push_table_data d;
 
@@ -474,15 +474,15 @@ namespace Quasardb.TimeSeries.ExpWriter
             d.timestamps = (qdb_timespec*)convert_array(timestamps, ref pins);
 
             d.column_count = (qdb_size_t)0;
-            d.columns = (qdb_exp_batch_push_column*)convert_array(convert_columns(infos, data, ref d.column_count, ref pins), ref pins);
+            d.columns = (qdb_exp_batch_push_column*)convert_array(convert_columns(infos, data, ref d.column_count, ref pins, ref value_pins), ref pins);
             return d;
         }
 
-        internal static qdb_exp_batch_push_table convert_table(QdbTableExpWriterData tbl, QdbTableExpWriterOptions options, ref List<GCHandle> pins)
+        internal static qdb_exp_batch_push_table convert_table(QdbTableExpWriterData tbl, QdbTableExpWriterOptions options, ref List<GCHandle> pins, ref List<GCHandle> value_pins)
         {
             qdb_exp_batch_push_table table;
-            table.name = convert_string(tbl.name, ref pins);
-            table.data = convert_data(tbl.columns, tbl.timestamps.ToArray(), tbl.data, ref pins);
+            table.name = convert_string(tbl.name, ref value_pins);
+            table.data = convert_data(tbl.columns, tbl.timestamps.ToArray(), tbl.data, ref pins, ref value_pins);
 
             if (options.Mode() == qdb_exp_batch_push_mode.truncate)
             {
