@@ -76,11 +76,11 @@ namespace Quasardb.Query
         /// The number of scanned points, for information purposes.
         /// </summary>
         /// <remarks>The actual number of scanned points may be greater</remarks>
-        public long ScannedPointCount => (long)_result->scanned_point_count;
+        public long ScannedPointCount => _result == null ? default(long) : (long)_result->scanned_point_count;
 
         /// <summary>
         /// An optional, detailed error message about the query failure.
         /// </summary>
-        public string ErrorMessage => _result->error_message;
+        public string ErrorMessage =>  _result == null? default(string) : _result->error_message;
     }
 }
