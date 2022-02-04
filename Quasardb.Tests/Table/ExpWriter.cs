@@ -147,7 +147,7 @@ namespace Quasardb.Tests.Table
             var int_arr = ts.Int64Columns["the_int64"].Points().ToArray();
             var string_arr = ts.StringColumns["the_string"].Points().ToArray();
             var ts_arr = ts.TimestampColumns["the_ts"].Points().ToArray();
-            var symbol_arr = ts.SymbolColumns["the_symbol"].Points().ToArray();
+            var symbol_arr = ts.StringColumns["the_symbol"].Points().ToArray();
             for (int idx = 0; idx < timestamps.Length; idx++)
             {
                 Assert.AreEqual(blob_arr[idx].Time, timestamps[idx]);

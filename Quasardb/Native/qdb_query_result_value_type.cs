@@ -8,7 +8,6 @@
         Int64 = 2,
         Timestamp = 3,
         Count = 4,
-        String = 5,
-        Symbol = 6
+        String = 5
     }
 }

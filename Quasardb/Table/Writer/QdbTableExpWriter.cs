@@ -215,12 +215,11 @@ namespace Quasardb.TimeSeries.ExpWriter
         internal void CheckType(long table_index, long column_index, qdb_ts_column_type type)
         {
             var column_type = _table_data[table_index].columns[column_index].type;
-            if (column_type != type)
+            if (column_type != type
+                && !(type == qdb_ts_column_type.qdb_ts_column_string && column_type == qdb_ts_column_type.qdb_ts_column_symbol)
+                && !(type == qdb_ts_column_type.qdb_ts_column_symbol && column_type == qdb_ts_column_type.qdb_ts_column_string))
             {
-                if (!(type == qdb_ts_column_type.qdb_ts_column_string && column_type == qdb_ts_column_type.qdb_ts_column_symbol))
-                {
-                    throw new QdbException(String.Format("Invalid type for column {0} of table {1}. Expected {2} got {3}", _tables[table_index], _table_data[table_index].columns[column_index].name.ToString(), ExpWriterHelper.column_type_name(column_type), ExpWriterHelper.column_type_name(type)));
-                }
+                throw new QdbException(String.Format("Invalid type for column {0} of table {1}. Expected {2} got {3}", _tables[table_index], _table_data[table_index].columns[column_index].name.ToString(), ExpWriterHelper.column_type_name(column_type), ExpWriterHelper.column_type_name(type)));                    
             }
         }
 

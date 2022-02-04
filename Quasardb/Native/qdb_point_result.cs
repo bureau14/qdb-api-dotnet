@@ -28,13 +28,6 @@ namespace Quasardb.Native
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    internal unsafe struct qdb_point_result_symbol_payload
-    {
-        internal char* content;
-        internal qdb_size_t content_size;
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
     internal unsafe struct qdb_point_result_blob_payload
     {
         internal void* content;
@@ -71,7 +64,5 @@ namespace Quasardb.Native
         internal qdb_point_result_count_payload count_payload;
         [System.Runtime.InteropServices.FieldOffset(8)]
         internal qdb_point_result_string_payload string_payload;
-        [System.Runtime.InteropServices.FieldOffset(8)]
-        internal qdb_point_result_symbol_payload symbol_payload;
     }
 }
