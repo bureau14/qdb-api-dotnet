@@ -102,19 +102,6 @@ namespace Quasardb.Tests.Table
             return r;
         }
 
-        public QdbSymbolPointCollection CreateSymbolPoints(DateTime time, int count)
-        {
-            Random random = new Random();
-            var r = new QdbSymbolPointCollection(count);
-
-            for (int i = 0; i < count; ++i)
-            {
-                r.Add(time, RandomString(32, random));
-                time = time.AddSeconds(1);
-            }
-            return r;
-        }
-
         public QdbTableWriter Insert(QdbTable ts1, QdbTable ts2,
             DateTime startTime,
             QdbBlobPointCollection blobPoints,
@@ -122,7 +109,7 @@ namespace Quasardb.Tests.Table
             QdbInt64PointCollection int64Points,
             QdbStringPointCollection stringPoints,
             QdbTimestampPointCollection timestampPoints,
-            QdbSymbolPointCollection symbolPoints)
+            QdbStringPointCollection symbolPoints)
         {
             var batch = _cluster.Writer(new QdbBatchColumnDefinition[]{
                 new QdbBatchColumnDefinition(ts1.Alias, "the_blob"),
@@ -140,7 +127,7 @@ namespace Quasardb.Tests.Table
                 batch.SetInt64("the_int64", int64Points[i].Value);
                 batch.SetString("the_string", stringPoints[i].Value);
                 batch.SetTimestamp("the_ts", timestampPoints[i].Value);
-                batch.SetSymbol("the_symbol", symbolPoints[i].Value);
+                batch.SetString("the_symbol", symbolPoints[i].Value);
             }
             return batch;
         }
@@ -151,7 +138,7 @@ namespace Quasardb.Tests.Table
             QdbInt64PointCollection int64Points,
             QdbStringPointCollection stringPoints,
             QdbTimestampPointCollection timestampPoints,
-            QdbSymbolPointCollection symbolPoints)
+            QdbStringPointCollection symbolPoints)
         {
             var blobColumn = ts1.BlobColumns["the_blob"];
             CollectionAssert.AreEqual(blobPoints.ToArray(), blobColumn.Points().ToArray());
@@ -168,7 +155,7 @@ namespace Quasardb.Tests.Table
             var timestampColumn = ts2.TimestampColumns["the_ts"];
             CollectionAssert.AreEqual(timestampPoints.ToArray(), timestampColumn.Points().ToArray());
             
-            var symbolColumn = ts2.SymbolColumns["the_symbol"];
+            var symbolColumn = ts2.StringColumns["the_symbol"];
             CollectionAssert.AreEqual(symbolPoints.ToArray(), symbolColumn.Points().ToArray());
         }
 
@@ -201,7 +188,7 @@ namespace Quasardb.Tests.Table
             var int64Data     = CreateInt64Points(startTime, 10);
             var stringData    = CreateStringPoints(startTime, 10);
             var timestampData = CreateTimestampPoints(startTime, 10);
-            var symbolData    = CreateSymbolPoints(startTime, 10);
+            var symbolData    = CreateStringPoints(startTime, 10);
             
             var batch = Insert(ts1, ts2, startTime, blobData, doubleData, int64Data, stringData, timestampData, symbolData);
             
@@ -221,7 +208,7 @@ namespace Quasardb.Tests.Table
             var int64Data     = CreateInt64Points(startTime, 10);
             var stringData    = CreateStringPoints(startTime, 10);
             var timestampData = CreateTimestampPoints(startTime, 10);
-            var symbolData    = CreateSymbolPoints(startTime, 10);
+            var symbolData    = CreateStringPoints(startTime, 10);
 
             var batch = Insert(ts1, ts2, startTime, blobData, doubleData, int64Data, stringData, timestampData, symbolData);
             
@@ -241,7 +228,7 @@ namespace Quasardb.Tests.Table
             var int64Data     = CreateInt64Points(startTime, 10);
             var stringData    = CreateStringPoints(startTime, 10);
             var timestampData = CreateTimestampPoints(startTime, 10);
-            var symbolData    = CreateSymbolPoints(startTime, 10);
+            var symbolData    = CreateStringPoints(startTime, 10);
 
             var batch = Insert(ts1, ts2, startTime, blobData, doubleData, int64Data, stringData, timestampData, symbolData);
             
