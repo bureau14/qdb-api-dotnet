@@ -192,34 +192,6 @@ namespace Quasardb.TimeSeries.Writer
         }
 
         /// <summary>
-        /// Set a value in the current row in a column of symbols.
-        /// </summary>
-        /// <param name="index">The index to the column you want to modify</param>
-        /// <param name="value">The value of the point to insert</param>
-        public unsafe void SetSymbol(long index, string value)
-        {
-            var content = Encoding.UTF8.GetBytes(value);
-            var err = qdb_api.qdb_ts_batch_row_set_symbol(
-                _table,
-                (qdb_size_t)index, content, (qdb_size_t)content.LongLength);
-            QdbExceptionThrower.ThrowIfNeeded(err);
-        }
-
-        /// <summary>
-        /// Set a value in the current row in a column of symbols.
-        /// </summary>
-        /// <param name="name">The name of the column you want to modify</param>
-        /// <param name="value">The value of the point to insert</param>
-        public unsafe void SetSymbol(string name, string value)
-        {
-            long index = IndexOf(name);
-            if (index == -1)
-                throw new QdbColumnNotFoundException(null, name);
-
-            SetSymbol(index, value);
-        }
-
-        /// <summary>
         /// Set a value in the current row in a column of timestamps.
         /// </summary>
         /// <param name="index">The index to the column you want to modify</param>

@@ -125,21 +125,6 @@ namespace Quasardb.TimeSeries
     }
 
     /// <summary>
-    /// A Time/Value pair, where value is a string point
-    /// </summary>
-    public class QdbSymbolPoint : QdbPoint<string>
-    {
-        /// <summary>
-        /// Creates a point.
-        /// </summary>
-        /// <param name="time">The point's time</param>
-        /// <param name="value">The point's value</param>
-        public QdbSymbolPoint(DateTime time, string value) : base(time, value)
-        {
-        }
-    }
-
-    /// <summary>
     /// A Time/Value pair, where value is a symbol point
     /// </summary>
     public class QdbStringPoint : QdbPoint<string>

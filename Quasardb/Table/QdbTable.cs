@@ -33,14 +33,14 @@ namespace Quasardb.TimeSeries
 
                 foreach (var column in columns)
                 {
-                    yield return MakeColumn(column.type, column.name, column.symtable);
+                    yield return MakeColumn(column.type, column.name);
                 }
             }
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        QdbColumn MakeColumn(qdb_ts_column_type type, string name, string symtable)
+        QdbColumn MakeColumn(qdb_ts_column_type type, string name)
         {
             switch (type)
             {
@@ -52,8 +52,9 @@ namespace Quasardb.TimeSeries
                     return new QdbInt64Column(_series, name);
                 case qdb_ts_column_type.qdb_ts_column_timestamp:
                     return new QdbTimestampColumn(_series, name);
+                case qdb_ts_column_type.qdb_ts_column_string:
                 case qdb_ts_column_type.qdb_ts_column_symbol:
-                    return new QdbSymbolColumn(_series, name, symtable);
+                    return new QdbStringColumn(_series, name);
                 default:
                     return new QdbUnknownColumn(_series, name, type);
             }
@@ -185,38 +186,6 @@ namespace Quasardb.TimeSeries
     }
 
     /// <summary>
-    /// A collection of columns contains symbol point values.
-    /// </summary>
-    public class QdbSymbolColumnCollection : IEnumerable<QdbSymbolColumn>
-    {
-        internal readonly QdbTable _series;
-
-        internal QdbSymbolColumnCollection(QdbTable series)
-        {
-            _series = series;
-        }
-
-        /// <summary>
-        /// Gets the column with the specified name.
-        /// <warning>The symbol table is not fetched.</warning>
-        /// </summary>
-        /// <param name="name">The name of the column</param>
-        public QdbSymbolColumn this[string name] => new QdbSymbolColumn(_series, name, null);
-
-        /// <inheritdoc />
-        public IEnumerator<QdbSymbolColumn> GetEnumerator()
-        {
-            foreach (var col in new QdbColumnCollection(_series))
-            {
-                if (col is QdbSymbolColumn symbolColumn)
-                    yield return symbolColumn;
-            }
-        }
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-    }
-
-    /// <summary>
     /// A collection of columns contains timestamp point values.
     /// </summary>
     public class QdbTimestampColumnCollection : IEnumerable<QdbTimestampColumn>
@@ -259,7 +228,6 @@ namespace Quasardb.TimeSeries
             BlobColumns = new QdbBlobColumnCollection(this);
             Int64Columns = new QdbInt64ColumnCollection(this);
             StringColumns = new QdbStringColumnCollection(this);
-            SymbolColumns = new QdbSymbolColumnCollection(this);
             TimestampColumns = new QdbTimestampColumnCollection(this);
         }
 
@@ -292,11 +260,6 @@ namespace Quasardb.TimeSeries
         /// The columns of the table that contains timestamp point values.
         /// </summary>
         public QdbTimestampColumnCollection TimestampColumns { get; }
-
-        /// <summary>
-        /// The columns of the table that contains symbol point values.
-        /// </summary>
-        public QdbSymbolColumnCollection SymbolColumns { get; }
 
         /// <summary>
         /// Returns the shard size of a table.
