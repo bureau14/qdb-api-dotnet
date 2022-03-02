@@ -135,6 +135,17 @@ namespace Quasardb
         }
 
         /// <summary>
+        /// ets the number of threads that will be used to execute queries
+        /// by the current handle.
+        /// </summary>
+        /// <param name="thread_count">Number of threads. Value of 0 means the number of logical processor cores.</param>
+        public void SetMaxParallelism(int thread_count)
+        {
+            var error = qdb_api.qdb_option_set_client_max_parallelism(_handle, thread_count);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+        }
+
+        /// <summary>
         /// Returns a <see cref="QdbBlob" /> attached to the specified alias.
         /// </summary>
         /// <remarks>No operation is performed in the database.</remarks>
