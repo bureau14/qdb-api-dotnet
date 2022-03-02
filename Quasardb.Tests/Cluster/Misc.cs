@@ -139,6 +139,12 @@ namespace Quasardb.Tests.Cluster
         }
 
         [TestMethod]
+        public void SetMaxParallelism_Works()
+        {
+            QdbTestCluster.Instance.SetMaxParallelism(8);
+        }
+
+        [TestMethod]
         public void GetLastErrorForNullQuery()
         {
             try
