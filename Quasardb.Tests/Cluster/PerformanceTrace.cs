@@ -61,6 +61,8 @@ namespace Quasardb.Tests.Cluster
                     "content_writing_ends",
                     "entry_writing_starts",
                     "entry_writing_ends",
+                    "serialization_starts",
+                    "serialization_ends",
                     "processing_ends"
                 }, labels);
                 
