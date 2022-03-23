@@ -37,3 +37,7 @@ Download the following files to your local copy of the repository:
 * `Quasardb\win64\qdb_api.dll` from [qdb-X.X.X-windows-64bit-c-api.zip](https://download.quasardb.net/quasardb/)
 
 Open the solution `Quasardb.sln` in Visual Studio.
+
+### Testing
+
+Start quasardb using scripts/tests/setup/start-services.sh
