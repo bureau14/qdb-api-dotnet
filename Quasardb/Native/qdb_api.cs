@@ -34,7 +34,8 @@ namespace Quasardb.Native
             string ext = is_linux ? "so" : "dll";
             string lib_fullname = prefix + LIB_NAME + "." + ext;
 
-            var local_path = new Uri(typeof(qdb_api).Assembly.CodeBase).LocalPath;
+            //var local_path = new Uri(typeof(qdb_api).Assembly.CodeBase).LocalPath;
+            var local_path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             var folder = Path.GetDirectoryName(local_path);
             if (is_linux)
             {
@@ -51,6 +52,10 @@ namespace Quasardb.Native
             }
             var library = Path.Combine(folder, lib_fullname);
 
+            Console.WriteLine("System detected: {0} {1}bit", (is_linux ? "linux" : "windows"), (is_linux || is_32 ? "32" : "64"));
+            Console.WriteLine("Loading path: {0}", library);
+            Console.WriteLine("OSArchitecture: {0}", RuntimeInformation.OSArchitecture);
+            Console.WriteLine("ProcessArchitecture: {0}", RuntimeInformation.ProcessArchitecture);
             try
             {
                 if (is_linux)
