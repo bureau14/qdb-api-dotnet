@@ -51,6 +51,10 @@ namespace Quasardb.Native
             }
             var library = Path.Combine(folder, lib_fullname);
 
+            Console.WriteLine("System detected: {0} {1}bit", (is_linux ? "linux" : "windows"), (is_linux || is_32 ? "32" : "64"));
+            Console.WriteLine("Loading path: {0}", library);
+            Console.WriteLine("OSArchitecture: {0}", RuntimeInformation.OSArchitecture);
+            Console.WriteLine("ProcessArchitecture: {0}", RuntimeInformation.ProcessArchitecture);
             try
             {
                 if (is_linux)
