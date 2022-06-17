@@ -22,24 +22,28 @@ namespace Quasardb.Native
         const int RTLD_NOW = 2; // for dlopen's flags
         const int RTLD_GLOBAL = 8;
 
-        const UnmanagedType ALIAS_TYPE = UnmanagedType.LPStr;
-        const CallingConvention CALL_CONV = CallingConvention.Cdecl;
-        static qdb_api()
-        {
-            bool is_32 = pointer_t.Size == 4;
-            bool is_linux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
 
+        static string get_folder_from_codebase()
+        {
+            return Path.GetDirectoryName(new Uri(typeof(qdb_api).Assembly.CodeBase).LocalPath);
+        }
+
+        static string get_folder_from_location()
+        {
+            return Path.GetDirectoryName(new Uri(typeof(qdb_api).Assembly.Location).LocalPath);
+        }
+
+        static string make_libname(bool is_linux)
+        {
             string prefix = is_linux ? "lib" : "";
             string ext = is_linux ? "so" : "dll";
-            string lib_fullname = prefix + LIB_NAME + "." + ext;
+            return prefix + LIB_NAME + "." + ext;
+        }
 
-            //var qdb_api_codebase = typeof(qdb_api).Assembly.CodeBase;
-            var qdb_api_location = typeof(qdb_api).Assembly.Location;
-            //var qdb_api_codebase_local_path = new Uri(qdb_api_codebase).LocalPath;
-            var qdb_api_location_local_path = new Uri(qdb_api_location).LocalPath;
+        static string make_fullpath(string folder, bool is_linux)
+        {
+            bool is_32 = pointer_t.Size == 4;
 
-            var local_path = qdb_api_location_local_path;
-            var folder = Path.GetDirectoryName(local_path);
             if (is_linux)
             {
                 folder = Path.Combine(folder, "linux");
@@ -53,31 +57,78 @@ namespace Quasardb.Native
                 // default to win64
                 folder = Path.Combine(folder, "win64");
             }
-            var library = Path.Combine(folder, lib_fullname);
+            return Path.Combine(folder, make_libname(is_linux));
+        }
 
-            try
+        internal class linux_loader
+        {
+            internal class dl
             {
-                if (is_linux)
-                {
-                    dlopen(library, RTLD_NOW | RTLD_GLOBAL);
-                }
-                else
-                {
-                    LoadLibrary(library);
-                }
+                [DllImport("libdl.so")]
+                static public extern IntPtr dlopen(string filename, int flags);
             }
-            catch (DllNotFoundException e)
+
+            internal class dl_backup
             {
-                Console.WriteLine("System detected: {0} {1}bit", (is_linux ? "linux" : "windows"), (is_linux || is_32 ? "32" : "64"));
-                Console.WriteLine("Loading path: {0}", library);
-                Console.WriteLine("OSArchitecture: {0}", RuntimeInformation.OSArchitecture);
-                Console.WriteLine("ProcessArchitecture: {0}", RuntimeInformation.ProcessArchitecture);
-                throw e;
+                [DllImport("libdl.so.2")]
+                static public extern IntPtr dlopen(string filename, int flags);
+            }
+
+            static public void load(string library)
+            {
+                try
+                {
+                    dl.dlopen(library, RTLD_NOW | RTLD_GLOBAL);
+                }
+                catch
+                {
+                    dl_backup.dlopen(library, RTLD_NOW | RTLD_GLOBAL);
+                }
             }
         }
 
-        [DllImport("kernel32.dll")]
-        private static extern pointer_t LoadLibrary(string dllToLoad);
+        internal class win_loader
+        {
+            [DllImport("kernel32.dll")]
+            private static extern pointer_t LoadLibrary(string dllToLoad);
+            static public void load(string library)
+            {
+                LoadLibrary(library);
+            }
+        }
+
+        static void load_library(string library, bool is_linux)
+        {
+
+            if (is_linux)
+            {
+                linux_loader.load(library);
+            }
+            else
+            {
+                win_loader.load(library);
+            }
+        }
+
+        const UnmanagedType ALIAS_TYPE = UnmanagedType.LPStr;
+        const CallingConvention CALL_CONV = CallingConvention.Cdecl;
+        static qdb_api()
+        {
+            bool is_linux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+
+            try
+            {
+                // try with assembly codebase
+                string library = make_fullpath(get_folder_from_codebase(), is_linux);
+                load_library(library, is_linux);
+            }
+            catch
+            {
+                // try with assembly location
+                string library = make_fullpath(get_folder_from_location(), is_linux);
+                load_library(library, is_linux);
+            }
+        }
 
         [DllImport("libdl.so")]
         static extern IntPtr dlopen(string filename, int flags);
