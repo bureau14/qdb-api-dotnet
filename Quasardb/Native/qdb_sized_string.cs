@@ -35,5 +35,7 @@ namespace Quasardb.Native
         {
             return s.ToString();
         }
+
+        internal static qdb_sized_string Null => new qdb_sized_string { data = null, length = (qdb_size_t)0 };
     }
 }
