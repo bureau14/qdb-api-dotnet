@@ -219,8 +219,57 @@ namespace Quasardb.TimeSeries.ExpWriter
                 && !(type == qdb_ts_column_type.qdb_ts_column_string && column_type == qdb_ts_column_type.qdb_ts_column_symbol)
                 && !(type == qdb_ts_column_type.qdb_ts_column_symbol && column_type == qdb_ts_column_type.qdb_ts_column_string))
             {
-                throw new QdbException(String.Format("Invalid type for column {0} of table {1}. Expected {2} got {3}", _tables[table_index], _table_data[table_index].columns[column_index].name.ToString(), ExpWriterHelper.column_type_name(column_type), ExpWriterHelper.column_type_name(type)));                    
+                throw new QdbException(String.Format("Invalid type for column {0} of table {1}. Expected {2} got {3}", _tables[table_index], _table_data[table_index].columns[column_index].name.ToString(), ExpWriterHelper.column_type_name(column_type), ExpWriterHelper.column_type_name(type)));
             }
+        }
+
+        internal double get_double(object val)
+        {
+            if (val == null)
+            {
+                return Double.NaN;
+            }
+            return (double)val;
+        }
+
+        internal long get_int64(object val)
+        {
+            if (val == null)
+            {
+                return unchecked((long)0x8000000000000000);
+            }
+            if (val.GetType().Equals(typeof(int)))
+            {
+                return (long)(int)val;
+            }
+            return (long)val;
+        }
+
+        internal qdb_timespec get_timestamp(object val)
+        {
+            if (val == null)
+            {
+                return qdb_timespec.Null;
+            }
+            return TimeConverter.ToTimespec((DateTime)val);
+        }
+
+        internal qdb_blob get_blob(object val)
+        {
+            if (val == null)
+            {
+                return qdb_blob.Null;
+            }
+            return ExpWriterHelper.convert_blob((byte[])val, ref _pins);
+        }
+
+        internal qdb_sized_string get_string(object val)
+        {
+            if (val == null)
+            {
+                return qdb_sized_string.Null;
+            }
+            return ExpWriterHelper.convert_string((string)val, ref _pins);
         }
 
         /// <summary>
@@ -240,25 +289,30 @@ namespace Quasardb.TimeSeries.ExpWriter
             long column_index = 0;
             foreach (var val in values)
             {
-                var type = ExpWriterHelper.object_type_to_column_type(val);
-                CheckType(table_index, column_index, type);
-                switch (type)
+                var column_type = _table_data[table_index].columns[column_index].type;
+                if (val != null)
+                {
+                    var type = ExpWriterHelper.object_type_to_column_type(val);
+                    CheckType(table_index, column_index, type);
+                }
+
+                switch (column_type)
                 {
                     case qdb_ts_column_type.qdb_ts_column_double:
-                        _table_data[table_index].data[column_index].doubles.Add((double)val);
+                        _table_data[table_index].data[column_index].doubles.Add(get_double(val));
                         break;
                     case qdb_ts_column_type.qdb_ts_column_blob:
-                        _table_data[table_index].data[column_index].blobs.Add(ExpWriterHelper.convert_blob((byte[])val, ref _pins));
+                        _table_data[table_index].data[column_index].blobs.Add(get_blob(val));
                         break;
                     case qdb_ts_column_type.qdb_ts_column_int64:
-                        _table_data[table_index].data[column_index].ints.Add((long)val);
+                        _table_data[table_index].data[column_index].ints.Add(get_int64(val));
                         break;
                     case qdb_ts_column_type.qdb_ts_column_timestamp:
-                        _table_data[table_index].data[column_index].timestamps.Add(TimeConverter.ToTimespec((DateTime)val));
+                        _table_data[table_index].data[column_index].timestamps.Add(get_timestamp(val));
                         break;
                     case qdb_ts_column_type.qdb_ts_column_string:
                     case qdb_ts_column_type.qdb_ts_column_symbol:
-                        _table_data[table_index].data[column_index].strings.Add(ExpWriterHelper.convert_string((string)val, ref _pins));
+                        _table_data[table_index].data[column_index].strings.Add(get_string(val));
                         break;
                 }
                 column_index++;
@@ -336,6 +390,10 @@ namespace Quasardb.TimeSeries.ExpWriter
                 return qdb_ts_column_type.qdb_ts_column_double;
             }
             else if (objType.Equals(typeof(long)))
+            {
+                return qdb_ts_column_type.qdb_ts_column_int64;
+            }
+            else if (objType.Equals(typeof(int)))
             {
                 return qdb_ts_column_type.qdb_ts_column_int64;
             }
@@ -417,7 +475,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             pins.Add(pin);
             return ss;
         }
-        
+
         internal unsafe static IntPtr convert_array<T>(T[] array, ref List<GCHandle> pins)
         {
             GCHandle pin = GCHandle.Alloc(array, GCHandleType.Pinned);

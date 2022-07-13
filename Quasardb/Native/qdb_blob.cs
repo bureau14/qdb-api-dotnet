@@ -19,5 +19,7 @@ namespace Quasardb.Native
             content = (byte*)pin.AddrOfPinnedObject();
             content_size = (qdb_size_t)arr.Length;
         }
+
+        internal static qdb_blob Null => new qdb_blob { content = null, content_size = (qdb_size_t)0 };
     }
 }

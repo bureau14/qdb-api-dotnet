@@ -62,7 +62,7 @@ namespace Quasardb.Tests.Table
             }
             return r;
         }
-        
+
         public static string RandomString(int length, Random r)
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -111,7 +111,7 @@ namespace Quasardb.Tests.Table
         {
             var batch = _cluster.ExpWriter(new string[] { ts }, options);
 
-            for (int index = 0 ; index < doubles.Length ; index++)
+            for (int index = 0; index < doubles.Length; index++)
             {
                 batch.Add(ts, timestamps[index], new object[] { blobs[index], doubles[index], int64s[index], strings[index], timestamps[index], strings[index] });
             }
@@ -195,10 +195,10 @@ namespace Quasardb.Tests.Table
         {
             QdbTable ts = CreateTable();
 
-            var blobs      = MakeBlobArray(10);
-            var doubles    = MakeDoubleArray(10);
-            var int64s     = MakeInt64Array(10);
-            var strings    = MakeStringArray(10);
+            var blobs = MakeBlobArray(10);
+            var doubles = MakeDoubleArray(10);
+            var int64s = MakeInt64Array(10);
+            var strings = MakeStringArray(10);
             var timestamps = MakeTimestamps(10);
 
             var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Transactional(), blobs, doubles, int64s, strings, timestamps);
@@ -209,18 +209,59 @@ namespace Quasardb.Tests.Table
         }
 
         [TestMethod]
+        public void Ok_BulkRowInsertWithNullValues()
+        {
+            QdbTable ts = CreateTable();
+
+            var blobs = new byte[5][] { System.Text.Encoding.UTF8.GetBytes("Running 🏃 is faster than swimming 🏊."), null, null, null, null };
+            var doubles = new object[5] { null, 1.1, null, null, null };
+            var int64s = new object[5] { null, null, 1, null, null };
+            var strings = new object[5] { null, null, null, "Running 🏃 is faster than swimming 🏊.", null };
+            var timestamps = MakeTimestamps(5);
+
+            var batch = _cluster.ExpWriter(new string[] { ts.Alias }, new QdbTableExpWriterOptions().Transactional());
+
+            for (int index = 0; index < doubles.Length; index++)
+            {
+                batch.Add(ts.Alias, timestamps[index], new object[] { blobs[index], doubles[index], int64s[index], strings[index], timestamps[index], strings[index] });
+            }
+
+            batch.Push();
+
+            // convert int64s[2] value to long for tests
+            int64s[2] = (long)(int)int64s[2];
+
+            var blob_arr = ts.BlobColumns["the_blob"].Points().ToArray();
+            var double_arr = ts.DoubleColumns["the_double"].Points().ToArray();
+            var int_arr = ts.Int64Columns["the_int64"].Points().ToArray();
+            var string_arr = ts.StringColumns["the_string"].Points().ToArray();
+            var ts_arr = ts.TimestampColumns["the_ts"].Points().ToArray();
+            var symbol_arr = ts.StringColumns["the_symbol"].Points().ToArray();
+            for (int idx = 0; idx < timestamps.Length; idx++)
+            {
+                Assert.AreEqual(blob_arr[idx].Time, timestamps[idx]);
+                CollectionAssert.AreEqual(blob_arr[idx].Value, blobs[idx]);
+                Assert.AreEqual(double_arr[idx].Value, doubles[idx]);
+                Assert.AreEqual(int_arr[idx].Value, int64s[idx]);
+                Assert.AreEqual(string_arr[idx].Value, strings[idx]);
+                Assert.AreEqual(ts_arr[idx].Value, timestamps[idx]);
+                Assert.AreEqual(symbol_arr[idx].Value, strings[idx]);
+            }
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(QdbException))]
         public void Ok_BulkRowInsertWithWrongName()
         {
-           QdbTable ts = CreateTable();
+            QdbTable ts = CreateTable();
 
-           var blobs = MakeBlobArray(10);
-           var timestamps = MakeTimestamps(10);
+            var blobs = MakeBlobArray(10);
+            var timestamps = MakeTimestamps(10);
 
-           var batch = _cluster.ExpWriter(new string[] { ts.Alias }, new QdbTableExpWriterOptions().Transactional());
-           batch.Add("the_wrong_name", timestamps[0], new object[] { });
+            var batch = _cluster.ExpWriter(new string[] { ts.Alias }, new QdbTableExpWriterOptions().Transactional());
+            batch.Add("the_wrong_name", timestamps[0], new object[] { });
 
-           batch.Push();
+            batch.Push();
         }
 
         [TestMethod]
