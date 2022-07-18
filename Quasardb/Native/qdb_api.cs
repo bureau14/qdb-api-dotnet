@@ -111,7 +111,7 @@ namespace Quasardb.Native
         }
 
         const UnmanagedType ALIAS_TYPE = UnmanagedType.LPStr;
-        const CallingConvention CALL_CONV = CallingConvention.Cdecl;
+        internal const CallingConvention CALL_CONV = CallingConvention.Cdecl;
         static qdb_api()
         {
             bool is_linux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
@@ -805,6 +805,22 @@ namespace Quasardb.Native
             [In] qdb_handle handle,
             [In][MarshalAs(ALIAS_TYPE)] string query,
             [Out] out qdb_query_result* result);
+
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_query_copy_results(
+            [In] qdb_handle handle,
+            [In] qdb_query_result * result,
+            [Out] out qdb_query_result* result_copy);
+
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_query_continuous(
+            [In] qdb_handle handle,
+            [In][MarshalAs(ALIAS_TYPE)] string query,
+            [In] qdb_query_continuous_mode mode,
+            [In] int refresh_rate_ms,
+            [In][MarshalAs(UnmanagedType.FunctionPtr)] continuous_query_callback callback,
+            [In] pointer_t cb_context,
+            [Out] out pointer_t cont_handle);
 
         #endregion
 

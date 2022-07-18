@@ -330,6 +330,32 @@ namespace Quasardb
         }
 
         /// <summary>
+        /// Run the provided query at repeated interval and sends a table directory with the results into the callback.
+        /// </summary>
+        /// <remarks>Queries are transactional. The complexity of this function
+        /// is dependent on the complexity of the query.</remarks>
+        /// <param name="query">The string representing the query to perform.</param>
+        /// <param name="mode">The continuous query mode, one of (Full, NewValuesOnly).</param>
+        /// <param name="refresh_rate_ms">The resfresh rate of the query, in milliseconds.</param>
+        /// <param name="callback">Your callback function, it will be invoked with the result from the query.</param>
+        /// <returns>A <see cref="QdbContinuousQuery" /> holding the results of the query.</returns>
+        /// <seealso cref="QdbContinuousQuery"/>
+        public QdbContinuousQuery ContinuousQuery(string query, QdbContinuousQuery.Mode mode, int refresh_rate_ms, Func<QdbQueryResult, int> callback)
+        {
+            if (string.IsNullOrEmpty(query))
+            {
+                throw new ArgumentException($"'{nameof(query)}' cannot be null or empty.", nameof(query));
+            }
+
+            if (callback is null)
+            {
+                throw new ArgumentNullException(nameof(callback));
+            }
+
+            return new QdbContinuousQuery(_handle, query, mode, refresh_rate_ms, callback);
+        }
+
+        /// <summary>
         /// The client will store performance measures from the server.
         /// Disabled by default.
         /// </summary>
