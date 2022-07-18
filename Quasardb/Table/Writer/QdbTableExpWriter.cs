@@ -18,6 +18,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         private qdb_exp_batch_push_mode _mode = qdb_exp_batch_push_mode.transactional;
         private qdb_exp_batch_push_options _option = qdb_exp_batch_push_options.standard;
         private QdbTimeInterval _interval = QdbTimeInterval.Nothing;
+        private Dictionary<string, string[]> _duplicate_columns_per_table;
 
         /// <summary>
         /// Provides information about the push.
@@ -67,8 +68,12 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// <summary>
         /// Removes duplicate found while inserting.
         /// </summary>
-        public QdbTableExpWriterOptions RemoveDuplicate()
+        public QdbTableExpWriterOptions RemoveDuplicate(Dictionary<string, string[]> columns_per_table = null)
         {
+            if (columns_per_table != null)
+            {
+                _duplicate_columns_per_table = columns_per_table;
+            }
             _option = qdb_exp_batch_push_options.unique;
             return this;
         }
@@ -86,6 +91,15 @@ namespace Quasardb.TimeSeries.ExpWriter
         internal QdbTimeInterval Interval()
         {
             return _interval;
+        }
+
+        internal string[] DeduplicateColumns(string table)
+        {
+            if (_duplicate_columns_per_table == null || !_duplicate_columns_per_table.ContainsKey(table))
+            {
+                return null;
+            }
+            return _duplicate_columns_per_table[table];
         }
     }
 
@@ -556,8 +570,22 @@ namespace Quasardb.TimeSeries.ExpWriter
                 table.truncate_range_count = (qdb_size_t)0;
             }
             table.options = options.Option();
-            table.where_duplicate = null;
-            table.where_duplicate_count = (qdb_size_t)0;
+            var deduplicated_columns = options.DeduplicateColumns(name);
+            if (deduplicated_columns == null)
+            {
+                table.where_duplicate = null;
+                table.where_duplicate_count = (qdb_size_t)0;
+            }
+            else
+            {
+                qdb_sized_string[] dep_columns = new qdb_sized_string[deduplicated_columns.Length];
+                for (int i = 0; i < deduplicated_columns.Length; i++)
+                {
+                    dep_columns[i] = convert_string(deduplicated_columns[i], ref pins);
+                }
+                table.where_duplicate = (qdb_sized_string*)convert_array<qdb_sized_string>(dep_columns, ref pins);
+                table.where_duplicate_count = (qdb_size_t)deduplicated_columns.Length;
+            }
             return table;
         }
     }

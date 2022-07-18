@@ -162,6 +162,13 @@ namespace Quasardb.Tests.Table
             var string_arr = ts.StringColumns["the_string"].Points().ToArray();
             var ts_arr = ts.TimestampColumns["the_ts"].Points().ToArray();
             var symbol_arr = ts.StringColumns["the_symbol"].Points().ToArray();
+
+            Assert.AreEqual(blob_arr.Length, blobs.Length);
+            Assert.AreEqual(double_arr.Length, doubles.Length);
+            Assert.AreEqual(int_arr.Length, ints.Length);
+            Assert.AreEqual(ts_arr.Length, timestamps.Length);
+            Assert.AreEqual(string_arr.Length, strings.Length);
+            Assert.AreEqual(symbol_arr.Length, symbols.Length);
             for (int idx = 0; idx < timestamps.Length; idx++)
             {
                 Assert.AreEqual(blob_arr[idx].Time, timestamps[idx]);
@@ -318,6 +325,93 @@ namespace Quasardb.Tests.Table
             var batch = InsertByName(ts.Alias, new QdbTableExpWriterOptions().Transactional(), blobs, doubles, int64s, strings, timestamps);
 
             batch.Push();
+
+            CheckTables(ts, blobs, doubles, int64s, strings, timestamps, strings);
+        }
+
+        [TestMethod]
+        public void Ok_BulkRowInsertUniqueByName()
+        {
+            QdbTable ts = CreateTable();
+
+            var blobs = MakeBlobArray(10);
+            var doubles = MakeDoubleArray(10);
+            var int64s = MakeInt64Array(10);
+            var strings = MakeStringArray(10);
+            var timestamps = MakeTimestamps(10);
+
+            // push normal
+            {
+                var batch = InsertByName(ts.Alias, new QdbTableExpWriterOptions().Transactional(), blobs, doubles, int64s, strings, timestamps);
+                batch.Push();
+            }
+            // push with remove duplicate on all columns
+            {
+                var batch = InsertByName(ts.Alias, new QdbTableExpWriterOptions().Transactional().RemoveDuplicate(), blobs, doubles, int64s, strings, timestamps);
+                batch.Push();
+            }
+
+            CheckTables(ts, blobs, doubles, int64s, strings, timestamps, strings);
+        }
+
+        [TestMethod]
+        public void Ok_BulkRowInsertUniqueWithAllColumns()
+        {
+            QdbTable ts = CreateTable();
+
+            var blobs = MakeBlobArray(10);
+            var doubles = MakeDoubleArray(10);
+            var int64s = MakeInt64Array(10);
+            var strings = MakeStringArray(10);
+            var timestamps = MakeTimestamps(10);
+
+            // push normal
+            {
+                var batch = InsertByName(ts.Alias, new QdbTableExpWriterOptions().Transactional(), blobs, doubles, int64s, strings, timestamps);
+                batch.Push();
+            }
+            // push with remove duplicate on all columns
+            {
+                var deduplicate_columns = new Dictionary<string, string[]>();
+                deduplicate_columns.Add(ts.Alias, new string[] { "the_blob", "the_double", "the_int64", "the_ts", "the_symbol" });
+                var batch = InsertByName(ts.Alias, new QdbTableExpWriterOptions().Transactional().RemoveDuplicate(deduplicate_columns), blobs, doubles, int64s, strings, timestamps);
+                batch.Push();
+            }
+
+
+            CheckTables(ts, blobs, doubles, int64s, strings, timestamps, strings);
+        }
+
+        [TestMethod]
+        public void Ok_BulkRowInsertUniqueWithPartialColumns()
+        {
+            QdbTable ts = CreateTable();
+
+            var blobs = MakeBlobArray(10);
+            var doubles = MakeDoubleArray(10);
+            var int64s = MakeInt64Array(10);
+            var strings = MakeStringArray(10);
+            var timestamps = MakeTimestamps(10);
+
+
+            // push normal
+            {
+                var batch = InsertByName(ts.Alias, new QdbTableExpWriterOptions().Transactional(), blobs, doubles, int64s, strings, timestamps);
+                batch.Push();
+            }
+            // push with remove duplicate on "the_ts" column, try to replace everything else
+            // spoiler alert it will not replace anything
+            {
+                var new_blobs = MakeBlobArray(10);
+                var new_doubles = MakeDoubleArray(10);
+                var new_strings = MakeStringArray(10);
+                var new_int64s = MakeInt64Array(10);
+
+                var deduplicate_columns = new Dictionary<string, string[]>();
+                deduplicate_columns.Add(ts.Alias, new string[] { "the_ts" });
+                var batch = InsertByName(ts.Alias, new QdbTableExpWriterOptions().Transactional().RemoveDuplicate(deduplicate_columns), new_blobs, new_doubles, new_int64s, new_strings, timestamps);
+                batch.Push();
+            }
 
             CheckTables(ts, blobs, doubles, int64s, strings, timestamps, strings);
         }
