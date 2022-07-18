@@ -47,15 +47,17 @@ namespace Quasardb.Query
                         return CountValue;
                     case QdbValueType.String:
                         return StringValue;
+                    case QdbValueType.DoubleArray:
+                        return DoubleArray;
                 }
                 return null;
             }
         }
 
         /// <summary>
-        /// Gets the result value.
+        /// Gets the result reinterpreted as a double.
         /// </summary>
-        /// <exception cref="InvalidCastException">The result value is not of type <see cref="QdbValueType.Double" /> </exception>
+        /// <exception cref="InvalidCastException">The result is not of type <see cref="QdbValueType.Double" /> </exception>
         public double? DoubleValue
         {
             get
@@ -65,22 +67,6 @@ namespace Quasardb.Query
                 if (Type != QdbValueType.Double)
                     throw new InvalidCastException();
                 return _result.double_payload.value;
-            }
-        }
-
-        /// <summary>
-        /// Gets the result value.
-        /// </summary>
-        /// <exception cref="InvalidCastException">The result value is not of type <see cref="QdbValueType.Int64" /> </exception>
-        public long? Int64Value
-        {
-            get
-            {
-                if (Type == QdbValueType.None)
-                    return null;
-                if (Type != QdbValueType.Int64)
-                    throw new InvalidCastException();
-                return _result.int64_payload.value;
             }
         }
 
@@ -95,9 +81,9 @@ namespace Quasardb.Query
         }
 
         /// <summary>
-        /// Gets the result value.
+        /// Gets the result reinterpreted as a byte array.
         /// </summary>
-        /// <exception cref="InvalidCastException">The result value is not of type <see cref="QdbValueType.Blob" /> </exception>
+        /// <exception cref="InvalidCastException">The result is not of type <see cref="QdbValueType.Blob" /> </exception>
         public unsafe byte[] BlobValue
         {
             get
@@ -111,9 +97,57 @@ namespace Quasardb.Query
         }
 
         /// <summary>
-        /// Gets the result value reinterpreted as a string.
+        /// Gets the result reinterpreted as a long.
         /// </summary>
-        /// <exception cref="InvalidCastException">The result value is not of type <see cref="QdbValueType.String" /> </exception>
+        /// <exception cref="InvalidCastException">The result is not of type <see cref="QdbValueType.Int64" /> </exception>
+        public long? Int64Value
+        {
+            get
+            {
+                if (Type == QdbValueType.None)
+                    return null;
+                if (Type != QdbValueType.Int64)
+                    throw new InvalidCastException();
+                return _result.int64_payload.value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the result reinterpreted as a DateTime.
+        /// </summary>
+        /// <exception cref="InvalidCastException">The result is not of type <see cref="QdbValueType.Timestamp" /> </exception>
+        public DateTime? TimestampValue
+        {
+            get
+            {
+                if (Type == QdbValueType.None)
+                    return null;
+                if (Type != QdbValueType.Timestamp)
+                    throw new InvalidCastException();
+                return TimeConverter.ToDateTime(_result.timestamp_payload.value);
+            }
+        }
+
+        /// <summary>
+        /// Gets the result reinterpreted as a long.
+        /// </summary>
+        /// <exception cref="InvalidCastException">The result is not of type <see cref="QdbValueType.Count" /> </exception>
+        public long? CountValue
+        {
+            get
+            {
+                if (Type == QdbValueType.None)
+                    return null;
+                if (Type != QdbValueType.Count)
+                    throw new InvalidCastException();
+                return (long)_result.count_payload.value.ToUInt64();
+            }
+        }
+
+        /// <summary>
+        /// Gets the result reinterpreted as a string.
+        /// </summary>
+        /// <exception cref="InvalidCastException">The result is not of type <see cref="QdbValueType.String" /> </exception>
         public unsafe string StringValue
         {
             get
@@ -131,34 +165,101 @@ namespace Quasardb.Query
         }
 
         /// <summary>
-        /// Gets the result value.
+        /// Gets the result reinterpreted as a double array.
         /// </summary>
-        /// <exception cref="InvalidCastException">The result value is not of type <see cref="QdbValueType.Timestamp" /> </exception>
-        public DateTime? TimestampValue
+        /// <exception cref="InvalidCastException">The result is not of type <see cref="QdbValueType.DoubleArray" /> </exception>
+        public unsafe double[] DoubleArray
         {
             get
             {
                 if (Type == QdbValueType.None)
                     return null;
-                if (Type != QdbValueType.Timestamp)
+                if (Type != QdbValueType.DoubleArray)
                     throw new InvalidCastException();
-                return TimeConverter.ToDateTime(_result.timestamp_payload.value);
+                var arr = new double[(int)_result.double_array_payload.array_size];
+                for (var i = 0L; i < (long)_result.double_array_payload.array_size; i++)
+                    arr[i] = _result.double_array_payload.content[i];
+                return arr;
             }
         }
 
         /// <summary>
-        /// Gets the result value.
+        /// Gets the result reinterpreted as a int64 array.
         /// </summary>
-        /// <exception cref="InvalidCastException">The result value is not of type <see cref="QdbValueType.Count" /> </exception>
-        public long? CountValue
+        /// <exception cref="InvalidCastException">The result is not of type <see cref="QdbValueType.Int64Array" /> </exception>
+        public unsafe long[] Int64Array
         {
             get
             {
                 if (Type == QdbValueType.None)
                     return null;
-                if (Type != QdbValueType.Count)
+                if (Type != QdbValueType.DoubleArray)
                     throw new InvalidCastException();
-                return (long)_result.count_payload.value.ToUInt64();
+                var arr = new long[(int)_result.int64_array_payload.array_size];
+                for (var i = 0L; i < (long)_result.int64_array_payload.array_size; i++)
+                    arr[i] = _result.int64_array_payload.content[i];
+                return arr;
+            }
+        }
+
+        /// <summary>
+        /// Gets the result reinterpreted as an array of bytes.
+        /// </summary>
+        /// <exception cref="InvalidCastException">The result is not of type <see cref="QdbValueType.BlobArray" /> </exception>
+        public unsafe byte[][] BlobArray
+        {
+            get
+            {
+                if (Type == QdbValueType.None)
+                    return null;
+                if (Type != QdbValueType.DoubleArray)
+                    throw new InvalidCastException();
+                var arr = new byte[(int)_result.blob_array_payload.array_size][];
+                for (var i = 0L; i < (long)_result.blob_array_payload.array_size; i++)
+                    arr[i] = Helper.GetBytes(new IntPtr(_result.blob_array_payload.content[i].content), (int)_result.blob_array_payload.content[i].content_size);
+                return arr;
+            }
+        }
+
+        /// <summary>
+        /// Gets the result value reinterpreted as a DateTime Array.
+        /// </summary>
+        /// <exception cref="InvalidCastException">The result is not of type <see cref="QdbValueType.TimestampArray" /> </exception>
+        public unsafe DateTime[] TimestampArray
+        {
+            get
+            {
+                if (Type == QdbValueType.None)
+                    return null;
+                if (Type != QdbValueType.DoubleArray)
+                    throw new InvalidCastException();
+                var arr = new DateTime[(int)_result.timestamp_array_payload.array_size];
+                for (var i = 0L; i < (long)_result.timestamp_array_payload.array_size; i++)
+                    arr[i] = TimeConverter.ToDateTime(_result.timestamp_array_payload.content[i]);
+                return arr;
+            }
+        }
+
+        /// <summary>
+        /// Gets the result reinterpreted as a string array.
+        /// </summary>
+        /// <exception cref="InvalidCastException">The result is not of type <see cref="QdbValueType.StringArray" /> </exception>
+        public unsafe string[] StringArray
+        {
+            get
+            {
+                if (Type == QdbValueType.None)
+                    return null;
+                if (Type != QdbValueType.DoubleArray)
+                    throw new InvalidCastException();
+                var arr = new string[(int)_result.string_array_payload.array_size];
+                Encoding enc = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true);
+                for (var i = 0L; i < (long)_result.string_array_payload.array_size; i++)
+                {
+                    var content = Helper.GetBytes(new IntPtr(_result.string_array_payload.content[i].data), (int)_result.string_array_payload.content[i].length);
+                    arr[i] = (content == null ? null : enc.GetString(content));
+                }
+                return arr;
             }
         }
     }
