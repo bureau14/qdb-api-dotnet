@@ -101,6 +101,19 @@ namespace Quasardb.Tests.Table
             return ts;
         }
 
+        public QdbTable CreateTableWithoutSymbol(string alias = null)
+        {
+            var ts = _cluster.Table(alias ?? RandomGenerator.CreateUniqueAlias());
+            ts.Create(new QdbColumnDefinition[] {
+                new QdbBlobColumnDefinition("the_blob"),
+                new QdbDoubleColumnDefinition("the_double"),
+                new QdbInt64ColumnDefinition("the_int64"),
+                new QdbStringColumnDefinition("the_string"),
+                new QdbTimestampColumnDefinition("the_ts"),
+            });
+            return ts;
+        }
+
         public QdbTableExpWriter Insert(string ts,
             QdbTableExpWriterOptions options,
             byte[][] blobs,
@@ -140,7 +153,8 @@ namespace Quasardb.Tests.Table
             double[] doubles,
             long[] ints,
             string[] strings,
-            DateTime[] timestamps)
+            DateTime[] timestamps,
+            string[] symbols)
         {
             var blob_arr = ts.BlobColumns["the_blob"].Points().ToArray();
             var double_arr = ts.DoubleColumns["the_double"].Points().ToArray();
@@ -156,7 +170,33 @@ namespace Quasardb.Tests.Table
                 Assert.AreEqual(int_arr[idx].Value, ints[idx]);
                 Assert.AreEqual(string_arr[idx].Value, strings[idx]);
                 Assert.AreEqual(ts_arr[idx].Value, timestamps[idx]);
-                Assert.AreEqual(symbol_arr[idx].Value, strings[idx]);
+                if (symbols != null)
+                {
+                    Assert.AreEqual(symbol_arr[idx].Value, symbols[idx]);
+                }
+            }
+        }
+
+        public void CheckTablesWithoutSymbol(QdbTable ts,
+            byte[][] blobs,
+            double[] doubles,
+            long[] ints,
+            string[] strings,
+            DateTime[] timestamps)
+        {
+            var blob_arr = ts.BlobColumns["the_blob"].Points().ToArray();
+            var double_arr = ts.DoubleColumns["the_double"].Points().ToArray();
+            var int_arr = ts.Int64Columns["the_int64"].Points().ToArray();
+            var string_arr = ts.StringColumns["the_string"].Points().ToArray();
+            var ts_arr = ts.TimestampColumns["the_ts"].Points().ToArray();
+            for (int idx = 0; idx < timestamps.Length; idx++)
+            {
+                Assert.AreEqual(blob_arr[idx].Time, timestamps[idx]);
+                CollectionAssert.AreEqual(blob_arr[idx].Value, blobs[idx]);
+                Assert.AreEqual(double_arr[idx].Value, doubles[idx]);
+                Assert.AreEqual(int_arr[idx].Value, ints[idx]);
+                Assert.AreEqual(string_arr[idx].Value, strings[idx]);
+                Assert.AreEqual(ts_arr[idx].Value, timestamps[idx]);
             }
         }
 
@@ -205,7 +245,7 @@ namespace Quasardb.Tests.Table
 
             batch.Push();
 
-            CheckTables(ts, blobs, doubles, int64s, strings, timestamps);
+            CheckTables(ts, blobs, doubles, int64s, strings, timestamps, strings);
         }
 
         [TestMethod]
@@ -279,7 +319,34 @@ namespace Quasardb.Tests.Table
 
             batch.Push();
 
-            CheckTables(ts, blobs, doubles, int64s, strings, timestamps);
+            CheckTables(ts, blobs, doubles, int64s, strings, timestamps, strings);
+        }
+
+        [TestMethod]
+        public void Ok_BulkRowInsertMultiTable()
+        {
+            QdbTable ts1 = CreateTableWithoutSymbol();
+            QdbTable ts2 = CreateTableWithoutSymbol();
+
+            var blobs = MakeBlobArray(10);
+            var doubles = MakeDoubleArray(10);
+            var int64s = MakeInt64Array(10);
+            var strings = MakeStringArray(10);
+            var timestamps = MakeTimestamps(10);
+
+            var batch = _cluster.ExpWriter(new string[] { ts1.Alias, ts2.Alias }, new QdbTableExpWriterOptions().Transactional());
+
+            for (int index = 0; index < doubles.Length; index++)
+            {
+                // TODO(vianney): Investigate why inserting symbols when there is more than one table does not work
+                batch.Add(ts1.Alias, timestamps[index], new object[] { blobs[index], doubles[index], int64s[index], strings[index], timestamps[index] });
+                batch.Add(ts2.Alias, timestamps[index], new object[] { blobs[index], doubles[index], int64s[index], strings[index], timestamps[index] });
+            }
+
+            batch.Push();
+
+            CheckTablesWithoutSymbol(ts1, blobs, doubles, int64s, strings, timestamps);
+            CheckTablesWithoutSymbol(ts2, blobs, doubles, int64s, strings, timestamps);
         }
 
         [TestMethod]
@@ -297,7 +364,7 @@ namespace Quasardb.Tests.Table
 
             batch.Push();
 
-            CheckTables(ts, blobs, doubles, int64s, strings, timestamps);
+            CheckTables(ts, blobs, doubles, int64s, strings, timestamps, strings);
         }
 
         [TestMethod]
@@ -315,7 +382,7 @@ namespace Quasardb.Tests.Table
 
             batch.Push();
 
-            CheckTables(ts, blobs, doubles, int64s, strings, timestamps);
+            CheckTables(ts, blobs, doubles, int64s, strings, timestamps, strings);
         }
 
         [TestMethod]
@@ -337,7 +404,7 @@ namespace Quasardb.Tests.Table
             // Ideally we could be able to get the proper flush interval
             Thread.Sleep(8 * 1000);
 
-            CheckTables(ts, blobs, doubles, int64s, strings, timestamps);
+            CheckTables(ts, blobs, doubles, int64s, strings, timestamps, strings);
         }
 
         [TestMethod]
@@ -359,7 +426,7 @@ namespace Quasardb.Tests.Table
             // Ideally we could be able to get the proper flush interval
             Thread.Sleep(8 * 1000);
 
-            CheckTables(ts, blobs, doubles, int64s, strings, timestamps);
+            CheckTables(ts, blobs, doubles, int64s, strings, timestamps, strings);
         }
 
         [TestMethod]
@@ -377,7 +444,7 @@ namespace Quasardb.Tests.Table
                 var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Transactional(), blobs, doubles, int64s, strings, timestamps);
                 batch.Push();
 
-                CheckTables(ts, blobs, doubles, int64s, strings, timestamps);
+                CheckTables(ts, blobs, doubles, int64s, strings, timestamps, strings);
             }
 
             {
@@ -392,7 +459,7 @@ namespace Quasardb.Tests.Table
                 var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Truncate(interval), blobs, doubles, int64s, strings, timestamps);
                 batch.Push();
 
-                CheckTables(ts, blobs, doubles, int64s, strings, timestamps);
+                CheckTables(ts, blobs, doubles, int64s, strings, timestamps, strings);
             }
         }
     }

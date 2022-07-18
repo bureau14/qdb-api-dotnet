@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 // ReSharper disable BuiltInTypeReferenceStyle
 // ReSharper disable InconsistentNaming
 
+using qdb_int_t = System.Int64;
 using qdb_size_t = System.UIntPtr;
 
 namespace Quasardb.Native
@@ -33,7 +34,7 @@ namespace Quasardb.Native
         [System.Runtime.InteropServices.FieldOffset(0)]
         internal qdb_blob* blobs;
         [System.Runtime.InteropServices.FieldOffset(0)]
-        internal long* ints;
+        internal qdb_int_t* ints;
         [System.Runtime.InteropServices.FieldOffset(0)]
         internal double* doubles;
     }
@@ -49,7 +50,7 @@ namespace Quasardb.Native
 
         internal qdb_exp_batch_push_column_data data;
     };
-    
+
     [StructLayout(LayoutKind.Sequential)]
     internal unsafe struct qdb_exp_batch_push_table_data
     {
@@ -65,7 +66,7 @@ namespace Quasardb.Native
         //! The table columns to send.
         internal qdb_exp_batch_push_column* columns;
     };
-    
+
     [StructLayout(LayoutKind.Sequential)]
     internal unsafe struct qdb_exp_batch_push_table
     {
@@ -77,15 +78,25 @@ namespace Quasardb.Native
 
         //! Field used by \ref qdb_exp_batch_push_truncate. The ranges
         //! specifying previous data to erase.
-        internal  qdb_ts_range* truncate_ranges;
+        internal qdb_ts_range* truncate_ranges;
 
         //! Field used by \ref qdb_exp_batch_push_truncate. The number of
         //! truncated ranges.
         internal qdb_size_t truncate_range_count;
 
+        //! Field used for controlling work with duplicated data.
+        //! Except of \ref qdb_exp_batch_push_truncate mode.
         internal qdb_exp_batch_push_options options;
+
+        //! Field used by \ref qdb_exp_batch_option_unique. The column names
+        //! array for duplication check. If NULL then all columns will be
+        //! checked.
+        internal qdb_sized_string* where_duplicate;
+
+        //! Size of \ref where_duplicate array.
+        internal qdb_size_t where_duplicate_count;
     };
-    
+
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     internal struct qdb_exp_batch_push_column_schema
     {
@@ -98,7 +109,7 @@ namespace Quasardb.Native
         //! The column symbol table (for symbol columns).
         internal qdb_sized_string symtable;
     };
-    
+
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     internal unsafe struct qdb_exp_batch_push_table_schema
     {

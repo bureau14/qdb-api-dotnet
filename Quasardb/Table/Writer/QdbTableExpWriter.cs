@@ -345,8 +345,8 @@ namespace Quasardb.TimeSeries.ExpWriter
                 index++;
             }
             var err = qdb_api.qdb_exp_batch_push(_handle, _options.Mode(), tables, null, _tables.Length);
-            QdbExceptionThrower.ThrowIfNeeded(err);
             Reset();
+            QdbExceptionThrower.ThrowIfNeededWithMsg(_handle, err);
         }
     }
 
@@ -556,6 +556,8 @@ namespace Quasardb.TimeSeries.ExpWriter
                 table.truncate_range_count = (qdb_size_t)0;
             }
             table.options = options.Option();
+            table.where_duplicate = null;
+            table.where_duplicate_count = (qdb_size_t)0;
             return table;
         }
     }

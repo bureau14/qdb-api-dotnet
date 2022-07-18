@@ -16,5 +16,24 @@ namespace Quasardb.Exceptions
                     throw QdbExceptionFactory.Create(error, alias, column);
             }
         }
+
+        public static void ThrowIfNeededWithMsg(qdb_handle handle, qdb_error error, string alias = null, string column = null)
+        {
+            var severity = (qdb_err_severity)((uint)error & (uint)qdb_err_severity.mask);
+
+            switch (severity)
+            {
+                case qdb_err_severity.warning:
+                case qdb_err_severity.error:
+                case qdb_err_severity.unrecoverable:
+                    {
+                        qdb_error err;
+                        qdb_sized_string message;
+                        qdb_api.qdb_get_last_error(handle, out err, out message);
+                        var msg = $"{error}: {message.ToString()}.";
+                        throw new QdbException(msg);
+                }
+            }
+        }
     }
 }
