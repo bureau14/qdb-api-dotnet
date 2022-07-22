@@ -249,6 +249,34 @@ namespace Quasardb.TimeSeries.ExpWriter
             }
         }
 
+        internal void CheckType(long table_index, long column_index, qdb_ts_column_type column_type, object values)
+        {
+            bool has_valid_type = false;
+            switch (column_type)
+            {
+                case qdb_ts_column_type.qdb_ts_column_double:
+                    has_valid_type = values is List<double>;
+                    break;
+                case qdb_ts_column_type.qdb_ts_column_blob:
+                    has_valid_type = values is List<byte[]>;
+                    break;
+                case qdb_ts_column_type.qdb_ts_column_int64:
+                    has_valid_type = values is List<long>;
+                    break;
+                case qdb_ts_column_type.qdb_ts_column_timestamp:
+                    has_valid_type = values is List<DateTime>;
+                    break;
+                case qdb_ts_column_type.qdb_ts_column_string:
+                case qdb_ts_column_type.qdb_ts_column_symbol:
+                    has_valid_type = values is List<string>;
+                    break;
+            }
+            if (!has_valid_type)
+            {
+                throw new QdbException(String.Format("Invalid type for column {0} of table {1}. Expected {2}", _tables[table_index], _table_data[table_index].columns[column_index].name.ToString(), ExpWriterHelper.column_type_name(column_type)));
+            }
+        }
+
         internal double get_double(object val)
         {
             if (val == null)
@@ -329,174 +357,49 @@ namespace Quasardb.TimeSeries.ExpWriter
         }
 
         /// <summary>
-        /// Set all values of a blob column at (table_index, column_index).
+        /// Set all values of a column at (table_index, column_index).
         /// </summary>
         /// <param name="table_index">The index of the table you want to modify</param>
         /// <param name="column_index">The index of the column within the table</param>
         /// <param name="values">The values to set</param>
-        public unsafe void SetBlobColumn(long table_index, long column_index, List<byte[]> values)
+        public unsafe void SetColumn(long table_index, long column_index, object values)
         {
-            var column_type = _table_data[table_index].columns[column_index].type;
-            CheckType(table_index, column_index, qdb_ts_column_type.qdb_ts_column_blob);
-            _table_data[table_index].data[column_index].blobs = values.ConvertAll(get_blob);
+            // There is no observable penalty with the object to List<T> conversion
+           var column_type = _table_data[table_index].columns[column_index].type;
+           CheckType(table_index, column_index, column_type, values);
+           switch (column_type)
+           {
+               case qdb_ts_column_type.qdb_ts_column_double:
+                   _table_data[table_index].data[column_index].doubles = (List<double>)values;
+                   break;
+               case qdb_ts_column_type.qdb_ts_column_blob:
+                   _table_data[table_index].data[column_index].blobs = ((List<byte[]>)values).ConvertAll(get_blob);
+                   break;
+               case qdb_ts_column_type.qdb_ts_column_int64:
+                   _table_data[table_index].data[column_index].ints = (List<long>)values;
+                   break;
+               case qdb_ts_column_type.qdb_ts_column_timestamp:
+                   _table_data[table_index].data[column_index].timestamps = ((List<DateTime>)values).ConvertAll(get_timestamp);
+                   break;
+               case qdb_ts_column_type.qdb_ts_column_string:
+               case qdb_ts_column_type.qdb_ts_column_symbol:
+                   _table_data[table_index].data[column_index].strings = ((List<string>)values).ConvertAll(get_string);
+                   break;
+           }
         }
 
         /// <summary>
-        /// Set all values of a blob column at (table_name, column_name).
+        /// Set all values of a column at (table_name, column_name).
         /// </summary>
         /// <param name="table_name">The name of the table you want to modify</param>
         /// <param name="column_name">The name of the column you want to modify</param>
         /// <param name="values">The values</param>
-        public unsafe void SetBlobColumn(string table_name, string column_name, List<byte[]> values)
+        public unsafe void SetColumn(string table_name, string column_name, object values)
         {
-            long table_index = IndexOfTable(table_name);
-            long column_index = IndexOfColumn(table_name, column_name);
-            SetBlobColumn(table_index, column_index, values);
+           long table_index = IndexOfTable(table_name);
+           long column_index = IndexOfColumn(table_name, column_name);
+           SetColumn(table_index, column_index, values);
         }
-
-        /// <summary>
-        /// Set all values of a double column at (table_index, column_index).
-        /// </summary>
-        /// <param name="table_index">The index of the table you want to modify</param>
-        /// <param name="column_index">The index of the column within the table</param>
-        /// <param name="values">The values to set</param>
-        public unsafe void SetDoubleColumn(long table_index, long column_index, List<double> values)
-        {
-            CheckType(table_index, column_index, qdb_ts_column_type.qdb_ts_column_double);
-            _table_data[table_index].data[column_index].doubles = values;
-        }
-
-        /// <summary>
-        /// Set all values of a double column at (table_name, column_name).
-        /// </summary>
-        /// <param name="table_name">The name of the table you want to modify</param>
-        /// <param name="column_name">The name of the column you want to modify</param>
-        /// <param name="values">The values</param>
-        public unsafe void SetDoubleColumn(string table_name, string column_name, List<double> values)
-        {
-            long table_index = IndexOfTable(table_name);
-            long column_index = IndexOfColumn(table_name, column_name);
-            SetDoubleColumn(table_index, column_index, values);
-        }
-
-        /// <summary>
-        /// Set all values of a integer column at (table_index, column_index).
-        /// </summary>
-        /// <param name="table_index">The index of the table you want to modify</param>
-        /// <param name="column_index">The index of the column within the table</param>
-        /// <param name="values">The values to set</param>
-        public unsafe void SetInt64Column(long table_index, long column_index, List<long> values)
-        {
-            CheckType(table_index, column_index, qdb_ts_column_type.qdb_ts_column_int64);
-            _table_data[table_index].data[column_index].ints = values;
-        }
-
-        /// <summary>
-        /// Set all values of a integer column at (table_name, column_name).
-        /// </summary>
-        /// <param name="table_name">The name of the table you want to modify</param>
-        /// <param name="column_name">The name of the column you want to modify</param>
-        /// <param name="values">The values</param>
-        public unsafe void SetInt64Column(string table_name, string column_name, List<long> values)
-        {
-            long table_index = IndexOfTable(table_name);
-            long column_index = IndexOfColumn(table_name, column_name);
-            SetInt64Column(table_index, column_index, values);
-        }
-
-        /// <summary>
-        /// Set all values of a timestamp column at (table_index, column_index).
-        /// </summary>
-        /// <param name="table_index">The index of the table you want to modify</param>
-        /// <param name="column_index">The index of the column within the table</param>
-        /// <param name="values">The values to set</param>
-        public unsafe void SetTimestampColumn(long table_index, long column_index, List<DateTime> values)
-        {
-            CheckType(table_index, column_index, qdb_ts_column_type.qdb_ts_column_timestamp);
-            _table_data[table_index].data[column_index].timestamps = values.ConvertAll(get_timestamp);
-        }
-
-        /// <summary>
-        /// Set all values of a timestamp column at (table_name, column_name).
-        /// </summary>
-        /// <param name="table_name">The name of the table you want to modify</param>
-        /// <param name="column_name">The name of the column you want to modify</param>
-        /// <param name="values">The values</param>
-        public unsafe void SetTimestampColumn(string table_name, string column_name, List<DateTime> values)
-        {
-            long table_index = IndexOfTable(table_name);
-            long column_index = IndexOfColumn(table_name, column_name);
-            SetTimestampColumn(table_index, column_index, values);
-        }
-
-        /// <summary>
-        /// Set all values of a string column at (table_index, column_index).
-        /// </summary>
-        /// <param name="table_index">The index of the table you want to modify</param>
-        /// <param name="column_index">The index of the column within the table</param>
-        /// <param name="values">The values to set</param>
-        public unsafe void SetStringColumn(long table_index, long column_index, List<string> values)
-        {
-            CheckType(table_index, column_index, qdb_ts_column_type.qdb_ts_column_string);
-            //var strings_length = values.Aggregate(0, (sum, val) => sum + val.Length);
-            _table_data[table_index].data[column_index].strings = values.ConvertAll(get_string);
-        }
-
-        /// <summary>
-        /// Set all values of a string column at (table_name, column_name).
-        /// </summary>
-        /// <param name="table_name">The name of the table you want to modify</param>
-        /// <param name="column_name">The name of the column you want to modify</param>
-        /// <param name="values">The values</param>
-        public unsafe void SetStringColumn(string table_name, string column_name, List<string> values)
-        {
-            long table_index = IndexOfTable(table_name);
-            long column_index = IndexOfColumn(table_name, column_name);
-            SetStringColumn(table_index, column_index, values);
-        }
-
-        ///// <summary>
-        ///// Set all values of a column at (table_index, column_index).
-        ///// </summary>
-        ///// <param name="table_index">The index of the table you want to modify</param>
-        ///// <param name="column_index">The index of the column within the table</param>
-        ///// <param name="values">The values to set</param>
-        //public unsafe void SetColumn(long table_index, long column_index, List<object> values)
-        //{
-        //    var column_type = _table_data[table_index].columns[column_index].type;
-        //    switch (column_type)
-        //    {
-        //        case qdb_ts_column_type.qdb_ts_column_double:
-        //            _table_data[table_index].data[column_index].doubles = values.ConvertAll(get_double);
-        //            break;
-        //        case qdb_ts_column_type.qdb_ts_column_blob:
-        //            _table_data[table_index].data[column_index].blobs = values.ConvertAll(get_blob);
-        //            break;
-        //        case qdb_ts_column_type.qdb_ts_column_int64:
-        //            _table_data[table_index].data[column_index].ints = values.ConvertAll(get_int64);
-        //            break;
-        //        case qdb_ts_column_type.qdb_ts_column_timestamp:
-        //            _table_data[table_index].data[column_index].timestamps = values.ConvertAll(get_timestamp);
-        //            break;
-        //        case qdb_ts_column_type.qdb_ts_column_string:
-        //        case qdb_ts_column_type.qdb_ts_column_symbol:
-        //            _table_data[table_index].data[column_index].strings = values.ConvertAll(get_string);
-        //            break;
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Set all values of a column at (table_name, column_name).
-        ///// </summary>
-        ///// <param name="table_name">The name of the table you want to modify</param>
-        ///// <param name="column_name">The name of the column you want to modify</param>
-        ///// <param name="values">The values</param>
-        //public unsafe void SetColumn(string table_name, string column_name, List<object> values)
-        //{
-        //    long table_index = IndexOfTable(table_name);
-        //    long column_index = IndexOfColumn(table_name, column_name);
-        //    SetColumn(table_index, column_index, values);
-        //}
 
         /// <summary>
         /// Set a timestamp column.
@@ -561,11 +464,8 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// <summary>
         /// Regular batch push.
         /// </summary>
-        public TimeSpan[] Push()
+        public void Push()
         {
-            TimeSpan[] ret = new TimeSpan[2];
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
             var tables = new qdb_exp_batch_push_table[_tables.Length];
             long index = 0;
             foreach (var table in _tables)
@@ -574,15 +474,9 @@ namespace Quasardb.TimeSeries.ExpWriter
                 index++;
             }
             var tables_arr = (qdb_exp_batch_push_table*)ExpWriterHelper.convert_array(tables, ref _pins);
-            sw.Stop();
-            ret[0] += sw.Elapsed;
-            sw.Restart();
             var err = qdb_api.qdb_exp_batch_push(_handle, _options.Mode(), (pointer_t)tables_arr, pointer_t.Zero, _tables.Length);
-            sw.Stop();
-            ret[1] += sw.Elapsed;
             Reset();
             QdbExceptionThrower.ThrowIfNeededWithMsg(_handle, err);
-            return ret;
         }
     }
 
@@ -698,16 +592,17 @@ namespace Quasardb.TimeSeries.ExpWriter
 
         internal static qdb_blob convert_blob(byte[] arr, ref List<GCHandle> pins)
         {
-            GCHandle pin;
-            var b = new qdb_blob(arr, ref pin);
+            GCHandle pin = GCHandle.Alloc(arr, GCHandleType.Pinned);
+            var b = new qdb_blob((byte*)pin.AddrOfPinnedObject(), (qdb_size_t)arr.Length);
             pins.Add(pin);
             return b;
         }
 
         internal static qdb_sized_string convert_string(string str, ref List<GCHandle> pins)
         {
-            GCHandle pin;
-            var ss = new qdb_sized_string(str, ref pin);
+            var content = System.Text.Encoding.UTF8.GetBytes(str);
+            GCHandle pin = GCHandle.Alloc(content, GCHandleType.Pinned);
+            var ss = new qdb_sized_string((byte*)pin.AddrOfPinnedObject(), (qdb_size_t)content.Length);
             pins.Add(pin);
             return ss;
         }
