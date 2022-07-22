@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
-using System.Text;
+using System.Linq;
 using Quasardb.Exceptions;
 using Quasardb.Native;
 
@@ -111,29 +111,18 @@ namespace Quasardb.TimeSeries.ExpWriter
         [System.Runtime.InteropServices.FieldOffset(0)]
         internal List<qdb_timespec> timestamps;
         [System.Runtime.InteropServices.FieldOffset(0)]
-        internal qdb_timespec[] timestamps_arr;
-        [System.Runtime.InteropServices.FieldOffset(0)]
         internal List<qdb_sized_string> strings;
-        [System.Runtime.InteropServices.FieldOffset(0)]
-        internal qdb_sized_string[] strings_arr;
         [System.Runtime.InteropServices.FieldOffset(0)]
         internal List<qdb_blob> blobs;
         [System.Runtime.InteropServices.FieldOffset(0)]
-        internal qdb_blob[] blobs_arr;
-        [System.Runtime.InteropServices.FieldOffset(0)]
         internal List<long> ints;
         [System.Runtime.InteropServices.FieldOffset(0)]
-        internal long[] ints_arr;
-        [System.Runtime.InteropServices.FieldOffset(0)]
         internal List<double> doubles;
-        [System.Runtime.InteropServices.FieldOffset(0)]
-        internal double[] doubles_arr;
     }
 
     internal unsafe sealed class QdbTableExpWriterData
     {
         public List<qdb_timespec> timestamps;
-        public qdb_timespec[] timestamps_arr;
         public qdb_ts_column_info_ex[] columns;
         public QdbColumnData[] data;
         public Dictionary<string, long> column_name_to_index;
@@ -179,7 +168,6 @@ namespace Quasardb.TimeSeries.ExpWriter
                     _table_data[table_index].columns = new qdb_ts_column_info_ex[(int)columns.Size];
                     _table_data[table_index].column_name_to_index = new Dictionary<string, long>();
                     _table_data[table_index].timestamps = new List<qdb_timespec>();
-                    _table_data[table_index].timestamps_arr = null;
                     foreach (var column in columns)
                     {
                         _table_data[table_index].columns[column_index] = column;
@@ -208,7 +196,6 @@ namespace Quasardb.TimeSeries.ExpWriter
             foreach (var data in _table_data)
             {
                 data.timestamps.Clear();
-                data.timestamps_arr = null;
                 ExpWriterHelper.reset_data(data.columns, ref data.data);
             }
         }
@@ -325,9 +312,9 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// </summary>
         /// <param name="table_index">The index of the table you want to modify</param>
         /// <param name="timestamps">The timestamps</param>
-        public unsafe void SetTimestamps(long table_index, DateTime[] timestamps)
+        public unsafe void SetTimestamps(long table_index, List<DateTime> timestamps)
         {
-            _table_data[table_index].timestamps_arr = Array.ConvertAll(timestamps, TimeConverter.ToTimespec);
+            _table_data[table_index].timestamps = timestamps.ConvertAll(TimeConverter.ToTimespec);
         }
 
         /// <summary>
@@ -335,7 +322,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// </summary>
         /// <param name="table_name">The name of the table you want to modify</param>
         /// <param name="timestamps">The timestamps</param>
-        public unsafe void SetTimestamps(string table_name, DateTime[] timestamps)
+        public unsafe void SetTimestamps(string table_name, List<DateTime> timestamps)
         {
             long table_index = IndexOfTable(table_name);
             SetTimestamps(table_index, timestamps);
@@ -347,11 +334,11 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// <param name="table_index">The index of the table you want to modify</param>
         /// <param name="column_index">The index of the column within the table</param>
         /// <param name="values">The values to set</param>
-        public unsafe void SetBlobColumn(long table_index, long column_index, byte[][] values)
+        public unsafe void SetBlobColumn(long table_index, long column_index, List<byte[]> values)
         {
             var column_type = _table_data[table_index].columns[column_index].type;
             CheckType(table_index, column_index, qdb_ts_column_type.qdb_ts_column_blob);
-            _table_data[table_index].data[column_index].blobs_arr = Array.ConvertAll(values, get_blob);
+            _table_data[table_index].data[column_index].blobs = values.ConvertAll(get_blob);
         }
 
         /// <summary>
@@ -360,7 +347,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// <param name="table_name">The name of the table you want to modify</param>
         /// <param name="column_name">The name of the column you want to modify</param>
         /// <param name="values">The values</param>
-        public unsafe void SetBlobColumn(string table_name, string column_name, byte[][] values)
+        public unsafe void SetBlobColumn(string table_name, string column_name, List<byte[]> values)
         {
             long table_index = IndexOfTable(table_name);
             long column_index = IndexOfColumn(table_name, column_name);
@@ -373,10 +360,10 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// <param name="table_index">The index of the table you want to modify</param>
         /// <param name="column_index">The index of the column within the table</param>
         /// <param name="values">The values to set</param>
-        public unsafe void SetDoubleColumn(long table_index, long column_index, double[] values)
+        public unsafe void SetDoubleColumn(long table_index, long column_index, List<double> values)
         {
             CheckType(table_index, column_index, qdb_ts_column_type.qdb_ts_column_double);
-            _table_data[table_index].data[column_index].doubles_arr = values;
+            _table_data[table_index].data[column_index].doubles = values;
         }
 
         /// <summary>
@@ -385,7 +372,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// <param name="table_name">The name of the table you want to modify</param>
         /// <param name="column_name">The name of the column you want to modify</param>
         /// <param name="values">The values</param>
-        public unsafe void SetDoubleColumn(string table_name, string column_name, double[] values)
+        public unsafe void SetDoubleColumn(string table_name, string column_name, List<double> values)
         {
             long table_index = IndexOfTable(table_name);
             long column_index = IndexOfColumn(table_name, column_name);
@@ -398,10 +385,10 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// <param name="table_index">The index of the table you want to modify</param>
         /// <param name="column_index">The index of the column within the table</param>
         /// <param name="values">The values to set</param>
-        public unsafe void SetInt64Column(long table_index, long column_index, long[] values)
+        public unsafe void SetInt64Column(long table_index, long column_index, List<long> values)
         {
             CheckType(table_index, column_index, qdb_ts_column_type.qdb_ts_column_int64);
-            _table_data[table_index].data[column_index].ints_arr = values;
+            _table_data[table_index].data[column_index].ints = values;
         }
 
         /// <summary>
@@ -410,7 +397,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// <param name="table_name">The name of the table you want to modify</param>
         /// <param name="column_name">The name of the column you want to modify</param>
         /// <param name="values">The values</param>
-        public unsafe void SetInt64Column(string table_name, string column_name, long[] values)
+        public unsafe void SetInt64Column(string table_name, string column_name, List<long> values)
         {
             long table_index = IndexOfTable(table_name);
             long column_index = IndexOfColumn(table_name, column_name);
@@ -423,10 +410,10 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// <param name="table_index">The index of the table you want to modify</param>
         /// <param name="column_index">The index of the column within the table</param>
         /// <param name="values">The values to set</param>
-        public unsafe void SetTimestampColumn(long table_index, long column_index, DateTime[] values)
+        public unsafe void SetTimestampColumn(long table_index, long column_index, List<DateTime> values)
         {
             CheckType(table_index, column_index, qdb_ts_column_type.qdb_ts_column_timestamp);
-            _table_data[table_index].data[column_index].timestamps_arr = Array.ConvertAll(values, get_timestamp);
+            _table_data[table_index].data[column_index].timestamps = values.ConvertAll(get_timestamp);
         }
 
         /// <summary>
@@ -435,7 +422,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// <param name="table_name">The name of the table you want to modify</param>
         /// <param name="column_name">The name of the column you want to modify</param>
         /// <param name="values">The values</param>
-        public unsafe void SetTimestampColumn(string table_name, string column_name, DateTime[] values)
+        public unsafe void SetTimestampColumn(string table_name, string column_name, List<DateTime> values)
         {
             long table_index = IndexOfTable(table_name);
             long column_index = IndexOfColumn(table_name, column_name);
@@ -448,10 +435,11 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// <param name="table_index">The index of the table you want to modify</param>
         /// <param name="column_index">The index of the column within the table</param>
         /// <param name="values">The values to set</param>
-        public unsafe void SetStringColumn(long table_index, long column_index, string[] values)
+        public unsafe void SetStringColumn(long table_index, long column_index, List<string> values)
         {
             CheckType(table_index, column_index, qdb_ts_column_type.qdb_ts_column_string);
-            _table_data[table_index].data[column_index].strings_arr = Array.ConvertAll(values, get_string);
+            //var strings_length = values.Aggregate(0, (sum, val) => sum + val.Length);
+            _table_data[table_index].data[column_index].strings = values.ConvertAll(get_string);
         }
 
         /// <summary>
@@ -460,7 +448,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         /// <param name="table_name">The name of the table you want to modify</param>
         /// <param name="column_name">The name of the column you want to modify</param>
         /// <param name="values">The values</param>
-        public unsafe void SetStringColumn(string table_name, string column_name, string[] values)
+        public unsafe void SetStringColumn(string table_name, string column_name, List<string> values)
         {
             long table_index = IndexOfTable(table_name);
             long column_index = IndexOfColumn(table_name, column_name);
@@ -570,13 +558,6 @@ namespace Quasardb.TimeSeries.ExpWriter
             Add(table_index, timestamp, values);
         }
 
-        public string get_ellapsed(TimeSpan elp)
-        {
-            return String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-                    elp.Hours, elp.Minutes, elp.Seconds,
-                    elp.Milliseconds / 10);
-        }
-
         /// <summary>
         /// Regular batch push.
         /// </summary>
@@ -589,9 +570,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             long index = 0;
             foreach (var table in _tables)
             {
-                bool is_array = _table_data[index].timestamps_arr != null;
-                var ts = (is_array ? _table_data[index].timestamps_arr : _table_data[index].timestamps.ToArray());
-                tables[index] = ExpWriterHelper.convert_table(table, _options, ts, _table_data[index].columns, _table_data[index].data, is_array, ref _pins);
+                tables[index] = ExpWriterHelper.convert_table(table, _options, _table_data[index].timestamps.ToArray(), _table_data[index].columns, _table_data[index].data, ref _pins);
                 index++;
             }
             var tables_arr = (qdb_exp_batch_push_table*)ExpWriterHelper.convert_array(tables, ref _pins);
@@ -759,75 +738,50 @@ namespace Quasardb.TimeSeries.ExpWriter
             return ptr;
         }
 
-        static qdb_exp_batch_push_column convert_column(qdb_ts_column_info_ex info, QdbColumnData data, bool is_array, ref List<GCHandle> pins)
+        static qdb_exp_batch_push_column convert_column(qdb_ts_column_info_ex info, QdbColumnData data, ref List<GCHandle> pins)
         {
             var column = new qdb_exp_batch_push_column();
             column.name = convert_string(info.name, ref pins);
             column.data_type = (info.type == qdb_ts_column_type.qdb_ts_column_symbol ? qdb_ts_column_type.qdb_ts_column_string : info.type);
             column.data = pointer_t.Zero;
-            if (is_array)
+            switch (info.type)
             {
-                switch (info.type)
-                {
-                    case qdb_ts_column_type.qdb_ts_column_double:
-                        column.data = (pointer_t)convert_array<double>(data.doubles_arr, ref pins);
-                        break;
-                    case qdb_ts_column_type.qdb_ts_column_blob:
-                        column.data = (pointer_t)convert_array<qdb_blob>(data.blobs_arr, ref pins);
-                        break;
-                    case qdb_ts_column_type.qdb_ts_column_int64:
-                        column.data = (pointer_t)convert_array<long>(data.ints_arr, ref pins);
-                        break;
-                    case qdb_ts_column_type.qdb_ts_column_timestamp:
-                        column.data = (pointer_t)convert_array<qdb_timespec>(data.timestamps_arr, ref pins);
-                        break;
-                    case qdb_ts_column_type.qdb_ts_column_string:
-                    case qdb_ts_column_type.qdb_ts_column_symbol:
-                        column.data = (pointer_t)convert_array<qdb_sized_string>(data.strings_arr, ref pins);
-                        break;
-                }
-            }
-            else
-            {
-                switch (info.type)
-                {
-                    case qdb_ts_column_type.qdb_ts_column_double:
-                        column.data = (pointer_t)convert_array<double>(data.doubles.ToArray(), ref pins);
-                        break;
-                    case qdb_ts_column_type.qdb_ts_column_blob:
-                        column.data = (pointer_t)convert_array<qdb_blob>(data.blobs.ToArray(), ref pins);
-                        break;
-                    case qdb_ts_column_type.qdb_ts_column_int64:
-                        column.data = (pointer_t)convert_array<long>(data.ints.ToArray(), ref pins);
-                        break;
-                    case qdb_ts_column_type.qdb_ts_column_timestamp:
-                        column.data = (pointer_t)convert_array<qdb_timespec>(data.timestamps.ToArray(), ref pins);
-                        break;
-                    case qdb_ts_column_type.qdb_ts_column_string:
-                    case qdb_ts_column_type.qdb_ts_column_symbol:
-                        column.data = (pointer_t)convert_array<qdb_sized_string>(data.strings.ToArray(), ref pins);
-                        break;
-                }
+                case qdb_ts_column_type.qdb_ts_column_double:
+                    column.data = (pointer_t)convert_array<double>(data.doubles.ToArray(), ref pins);
+                    break;
+                case qdb_ts_column_type.qdb_ts_column_blob:
+                    column.data = (pointer_t)convert_array<qdb_blob>(data.blobs.ToArray(), ref pins);
+                    break;
+                case qdb_ts_column_type.qdb_ts_column_int64:
+                    column.data = (pointer_t)convert_array<long>(data.ints.ToArray(), ref pins);
+                    break;
+                case qdb_ts_column_type.qdb_ts_column_timestamp:
+                    column.data = (pointer_t)convert_array<qdb_timespec>(data.timestamps.ToArray(), ref pins);
+                    break;
+                case qdb_ts_column_type.qdb_ts_column_string:
+                case qdb_ts_column_type.qdb_ts_column_symbol:
+                    column.data = (pointer_t)convert_array<qdb_sized_string>(data.strings.ToArray(), ref pins);
+                    break;
             }
 
             return column;
         }
 
-        static qdb_exp_batch_push_column[] convert_columns(qdb_ts_column_info_ex[] infos, QdbColumnData[] data, bool is_array, ref qdb_size_t columnCount, ref List<GCHandle> pins)
+        static qdb_exp_batch_push_column[] convert_columns(qdb_ts_column_info_ex[] infos, QdbColumnData[] data, ref qdb_size_t columnCount, ref List<GCHandle> pins)
         {
             var columns = new List<qdb_exp_batch_push_column>();
             for (int index = 0; index < infos.Length; index++)
             {
                 if (data[index] != null)
                 {
-                    columns.Add(convert_column(infos[index], data[index], is_array, ref pins));
+                    columns.Add(convert_column(infos[index], data[index], ref pins));
                 }
             }
             columnCount = (qdb_size_t)columns.Count;
             return columns.ToArray();
         }
 
-        static qdb_exp_batch_push_table_data convert_data(qdb_ts_column_info_ex[] infos, qdb_timespec[] timestamps, QdbColumnData[] data, bool is_array, ref List<GCHandle> pins)
+        static qdb_exp_batch_push_table_data convert_data(qdb_ts_column_info_ex[] infos, qdb_timespec[] timestamps, QdbColumnData[] data, ref List<GCHandle> pins)
         {
             qdb_exp_batch_push_table_data d;
 
@@ -835,15 +789,15 @@ namespace Quasardb.TimeSeries.ExpWriter
             d.timestamps = (pointer_t)convert_array(timestamps, ref pins);
 
             d.column_count = (qdb_size_t)0;
-            d.columns = (pointer_t)convert_array(convert_columns(infos, data, is_array, ref d.column_count, ref pins), ref pins);
+            d.columns = (pointer_t)convert_array(convert_columns(infos, data, ref d.column_count, ref pins), ref pins);
             return d;
         }
 
-        internal static qdb_exp_batch_push_table convert_table(string name, QdbTableExpWriterOptions options, qdb_timespec[] timestamps, qdb_ts_column_info_ex[] infos, QdbColumnData[] data, bool is_array, ref List<GCHandle> pins)
+        internal static qdb_exp_batch_push_table convert_table(string name, QdbTableExpWriterOptions options, qdb_timespec[] timestamps, qdb_ts_column_info_ex[] infos, QdbColumnData[] data, ref List<GCHandle> pins)
         {
             qdb_exp_batch_push_table table;
             table.name = convert_string(name, ref pins);
-            table.data = convert_data(infos, timestamps, data, is_array, ref pins);
+            table.data = convert_data(infos, timestamps, data, ref pins);
 
             if (options.Mode() == qdb_exp_batch_push_mode.truncate)
             {
