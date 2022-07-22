@@ -638,24 +638,24 @@ namespace Quasardb.TimeSeries.ExpWriter
             var column = new qdb_exp_batch_push_column();
             column.name = convert_string(info.name, ref pins);
             column.data_type = (info.type == qdb_ts_column_type.qdb_ts_column_symbol ? qdb_ts_column_type.qdb_ts_column_string : info.type);
-            column.data = pointer_t.Zero;
+            column.data = new qdb_exp_batch_push_column_data();
             switch (info.type)
             {
                 case qdb_ts_column_type.qdb_ts_column_double:
-                    column.data = (pointer_t)convert_array<double>(data.doubles.ToArray(), ref pins);
+                    column.data.doubles = (double*)convert_array<double>(data.doubles.ToArray(), ref pins);
                     break;
                 case qdb_ts_column_type.qdb_ts_column_blob:
-                    column.data = (pointer_t)convert_array<qdb_blob>(data.blobs.ToArray(), ref pins);
+                    column.data.blobs = (qdb_blob*)convert_array<qdb_blob>(data.blobs.ToArray(), ref pins);
                     break;
                 case qdb_ts_column_type.qdb_ts_column_int64:
-                    column.data = (pointer_t)convert_array<long>(data.ints.ToArray(), ref pins);
+                    column.data.ints = (long*)convert_array<long>(data.ints.ToArray(), ref pins);
                     break;
                 case qdb_ts_column_type.qdb_ts_column_timestamp:
-                    column.data = (pointer_t)convert_array<qdb_timespec>(data.timestamps.ToArray(), ref pins);
+                    column.data.timestamps = (qdb_timespec*)convert_array<qdb_timespec>(data.timestamps.ToArray(), ref pins);
                     break;
                 case qdb_ts_column_type.qdb_ts_column_string:
                 case qdb_ts_column_type.qdb_ts_column_symbol:
-                    column.data = (pointer_t)convert_array<qdb_sized_string>(data.strings.ToArray(), ref pins);
+                    column.data.strings = (qdb_sized_string*)convert_array<qdb_sized_string>(data.strings.ToArray(), ref pins);
                     break;
             }
 
@@ -681,10 +681,10 @@ namespace Quasardb.TimeSeries.ExpWriter
             qdb_exp_batch_push_table_data d;
 
             d.row_count = (qdb_size_t)timestamps.Length;
-            d.timestamps = (pointer_t)convert_array(timestamps, ref pins);
+            d.timestamps = (qdb_timespec*)convert_array(timestamps, ref pins);
 
             d.column_count = (qdb_size_t)0;
-            d.columns = (pointer_t)convert_array(convert_columns(infos, data, ref d.column_count, ref pins), ref pins);
+            d.columns = (qdb_exp_batch_push_column*)convert_array(convert_columns(infos, data, ref d.column_count, ref pins), ref pins);
             return d;
         }
 
@@ -710,7 +710,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             var deduplicated_columns = options.DeduplicateColumns(name);
             if (deduplicated_columns == null)
             {
-                table.where_duplicate = pointer_t.Zero;
+                table.where_duplicate = null;
                 table.where_duplicate_count = (qdb_size_t)0;
             }
             else
@@ -720,7 +720,7 @@ namespace Quasardb.TimeSeries.ExpWriter
                 {
                     dep_columns[i] = convert_string(deduplicated_columns[i], ref pins);
                 }
-                table.where_duplicate = (pointer_t)convert_array<qdb_sized_string>(dep_columns, ref pins);
+                table.where_duplicate = (qdb_sized_string*)convert_array<qdb_sized_string>(dep_columns, ref pins);
                 table.where_duplicate_count = (qdb_size_t)deduplicated_columns.Length;
             }
             return table;
