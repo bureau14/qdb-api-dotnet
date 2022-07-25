@@ -129,7 +129,7 @@ namespace Quasardb.Tests.Entry.Table
             var insertedStringData = InsertStringPoints(ts, startTime, 10);
             var insertedTimestampData = InsertTimestampPoints(ts, startTime, 10);
 
-            var reader = ts.StreamReader();
+            var reader = ts.StreamReader(new QdbTimeInterval(startTime, startTime.AddSeconds(10)));
 
             for (int i = 0; i < insertedBlobData.Count; i++)
             {
@@ -163,7 +163,7 @@ namespace Quasardb.Tests.Entry.Table
             insertedStringData.Add(startTime.AddSeconds(9), null);
             insertedTimestampData.Add(startTime.AddSeconds(9), null);
 
-            var reader = ts.StreamReader();
+            var reader = ts.StreamReader(new QdbTimeInterval(startTime, startTime.AddSeconds(10)));
 
             for (int i = 0; i < insertedBlobData.Count; i++)
             {
@@ -192,7 +192,7 @@ namespace Quasardb.Tests.Entry.Table
             var reader = ts.StreamReader(new QdbColumnDefinition[]{
                 new QdbDoubleColumnDefinition("the_double"),
                 new QdbInt64ColumnDefinition("the_int64")
-            });
+            }, new QdbTimeInterval(startTime, startTime.AddSeconds(10)));
 
             int index = 0;
             for (int i = 0; i < insertedDoubleData.Count; i++)
