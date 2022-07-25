@@ -404,6 +404,26 @@ namespace Quasardb.Tests.Query
             }
         }
 
+        [TestMethod]
+        public void ReturnsArrayAccum()
+        {
+            string alias = RandomGenerator.CreateUniqueAlias();
+            _cluster.Query(String.Format("CREATE TABLE {0} (col1 DOUBLE)", alias));
+            _cluster.Query(String.Format("INSERT INTO {0} ($timestamp, col1) values (2017-01-01, 10), (2017-01-01, 20), (2017-01-01, null), (2017-01-01, 21)", alias));
+
+            var results = _cluster.Query(String.Format("SELECT $timestamp, array_accum(col1) FROM {0} in range(2017, +1d) group by 1day", alias));
+            var rows = results.Rows;
+            Assert.AreEqual(2, results.ColumnNames.Count);
+            Assert.AreEqual("$timestamp", results.ColumnNames[0]);
+            Assert.AreEqual("array_accum(col1)", results.ColumnNames[1]);
+
+            double[] values = (double[])results.Rows[0]["array_accum(col1)"].Value;
+            Assert.AreEqual(10, values[0]);
+            Assert.AreEqual(20, values[1]);
+            Assert.AreEqual(Double.NaN, values[2]);
+            Assert.AreEqual(21, values[3]);
+        }
+
         #endregion
     }
 }
