@@ -60,7 +60,8 @@ namespace Quasardb.Tests.Entry.Table.Int64
 
             var result = col.SampleVariance();
 
-            Assert.AreEqual(5647958L, result);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(5647958.2, result.Value, /*delta=*/1e-5);
         }
 
         [TestMethod]
