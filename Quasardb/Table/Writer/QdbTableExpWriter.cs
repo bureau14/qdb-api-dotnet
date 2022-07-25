@@ -255,16 +255,16 @@ namespace Quasardb.TimeSeries.ExpWriter
             switch (column_type)
             {
                 case qdb_ts_column_type.qdb_ts_column_double:
-                    has_valid_type = values is List<double>;
+                    has_valid_type = values is List<double?> || values is List<double>;
                     break;
                 case qdb_ts_column_type.qdb_ts_column_blob:
                     has_valid_type = values is List<byte[]>;
                     break;
                 case qdb_ts_column_type.qdb_ts_column_int64:
-                    has_valid_type = values is List<long>;
+                    has_valid_type = values is List<long?> || values is List<long>;
                     break;
                 case qdb_ts_column_type.qdb_ts_column_timestamp:
-                    has_valid_type = values is List<DateTime>;
+                    has_valid_type = values is List<DateTime?> || values is List<DateTime>;
                     break;
                 case qdb_ts_column_type.qdb_ts_column_string:
                 case qdb_ts_column_type.qdb_ts_column_symbol:
@@ -286,6 +286,15 @@ namespace Quasardb.TimeSeries.ExpWriter
             return (double)val;
         }
 
+        internal double get_optional_double(double? val)
+        {
+            if (val == null)
+            {
+                return Double.NaN;
+            }
+            return (double)val;
+        }
+
         internal long get_int64(object val)
         {
             if (val == null)
@@ -299,7 +308,20 @@ namespace Quasardb.TimeSeries.ExpWriter
             return (long)val;
         }
 
-        internal qdb_timespec get_timestamp(DateTime val)
+        internal long get_optional_int64(long? val)
+        {
+            if (val == null)
+            {
+                return unchecked((long)0x8000000000000000);
+            }
+            if (val.GetType().Equals(typeof(int)))
+            {
+                return (long)(int)val;
+            }
+            return (long)val;
+        }
+
+        internal qdb_timespec get_timestamp(DateTime? val)
         {
             if (val == null)
             {
@@ -370,16 +392,16 @@ namespace Quasardb.TimeSeries.ExpWriter
            switch (column_type)
            {
                case qdb_ts_column_type.qdb_ts_column_double:
-                   _table_data[table_index].data[column_index].doubles = (List<double>)values;
+                   _table_data[table_index].data[column_index].doubles = values is List<double> ? (List<double>)values : ((List<double?>)values).ConvertAll(get_optional_double);
                    break;
                case qdb_ts_column_type.qdb_ts_column_blob:
                    _table_data[table_index].data[column_index].blobs = ((List<byte[]>)values).ConvertAll(get_blob);
                    break;
                case qdb_ts_column_type.qdb_ts_column_int64:
-                   _table_data[table_index].data[column_index].ints = (List<long>)values;
+                   _table_data[table_index].data[column_index].ints = values is List<long> ? (List<long>)values : ((List<long?>)values).ConvertAll(get_optional_int64);
                    break;
                case qdb_ts_column_type.qdb_ts_column_timestamp:
-                   _table_data[table_index].data[column_index].timestamps = ((List<DateTime>)values).ConvertAll(get_timestamp);
+                   _table_data[table_index].data[column_index].timestamps = values is List<DateTime> ? ((List<DateTime>)values).ConvertAll(TimeConverter.ToTimespec) : ((List<DateTime?>)values).ConvertAll(get_timestamp);
                    break;
                case qdb_ts_column_type.qdb_ts_column_string:
                case qdb_ts_column_type.qdb_ts_column_symbol:
@@ -612,25 +634,6 @@ namespace Quasardb.TimeSeries.ExpWriter
             GCHandle pin = GCHandle.Alloc(array, GCHandleType.Pinned);
             pins.Add(pin);
             return pin.AddrOfPinnedObject();
-        }
-
-        internal unsafe static IntPtr convert_data_array<T>(T[] array, ref List<GCHandle> pins)
-        {
-            int elSiz = Marshal.SizeOf<T>();
-            // Get the total size of unmanaged memory that is needed (length + elements)
-            int size = sizeof(int) + (elSiz * array.Length);
-            // Allocate unmanaged space. For COM, use Marshal.AllocCoTaskMem instead.
-            IntPtr ptr = Marshal.AllocHGlobal(size);
-            // Write the "Length" field first
-            Marshal.WriteInt32(ptr, array.Length);
-            // Write the array data
-            for (int i = 0; i < array.Length; i++)
-            {   // Newly-allocated space has no existing object, so the last param is false
-                Marshal.StructureToPtr<T>(array[i], ptr + sizeof(int) + (elSiz * i), false);
-            }
-            // If you're only using arrays of primitive types, you could use this instead:
-            //Marshal.Copy(array, 0, ptr + sizeof(int), array.Length);
-            return ptr;
         }
 
         static qdb_exp_batch_push_column convert_column(qdb_ts_column_info_ex info, QdbColumnData data, ref List<GCHandle> pins)
