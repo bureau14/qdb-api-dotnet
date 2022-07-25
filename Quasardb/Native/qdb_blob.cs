@@ -13,11 +13,10 @@ namespace Quasardb.Native
         internal byte* content;
         internal qdb_size_t content_size;
 
-        public qdb_blob(byte[] arr, ref GCHandle pin)
+        public qdb_blob(byte* c, qdb_size_t l)
         {
-            pin = GCHandle.Alloc(arr, GCHandleType.Pinned);
-            content = (byte*)pin.AddrOfPinnedObject();
-            content_size = (qdb_size_t)arr.Length;
+            content = c;
+            content_size = l;
         }
 
         internal static qdb_blob Null => new qdb_blob { content = null, content_size = (qdb_size_t)0 };

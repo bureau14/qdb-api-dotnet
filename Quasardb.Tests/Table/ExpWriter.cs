@@ -131,6 +131,47 @@ namespace Quasardb.Tests.Table
             return batch;
         }
 
+        public QdbTableExpWriter InsertWithColumn(string ts,
+            QdbTableExpWriterOptions options,
+            byte[][] blobs,
+            double[] doubles,
+            long[] int64s,
+            string[] strings,
+            DateTime[] timestamps)
+        {
+            var batch = _cluster.ExpWriter(new string[] { ts }, options);
+
+            batch.SetTimestamps(ts, timestamps.ToList());
+            batch.SetColumn(ts, "the_blob", blobs.ToList());
+            batch.SetColumn(ts, "the_double", doubles.ToList());
+            batch.SetColumn(ts, "the_int64", int64s.ToList());
+            batch.SetColumn(ts, "the_string", strings.ToList());
+            batch.SetColumn(ts, "the_ts", timestamps.ToList());
+            batch.SetColumn(ts, "the_symbol", strings.ToList());
+            return batch;
+        }
+
+        public QdbTableExpWriter InsertWithColumnWithNull(string ts,
+            QdbTableExpWriterOptions options,
+            byte[][] blobs,
+            double?[] doubles,
+            long?[] int64s,
+            string[] strings,
+            DateTime[] timestamps,
+            DateTime?[] timestamps_values)
+        {
+            var batch = _cluster.ExpWriter(new string[] { ts }, options);
+
+            batch.SetTimestamps(ts, timestamps.ToList());
+            batch.SetColumn(ts, "the_blob", blobs.ToList());
+            batch.SetColumn(ts, "the_double", doubles.ToList());
+            batch.SetColumn(ts, "the_int64", int64s.ToList());
+            batch.SetColumn(ts, "the_string", strings.ToList());
+            batch.SetColumn(ts, "the_ts", timestamps_values.ToList());
+            batch.SetColumn(ts, "the_symbol", strings.ToList());
+            return batch;
+        }
+
         public QdbTableExpWriter InsertByName(string ts,
             QdbTableExpWriterOptions options,
             byte[][] blobs,
@@ -177,6 +218,43 @@ namespace Quasardb.Tests.Table
                 Assert.AreEqual(int_arr[idx].Value, ints[idx]);
                 Assert.AreEqual(string_arr[idx].Value, strings[idx]);
                 Assert.AreEqual(ts_arr[idx].Value, timestamps[idx]);
+                if (symbols != null)
+                {
+                    Assert.AreEqual(symbol_arr[idx].Value, symbols[idx]);
+                }
+            }
+        }
+
+        public void CheckTablesWithNull(QdbTable ts,
+            byte[][] blobs,
+            double?[] doubles,
+            long?[] ints,
+            string[] strings,
+            DateTime[] timestamps,
+            DateTime?[] timestamp_values,
+            string[] symbols)
+        {
+            var blob_arr = ts.BlobColumns["the_blob"].Points().ToArray();
+            var double_arr = ts.DoubleColumns["the_double"].Points().ToArray();
+            var int_arr = ts.Int64Columns["the_int64"].Points().ToArray();
+            var string_arr = ts.StringColumns["the_string"].Points().ToArray();
+            var ts_arr = ts.TimestampColumns["the_ts"].Points().ToArray();
+            var symbol_arr = ts.StringColumns["the_symbol"].Points().ToArray();
+
+            Assert.AreEqual(blob_arr.Length, blobs.Length);
+            Assert.AreEqual(double_arr.Length, doubles.Length);
+            Assert.AreEqual(int_arr.Length, ints.Length);
+            Assert.AreEqual(ts_arr.Length, timestamp_values.Length);
+            Assert.AreEqual(string_arr.Length, strings.Length);
+            Assert.AreEqual(symbol_arr.Length, symbols.Length);
+            for (int idx = 0; idx < timestamps.Length; idx++)
+            {
+                Assert.AreEqual(blob_arr[idx].Time, timestamps[idx]);
+                CollectionAssert.AreEqual(blob_arr[idx].Value, blobs[idx]);
+                Assert.AreEqual(double_arr[idx].Value, doubles[idx]);
+                Assert.AreEqual(int_arr[idx].Value, ints[idx]);
+                Assert.AreEqual(string_arr[idx].Value, strings[idx]);
+                Assert.AreEqual(ts_arr[idx].Value, timestamp_values[idx]);
                 if (symbols != null)
                 {
                     Assert.AreEqual(symbol_arr[idx].Value, symbols[idx]);
@@ -235,6 +313,47 @@ namespace Quasardb.Tests.Table
             Assert.IsTrue(IsBlittable(typeof(Quasardb.Native.qdb_sized_string)));
             Assert.IsTrue(IsBlittable(typeof(Quasardb.Native.qdb_blob[])));
             Assert.IsTrue(IsBlittable(typeof(Quasardb.Native.qdb_sized_string[])));
+            Assert.IsTrue(IsBlittable(typeof(Quasardb.Native.qdb_exp_batch_push_table)));
+            Assert.IsTrue(IsBlittable(typeof(Quasardb.Native.qdb_exp_batch_push_table_data)));
+            Assert.IsTrue(IsBlittable(typeof(Quasardb.Native.qdb_exp_batch_push_column)));
+            //Assert.IsTrue(IsBlittable(typeof(Quasardb.Native.qdb_exp_batch_push_column_data)));
+        }
+
+        [TestMethod]
+        public void Ok_ColumnInsert()
+        {
+            QdbTable ts = CreateTable();
+
+            var blobs = MakeBlobArray(10);
+            var doubles = MakeDoubleArray(10);
+            var int64s = MakeInt64Array(10);
+            var strings = MakeStringArray(10);
+            var timestamps = MakeTimestamps(10);
+
+            var batch = InsertWithColumn(ts.Alias, new QdbTableExpWriterOptions().Transactional(), blobs, doubles, int64s, strings, timestamps);
+
+            batch.Push();
+
+            CheckTables(ts, blobs, doubles, int64s, strings, timestamps, strings);
+        }
+
+        [TestMethod]
+        public void Ok_ColumnInsertWithNull()
+        {
+            QdbTable ts = CreateTable();
+
+            var blobs = new byte[5][] { System.Text.Encoding.UTF8.GetBytes("Running 🏃 is faster than swimming 🏊."), null, null, null, null };
+            var doubles = new double?[5] { null, 1.1, null, null, null };
+            var int64s = new long?[5] { null, null, 1, null, null };
+            var strings = new string[5] { null, null, null, "Running 🏃 is faster than swimming 🏊.", null };
+            var timestamps = MakeTimestamps(5);
+            var timestamp_values = new DateTime?[5] { null, null, null, DateTime.Parse("2021-01-01T00:00:00Z"), null };
+
+            var batch = InsertWithColumnWithNull(ts.Alias, new QdbTableExpWriterOptions().Transactional(), blobs, doubles, int64s, strings, timestamps, timestamp_values);
+
+            batch.Push();
+
+            CheckTablesWithNull(ts, blobs, doubles, int64s, strings, timestamps, timestamp_values, strings);
         }
 
         [TestMethod]
