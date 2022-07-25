@@ -60,7 +60,8 @@ namespace Quasardb.Tests.Entry.Table.Int64
 
             var result = col.PopulationVariance();
 
-            Assert.AreEqual(4518366L, result);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(4518366.5600000005, result.Value, /*delta=*/1e-5);
         }
 
         [TestMethod]
@@ -72,7 +73,8 @@ namespace Quasardb.Tests.Entry.Table.Int64
             var interval = new QdbTimeInterval(_points[0].Time, _points[4].Time);
             var result = col.PopulationVariance(interval);
 
-            Assert.AreEqual(256066L, result);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(256066.1875, result.Value, /*delta=*/1e-5);
         }
 
         [TestMethod]
@@ -91,8 +93,10 @@ namespace Quasardb.Tests.Entry.Table.Int64
             var results = col.PopulationVariance(intervals).ToArray();
 
             Assert.AreEqual(3, results.Length);
-            Assert.AreEqual(420L, results[0]);
-            Assert.AreEqual(4922915L, results[1]);
+            Assert.IsNotNull(results[0]);
+            Assert.AreEqual(420.25, results[0].Value, /*delta=*/1e-5);
+            Assert.IsNotNull(results[1]);
+            Assert.AreEqual(4922915.0000000009, results[1].Value, /*delta=*/1e-5);
             Assert.IsNull(results[2]);
         }
     }

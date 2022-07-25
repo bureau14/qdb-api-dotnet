@@ -60,7 +60,7 @@ namespace Quasardb.Tests.Entry.Table.Int64
 
             var result = col.QuadraticMean();
 
-            Assert.AreEqual(2615L, result);
+            Assert.AreEqual(2615.6360985427618, result);
         }
 
         [TestMethod]
@@ -72,7 +72,7 @@ namespace Quasardb.Tests.Entry.Table.Int64
             var interval = new QdbTimeInterval(_points[0].Time, _points[4].Time);
             var result = col.QuadraticMean(interval);
 
-            Assert.AreEqual(701L, result);
+            Assert.AreEqual(701.44083856017392, result);
         }
 
         [TestMethod]
@@ -91,8 +91,8 @@ namespace Quasardb.Tests.Entry.Table.Int64
             var results = col.QuadraticMean(intervals).ToArray();
 
             Assert.AreEqual(3, results.Length);
-            Assert.AreEqual(29L, results[0]);
-            Assert.AreEqual(2924L, results[1]);
+            Assert.AreEqual(29.706901555025897, results[0]);
+            Assert.AreEqual(2924.3700176277284, results[1]);
             Assert.IsNull(results[2]);
         }
     }

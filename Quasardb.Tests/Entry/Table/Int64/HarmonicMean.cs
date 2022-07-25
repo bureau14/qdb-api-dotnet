@@ -60,7 +60,7 @@ namespace Quasardb.Tests.Entry.Table.Int64
 
             var result = col.HarmonicMean();
 
-            Assert.AreEqual(4L, result);
+            Assert.AreEqual(4.8718816132119009, result);
         }
 
         [TestMethod]
@@ -72,7 +72,7 @@ namespace Quasardb.Tests.Entry.Table.Int64
             var interval = new QdbTimeInterval(_points[0].Time, _points[4].Time);
             var result = col.HarmonicMean(interval);
 
-            Assert.AreEqual(3L, result);
+            Assert.AreEqual(3.8981742389104732, result);
         }
 
         [TestMethod]
@@ -91,8 +91,8 @@ namespace Quasardb.Tests.Entry.Table.Int64
             var results = col.HarmonicMean(intervals).ToArray();
 
             Assert.AreEqual(3, results.Length);
-            Assert.AreEqual(1L, results[0]);
-            Assert.AreEqual(152L, results[1]);
+            Assert.AreEqual(1.9534883720930234, results[0]);
+            Assert.AreEqual(152.1056184158698, results[1]);
             Assert.IsNull(results[2]);
         }
     }

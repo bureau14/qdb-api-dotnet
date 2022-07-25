@@ -61,8 +61,7 @@ namespace Quasardb.Tests.Entry.Table.Int64
             var result = col.Skewness();
 
             Assert.IsNotNull(result);
-            // TODO: Should be 1.3373617909019273.
-            Assert.AreEqual(1L, result.Value);
+            Assert.AreEqual(1.3373617909019264, result.Value, /*delta=*/1e-5);
         }
 
         [TestMethod]
@@ -74,7 +73,8 @@ namespace Quasardb.Tests.Entry.Table.Int64
             var interval = new QdbTimeInterval(_points[0].Time, _points[4].Time);
             var result = col.Skewness(interval);
 
-            Assert.AreEqual(0L, result);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(0.43120395429883873, result.Value, /*delta=*/1e-5);
         }
 
         [TestMethod]
@@ -94,11 +94,9 @@ namespace Quasardb.Tests.Entry.Table.Int64
 
             Assert.AreEqual(3, results.Length);
             Assert.IsNotNull(results[0]);
-            // TODO: Should be 0.69749030004661439.
-            Assert.AreEqual(0L, results[0].Value);
+            Assert.AreEqual(0.69749030004661439, results[0].Value, /*delta=*/1e-5);
             Assert.IsNotNull(results[1]);
-            // TODO: Should be -0.057460816522297134.
-            Assert.AreEqual(0L, results[1].Value);
+            Assert.AreEqual(-0.057460816522297134, results[1].Value, /*delta=*/1e-5);
             Assert.IsNull(results[2]);
         }
     }

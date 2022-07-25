@@ -60,7 +60,7 @@ namespace Quasardb.Tests.Entry.Table.Int64
 
             var result = col.GeometricMean();
 
-            Assert.AreEqual(181L, result);
+            Assert.AreEqual(181.32046055188965, result);
         }
 
         [TestMethod]
@@ -72,7 +72,7 @@ namespace Quasardb.Tests.Entry.Table.Int64
             var interval = new QdbTimeInterval(_points[0].Time, _points[4].Time);
             var result = col.GeometricMean(interval);
 
-            Assert.AreEqual(76L, result);
+            Assert.AreEqual(76.649560643800257, result);
         }
 
         [TestMethod]
@@ -91,8 +91,8 @@ namespace Quasardb.Tests.Entry.Table.Int64
             var results = col.GeometricMean(intervals).ToArray();
 
             Assert.AreEqual(3, results.Length);
-            Assert.AreEqual(6L, results[0]);
-            Assert.AreEqual(665L, results[1]);
+            Assert.AreEqual(6.48074069840786, results[0]);
+            Assert.AreEqual(665.36280118485013, results[1]);
             Assert.IsNull(results[2]);
         }
     }
