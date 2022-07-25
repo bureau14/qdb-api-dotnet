@@ -15,12 +15,10 @@ namespace Quasardb.Native
         internal byte* data;
         internal qdb_size_t length;
 
-        public qdb_sized_string(string str, ref GCHandle pin)
+        public qdb_sized_string(byte * d, qdb_size_t l)
         {
-            var content = Encoding.UTF8.GetBytes(str);
-            pin = GCHandle.Alloc(content, GCHandleType.Pinned);
-            data = (byte*)pin.AddrOfPinnedObject();
-            length = (qdb_size_t)content.Length;
+            data = d;
+            length = l;
         }
 
         public override string ToString()
