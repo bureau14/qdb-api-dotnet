@@ -72,7 +72,7 @@ namespace Quasardb.Tests.Entry.Table.Int64
             var interval = new QdbTimeInterval(_points[0].Time, _points[4].Time);
             var result = col.SampleVariance(interval);
 
-            Assert.AreEqual(341421L, result);
+            Assert.AreEqual(341421.58333333331, result);
         }
 
         [TestMethod]
@@ -91,8 +91,10 @@ namespace Quasardb.Tests.Entry.Table.Int64
             var results = col.SampleVariance(intervals).ToArray();
 
             Assert.AreEqual(3, results.Length);
-            Assert.AreEqual(840L, results[0]);
-            Assert.AreEqual(6563886L, results[1]);
+            Assert.IsNotNull(results[0]);
+            Assert.AreEqual(840.5, results[0].Value, /*delta=*/1e-5);
+            Assert.IsNotNull(results[1]);
+            Assert.AreEqual(6563886.6666666679, results[1].Value, /*delta=*/1e-5);
             Assert.IsNull(results[2]);
         }
     }
