@@ -734,6 +734,12 @@ namespace Quasardb.Native
             [In] qdb_ts_range[] ranges,
             [In] qdb_size_t range_count);
 
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_ts_table_stream_ranges(
+            [In] pointer_t table,
+            [In] qdb_ts_range[] ranges,
+            [In] qdb_size_t range_count);
+
         #endregion
 
         #region Functions specific to batch tables
