@@ -579,6 +579,129 @@ namespace Quasardb.TimeSeries
 
         #endregion
 
+        #region StreamReader
+
+        /// <summary>
+        /// Initialize a local table for reading from this table.
+        /// </summary>
+        /// <returns>A <see cref="QdbTableStreamReader"/> for reading from this table</returns>
+        /// <seealso cref="QdbTableStreamReader"/>
+        public QdbTableStreamReader StreamReader()
+        {
+            return StreamReader(null, QdbTimeInterval.Everything);
+        }
+
+        /// <summary>
+        /// Initialize a local table for reading from this table.
+        /// </summary>
+        /// <param name="interval">The time interval to read</param>
+        /// <returns>A <see cref="QdbTableStreamReader"/> for reading from this table</returns>
+        /// <seealso cref="QdbTableStreamReader"/>
+        public QdbTableStreamReader StreamReader(QdbTimeInterval interval)
+        {
+            return StreamReader(null, new[] { interval });
+        }
+
+        /// <summary>
+        /// Initialize a local table for reading from this table.
+        /// </summary>
+        /// <param name="intervals">The time intervals to read</param>
+        /// <exception cref="QdbInvalidArgumentException">If interval list is empty.</exception>
+        /// <returns>A <see cref="QdbTableStreamReader"/> for reading from this table</returns>
+        /// <seealso cref="QdbTableStreamReader"/>
+        public QdbTableStreamReader StreamReader(IEnumerable<QdbTimeInterval> intervals)
+        {
+            return StreamReader(null, intervals);
+        }
+
+        /// <summary>
+        /// Initialize a local table for reading from this table.
+        /// </summary>
+        /// <param name="columnDefinitions">The description of the columns</param>
+        /// <returns>A <see cref="QdbTableStreamReader"/> for reading from this table</returns>
+        /// <seealso cref="QdbTableStreamReader"/>
+        public QdbTableStreamReader StreamReader(IEnumerable<QdbColumnDefinition> columnDefinitions)
+        {
+            return StreamReader(columnDefinitions, QdbTimeInterval.Everything);
+        }
+
+        /// <summary>
+        /// Initialize a local table for reading from this table.
+        /// </summary>
+        /// <param name="columnDefinitions">The description of the columns</param>
+        /// <param name="interval">The time interval to read</param>
+        /// <returns>A <see cref="QdbTableStreamReader"/> for reading from this table</returns>
+        /// <seealso cref="QdbTableStreamReader"/>
+        public QdbTableStreamReader StreamReader(IEnumerable<QdbColumnDefinition> columnDefinitions, QdbTimeInterval interval)
+        {
+            return StreamReader(columnDefinitions, new[] { interval });
+        }
+
+        /// <summary>
+        /// Initialize a local table for reading from this table.
+        /// </summary>
+        /// <param name="columnDefinitions">The description of the columns</param>
+        /// <param name="intervals">The time intervals to read</param>
+        /// <exception cref="QdbInvalidArgumentException">If interval list is empty.</exception>
+        /// <returns>A <see cref="QdbTableStreamReader"/> for reading from this table</returns>
+        /// <seealso cref="QdbTableStreamReader"/>
+        public QdbTableStreamReader StreamReader(IEnumerable<QdbColumnDefinition> columnDefinitions, IEnumerable<QdbTimeInterval> intervals)
+        {
+            InteropableList<qdb_ts_column_info> columns;
+            if (columnDefinitions == null)
+            {
+                var defs = GetColumnDefinitions();
+                columns = new InteropableList<qdb_ts_column_info>((int)defs.Count);
+                foreach (var def in defs)
+                {
+                    columns.Add(new qdb_ts_column_info
+                    {
+                        name = def.name,
+                        type = def.type,
+                    });
+                }
+            }
+            else
+            {
+                var count = Helpers.GetCountOrDefault(columnDefinitions);
+                columns = new InteropableList<qdb_ts_column_info>(count);
+                foreach (var def in columnDefinitions)
+                {
+                    columns.Add(new qdb_ts_column_info
+                    {
+                        name = def.Name,
+                        type = def.Type,
+                    });
+                }
+            }
+
+            var err = qdb_api.qdb_ts_local_table_init(
+                Handle, Alias,
+                columns.Buffer, columns.Count,
+                out IntPtr table);
+            QdbExceptionThrower.ThrowIfNeeded(err, alias: Alias);
+
+            try
+            {
+                var ranges = new InteropableList<qdb_ts_range>(Helpers.GetCountOrDefault(intervals));
+                foreach (var interval in intervals)
+                    ranges.Add(interval.ToNative());
+
+                err = qdb_api.qdb_ts_table_stream_ranges(
+                    table, ranges.Buffer, ranges.Count);
+                QdbExceptionThrower.ThrowIfNeeded(err, alias: Alias);
+            }
+            catch
+            {
+                qdb_api.qdb_release(Handle, table);
+                throw;
+            }
+
+            return new QdbTableStreamReader(Handle, Alias, table, columns);
+        }
+
+        #endregion
+
         #region Writer
 
         /// <summary>
