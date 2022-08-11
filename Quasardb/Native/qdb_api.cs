@@ -42,20 +42,13 @@ namespace Quasardb.Native
 
         static string make_fullpath(string folder, bool is_linux)
         {
-            bool is_32 = pointer_t.Size == 4;
-
             if (is_linux)
             {
                 folder = Path.Combine(folder, "linux");
             }
-            else if (is_32)
-            {
-                folder = Path.Combine(folder, "win32");
-            }
             else
             {
-                // default to win64
-                folder = Path.Combine(folder, "win64");
+                folder = Path.Combine(folder, (Environment.Is64BitProcess ? "win64" : "win32"));
             }
             return Path.Combine(folder, make_libname(is_linux));
         }
