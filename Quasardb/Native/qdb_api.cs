@@ -124,9 +124,16 @@ namespace Quasardb.Native
             }
             catch
             {
-                // try with assembly location
-                string library = make_fullpath(get_folder_from_location(), is_linux);
-                load_library(library, is_linux);
+                try
+                {
+                    // try with assembly location
+                    string library = make_fullpath(get_folder_from_location(), is_linux);
+                    load_library(library, is_linux);
+                }
+                catch
+                {
+                    throw new Exception(String.Format("Could not open dll at {0}, nor {1}", make_fullpath(get_folder_from_codebase(), is_linux), make_fullpath(get_folder_from_location(), is_linux)));
+                }
             }
         }
 
