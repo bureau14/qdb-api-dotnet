@@ -48,14 +48,9 @@ namespace Quasardb.Native
             {
                 folder = Path.Combine(folder, "linux");
             }
-            else if (is_32)
-            {
-                folder = Path.Combine(folder, "win32");
-            }
             else
             {
-                // default to win64
-                folder = Path.Combine(folder, "win64");
+                folder = Path.Combine(folder, (Environment.Is64BitProcess ? "win64" : "win32"));
             }
             return Path.Combine(folder, make_libname(is_linux));
         }
