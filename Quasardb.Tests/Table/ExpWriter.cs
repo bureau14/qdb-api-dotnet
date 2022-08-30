@@ -574,7 +574,7 @@ namespace Quasardb.Tests.Table
             var strings = MakeStringArray(10);
             var timestamps = MakeTimestamps(10);
 
-            var batch = _cluster.ExpWriter(new string[] {}, new QdbTableExpWriterOptions().Transactional());
+            var batch = _cluster.ExpWriter(new QdbTableExpWriterOptions().Transactional());
 
             for (int index = 0; index < doubles.Length; index++)
             {
