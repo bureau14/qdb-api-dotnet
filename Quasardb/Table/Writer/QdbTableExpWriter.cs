@@ -222,13 +222,24 @@ namespace Quasardb.TimeSeries.ExpWriter
 
         internal int IndexOfTable(string table)
         {
-            try
+            if (_table_name_to_index.ContainsKey(table))
             {
                 return _table_name_to_index[table];
             }
-            catch (KeyNotFoundException /*e*/)
+            else
             {
-                throw new QdbException(String.Format("Table '{0}' not found.", table));
+                try
+                {
+                    var table_index = _table_data.Count;
+                    _table_data.Add(initialize_table(_handle, table));
+                    _tables.Add(table);
+                    _table_name_to_index[table] = table_index;
+                    return table_index;
+                }
+                catch
+                {
+                    throw new QdbException(String.Format("Could not initialize '{0}'.", table));
+                }
             }
         }
 
