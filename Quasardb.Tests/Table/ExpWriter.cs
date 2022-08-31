@@ -9,6 +9,7 @@ using Quasardb.TimeSeries.ExpWriter;
 
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
+using System.Reflection;
 
 namespace Quasardb.Tests.Table
 {
@@ -590,9 +591,10 @@ namespace Quasardb.Tests.Table
         }
 
         [TestMethod]
-        public void Ok_BulkRowInsertFast()
+        public void Ok_SendOneTableThenTheOther()
         {
-            QdbTable ts = CreateTable();
+            QdbTable ts1 = CreateTableWithoutSymbol();
+            QdbTable ts2 = CreateTableWithoutSymbol();
 
             var blobs = MakeBlobArray(10);
             var doubles = MakeDoubleArray(10);
@@ -600,8 +602,32 @@ namespace Quasardb.Tests.Table
             var strings = MakeStringArray(10);
             var timestamps = MakeTimestamps(10);
 
-            var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Fast(), blobs, doubles, int64s, strings, timestamps);
+            var batch = _cluster.ExpWriter(new QdbTableExpWriterOptions().Transactional());
 
+            for (int index = 0; index < doubles.Length; index++)
+            {
+                // TODO(vianney): Investigate why inserting symbols when there is more than one table does not work
+                batch.Add(ts1.Alias, timestamps[index], new object[] { blobs[index], doubles[index], int64s[index], strings[index], timestamps[index] });
+            }
+            batch.Push();
+            for (int index = 0; index < doubles.Length; index++)
+            {
+                batch.Add(ts2.Alias, timestamps[index], new object[] { blobs[index], doubles[index], int64s[index], strings[index], timestamps[index] });
+            }
+            batch.Push();
+            CheckTablesWithoutSymbol(ts1, blobs, doubles, int64s, strings, timestamps);
+            CheckTablesWithoutSymbol(ts2, blobs, doubles, int64s, strings, timestamps);
+        }
+        [TestMethod]
+        public void Ok_BulkRowInsertFast()
+        {
+            QdbTable ts = CreateTable();
+            var blobs = MakeBlobArray(10);
+            var doubles = MakeDoubleArray(10);
+            var int64s = MakeInt64Array(10);
+            var strings = MakeStringArray(10);
+            var timestamps = MakeTimestamps(10);
+            var batch = Insert(ts.Alias, new QdbTableExpWriterOptions().Fast(), blobs, doubles, int64s, strings, timestamps);
             batch.Push();
 
             CheckTables(ts, blobs, doubles, int64s, strings, timestamps, strings);
