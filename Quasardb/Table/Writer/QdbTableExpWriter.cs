@@ -141,7 +141,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         QdbTableExpWriterOptions _options;
 
         private List<QdbTableExpWriterData> _table_data;
-        private qdb_exp_batch_push_table_schema* _schemas = null;
+        private qdb_exp_batch_push_table_schema* _schemas = (qdb_exp_batch_push_table_schema * )pointer_t.Zero;
         private Dictionary<string, int> _table_name_to_index;
 
         internal QdbTableExpWriter(qdb_handle handle, string[] tables, QdbTableExpWriterOptions options) : base(IntPtr.Zero, true)
@@ -514,7 +514,7 @@ namespace Quasardb.TimeSeries.ExpWriter
                 index++;
             }
             var tables_arr = (qdb_exp_batch_push_table*)ExpWriterHelper.convert_array(tables, ref _pins);
-            var err = qdb_api.qdb_exp_batch_push(_handle, _options.Mode(), (pointer_t)tables_arr, pointer_t.Zero, _tables.Count);
+            var err = qdb_api.qdb_exp_batch_push(_handle, _options.Mode(), tables_arr, _schemas, _tables.Count);
             Reset();
             QdbExceptionThrower.ThrowIfNeededWithMsg(_handle, err);
         }

@@ -670,8 +670,8 @@ namespace Quasardb.Native
         internal static extern qdb_error qdb_exp_batch_push(
             [In] qdb_handle handle,
             [In] qdb_exp_batch_push_mode mode,
-            [In] pointer_t tables,
-            [In] pointer_t schemas,
+            [In] qdb_exp_batch_push_table* tables,
+            [In] qdb_exp_batch_push_table_schema* schemas,
             [In] long table_count);
 
         #region Functions specific to local tables
