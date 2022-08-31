@@ -317,6 +317,17 @@ namespace Quasardb
         }
 
         /// <summary>
+        /// Returns a <see cref="QdbTableExpWriter" /> attached to the specified columns.
+        /// </summary>
+        /// <param name="options">The options used for the push</param>
+        /// <returns>A batch table for bulk insertion associated with the table.</returns>
+        /// <seealso cref="QdbTableExpWriter"/>
+        public QdbTableExpWriter ExpWriter(QdbTableExpWriterOptions options)
+        {
+            return new QdbTableExpWriter(_handle, new string[] {}, options);
+        }
+
+        /// <summary>
         /// Run the provided query and creates a table directory with the results.
         /// </summary>
         /// <remarks>Queries are transactional. The complexity of this function
