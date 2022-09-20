@@ -145,6 +145,19 @@ namespace Quasardb.Native
             [In] pointer_t handle);
 
         [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_copy_alloc_buffer(
+            [In] qdb_handle handle,
+            [In] pointer_t source_buffer,
+            [In] qdb_size_t source_buffer_size,
+            [Out] out pointer_t dest_buffer);
+
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_alloc_buffer(
+            [In] qdb_handle handle,
+            [In] qdb_size_t buffer_size,
+            [Out] out pointer_t dest_buffer);
+
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
         internal static extern qdb_error qdb_connect(
             [In] qdb_handle handle,
             [In][MarshalAs(UnmanagedType.LPStr)] string uri);
@@ -212,6 +225,25 @@ namespace Quasardb.Native
         internal static extern qdb_error qdb_option_set_client_max_parallelism(
             [In] qdb_handle handle,
             [In] qdb_int_t thread_count);
+
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_option_cluster_tidy_memory(
+            [In] qdb_handle handle);
+
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_option_set_client_soft_memory_limit(
+            [In] qdb_handle handle,
+            [In] qdb_uint_t limit);
+
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_option_client_get_memory_info(
+            [In] qdb_handle handle,
+            [Out] out pointer_t content,
+            [Out] out size_t content_length);
+
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_option_client_tidy_memory(
+            [In] qdb_handle handle);
 
         #endregion
 
@@ -815,7 +847,7 @@ namespace Quasardb.Native
         [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
         internal static extern qdb_error qdb_query_copy_results(
             [In] qdb_handle handle,
-            [In] qdb_query_result * result,
+            [In] qdb_query_result* result,
             [Out] out qdb_query_result* result_copy);
 
         [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
