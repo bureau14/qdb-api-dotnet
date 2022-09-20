@@ -174,15 +174,6 @@ namespace Quasardb.Tests.Cluster
         }
 
         [TestMethod]
-        public void AllocateBuffer_Works()
-        {
-            var bytes = QdbTestCluster.Instance.AllocateBuffer(10);
-            Assert.AreEqual(10, bytes.Length);
-            bytes = QdbTestCluster.Instance.AllocateBuffer(500);
-            Assert.AreEqual(500, bytes.Length);
-        }
-
-        [TestMethod]
         public void GetLastErrorForNullQuery()
         {
             try

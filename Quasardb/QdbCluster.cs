@@ -194,22 +194,6 @@ namespace Quasardb
         }
 
         /// <summary>
-        /// Allocates a buffer using internal high-performance allocator.
-        /// </summary>
-        /// <remarks>EXPERIMENTAL. Use at your own risk!</remarks>
-        /// <param name="size">The requested buffer size in bytes</param>
-        public byte[] AllocateBuffer(long size)
-        {
-            using (var content = new QdbBlobBuffer(_handle))
-            {
-                content.Size = (UIntPtr)size;
-                var error = qdb_api.qdb_alloc_buffer(_handle, content.Size, out content.Pointer);
-                QdbExceptionThrower.ThrowIfNeeded(error);
-                return content.GetBytes();
-            }
-        }
-
-        /// <summary>
         /// Returns a <see cref="QdbBlob" /> attached to the specified alias.
         /// </summary>
         /// <remarks>No operation is performed in the database.</remarks>

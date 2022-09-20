@@ -145,19 +145,6 @@ namespace Quasardb.Native
             [In] pointer_t handle);
 
         [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
-        internal static extern qdb_error qdb_copy_alloc_buffer(
-            [In] qdb_handle handle,
-            [In] pointer_t source_buffer,
-            [In] qdb_size_t source_buffer_size,
-            [Out] out pointer_t dest_buffer);
-
-        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
-        internal static extern qdb_error qdb_alloc_buffer(
-            [In] qdb_handle handle,
-            [In] qdb_size_t buffer_size,
-            [Out] out pointer_t dest_buffer);
-
-        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
         internal static extern qdb_error qdb_connect(
             [In] qdb_handle handle,
             [In][MarshalAs(UnmanagedType.LPStr)] string uri);
