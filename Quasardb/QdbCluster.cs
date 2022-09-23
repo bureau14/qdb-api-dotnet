@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using Quasardb.Exceptions;
 using Quasardb.Native;
 using Quasardb.TimeSeries;
@@ -135,7 +136,54 @@ namespace Quasardb
         }
 
         /// <summary>
-        /// ets the number of threads that will be used to execute queries
+        /// Forces tidying of cluster memory.
+        /// </summary>
+        /// <remarks>EXPERIMENTAL. Use at your own risk!</remarks>
+        public void ClusterTidyMemory()
+        {
+            var error = qdb_api.qdb_option_cluster_tidy_memory(_handle);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+        }
+
+        /// <summary>
+        /// Sets the client-side soft memory limit.
+        /// </summary>
+        /// <remarks>EXPERIMENTAL. Use at your own risk!</remarks>
+        /// <param name="limit">Number of bytes.</param>
+        public void SetSoftMemoryLimit(long limit)
+        {
+            var error = qdb_api.qdb_option_set_client_soft_memory_limit(_handle, (ulong)limit);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+        }
+
+        /// <summary>
+        /// Gets client memory information.
+        /// </summary>
+        /// <returns>The information about the client-side memory.</returns>
+        /// <remarks>EXPERIMENTAL. Use at your own risk!</remarks>
+        public string GetClientMemoryInfo()
+        {
+            using (var content = new QdbBlobBuffer(_handle))
+            {
+                var error = qdb_api.qdb_option_client_get_memory_info(_handle, out content.Pointer, out content.Size);
+                QdbExceptionThrower.ThrowIfNeeded(error);
+                var bytes = content.GetBytes();
+                return Encoding.UTF8.GetString(bytes);
+            }
+        }
+
+        /// <summary>
+        /// Forces tidying of client-side memory.
+        /// </summary>
+        /// <remarks>EXPERIMENTAL. Use at your own risk!</remarks>
+        public void ClientTidyMemory()
+        {
+            var error = qdb_api.qdb_option_client_tidy_memory(_handle);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+        }
+
+        /// <summary>
+        /// Sets the number of threads that will be used to execute queries
         /// by the current handle.
         /// </summary>
         /// <param name="thread_count">Number of threads. Value of 0 means the number of logical processor cores.</param>
@@ -370,23 +418,26 @@ namespace Quasardb
         /// The client will store performance measures from the server.
         /// Disabled by default.
         /// </summary>
-        public void EnablePerformanceTraces() {
+        public void EnablePerformanceTraces()
+        {
             var error = qdb_api.qdb_perf_enable_client_tracking(_handle);
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
-        
+
         /// <summary>
         /// The client will stop storing performance measures from the server.
         /// </summary>
-        public void DisablePerformanceTraces() {
+        public void DisablePerformanceTraces()
+        {
             var error = qdb_api.qdb_perf_disable_client_tracking(_handle);
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
-        
+
         /// <summary>
         /// Returns all new performance traces since the last call to this function.
         /// </summary>
-        public unsafe QdbPerformanceTrace[] GetPerformanceTraces() {
+        public unsafe QdbPerformanceTrace[] GetPerformanceTraces()
+        {
             qdb_perf_profile* profiles;
             UIntPtr profile_count;
             var error = qdb_api.qdb_perf_get_profiles(_handle, out profiles, out profile_count);
@@ -400,7 +451,8 @@ namespace Quasardb
         /// <summary>
         /// Releases all performances traces currently stored by the client.
         /// </summary>
-        public void ClearPerformanceTraces() {
+        public void ClearPerformanceTraces()
+        {
             var error = qdb_api.qdb_perf_clear_all_profiles(_handle);
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
