@@ -135,13 +135,42 @@ namespace Quasardb.Tests.Cluster
         [TestMethod]
         public void SetMaxInBufferSize_Works()
         {
-            QdbTestCluster.Instance.SetMaxInBufferSize(128*1024*1024);
+            QdbTestCluster.Instance.SetMaxInBufferSize(128 * 1024 * 1024);
         }
 
         [TestMethod]
         public void SetMaxParallelism_Works()
         {
             QdbTestCluster.Instance.SetMaxParallelism(8);
+        }
+
+        [TestMethod]
+        public void ClusterTidyMemory_Works()
+        {
+            QdbTestCluster.Instance.ClusterTidyMemory();
+        }
+
+        [TestMethod]
+        public void ClientTidyMemory_Works()
+        {
+            QdbTestCluster.Instance.ClientTidyMemory();
+        }
+
+        [TestMethod]
+        public void SetSoftMemoryLimit_Works()
+        {
+            QdbTestCluster.Instance.SetSoftMemoryLimit(128 * 1024 * 1024);
+        }
+
+        [TestMethod]
+        public void GetClientMemoryInfo_Works()
+        {
+            var info = QdbTestCluster.Instance.GetClientMemoryInfo();
+            StringAssert.Contains(info, "TBB huge threshold bytes");
+            StringAssert.Contains(info, "TBB soft limit bytes");
+            StringAssert.Contains(info, "TBB total count");
+            StringAssert.Contains(info, "TBB max requested bytes");
+            StringAssert.Contains(info, "TBB global large object cache bytes");
         }
 
         [TestMethod]
@@ -158,7 +187,8 @@ namespace Quasardb.Tests.Cluster
         }
 
         [TestMethod]
-        public void GetLastErrorForInvalidQuery() {
+        public void GetLastErrorForInvalidQuery()
+        {
             try
             {
                 QdbTestCluster.Instance.SetCompression(Quasardb.QdbCompression.Best);
