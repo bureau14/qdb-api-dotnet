@@ -3,6 +3,85 @@ using System.Collections.Concurrent;
 
 namespace Quasardb
 {
+    public class QdbConnectionFactory
+    {
+        string _uri;
+        string _cluster_public_key;
+        string _username;
+        string _user_private_key;
+        bool _is_secured = false;
+        int _parallelism_count = -1;
+        int _max_in_buffer_size = -1;
+        QdbCompression _level = QdbCompression.Fast;
+
+        /// <summary>
+        /// Initialize a factory to create connections.
+        /// </summary>
+        public QdbConnectionFactory(string uri)
+        {
+            _uri = uri;
+        }
+
+        /// <summary>
+        /// Adds security parameters.
+        /// </summary>
+        public QdbConnectionFactory WithSecurity(string clusterPublicKey, string userName, string userPrivateKey)
+        {
+            _is_secured = true;
+            _cluster_public_key = clusterPublicKey;
+            _username = userName;
+            _user_private_key = userPrivateKey;
+
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the number of thread used per connection.
+        /// </summary>
+        public QdbConnectionFactory WithParallelism(int count)
+        {
+            _parallelism_count = count;
+
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the number of thread used per connection.
+        /// </summary>
+        public QdbConnectionFactory WithMaxInBufferSize(int max_size)
+        {
+            _max_in_buffer_size = max_size;
+
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the compression level.
+        /// </summary>
+        public QdbConnectionFactory WithCompression(QdbCompression level)
+        {
+            _level = level;
+
+            return this;
+        }
+
+        internal QdbCluster Create()
+        {
+            var c = _is_secured ? new QdbCluster(_uri, _cluster_public_key, _username, _user_private_key) : new QdbCluster(_uri);
+            if (_parallelism_count != -1)
+            {
+                c.SetMaxParallelism(_parallelism_count);
+            }
+            if (_max_in_buffer_size != -1)
+            {
+                c.SetMaxInBufferSize(_max_in_buffer_size);
+            }
+            c.SetCompression(_level);
+
+            return c;
+        }
+    }
+
     /// <summary>
     /// A  entry in a quasardb database.
     /// </summary>
@@ -11,26 +90,14 @@ namespace Quasardb
         private readonly BlockingCollection<QdbCluster> _connections;
 
         /// <summary>
-        /// Create a pool for unsecured connections.
+        /// Create a pool using the connection factory.
         /// </summary>
-        public QdbConnectionPool(string uri, int size)
+        public QdbConnectionPool(QdbConnectionFactory factory, int size)
         {
             _connections = new BlockingCollection<QdbCluster>(size);
             for (int i = 0; i < size; i++)
             {
-                _connections.Add(new QdbCluster(uri));
-            }
-        }
-
-        /// <summary>
-        /// Create a pool for secured connections.
-        /// </summary>
-        public QdbConnectionPool(string uri, string clusterPublicKey, string userName, string userPrivateKey, int size)
-        {
-            _connections = new BlockingCollection<QdbCluster>(size);
-            for (int i = 0 ; i < size; i++)
-            {
-                _connections.Add(new QdbCluster(uri, clusterPublicKey, userName, userPrivateKey));
+                _connections.Add(factory.Create());
             }
         }
 
