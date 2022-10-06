@@ -12,17 +12,15 @@ namespace Quasardb.Tests.Cluster
     {
         public QdbConnectionPool CreatePool(int size)
         {
+            var factory = new QdbConnectionFactory(DaemonRunner.ClusterUrl);
 
             if (DaemonRunner.UseSecurity)
             {
-                return new QdbConnectionPool(DaemonRunner.ClusterUrl, DaemonRunner.ClusterPublicKey,
-                    DaemonRunner.UserName, DaemonRunner.UserPrivateKey, size);
+                factory.WithSecurity(DaemonRunner.ClusterPublicKey, DaemonRunner.UserName, DaemonRunner.UserPrivateKey);
             }
-            else
-            {
-                return new QdbConnectionPool(DaemonRunner.ClusterUrl, size);
-            }
+            return new QdbConnectionPool(factory, size);
         }
+
         [TestMethod]
         public void CantTakeMoreThanLimit()
         {
@@ -48,6 +46,13 @@ namespace Quasardb.Tests.Cluster
             // After returning one connection we can get it
             Assert.IsTrue(pool.TryGet(out cs3, limit));
             CollectionAssert.AreEqual(cs3.Blob(alias1).Get(), content);
+        }
+
+        [TestMethod]
+        public void PoolSize()
+        {
+            var pool = CreatePool(2);
+            Assert.AreEqual(pool.Size(), 2);
         }
     }
 }
