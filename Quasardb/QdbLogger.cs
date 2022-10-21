@@ -25,12 +25,12 @@ namespace Quasardb
         /// <summary>
         /// Create a new logger
         /// </summary>
-        public QdbLogger()
+        public QdbLogger(LogLevel minimulLevel = LogLevel.Information)
         {
             ServiceProvider serviceProvider = new ServiceCollection()
                 .AddLogging((loggingBuilder) => loggingBuilder
-                    .SetMinimumLevel(LogLevel.Trace)
-                    .AddSimpleConsole( options =>
+                    .SetMinimumLevel(minimulLevel)
+                    .AddSimpleConsole(options =>
                     {
                         options.IncludeScopes = true;
                         options.SingleLine = true;

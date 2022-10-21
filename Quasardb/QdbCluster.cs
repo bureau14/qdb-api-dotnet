@@ -9,6 +9,7 @@ using Quasardb.TimeSeries.ExpWriter;
 using Quasardb.TimeSeries.Writer;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
+using Microsoft.Extensions.Logging;
 
 namespace Quasardb
 {
@@ -461,11 +462,11 @@ namespace Quasardb
         /// <summary>
         /// Starts a new logger
         /// </summary>
-        public unsafe void StartLog()
+        public unsafe void StartLog(LogLevel level = LogLevel.Information)
         {
             if (_logger == null)
             {
-                _logger = new QdbLogger();
+                _logger = new QdbLogger(level);
             }
         }
 
