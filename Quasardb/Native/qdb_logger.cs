@@ -27,11 +27,12 @@ namespace Quasardb.Native
     }
 
     [UnmanagedFunctionPointer(qdb_api.CALL_CONV)]
-    unsafe delegate void log_callback(
+    delegate void log_callback(
         [In] qdb_log_level level,
-        [In] pointer_t timestamp,
-        [In] ulong pid,
-        [In] ulong tid,
-        [In] byte* msg,
+        [MarshalAs(UnmanagedType.LPArray, SizeConst=7)]
+        [In] uint[] timestamp,
+        [In] uint pid,
+        [In] uint tid,
+        [In] pointer_t msg,
         [In] qdb_size_t msg_len);
 }

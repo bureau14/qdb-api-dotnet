@@ -40,6 +40,7 @@ namespace Quasardb
     {
         readonly qdb_handle _handle;
         readonly QdbEntryFactory _factory;
+        QdbLogger _logger = null;
 
         /// <summary>
         /// Connects to a quasardb database.
@@ -455,6 +456,30 @@ namespace Quasardb
         {
             var error = qdb_api.qdb_perf_clear_all_profiles(_handle);
             QdbExceptionThrower.ThrowIfNeeded(error);
+        }
+
+        /// <summary>
+        /// Starts a new logger
+        /// </summary>
+        public unsafe void StartLog()
+        {
+            if (_logger == null)
+            {
+                _logger = new QdbLogger();
+            }
+        }
+
+        /// <summary>
+        /// Stops the currently used logger
+        /// </summary>
+        public unsafe void StopLog()
+        {
+            if (_logger != null)
+            {
+                _logger.Stop();
+                _logger = null;
+
+            }
         }
     }
 }
