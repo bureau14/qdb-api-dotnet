@@ -3,6 +3,9 @@ using System.Collections.Concurrent;
 
 namespace Quasardb
 {
+    /// <summary>
+    /// A configuration builder to define the properties of the connection.
+    /// </summary>
     public class QdbConnectionFactory
     {
         string _uri;

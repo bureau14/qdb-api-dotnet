@@ -9,6 +9,7 @@ using Quasardb.TimeSeries.ExpWriter;
 using Quasardb.TimeSeries.Writer;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
+using Microsoft.Extensions.Logging;
 
 namespace Quasardb
 {
@@ -40,6 +41,7 @@ namespace Quasardb
     {
         readonly qdb_handle _handle;
         readonly QdbEntryFactory _factory;
+        QdbLogger _logger = null;
 
         /// <summary>
         /// Connects to a quasardb database.
@@ -455,6 +457,42 @@ namespace Quasardb
         {
             var error = qdb_api.qdb_perf_clear_all_profiles(_handle);
             QdbExceptionThrower.ThrowIfNeeded(error);
+        }
+
+        /// <summary>
+        /// Starts a new logger
+        /// </summary>
+        public unsafe void StartLog(QdbLoggerBuilder builder)
+        {
+            if (_logger == null)
+            {
+                _logger = new QdbLogger(builder);
+            }
+        }
+
+        /// <summary>
+        /// Swaps the current logger with the new configuration builder
+        /// </summary>
+        public unsafe void SwapLog(QdbLoggerBuilder builder)
+        {
+            if (_logger != null)
+            {
+                StopLog();
+            }
+            StartLog(builder);
+        }
+
+        /// <summary>
+        /// Stops the currently used logger
+        /// </summary>
+        public unsafe void StopLog()
+        {
+            if (_logger != null)
+            {
+                _logger.Stop();
+                _logger = null;
+
+            }
         }
     }
 }

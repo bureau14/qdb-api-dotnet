@@ -870,5 +870,27 @@ namespace Quasardb.Native
             [In] qdb_handle handle);
 
         #endregion
+        
+        #region Logging functions
+
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_log_add_callback(
+            [In] log_callback cb,
+            [Out] out qdb_size_t id
+        );
+
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_log_remove_callback(
+            [In] qdb_size_t id
+        );
+
+
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern int qdb_log_option_is_sync();
+
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern void qdb_log_option_set_sync([In] int sync_logger);
+
+        #endregion
     }
 }
