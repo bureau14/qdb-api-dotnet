@@ -14,40 +14,114 @@ using Microsoft.Extensions.Options;
 
 namespace Quasardb
 {
+    /// <summary>
+    /// A configuration builder to define the properties of the logger.
+    /// </summary>
+    public class QdbLoggerBuilder
+    {
+        LogLevel _level = LogLevel.Information;
+        string _filename = null;
+        bool _is_nano = false;
+
+        /// <summary>
+        /// Instantiate a new logger builder
+        /// </summary>
+        public QdbLoggerBuilder()
+        {}
+
+        /// <summary>
+        /// Defines the minimum log level
+        /// </summary>
+        public QdbLoggerBuilder WithLevel(LogLevel level)
+        {
+            _level = level;
+            return this;
+        }
+
+        /// <summary>
+        /// Defines the logging file
+        /// </summary>
+        public QdbLoggerBuilder WithFile(string filename)
+        {
+            _filename = filename;
+            return this;
+        }
+
+        /// <summary>
+        /// Defines whether the date format should contain nanoseconds
+        /// </summary>
+        public QdbLoggerBuilder WithNanosecondDate()
+        {
+            _is_nano = true;
+            return this;
+        }
+
+        internal LogLevel Level()
+        {
+            return _level;
+        }
+
+        internal string Filename()
+        {
+            return _filename;
+        }
+
+        internal bool IsNano()
+        {
+            return _is_nano;
+        }
+    }
+
+
     /// An interface to the C-API logging capability.
-    public sealed class QdbLogger
+    internal sealed class QdbLogger
     {
         private readonly ILogger _logger;
         log_callback _internal_callback;
         qdb_size_t _id = (qdb_size_t)0;
         bool _is_logging = true;
 
-        /// <summary>
-        /// Create a new logger
-        /// </summary>
-        public QdbLogger(LogLevel minimulLevel = LogLevel.Information)
+        string _date_format = null;
+
+        internal QdbLogger(QdbLoggerBuilder builder)
         {
+            _internal_callback = log_callback_impl;
+            var err = qdb_api.qdb_log_add_callback(_internal_callback, out _id);
+            QdbExceptionThrower.ThrowIfNeeded(err);
+
             ServiceProvider serviceProvider = new ServiceCollection()
-                .AddLogging((loggingBuilder) => loggingBuilder
-                    .SetMinimumLevel(minimulLevel)
-                    .AddSimpleConsole(options =>
+                .AddLogging((loggingBuilder) =>
+                {
+                    var b = loggingBuilder
+                        .SetMinimumLevel(builder.Level());
+                    if (builder.Filename() == null)
                     {
-                        options.IncludeScopes = true;
-                        options.SingleLine = true;
-                    }))
+                        b.AddSimpleConsole(options =>
+                        {
+                            options.IncludeScopes = true;
+                            options.SingleLine = true;
+                        });
+                    }
+                })
                 .BuildServiceProvider();
 
             _logger = serviceProvider.GetService<ILoggerFactory>().CreateLogger<QdbLogger>();
 
-            _internal_callback = log_callback_impl;
-            var err = qdb_api.qdb_log_add_callback(_internal_callback, out _id);
-            QdbExceptionThrower.ThrowIfNeeded(err);
+
+            if (builder.IsNano())
+            {
+                _date_format = "{0:D4}-{1:D2}-{2:D2}T{3:D2}:{4:D2}:{5:D2}.{6:D9}";
+            }
+            else
+            {
+                _date_format = "{0:D4}-{1:D2}-{2:D2}T{3:D2}:{4:D2}:{5:D2}";
+            }
         }
 
         /// <summary>
         /// Stops the logger
         /// </summary>
-        public void Stop()
+        internal void Stop()
         {
             _is_logging = false;
         }
@@ -82,7 +156,7 @@ namespace Quasardb
 
         string to_string(uint[] ts)
         {
-            return String.Format("{0:D4}-{1:D2}-{2:D2}T{3:D2}:{4:D2}:{5:D2}.{6:D9}", ts[0], ts[1], ts[2], ts[3], ts[4], ts[5], ts[6]);
+            return String.Format(_date_format, ts[0], ts[1], ts[2], ts[3], ts[4], ts[5], ts[6]);
         }
 
         private unsafe void log_callback_impl(

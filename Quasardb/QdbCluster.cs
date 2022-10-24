@@ -462,12 +462,24 @@ namespace Quasardb
         /// <summary>
         /// Starts a new logger
         /// </summary>
-        public unsafe void StartLog(LogLevel level = LogLevel.Information)
+        public unsafe void StartLog(QdbLoggerBuilder builder)
         {
             if (_logger == null)
             {
-                _logger = new QdbLogger(level);
+                _logger = new QdbLogger(builder);
             }
+        }
+
+        /// <summary>
+        /// Swaps the current logger with the new configuration builder
+        /// </summary>
+        public unsafe void SwapLog(QdbLoggerBuilder builder)
+        {
+            if (_logger != null)
+            {
+                StopLog();
+            }
+            StartLog(builder);
         }
 
         /// <summary>
