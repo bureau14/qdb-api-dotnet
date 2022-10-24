@@ -10,7 +10,8 @@ using qdb_size_t = System.UIntPtr;
 using pointer_t = System.IntPtr;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+using NReco.Logging.File;
+using Microsoft.Extensions.Logging.Console;
 
 namespace Quasardb
 {
@@ -21,6 +22,7 @@ namespace Quasardb
     {
         LogLevel _level = LogLevel.Information;
         string _filename = null;
+        bool _append = true;
         bool _is_nano = false;
 
         /// <summary>
@@ -41,9 +43,10 @@ namespace Quasardb
         /// <summary>
         /// Defines the logging file
         /// </summary>
-        public QdbLoggerBuilder WithFile(string filename)
+        public QdbLoggerBuilder WithFile(string filename, bool append = true)
         {
             _filename = filename;
+            _append = append;
             return this;
         }
 
@@ -64,6 +67,11 @@ namespace Quasardb
         internal string Filename()
         {
             return _filename;
+        }
+
+        internal bool Append()
+        {
+            return _append;
         }
 
         internal bool IsNano()
@@ -92,15 +100,18 @@ namespace Quasardb
             ServiceProvider serviceProvider = new ServiceCollection()
                 .AddLogging((loggingBuilder) =>
                 {
-                    var b = loggingBuilder
-                        .SetMinimumLevel(builder.Level());
                     if (builder.Filename() == null)
                     {
-                        b.AddSimpleConsole(options =>
+                        loggingBuilder
+                        .SetMinimumLevel(builder.Level()).AddSimpleConsole(options =>
                         {
                             options.IncludeScopes = true;
                             options.SingleLine = true;
                         });
+                    }
+                    else
+                    {
+                        loggingBuilder.AddFile(builder.Filename(), append: builder.Append());
                     }
                 })
                 .BuildServiceProvider();
