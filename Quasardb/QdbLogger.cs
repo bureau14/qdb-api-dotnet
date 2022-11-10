@@ -100,10 +100,11 @@ namespace Quasardb
             ServiceProvider serviceProvider = new ServiceCollection()
                 .AddLogging((loggingBuilder) =>
                 {
+                    
+                    loggingBuilder.SetMinimumLevel(builder.Level());
                     if (builder.Filename() == null)
                     {
-                        loggingBuilder
-                        .SetMinimumLevel(builder.Level()).AddSimpleConsole(options =>
+                        loggingBuilder.AddSimpleConsole(options =>
                         {
                             options.IncludeScopes = true;
                             options.SingleLine = true;
