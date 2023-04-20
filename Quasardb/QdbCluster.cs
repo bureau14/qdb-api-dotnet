@@ -112,7 +112,7 @@ namespace Quasardb
         public unsafe string GetLastError()
         {
             qdb_error error;
-            qdb_sized_string* message;
+            qdb_sized_string* message = (qdb_sized_string*)IntPtr.Zero;
             var ec = qdb_api.qdb_get_last_error(_handle, out error, out message);
             QdbExceptionThrower.ThrowIfNeeded(ec);
             var msg = message->ToString();

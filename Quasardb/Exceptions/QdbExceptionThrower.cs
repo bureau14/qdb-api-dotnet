@@ -29,7 +29,7 @@ namespace Quasardb.Exceptions
                 case qdb_err_severity.unrecoverable:
                     {
                         qdb_error err;
-                        qdb_sized_string* message;
+                        qdb_sized_string* message = (qdb_sized_string*)IntPtr.Zero;
                         var ec = qdb_api.qdb_get_last_error(handle, out err, out message);
                         ThrowIfNeeded(ec);
                         var msg = $"{error}: {message->ToString()}.";
