@@ -61,8 +61,8 @@ namespace Quasardb.Query
             var error = qdb_api.qdb_query_continuous(_handle, query, (qdb_query_continuous_mode)mode, refresh_rate_ms, _internal_callback, IntPtr.Zero, out _cont_handle);
             if (error != qdb_error.qdb_e_ok)
             {
-                qdb_sized_string* error_message;
                 qdb_error err;
+                qdb_sized_string* error_message = (qdb_sized_string*)IntPtr.Zero;
                 var ec = qdb_api.qdb_get_last_error(_handle, out err, out error_message);
                 QdbExceptionThrower.ThrowIfNeeded(ec);
                 var msg = error_message->ToString();
