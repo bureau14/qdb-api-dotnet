@@ -109,12 +109,15 @@ namespace Quasardb
         /// Gets the last API error description.
         /// <returns>A message describing the error occurred during the last operation.</returns>
         /// </summary>
-        public string GetLastError()
+        public unsafe string GetLastError()
         {
             qdb_error error;
-            qdb_sized_string message;
-            qdb_api.qdb_get_last_error(_handle, out error, out message);
-            return message.ToString();
+            qdb_sized_string* message;
+            var ec = qdb_api.qdb_get_last_error(_handle, out error, out message);
+            QdbExceptionThrower.ThrowIfNeeded(ec);
+            var msg = message->ToString();
+            qdb_api.qdb_release(_handle, (IntPtr)message);
+            return msg;
         }
 
         /// <summary>
