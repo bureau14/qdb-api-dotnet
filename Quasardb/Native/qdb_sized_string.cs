@@ -24,6 +24,7 @@ namespace Quasardb.Native
         public override string ToString()
         {
             if (length.ToUInt64() == 0UL) return string.Empty;
+            if (length.ToUInt64() > int.MaxValue) throw new ArgumentException($"String is too long {length}");
             // Allocates a managed String, copies a specified number of characters from an unmanaged ANSI or UTF-8 string into it,
             // and widens each character to UTF-16.
             return Marshal.PtrToStringAnsi(new IntPtr(data), (int)length);

@@ -51,7 +51,7 @@ namespace Quasardb.Query
         }
 
         // TODO(vianney): convert refresh_rate_ms to Interval?
-        internal QdbContinuousQuery(qdb_handle handle, string query, Mode mode, int refresh_rate_ms, Func<QdbQueryResult, int> callback) : base(IntPtr.Zero, true)
+        internal unsafe QdbContinuousQuery(qdb_handle handle, string query, Mode mode, int refresh_rate_ms, Func<QdbQueryResult, int> callback) : base(IntPtr.Zero, true)
         {
             _handle = handle;
             // We need to create an internal reference in order to keep the callbacks alive.
@@ -59,13 +59,7 @@ namespace Quasardb.Query
             _internal_callback = internal_query_callback;
 
             var error = qdb_api.qdb_query_continuous(_handle, query, (qdb_query_continuous_mode)mode, refresh_rate_ms, _internal_callback, IntPtr.Zero, out _cont_handle);
-            if (error != qdb_error.qdb_e_ok)
-            {
-                qdb_sized_string error_message;
-                qdb_error err;
-                qdb_api.qdb_get_last_error(_handle, out err, out error_message);
-                throw new QdbQueryException((string)error_message ?? qdb_api.qdb_error(error));
-            }
+            QdbExceptionThrower.ThrowIfNeededWithMsg(_handle, error);
         }
 
         /// <inheritdoc />
