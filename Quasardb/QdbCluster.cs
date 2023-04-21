@@ -114,7 +114,11 @@ namespace Quasardb
             qdb_error error;
             qdb_sized_string* message = (qdb_sized_string*)IntPtr.Zero;
             var ec = qdb_api.qdb_get_last_error(_handle, out error, out message);
-            QdbExceptionThrower.ThrowIfNeeded(ec);
+            if (ec != qdb_error.qdb_e_ok)
+            {
+                return qdb_api.qdb_error(ec);
+            }
+
             var msg = message->ToString();
             qdb_api.qdb_release(_handle, (IntPtr)message);
             return msg;
