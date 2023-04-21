@@ -1,4 +1,5 @@
 ﻿using Quasardb.Native;
+using System;
 
 namespace Quasardb.Exceptions
 {
@@ -17,7 +18,7 @@ namespace Quasardb.Exceptions
             }
         }
 
-        public static void ThrowIfNeededWithMsg(qdb_handle handle, qdb_error error, string alias = null, string column = null)
+        public static unsafe void ThrowIfNeededWithMsg(qdb_handle handle, qdb_error error, string alias = null, string column = null)
         {
             var severity = (qdb_err_severity)((uint)error & (uint)qdb_err_severity.mask);
 
@@ -28,9 +29,11 @@ namespace Quasardb.Exceptions
                 case qdb_err_severity.unrecoverable:
                     {
                         qdb_error err;
-                        qdb_sized_string message;
-                        qdb_api.qdb_get_last_error(handle, out err, out message);
-                        var msg = $"{error}: {message.ToString()}.";
+                        qdb_sized_string* message = (qdb_sized_string*)IntPtr.Zero;
+                        var ec = qdb_api.qdb_get_last_error(handle, out err, out message);
+                        ThrowIfNeeded(ec);
+                        var msg = $"{error}: {message->ToString()}.";
+                        qdb_api.qdb_release(handle, (IntPtr)message);
                         throw new QdbException(msg);
                 }
             }
