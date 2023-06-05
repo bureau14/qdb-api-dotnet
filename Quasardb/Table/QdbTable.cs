@@ -357,7 +357,7 @@ namespace Quasardb.TimeSeries
                 Handle, Alias,
                 (ulong)(shardSize.TotalMilliseconds *
                         (double)qdb_duration.qdb_d_millisecond),
-                columns.Buffer, columns.Count);
+                columns.Buffer, columns.Count, 0);
             QdbExceptionThrower.ThrowIfNeeded(err, alias: Alias);
         }
 

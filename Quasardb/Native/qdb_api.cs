@@ -444,7 +444,8 @@ namespace Quasardb.Native
             [In][MarshalAs(ALIAS_TYPE)] string alias,
             [In] qdb_uint_t shard_size,
             [In] qdb_ts_column_info_ex[] columns,
-            [In] qdb_size_t column_count);
+            [In] qdb_size_t column_count,
+            [In] qdb_time_t ttl);
 
         [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
         internal static extern qdb_error qdb_ts_insert_columns(
