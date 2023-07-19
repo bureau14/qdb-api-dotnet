@@ -46,6 +46,12 @@ namespace Quasardb.Tests.Cluster
                 Assert.AreEqual("integer.put", traces[0].name);
                 
                 var labels = trace.measures.Select(m => m.label).ToArray();
+
+                // XXX(leon): general observation: these tests can be more resilient
+                //            by checking the presence of each of these labels, rather
+                //            than strict 100% equality. That way, if small changes to
+                //            the logic are made (e.g. a new label is added), the tests
+                //            don't fail.
                 CollectionAssert.AreEqual(new string[]{
                     "received",
                     "deserialization_starts",
@@ -55,8 +61,6 @@ namespace Quasardb.Tests.Cluster
                     "deserialization_starts",
                     "deserialization_ends",
                     "processing_starts",
-                    "entry_trimming_starts",
-                    "entry_trimming_ends",
                     "content_writing_starts",
                     "content_writing_ends",
                     "entry_writing_starts",
