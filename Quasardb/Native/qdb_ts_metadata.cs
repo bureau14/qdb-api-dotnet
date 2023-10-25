@@ -10,7 +10,7 @@ namespace Quasardb.Native
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     internal unsafe struct qdb_ts_metadata
     {
-        internal qdb_ts_column_info_ex* columns;
+        internal qdb_ts_column_info_ex_return* columns;
         internal qdb_size_t column_count;
         internal qdb_duration shard_size;
         internal qdb_duration ttl;

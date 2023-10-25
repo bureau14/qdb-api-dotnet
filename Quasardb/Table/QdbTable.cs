@@ -345,15 +345,14 @@ namespace Quasardb.TimeSeries
         {
             var count = Helpers.GetCountOrDefault(columnDefinitions);
             var columns = new InteropableList<qdb_ts_column_info_ex>(count);
-            var pins = new List<GCHandle>(128);
 
             foreach (var def in columnDefinitions)
             {
                 columns.Add(new qdb_ts_column_info_ex
                 {
-                    name = ExpWriter.ExpWriterHelper.convert_string(def.Name, ref pins),
+                    name = def.Name,
                     type = def.Type,
-                    symtable = ExpWriter.ExpWriterHelper.convert_string(def.Symtable, ref pins)
+                    symtable = def.Symtable
                 });
             }
 
@@ -384,15 +383,14 @@ namespace Quasardb.TimeSeries
         {
             var count = Helpers.GetCountOrDefault(columnDefinitions);
             var columns = new InteropableList<qdb_ts_column_info_ex>(count);
-            var pins = new List<GCHandle>(128);
 
             foreach (var def in columnDefinitions)
             {
                 columns.Add(new qdb_ts_column_info_ex
                 {
-                    name = ExpWriter.ExpWriterHelper.convert_string(def.Name, ref pins),
+                    name = def.Name,
                     type = def.Type,
-                    symtable = ExpWriter.ExpWriterHelper.convert_string(def.Symtable, ref pins)
+                    symtable = def.Symtable
                 });
             }
 

@@ -17,7 +17,7 @@ namespace Quasardb.Native
     [StructLayout(LayoutKind.Sequential)]
     internal struct qdb_ts_aggregated_column_info
     {
-        internal qdb_ts_column_info_ex info;
+        internal qdb_ts_column_info_ex_return info;
         internal qdb_ts_aggregation_type aggregation;
         internal qdb_size_t index;
     }
