@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
+using System.Runtime.InteropServices;
 using Quasardb.Exceptions;
 using Quasardb.Native;
 using Quasardb.TimeSeries.Reader;
@@ -264,15 +266,16 @@ namespace Quasardb.TimeSeries
         /// <summary>
         /// Returns the shard size of a table.
         /// </summary>
-        public TimeSpan ShardSize
+        public unsafe TimeSpan ShardSize
         {
             get
             {
-                ulong shardSize = 0;
-                var err = qdb_api.qdb_ts_shard_size(
-                    Handle, Alias,
-                    out shardSize);
+                qdb_ts_metadata* metadata;
+                var err = qdb_api.qdb_ts_get_metadata(Handle, Alias, out metadata);
                 QdbExceptionThrower.ThrowIfNeeded(err, alias: Alias);
+                qdb_duration shardSize = metadata->shard_size;
+
+                qdb_api.qdb_release(Handle, new IntPtr(metadata));
                 return TimeSpan.FromMilliseconds((double)shardSize);
             }
         }
@@ -347,9 +350,9 @@ namespace Quasardb.TimeSeries
             {
                 columns.Add(new qdb_ts_column_info_ex
                 {
-                    name     = def.Name,
-                    type     = def.Type,
-                    symtable = def.Symtable,
+                    name = def.Name,
+                    type = def.Type,
+                    symtable = def.Symtable
                 });
             }
 
@@ -385,9 +388,9 @@ namespace Quasardb.TimeSeries
             {
                 columns.Add(new qdb_ts_column_info_ex
                 {
-                    name     = def.Name,
-                    type     = def.Type,
-                    symtable = def.Symtable,
+                    name = def.Name,
+                    type = def.Type,
+                    symtable = def.Symtable
                 });
             }
 

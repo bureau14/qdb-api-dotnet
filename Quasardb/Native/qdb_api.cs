@@ -476,10 +476,10 @@ namespace Quasardb.Native
             [Out] out size_t column_count);
 
         [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
-        internal static extern qdb_error qdb_ts_shard_size(
+        internal static extern qdb_error qdb_ts_get_metadata(
             [In] qdb_handle handle,
             [In][MarshalAs(ALIAS_TYPE)] string alias,
-            [Out] out qdb_uint_t shard_size);
+            [Out] out qdb_ts_metadata* metadata);
 
         [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
         internal static extern qdb_error qdb_ts_blob_insert(
