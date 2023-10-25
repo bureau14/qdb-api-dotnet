@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
+using System.Runtime.InteropServices;
 using Quasardb.Exceptions;
 using Quasardb.Native;
 using Quasardb.TimeSeries.Reader;
@@ -343,14 +345,15 @@ namespace Quasardb.TimeSeries
         {
             var count = Helpers.GetCountOrDefault(columnDefinitions);
             var columns = new InteropableList<qdb_ts_column_info_ex>(count);
+            var pins = new List<GCHandle>(128);
 
             foreach (var def in columnDefinitions)
             {
                 columns.Add(new qdb_ts_column_info_ex
                 {
-                    name = def.Name,
+                    name = ExpWriter.ExpWriterHelper.convert_string(def.Name, ref pins),
                     type = def.Type,
-                    symtable = def.Symtable,
+                    symtable = ExpWriter.ExpWriterHelper.convert_string(def.Symtable, ref pins)
                 });
             }
 
@@ -381,14 +384,15 @@ namespace Quasardb.TimeSeries
         {
             var count = Helpers.GetCountOrDefault(columnDefinitions);
             var columns = new InteropableList<qdb_ts_column_info_ex>(count);
+            var pins = new List<GCHandle>(128);
 
             foreach (var def in columnDefinitions)
             {
                 columns.Add(new qdb_ts_column_info_ex
                 {
-                    name = def.Name,
+                    name = ExpWriter.ExpWriterHelper.convert_string(def.Name, ref pins),
                     type = def.Type,
-                    symtable = def.Symtable,
+                    symtable = ExpWriter.ExpWriterHelper.convert_string(def.Symtable, ref pins)
                 });
             }
 
