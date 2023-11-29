@@ -100,7 +100,7 @@
       <runner id="RUNNER_307" name="Create NuGet package" type="jb.nuget.pack">
         <parameters>
           <param name="nuget.pack.as.artifact" value="true" />
-          <param name="nuget.pack.commandline" value="-NoCompositeExcludes" />
+          <param name="nuget.pack.commandline" value="-NoDefaultExcludes" />
           <param name="nuget.pack.output.clean" value="true" />
           <param name="nuget.pack.output.directory" value="nuget-pack-out" />
           <param name="nuget.pack.project.dir" value="as_is" />
@@ -153,4 +153,3 @@
     <cleanup />
   </settings>
 </build-type>
-
