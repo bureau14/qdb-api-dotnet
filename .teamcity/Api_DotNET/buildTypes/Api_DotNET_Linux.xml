@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2021.1/project-config.xsd">
+  <name>Linux</name>
+  <description />
+  <settings ref="Api_DotNET_Build">
+    <parameters>
+      <param name="dotnet.framework" value=".NETCoreApp,Version=v5.0" />
+      <param name="dotnet.version" value="net5.0" />
+      <param name="platform" value="linux-64bit-core2" />
+    </parameters>
+    <build-runners />
+    <vcs-settings />
+    <requirements>
+      <equals id="RQ_1" name="teamcity.agent.jvm.os.name" value="Linux" />
+      <equals id="RQ_2" name="teamcity.agent.jvm.os.arch" value="amd64" />
+    </requirements>
+    <build-triggers />
+    <artifact-dependencies>
+      <dependency id="ARTIFACT_DEPENDENCY_1" sourceBuildTypeId="Quasardb_Artifacts_Release_Linux_X8664Core2_Composite" cleanDestination="false">
+        <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
+        <artifact sourcePath="*-c-api.tar.gz!**/*=&gt;qdb&#xD;&#xA;*-server.tar.gz!bin/*=&gt;qdb/bin&#xD;&#xA;*-utils.*!bin/*=&gt;qdb/bin&#xD;&#xA;&#xD;&#xA;*-linux-64bit-core2-c-api.tar.gz!lib/*=&gt;Quasardb/linux" />
+      </dependency>
+      <dependency id="ARTIFACT_DEPENDENCY_2" sourceBuildTypeId="Quasardb_Artifacts_Release_Windows_X8664Core2" cleanDestination="false">
+        <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
+        <artifact sourcePath="*-windows-64bit-core2-c-api.zip!bin/*=&gt;Quasardb/win64" />
+      </dependency>
+      <dependency id="ARTIFACT_DEPENDENCY_3" sourceBuildTypeId="Quasardb_Artifacts_Release_Windows_X86Haswell" cleanDestination="false">
+        <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
+        <artifact sourcePath="*-windows-32bit-c-api.zip!bin/*=&gt;Quasardb/win32" />
+      </dependency>
+    </artifact-dependencies>
+    <dependencies>
+      <depend-on sourceBuildTypeId="Quasardb_Artifacts_Release_Windows_X8664Core2">
+        <options>
+          <option name="take-started-build-with-same-revisions" value="true" />
+          <option name="take-successful-builds-only" value="true" />
+        </options>
+      </depend-on>
+      <depend-on sourceBuildTypeId="Quasardb_Artifacts_Release_Windows_X86Haswell">
+        <options>
+          <option name="take-started-build-with-same-revisions" value="true" />
+          <option name="take-successful-builds-only" value="true" />
+        </options>
+      </depend-on>
+      <depend-on sourceBuildTypeId="Quasardb_Artifacts_Release_Linux_X8664Core2_Composite">
+        <options>
+          <option name="take-started-build-with-same-revisions" value="true" />
+          <option name="take-successful-builds-only" value="true" />
+        </options>
+      </depend-on>
+    </dependencies>
+    <cleanup />
+  </settings>
+</build-type>
+
