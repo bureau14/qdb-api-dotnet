@@ -100,7 +100,7 @@
       <runner id="RUNNER_307" name="Create NuGet package" type="jb.nuget.pack">
         <parameters>
           <param name="nuget.pack.as.artifact" value="true" />
-          <param name="nuget.pack.commandline" value="-NoDefaultExcludes" />
+          <param name="nuget.pack.commandline" value="-NoCompositeExcludes" />
           <param name="nuget.pack.output.clean" value="true" />
           <param name="nuget.pack.output.directory" value="nuget-pack-out" />
           <param name="nuget.pack.project.dir" value="as_is" />
@@ -117,7 +117,7 @@
     </requirements>
     <build-triggers />
     <artifact-dependencies>
-      <dependency id="ARTIFACT_DEPENDENCY_1" sourceBuildTypeId="Quasardb_Artifacts_Release_Linux_X8664Core2_Default" cleanDestination="false">
+      <dependency id="ARTIFACT_DEPENDENCY_1" sourceBuildTypeId="Quasardb_Artifacts_Release_Linux_X8664Core2_Composite" cleanDestination="false">
         <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
         <artifact sourcePath="*-linux-64bit-core2-c-api.tar.gz!lib/*=&gt;Quasardb/linux" />
       </dependency>
@@ -131,7 +131,7 @@
       </dependency>
     </artifact-dependencies>
     <dependencies>
-      <depend-on sourceBuildTypeId="Quasardb_Artifacts_Release_Linux_X8664Core2_Default">
+      <depend-on sourceBuildTypeId="Quasardb_Artifacts_Release_Linux_X8664Core2_Composite">
         <options>
           <option name="take-started-build-with-same-revisions" value="true" />
           <option name="take-successful-builds-only" value="true" />
