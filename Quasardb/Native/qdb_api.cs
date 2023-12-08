@@ -214,6 +214,11 @@ namespace Quasardb.Native
             [In] qdb_int_t thread_count);
 
         [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_option_set_stabilization_max_wait(
+            [In] qdb_handle handle,
+            [In] int wait_ms);
+
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
         internal static extern qdb_error qdb_option_cluster_tidy_memory(
             [In] qdb_handle handle);
 
