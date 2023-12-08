@@ -145,6 +145,12 @@ namespace Quasardb.Tests.Cluster
         }
 
         [TestMethod]
+        public void SetStabilizationMaxWait_Works()
+        {
+            QdbTestCluster.Instance.SetStabilizationMaxWait(5 * 60 * 1000);
+        }
+
+        [TestMethod]
         public void ClusterTidyMemory_Works()
         {
             QdbTestCluster.Instance.ClusterTidyMemory();

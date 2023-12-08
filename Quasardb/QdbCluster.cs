@@ -203,6 +203,16 @@ namespace Quasardb
         }
 
         /// <summary>
+        /// Sets the maximum stabilization waiting time for operations.
+        /// </summary>
+        /// <param name="wait_ms">The maximum amount of time to wait, in ms.</param>
+        public void SetStabilizationMaxWait(int wait_ms)
+        {
+            var error = qdb_api.qdb_option_set_stabilization_max_wait(_handle, wait_ms);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+        }
+
+        /// <summary>
         /// Returns a <see cref="QdbBlob" /> attached to the specified alias.
         /// </summary>
         /// <remarks>No operation is performed in the database.</remarks>
