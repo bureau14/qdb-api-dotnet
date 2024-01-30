@@ -123,7 +123,7 @@ namespace Quasardb.Tests.Tutorial
 
             // query-start
             // Execute the query
-            var r = c.Query("SELECT SUM(volume) FROM stocks");
+            var r = c.Query("SELECT SUM(volume) FROM " + alias);
 
             // The rows are exposed as a regular .Net Enumerable
             var columnNames = r.ColumnNames;
