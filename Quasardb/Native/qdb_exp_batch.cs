@@ -121,6 +121,9 @@ namespace Quasardb.Native
 
         //! Size of \ref where_duplicate array.
         internal qdb_size_t where_duplicate_count;
+
+        //! Specifies how to work with not existing tables and columns.
+        internal qdb_exp_batch_creation_mode creation;
     };
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
@@ -134,6 +137,10 @@ namespace Quasardb.Native
 
         //! The column symbol table (for symbol columns).
         internal qdb_sized_string symtable;
+
+        //! The column name.
+        //! Used by lazy creation mode
+        internal qdb_sized_string name;
     };
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
@@ -142,8 +149,18 @@ namespace Quasardb.Native
         //! The table shard size.
         internal long shard_size;
 
+        //! The table TTL, if incorrect push will fail
+        //! Set it to qdb_ttl_disabled if there's no TTL
+        //! Set to qdb_d_max_duration if you don't know the value:
+        //!   with the cost of an extra remote lookup
+        internal long ttl;
+
         //! The table columns. The column count is given by the associated \ref
         //! qdb_exp_batch_push_table_t, at data.column_count.
         internal qdb_exp_batch_push_column_schema* columns;
+
+        //! The number of columns in schema.
+        //! Valid only for lazy creation mode qdb_exp_batch_creation_mode_t
+        internal qdb_size_t column_count;
     };
 }
