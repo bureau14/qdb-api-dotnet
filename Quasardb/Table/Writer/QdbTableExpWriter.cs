@@ -744,6 +744,8 @@ namespace Quasardb.TimeSeries.ExpWriter
                 table.where_duplicate = (qdb_sized_string*)convert_array<qdb_sized_string>(dep_columns, ref pins);
                 table.where_duplicate_count = (qdb_size_t)deduplicated_columns.Length;
             }
+            table.creation = qdb_exp_batch_creation_mode.create_tables;
+
             return table;
         }
     }
