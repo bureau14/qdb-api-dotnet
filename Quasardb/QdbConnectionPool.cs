@@ -15,7 +15,7 @@ namespace Quasardb
         bool _is_secured = false;
         int _parallelism_count = -1;
         int _max_in_buffer_size = -1;
-        QdbCompression _level = QdbCompression.Fast;
+        QdbCompression _level = QdbCompression.None;
 
         /// <summary>
         /// Initialize a factory to create connections.
