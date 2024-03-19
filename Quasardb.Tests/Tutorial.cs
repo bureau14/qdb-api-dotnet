@@ -20,8 +20,9 @@ namespace Quasardb.Tests.Tutorial
             Assert.IsNotNull(c);
 
             // create-table-start
-            // First we acquire a reference to a table (which may or may not yet exist)
-            var ts = c.Table("stocks");
+            // First we acquire a reference to a table which not exist
+            var alias = RandomGenerator.CreateUniqueAlias(); //= "stocks";
+            var ts = c.Table(alias);
 
             // Initialize our column definitions
             var columns = new QdbColumnDefinition[]{
@@ -122,7 +123,7 @@ namespace Quasardb.Tests.Tutorial
 
             // query-start
             // Execute the query
-            var r = c.Query("SELECT SUM(volume) FROM stocks");
+            var r = c.Query("SELECT SUM(volume) FROM " + alias);
 
             // The rows are exposed as a regular .Net Enumerable
             var columnNames = r.ColumnNames;
@@ -133,8 +134,8 @@ namespace Quasardb.Tests.Tutorial
             }
 
             // Since we only expect one row, we also access it like this:
-            var aggregateResult = rows[0]["sum(volume)"].Int64Value;
-            Console.Write($"sum(volume): {aggregateResult}");
+            var aggregateResult = rows[0]["SUM(volume)"].Int64Value;
+            Console.Write($"SUM(volume): {aggregateResult}");
             // query-end
 
             // drop-table-start
