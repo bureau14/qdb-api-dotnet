@@ -44,7 +44,7 @@ namespace Quasardb.Tests.Cluster
 
                 var trace = traces[0];
                 Assert.AreEqual("integer.put", traces[0].name);
-                
+
                 var labels = trace.measures.Select(m => m.label).ToArray();
 
                 // XXX(leon): general observation: these tests can be more resilient
@@ -61,6 +61,8 @@ namespace Quasardb.Tests.Cluster
                     "deserialization_starts",
                     "deserialization_ends",
                     "processing_starts",
+                    "entry_trimming_starts",
+                    "entry_trimming_ends",
                     "content_writing_starts",
                     "content_writing_ends",
                     "entry_writing_starts",
@@ -69,7 +71,7 @@ namespace Quasardb.Tests.Cluster
                     "serialization_ends",
                     "processing_ends"
                 }, labels);
-                
+
                 traces = _cluster.GetPerformanceTraces();
                 Assert.AreEqual(0, traces.Length);
             }
@@ -110,7 +112,7 @@ namespace Quasardb.Tests.Cluster
                     "content_reading_ends",
                     "processing_ends"
                 }, labels);
-                
+
                 traces = _cluster.GetPerformanceTraces();
                 Assert.AreEqual(0, traces.Length);
             }

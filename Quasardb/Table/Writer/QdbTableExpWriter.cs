@@ -18,7 +18,7 @@ namespace Quasardb.TimeSeries.ExpWriter
     public sealed class QdbTableExpWriterOptions
     {
         private qdb_exp_batch_push_mode _mode = qdb_exp_batch_push_mode.transactional;
-        private qdb_exp_batch_push_options _option = qdb_exp_batch_push_options.standard;
+        private qdb_exp_batch_deduplication_mode _deduplication_mode = qdb_exp_batch_deduplication_mode.disabled;
         private QdbTimeInterval _interval = QdbTimeInterval.Nothing;
         private Dictionary<string, string[]> _duplicate_columns_per_table;
 
@@ -76,7 +76,20 @@ namespace Quasardb.TimeSeries.ExpWriter
             {
                 _duplicate_columns_per_table = columns_per_table;
             }
-            _option = qdb_exp_batch_push_options.unique;
+            _deduplication_mode = qdb_exp_batch_deduplication_mode.drop;
+            return this;
+        }
+
+        /// <summary>
+        /// Removes duplicate found while inserting.
+        /// </summary>
+        public QdbTableExpWriterOptions RemoveDuplicateUpsert(Dictionary<string, string[]> columns_per_table = null)
+        {
+            if (columns_per_table != null)
+            {
+                _duplicate_columns_per_table = columns_per_table;
+            }
+            _deduplication_mode = qdb_exp_batch_deduplication_mode.upsert;
             return this;
         }
 
@@ -85,9 +98,9 @@ namespace Quasardb.TimeSeries.ExpWriter
             return _mode;
         }
 
-        internal qdb_exp_batch_push_options Option()
+        internal qdb_exp_batch_deduplication_mode DeduplicationMode()
         {
-            return _option;
+            return _deduplication_mode;
         }
 
         internal QdbTimeInterval Interval()
@@ -727,7 +740,7 @@ namespace Quasardb.TimeSeries.ExpWriter
                 table.truncate_ranges = null;
                 table.truncate_range_count = (qdb_size_t)0;
             }
-            table.options = options.Option();
+            table.deduplication_mode = options.DeduplicationMode();
             var deduplicated_columns = options.DeduplicateColumns(name);
             if (deduplicated_columns == null)
             {
