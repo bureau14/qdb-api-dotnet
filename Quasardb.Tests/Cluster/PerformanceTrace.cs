@@ -9,7 +9,7 @@ namespace Quasardb.Tests.Cluster
     public class PerformanceTrace
     {
         private readonly QdbCluster _cluster = QdbTestCluster.Instance;
-        private readonly string[] to_check = {
+        private readonly string[] _to_check = {
                     "received",
                     "deserialization_starts",
                     "deserialization_ends",
@@ -71,7 +71,7 @@ namespace Quasardb.Tests.Cluster
                 var labels = trace.measures.Select(m => m.label).ToArray();
 
                 StringCollection toCheck = new StringCollection();
-                toCheck.AddRange(to_check);
+                toCheck.AddRange(_to_check);
                 foreach (var l in labels)
                 {
                     CollectionAssert.Contains(toCheck, l);
@@ -106,7 +106,7 @@ namespace Quasardb.Tests.Cluster
                 var labels = trace.measures.Select(m => m.label).ToArray();
 
                 StringCollection toCheck = new StringCollection();
-                toCheck.AddRange(to_check);
+                toCheck.AddRange(_to_check);
                 foreach (var l in labels)
                 {
                     CollectionAssert.Contains(toCheck, l);
