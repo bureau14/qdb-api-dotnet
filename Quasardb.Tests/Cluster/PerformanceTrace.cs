@@ -22,6 +22,8 @@ namespace Quasardb.Tests.Cluster
                     "entry_trimming_ends",
                     "content_writing_starts",
                     "content_writing_ends",
+                    "content_reading_starts",
+                    "content_reading_ends",
                     "entry_writing_starts",
                     "entry_writing_ends",
                     "serialization_starts",
