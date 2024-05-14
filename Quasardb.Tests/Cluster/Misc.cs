@@ -173,7 +173,7 @@ namespace Quasardb.Tests.Cluster
         public void GetTimezone_Works()
         {
             var tz = QdbTestCluster.Instance.GetTimezone();
-            StringAssert.Equals(tz, "UTC");
+            Assert.AreEqual("Etc/UTC", tz);
         }
 
         [TestMethod]
@@ -182,7 +182,7 @@ namespace Quasardb.Tests.Cluster
             string tz_set = "Europe/Paris";
             QdbTestCluster.Instance.SetTimezone(tz_set);
             var tz = QdbTestCluster.Instance.GetTimezone();
-            StringAssert.Equals(tz_set, tz);
+            Assert.AreEqual(tz_set, tz);
         }
 
         [TestMethod]

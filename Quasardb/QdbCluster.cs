@@ -10,6 +10,7 @@ using Quasardb.TimeSeries.Writer;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace Quasardb
 {
@@ -224,7 +225,7 @@ namespace Quasardb
             var error = qdb_api.qdb_option_get_timezone(_handle, out timezone);
             QdbExceptionThrower.ThrowIfNeeded(error);
 
-            var msg = timezone.ToString();
+            var msg = System.Runtime.InteropServices.Marshal.PtrToStringAnsi(timezone);
             qdb_api.qdb_release(_handle, timezone);
             return msg;
         }
