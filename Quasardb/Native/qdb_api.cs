@@ -699,6 +699,14 @@ namespace Quasardb.Native
             [In] qdb_exp_batch_push_table_schema* schemas,
             [In] long table_count);
 
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV), SuppressUnmanagedCodeSecurity]
+        internal static extern qdb_error qdb_exp_batch_push_with_options(
+            [In] qdb_handle handle,
+            [In] qdb_exp_batch_options* options,
+            [In] qdb_exp_batch_push_table* tables,
+            [In] qdb_exp_batch_push_table_schema* schemas,
+            [In] long table_count);
+
         #region Functions specific to local tables
 
         [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]

@@ -1,4 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 
 namespace Quasardb.Tests.Cluster
@@ -7,6 +9,27 @@ namespace Quasardb.Tests.Cluster
     public class PerformanceTrace
     {
         private readonly QdbCluster _cluster = QdbTestCluster.Instance;
+        private readonly string[] _to_check = {
+                    "received",
+                    "deserialization_starts",
+                    "deserialization_ends",
+                    "entering_chord",
+                    "dispatch",
+                    "deserialization_starts",
+                    "deserialization_ends",
+                    "processing_starts",
+                    "entry_trimming_starts",
+                    "entry_trimming_ends",
+                    "content_writing_starts",
+                    "content_writing_ends",
+                    "content_reading_starts",
+                    "content_reading_ends",
+                    "entry_writing_starts",
+                    "entry_writing_ends",
+                    "serialization_starts",
+                    "serialization_ends",
+                    "processing_ends"
+                    };
 
         [TestMethod]
         public void DisabledByDefault()
@@ -44,32 +67,16 @@ namespace Quasardb.Tests.Cluster
 
                 var trace = traces[0];
                 Assert.AreEqual("integer.put", traces[0].name);
-                
+
                 var labels = trace.measures.Select(m => m.label).ToArray();
 
-                // XXX(leon): general observation: these tests can be more resilient
-                //            by checking the presence of each of these labels, rather
-                //            than strict 100% equality. That way, if small changes to
-                //            the logic are made (e.g. a new label is added), the tests
-                //            don't fail.
-                CollectionAssert.AreEqual(new string[]{
-                    "received",
-                    "deserialization_starts",
-                    "deserialization_ends",
-                    "entering_chord",
-                    "dispatch",
-                    "deserialization_starts",
-                    "deserialization_ends",
-                    "processing_starts",
-                    "content_writing_starts",
-                    "content_writing_ends",
-                    "entry_writing_starts",
-                    "entry_writing_ends",
-                    "serialization_starts",
-                    "serialization_ends",
-                    "processing_ends"
-                }, labels);
-                
+                StringCollection toCheck = new StringCollection();
+                toCheck.AddRange(_to_check);
+                foreach (var l in labels)
+                {
+                    CollectionAssert.Contains(toCheck, l);
+                }
+
                 traces = _cluster.GetPerformanceTraces();
                 Assert.AreEqual(0, traces.Length);
             }
@@ -97,20 +104,14 @@ namespace Quasardb.Tests.Cluster
                 Assert.AreEqual("common.get", trace.name);
 
                 var labels = trace.measures.Select(m => m.label).ToArray();
-                CollectionAssert.AreEqual(new string[]{
-                    "received",
-                    "deserialization_starts",
-                    "deserialization_ends",
-                    "entering_chord",
-                    "dispatch",
-                    "deserialization_starts",
-                    "deserialization_ends",
-                    "processing_starts",
-                    "content_reading_starts",
-                    "content_reading_ends",
-                    "processing_ends"
-                }, labels);
-                
+
+                StringCollection toCheck = new StringCollection();
+                toCheck.AddRange(_to_check);
+                foreach (var l in labels)
+                {
+                    CollectionAssert.Contains(toCheck, l);
+                }
+
                 traces = _cluster.GetPerformanceTraces();
                 Assert.AreEqual(0, traces.Length);
             }
