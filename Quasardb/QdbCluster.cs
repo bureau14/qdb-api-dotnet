@@ -203,6 +203,33 @@ namespace Quasardb
         }
 
         /// <summary>
+        /// Sets the timezone of the client
+        /// by the current handle.
+        /// </summary>
+        /// <param name="timezone">The timezone to set.</param>
+        public void SetTimezone(string timezone)
+        {
+            var error = qdb_api.qdb_option_set_timezone(_handle, timezone);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+        }
+
+        /// <summary>
+        /// Gets the timezone of the client
+        /// by the current handle.
+        /// <returns>A timezone name.</returns>
+        /// </summary>
+        public unsafe string GetTimezone()
+        {
+            IntPtr timezone = IntPtr.Zero;
+            var error = qdb_api.qdb_option_get_timezone(_handle, out timezone);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+
+            var msg = timezone.ToString();
+            qdb_api.qdb_release(_handle, timezone);
+            return msg;
+        }
+
+        /// <summary>
         /// Sets the maximum stabilization waiting time for operations.
         /// </summary>
         /// <param name="wait_ms">The maximum amount of time to wait, in ms.</param>
