@@ -48,8 +48,6 @@ namespace Quasardb.Native
 
         //! Flags that apply to every push in the call
         internal qdb_uint_t push_flags;
-
-        internal qdb_exp_batch_push_column_data data;
     };
 
     [StructLayout(LayoutKind.Explicit)]
