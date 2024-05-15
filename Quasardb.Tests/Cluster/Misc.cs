@@ -170,6 +170,22 @@ namespace Quasardb.Tests.Cluster
         }
 
         [TestMethod]
+        public void GetTimezone_Works()
+        {
+            var tz = QdbTestCluster.Instance.GetTimezone();
+            Assert.AreEqual("Etc/UTC", tz);
+        }
+
+        [TestMethod]
+        public void SetTimezone_Works()
+        {
+            string tz_set = "Europe/Paris";
+            QdbTestCluster.Instance.SetTimezone(tz_set);
+            var tz = QdbTestCluster.Instance.GetTimezone();
+            Assert.AreEqual(tz_set, tz);
+        }
+
+        [TestMethod]
         public void GetClientMemoryInfo_Works()
         {
             var info = QdbTestCluster.Instance.GetClientMemoryInfo();
