@@ -237,6 +237,16 @@ namespace Quasardb.Native
         internal static extern qdb_error qdb_option_client_tidy_memory(
             [In] qdb_handle handle);
 
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_option_set_timezone(
+            [In] qdb_handle handle,
+            [In] string timezone);
+
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_option_get_timezone(
+            [In] qdb_handle handle,
+            [Out] out pointer_t timezone);
+
         #endregion
 
         #region Functions common to all entries
@@ -695,6 +705,14 @@ namespace Quasardb.Native
         internal static extern qdb_error qdb_exp_batch_push(
             [In] qdb_handle handle,
             [In] qdb_exp_batch_push_mode mode,
+            [In] qdb_exp_batch_push_table* tables,
+            [In] qdb_exp_batch_push_table_schema* schemas,
+            [In] long table_count);
+
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV), SuppressUnmanagedCodeSecurity]
+        internal static extern qdb_error qdb_exp_batch_push_with_options(
+            [In] qdb_handle handle,
+            [In] qdb_exp_batch_options* options,
             [In] qdb_exp_batch_push_table* tables,
             [In] qdb_exp_batch_push_table_schema* schemas,
             [In] long table_count);

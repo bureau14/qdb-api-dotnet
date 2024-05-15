@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 // ReSharper disable InconsistentNaming
 
 using qdb_int_t = System.Int64;
+using qdb_uint_t = System.UInt64;
 using qdb_size_t = System.UIntPtr;
 
 namespace Quasardb.Native
@@ -17,12 +18,37 @@ namespace Quasardb.Native
         async = 3,
     }
 
-    // this matches qdb_exp_batch_push_options_t enum type in ts.h
-    internal enum qdb_exp_batch_push_options : int
+    // this matches qdb_exp_batch_push_flags_t enum type in ts.h
+    internal enum qdb_exp_batch_push_flags : int
     {
-        standard = 0,
-        unique = 1,
+        none = 0,
+        write_through = 1,
+        asynchronous_client_push = 2,
     }
+
+    // this matches qdb_exp_batch_deduplication_mode_t enum type in ts.h
+    internal enum qdb_exp_batch_deduplication_mode : int
+    {
+        disabled = 0,
+        drop = 1,
+        upsert = 2,
+    }
+
+    internal enum qdb_exp_batch_creation_mode : int
+    {
+        dont_create = 0,
+        create_tables = 1,
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal unsafe struct qdb_exp_batch_options
+    {
+        //! Specifies how the data is pushed.
+        internal qdb_exp_batch_push_mode mode;
+
+        //! Flags that apply to every push in the call
+        internal qdb_uint_t push_flags;
+    };
 
     [StructLayout(LayoutKind.Explicit)]
     internal unsafe struct qdb_exp_batch_push_column_data
@@ -86,7 +112,7 @@ namespace Quasardb.Native
 
         //! Field used for controlling work with duplicated data.
         //! Except of \ref qdb_exp_batch_push_truncate mode.
-        internal qdb_exp_batch_push_options options;
+        internal qdb_exp_batch_deduplication_mode deduplication_mode;
 
         //! Field used by \ref qdb_exp_batch_option_unique. The column names
         //! array for duplication check. If NULL then all columns will be

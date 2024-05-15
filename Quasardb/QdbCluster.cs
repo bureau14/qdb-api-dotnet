@@ -10,6 +10,7 @@ using Quasardb.TimeSeries.Writer;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace Quasardb
 {
@@ -200,6 +201,33 @@ namespace Quasardb
         {
             var error = qdb_api.qdb_option_set_client_max_parallelism(_handle, thread_count);
             QdbExceptionThrower.ThrowIfNeeded(error);
+        }
+
+        /// <summary>
+        /// Sets the timezone of the client
+        /// by the current handle.
+        /// </summary>
+        /// <param name="timezone">The timezone to set.</param>
+        public void SetTimezone(string timezone)
+        {
+            var error = qdb_api.qdb_option_set_timezone(_handle, timezone);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+        }
+
+        /// <summary>
+        /// Gets the timezone of the client
+        /// by the current handle.
+        /// <returns>A timezone name.</returns>
+        /// </summary>
+        public unsafe string GetTimezone()
+        {
+            IntPtr timezone = IntPtr.Zero;
+            var error = qdb_api.qdb_option_get_timezone(_handle, out timezone);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+
+            var msg = System.Runtime.InteropServices.Marshal.PtrToStringAnsi(timezone);
+            qdb_api.qdb_release(_handle, timezone);
+            return msg;
         }
 
         /// <summary>
