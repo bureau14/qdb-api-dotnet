@@ -8,7 +8,7 @@ using Quasardb.Native;
 
 using qdb_size_t = System.UIntPtr;
 using pointer_t = System.IntPtr;
-using System.Diagnostics;
+using qdb_char_ptr = System.IntPtr;
 
 namespace Quasardb.TimeSeries.ExpWriter
 {
@@ -388,6 +388,15 @@ namespace Quasardb.TimeSeries.ExpWriter
             return ExpWriterHelper.convert_string((string)val, ref _pins);
         }
 
+        internal IntPtr get_char_array(object val)
+        {
+            if (val == null)
+            {
+                return IntPtr.Zero;
+            }
+            return ExpWriterHelper.convert_char_array((string)val, ref _pins);
+        }
+
         /// <summary>
         /// Set the timestamp column.
         /// </summary>
@@ -660,6 +669,13 @@ namespace Quasardb.TimeSeries.ExpWriter
             return ss;
         }
 
+        internal static IntPtr convert_char_array(string str, ref List<GCHandle> pins)
+        {
+            var content = System.Text.Encoding.UTF8.GetBytes(str);
+            GCHandle pin = GCHandle.Alloc(content, GCHandleType.Pinned);
+            return pin.AddrOfPinnedObject();
+        }
+
         internal unsafe static IntPtr convert_array<T>(T[] array, ref List<GCHandle> pins)
         {
             GCHandle pin = GCHandle.Alloc(array, GCHandleType.Pinned);
@@ -670,7 +686,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         static qdb_exp_batch_push_column convert_column(qdb_ts_column_info_ex info, QdbColumnData data, ref List<GCHandle> pins)
         {
             var column = new qdb_exp_batch_push_column();
-            column.name = convert_string(info.name, ref pins);
+            column.name = convert_char_array(info.name, ref pins);
             column.data_type = (info.type == qdb_ts_column_type.qdb_ts_column_symbol ? qdb_ts_column_type.qdb_ts_column_string : info.type);
             column.data = new qdb_exp_batch_push_column_data();
             switch (info.type)
@@ -725,7 +741,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         internal static qdb_exp_batch_push_table convert_table(string name, QdbTableExpWriterOptions options, qdb_timespec[] timestamps, qdb_ts_column_info_ex[] infos, QdbColumnData[] data, ref List<GCHandle> pins)
         {
             qdb_exp_batch_push_table table;
-            table.name = convert_string(name, ref pins);
+            table.name = convert_char_array(name, ref pins);
             table.data = convert_data(infos, timestamps, data, ref pins);
 
             if (options.Mode() == qdb_exp_batch_push_mode.truncate)
@@ -744,17 +760,17 @@ namespace Quasardb.TimeSeries.ExpWriter
             var deduplicated_columns = options.DeduplicateColumns(name);
             if (deduplicated_columns == null)
             {
-                table.where_duplicate = null;
+                table.where_duplicate = IntPtr.Zero;
                 table.where_duplicate_count = (qdb_size_t)0;
             }
             else
             {
-                qdb_sized_string[] dep_columns = new qdb_sized_string[deduplicated_columns.Length];
+                IntPtr[] dep_columns = new IntPtr[deduplicated_columns.Length];
                 for (int i = 0; i < deduplicated_columns.Length; i++)
                 {
-                    dep_columns[i] = convert_string(deduplicated_columns[i], ref pins);
+                    dep_columns[i] = convert_char_array(deduplicated_columns[i], ref pins);
                 }
-                table.where_duplicate = (qdb_sized_string*)convert_array<qdb_sized_string>(dep_columns, ref pins);
+                table.where_duplicate = convert_array<qdb_char_ptr>(dep_columns, ref pins);
                 table.where_duplicate_count = (qdb_size_t)deduplicated_columns.Length;
             }
             table.creation = qdb_exp_batch_creation_mode.create_tables;

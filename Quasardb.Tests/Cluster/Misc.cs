@@ -140,12 +140,6 @@ namespace Quasardb.Tests.Cluster
         }
 
         [TestMethod]
-        public void SetMaxParallelism_Works()
-        {
-            QdbTestCluster.Instance.SetMaxParallelism(8);
-        }
-
-        [TestMethod]
         public void SetStabilizationMaxWait_Works()
         {
             QdbTestCluster.Instance.SetStabilizationMaxWait(5 * 60 * 1000);

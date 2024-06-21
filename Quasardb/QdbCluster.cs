@@ -60,6 +60,30 @@ namespace Quasardb
         }
 
         /// <summary>
+        /// Connects to a quasardb database.
+        /// </summary>
+        /// <param name="uri">The URI of the quasardb database.</param>
+        /// <param name="parallelismCount">Number of threads. 
+        /// Value of 0 means the number of logical processor cores divided by two.</param>
+        public QdbCluster(string uri, int parallelismCount) : base(IntPtr.Zero, true)
+        {
+            if (uri == null) throw new ArgumentNullException(nameof(uri));
+
+            _handle = qdb_api.qdb_open_tcp();
+
+            qdb_error error;
+            if (parallelismCount != -1)
+            {
+                error = qdb_api.qdb_option_set_client_max_parallelism(_handle, parallelismCount);
+                QdbExceptionThrower.ThrowIfNeeded(error);
+            }
+
+            error = qdb_api.qdb_connect(_handle, uri);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+            _factory = new QdbEntryFactory(_handle);
+        }
+
+        /// <summary>
         /// Connects securely to a quasardb database.
         /// </summary>
         /// <param name="uri">The URI of the quasardb database.</param>
@@ -77,6 +101,39 @@ namespace Quasardb
 
             error = qdb_api.qdb_option_set_user_credentials(_handle, userName, userPrivateKey);
             QdbExceptionThrower.ThrowIfNeeded(error);
+
+            error = qdb_api.qdb_connect(_handle, uri);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+
+            _factory = new QdbEntryFactory(_handle);
+        }
+
+        /// <summary>
+        /// Connects securely to a quasardb database.
+        /// </summary>
+        /// <param name="uri">The URI of the quasardb database.</param>
+        /// <param name="clusterPublicKey">Cluster public key used for database authentication.</param>
+        /// <param name="userName">User name used for connection.</param>
+        /// <param name="userPrivateKey">User private key used for connection.</param>
+        /// <param name="parallelismCount">Number of threads. 
+        /// Value of 0 means the number of logical processor cores divided by two.</param>
+        public QdbCluster(string uri, string clusterPublicKey, string userName, string userPrivateKey, int parallelismCount) : base(IntPtr.Zero, true)
+        {
+            if (uri == null) throw new ArgumentNullException(nameof(uri));
+
+            _handle = qdb_api.qdb_open_tcp();
+
+            var error = qdb_api.qdb_option_set_cluster_public_key(_handle, clusterPublicKey);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+
+            error = qdb_api.qdb_option_set_user_credentials(_handle, userName, userPrivateKey);
+            QdbExceptionThrower.ThrowIfNeeded(error);
+
+            if (parallelismCount != -1)
+            {
+                error = qdb_api.qdb_option_set_client_max_parallelism(_handle, parallelismCount);
+                QdbExceptionThrower.ThrowIfNeeded(error);
+            }
 
             error = qdb_api.qdb_connect(_handle, uri);
             QdbExceptionThrower.ThrowIfNeeded(error);
@@ -189,17 +246,6 @@ namespace Quasardb
         public void ClientTidyMemory()
         {
             var error = qdb_api.qdb_option_client_tidy_memory(_handle);
-            QdbExceptionThrower.ThrowIfNeeded(error);
-        }
-
-        /// <summary>
-        /// Sets the number of threads that will be used to execute queries
-        /// by the current handle.
-        /// </summary>
-        /// <param name="thread_count">Number of threads. Value of 0 means the number of logical processor cores.</param>
-        public void SetMaxParallelism(int thread_count)
-        {
-            var error = qdb_api.qdb_option_set_client_max_parallelism(_handle, thread_count);
             QdbExceptionThrower.ThrowIfNeeded(error);
         }
 

@@ -6,6 +6,8 @@ using System.Runtime.InteropServices;
 using qdb_int_t = System.Int64;
 using qdb_uint_t = System.UInt64;
 using qdb_size_t = System.UIntPtr;
+using qdb_char_ptr = System.IntPtr;
+using qdb_char_ptr_ptr = System.IntPtr;
 
 namespace Quasardb.Native
 {
@@ -69,7 +71,7 @@ namespace Quasardb.Native
     internal unsafe struct qdb_exp_batch_push_column
     {
         //! The column name in UTF-8 format.
-        internal qdb_sized_string name;
+        internal qdb_char_ptr name;
 
         //! The column data type, how it's stored client-side.
         internal qdb_ts_column_type data_type;
@@ -97,7 +99,7 @@ namespace Quasardb.Native
     internal unsafe struct qdb_exp_batch_push_table
     {
         //! The table name in UTF-8 format.
-        internal qdb_sized_string name;
+        internal qdb_char_ptr name;
 
         //! The table data.
         internal qdb_exp_batch_push_table_data data;
@@ -117,7 +119,7 @@ namespace Quasardb.Native
         //! Field used by \ref qdb_exp_batch_option_unique. The column names
         //! array for duplication check. If NULL then all columns will be
         //! checked.
-        internal qdb_sized_string* where_duplicate;
+        internal qdb_char_ptr_ptr where_duplicate;
 
         //! Size of \ref where_duplicate array.
         internal qdb_size_t where_duplicate_count;
@@ -136,11 +138,11 @@ namespace Quasardb.Native
         internal long index;
 
         //! The column symbol table (for symbol columns).
-        internal qdb_sized_string symtable;
+        internal qdb_char_ptr symtable;
 
         //! The column name.
         //! Used by lazy creation mode
-        internal qdb_sized_string name;
+        internal qdb_char_ptr name;
     };
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
