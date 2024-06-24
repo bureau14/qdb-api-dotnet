@@ -70,11 +70,7 @@ namespace Quasardb
 
         internal QdbCluster Create()
         {
-            var c = _is_secured ? new QdbCluster(_uri, _cluster_public_key, _username, _user_private_key) : new QdbCluster(_uri);
-            if (_parallelism_count != -1)
-            {
-                c.SetMaxParallelism(_parallelism_count);
-            }
+            var c = _is_secured ? new QdbCluster(_uri, _cluster_public_key, _username, _user_private_key, _parallelism_count) : new QdbCluster(_uri, _parallelism_count);
             if (_max_in_buffer_size != -1)
             {
                 c.SetMaxInBufferSize(_max_in_buffer_size);
