@@ -276,7 +276,7 @@ namespace Quasardb.TimeSeries.ExpWriter
                 && !(type == qdb_ts_column_type.qdb_ts_column_string && column_type == qdb_ts_column_type.qdb_ts_column_symbol)
                 && !(type == qdb_ts_column_type.qdb_ts_column_symbol && column_type == qdb_ts_column_type.qdb_ts_column_string))
             {
-                throw new QdbException(String.Format("Invalid type for column {0} of table {1}. Expected {2} got {3}", _tables[table_index], _table_data[table_index].columns[column_index].name.ToString(), ExpWriterHelper.column_type_name(column_type), ExpWriterHelper.column_type_name(type)));
+                throw new QdbException(String.Format("Invalid type for column {0} of table {1}. Expected {2} got {3}", _table_data[table_index].columns[column_index].name.ToString(), _tables[table_index], ExpWriterHelper.column_type_name(column_type), ExpWriterHelper.column_type_name(type)));
             }
         }
 
@@ -304,7 +304,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             }
             if (!has_valid_type)
             {
-                throw new QdbException(String.Format("Invalid type for column {0} of table {1}. Expected {2}", _tables[table_index], _table_data[table_index].columns[column_index].name.ToString(), ExpWriterHelper.column_type_name(column_type)));
+                throw new QdbException(String.Format("Invalid type for column {0} of table {1}. Expected {2}", _table_data[table_index].columns[column_index].name.ToString(), _tables[table_index], ExpWriterHelper.column_type_name(column_type)));
             }
         }
 
