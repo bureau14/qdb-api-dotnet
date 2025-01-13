@@ -113,7 +113,7 @@
     </build-runners>
     <vcs-settings />
     <requirements>
-      <equals id="RQ_1" name="teamcity.agent.jvm.os.name" value="Windows Server 2019" />
+      <contains id="RQ_1" name="teamcity.agent.jvm.os.name" value="Windows" />
     </requirements>
     <build-triggers />
     <artifact-dependencies>
@@ -153,3 +153,4 @@
     <cleanup />
   </settings>
 </build-type>
+
