@@ -8,6 +8,8 @@ namespace Quasardb.Tests.Cluster
     [TestClass]
     public class PerformanceTrace
     {
+        public TestContext TestContext { get; set; }
+
         private readonly QdbCluster _cluster = QdbTestCluster.Instance;
         private readonly string[] _to_check = {
                     "received",
@@ -74,6 +76,7 @@ namespace Quasardb.Tests.Cluster
                 toCheck.AddRange(_to_check);
                 foreach (var l in labels)
                 {
+                    TestContext.WriteLine("check: '" + l + "'");
                     CollectionAssert.Contains(toCheck, l, l);
                 }
 
@@ -109,6 +112,7 @@ namespace Quasardb.Tests.Cluster
                 toCheck.AddRange(_to_check);
                 foreach (var l in labels)
                 {
+                    TestContext.WriteLine("check: '" + l + "'");
                     CollectionAssert.Contains(toCheck, l, l);
                 }
 
