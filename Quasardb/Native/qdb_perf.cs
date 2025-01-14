@@ -43,6 +43,9 @@ namespace Quasardb.Native
         ts_bucket_updating_ends = 29,
         affix_search_starts = 30,
         affix_search_ends = 31,
+        entry_reading_starts = 44,
+        entry_reading_ends = 45,
+
         unknown = 255
     }
     
