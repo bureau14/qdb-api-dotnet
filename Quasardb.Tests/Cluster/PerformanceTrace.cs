@@ -74,9 +74,9 @@ namespace Quasardb.Tests.Cluster
 
                 StringCollection toCheck = new StringCollection();
                 toCheck.AddRange(_to_check);
+                TestContext.WriteLine("lables: [" + string.Join(", ", labels) + "]");
                 foreach (var l in labels)
                 {
-                    TestContext.WriteLine("check: '" + l + "'");
                     CollectionAssert.Contains(toCheck, l, l);
                 }
 
@@ -110,10 +110,10 @@ namespace Quasardb.Tests.Cluster
 
                 StringCollection toCheck = new StringCollection();
                 toCheck.AddRange(_to_check);
+                TestContext.WriteLine("lables: [" + string.Join(", ", labels) + "]");
                 foreach (var l in labels)
                 {
-                    TestContext.WriteLine("check: '" + l + "'");
-                    //CollectionAssert.Contains(toCheck, l, l);
+                    CollectionAssert.Contains(toCheck, l, l);
                 }
 
                 traces = _cluster.GetPerformanceTraces();
