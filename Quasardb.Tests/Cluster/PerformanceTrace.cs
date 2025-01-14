@@ -74,7 +74,7 @@ namespace Quasardb.Tests.Cluster
                 toCheck.AddRange(_to_check);
                 foreach (var l in labels)
                 {
-                    CollectionAssert.Contains(toCheck, l);
+                    CollectionAssert.Contains(toCheck, l, l);
                 }
 
                 traces = _cluster.GetPerformanceTraces();
@@ -109,7 +109,7 @@ namespace Quasardb.Tests.Cluster
                 toCheck.AddRange(_to_check);
                 foreach (var l in labels)
                 {
-                    CollectionAssert.Contains(toCheck, l);
+                    CollectionAssert.Contains(toCheck, l, l);
                 }
 
                 traces = _cluster.GetPerformanceTraces();
