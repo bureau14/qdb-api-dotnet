@@ -8,6 +8,8 @@ namespace Quasardb.Tests.Cluster
     [TestClass]
     public class PerformanceTrace
     {
+        public TestContext TestContext { get; set; }
+
         private readonly QdbCluster _cluster = QdbTestCluster.Instance;
         private readonly string[] _to_check = {
                     "received",
@@ -26,6 +28,8 @@ namespace Quasardb.Tests.Cluster
                     "content_reading_ends",
                     "entry_writing_starts",
                     "entry_writing_ends",
+                    "entry_reading_starts",
+                    "entry_reading_ends",
                     "serialization_starts",
                     "serialization_ends",
                     "processing_ends"
@@ -72,9 +76,10 @@ namespace Quasardb.Tests.Cluster
 
                 StringCollection toCheck = new StringCollection();
                 toCheck.AddRange(_to_check);
+                TestContext.WriteLine("lables: [" + string.Join(", ", labels) + "]");
                 foreach (var l in labels)
                 {
-                    CollectionAssert.Contains(toCheck, l);
+                    CollectionAssert.Contains(toCheck, l, l);
                 }
 
                 traces = _cluster.GetPerformanceTraces();
@@ -107,9 +112,10 @@ namespace Quasardb.Tests.Cluster
 
                 StringCollection toCheck = new StringCollection();
                 toCheck.AddRange(_to_check);
+                TestContext.WriteLine("lables: [" + string.Join(", ", labels) + "]");
                 foreach (var l in labels)
                 {
-                    CollectionAssert.Contains(toCheck, l);
+                    CollectionAssert.Contains(toCheck, l, l);
                 }
 
                 traces = _cluster.GetPerformanceTraces();
