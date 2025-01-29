@@ -123,7 +123,7 @@
       </dependency>
       <dependency id="ARTIFACT_DEPENDENCY_2" sourceBuildTypeId="Quasardb_Artifacts_Release_Windows_X8664Core2" cleanDestination="false">
         <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
-        <artifact sourcePath="*-c-api.zip!**/*=&gt;qdb&#xA;*-server.zip!bin/*=&gt;qdb/bin&#xA;*-utils.zip!bin/*=&gt;qdb/bin&#xA;&#xA;*-windows-64bit-core2-c-api.zip!bin/*=&gt;Quasardb/win64" />
+        <artifact sourcePath="*-c-api.tar.zst!**/*=&gt;qdb&#xD;&#xA;*-server.tar.zst!bin/*=&gt;qdb/bin&#xD;&#xA;*-utils.tar.zst!bin/*=&gt;qdb/bin&#xD;&#xA;&#xD;&#xA;*-windows-64bit-core2-c-api.tar.zst!bin/*=&gt;Quasardb/win64" />
       </dependency>
       <dependency id="ARTIFACT_DEPENDENCY_3" sourceBuildTypeId="Quasardb_Artifacts_Release_Windows_X86Haswell" cleanDestination="false">
         <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
