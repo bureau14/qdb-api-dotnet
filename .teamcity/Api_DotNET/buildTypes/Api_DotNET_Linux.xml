@@ -26,7 +26,7 @@
       </dependency>
       <dependency id="ARTIFACT_DEPENDENCY_3" sourceBuildTypeId="Quasardb_Artifacts_Release_Windows_X86Haswell" cleanDestination="false">
         <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
-        <artifact sourcePath="*-windows-32bit-c-api.zip!bin/*=&gt;Quasardb/win32" />
+        <artifact sourcePath="*-windows-32bit-c-api.tar.zst!bin/*=&gt;Quasardb/win32" />
       </dependency>
     </artifact-dependencies>
     <dependencies>
