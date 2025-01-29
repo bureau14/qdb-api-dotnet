@@ -18,7 +18,7 @@
     <artifact-dependencies>
       <dependency id="ARTIFACT_DEPENDENCY_1" sourceBuildTypeId="Quasardb_Artifacts_Release_Linux_X8664Core2_Composite" cleanDestination="false">
         <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
-        <artifact sourcePath="*-c-api.tar.gz!**/*=&gt;qdb&#xD;&#xA;*-server.tar.gz!bin/*=&gt;qdb/bin&#xD;&#xA;*-utils.*!bin/*=&gt;qdb/bin&#xD;&#xA;&#xD;&#xA;*-linux-64bit-core2-c-api.tar.gz!lib/*=&gt;Quasardb/linux" />
+        <artifact sourcePath="*-c-api.tar.zst!**/*=&gt;qdb&#xD;&#xA;*-server.tar.zst!bin/*=&gt;qdb/bin&#xD;&#xA;*-utils.*!bin/*=&gt;qdb/bin&#xD;&#xA;&#xD;&#xA;*-linux-64bit-core2-c-api.tar.zst!lib/*=&gt;Quasardb/linux" />
       </dependency>
       <dependency id="ARTIFACT_DEPENDENCY_2" sourceBuildTypeId="Quasardb_Artifacts_Release_Windows_X8664Core2" cleanDestination="false">
         <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
