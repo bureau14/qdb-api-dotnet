@@ -5,7 +5,7 @@
   <settings ref="Api_DotNET_Build">
     <parameters>
       <param name="dotnet.framework" value=".NETCoreApp,Version=v8.0" />
-      <param name="dotnet.version" value="net5.0" />
+      <param name="dotnet.version" value="net8.0" />
       <param name="platform" value="linux-64bit-core2" />
     </parameters>
     <build-runners />
