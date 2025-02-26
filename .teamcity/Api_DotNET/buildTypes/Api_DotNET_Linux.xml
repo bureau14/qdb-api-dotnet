@@ -13,6 +13,7 @@
     <requirements>
       <equals id="RQ_1" name="teamcity.agent.jvm.os.name" value="Linux" />
       <equals id="RQ_2" name="teamcity.agent.jvm.os.arch" value="amd64" />
+      <exists id="RQ_193" name="DotNetCoreRuntime8.0_Path" />
     </requirements>
     <build-triggers />
     <artifact-dependencies>
