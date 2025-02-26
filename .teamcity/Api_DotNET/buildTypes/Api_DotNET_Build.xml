@@ -114,9 +114,7 @@
     <vcs-settings>
       <vcs-entry-ref root-id="QdbApiDotnet" />
     </vcs-settings>
-    <requirements>
-      <contains id="RQ_180" name="teamcity.agent.name" value="default" />
-    </requirements>
+    <requirements />
     <build-triggers />
     <build-extensions>
       <extension id="perfmon" type="perfmon">
