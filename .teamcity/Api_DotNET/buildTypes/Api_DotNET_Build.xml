@@ -122,9 +122,8 @@
       </extension>
       <extension id="swabra" type="swabra">
         <parameters>
-          <param name="swabra.enabled" value="swabra.before.build" />
+          <param name="swabra.enabled" value="swabra.after.build" />
           <param name="swabra.processes" value="kill" />
-          <param name="swabra.strict" value="true" />
         </parameters>
       </extension>
     </build-extensions>
