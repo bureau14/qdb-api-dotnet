@@ -9,12 +9,15 @@ using qdb_size_t = System.UIntPtr;
 using qdb_time_t = System.Int64;
 using qdb_uint_t = System.UInt64;
 using size_t = System.UIntPtr;
+using qdb_char_ptr_ptr = System.IntPtr;
 
 // ReSharper disable BuiltInTypeReferenceStyle
 // ReSharper disable InconsistentNaming
 
 namespace Quasardb.Native
 {
+    using qdb_bulk_reader_table_data = qdb_exp_batch_push_table_data;
+
     [SuppressUnmanagedCodeSecurity]
     internal static unsafe class qdb_api
     {
@@ -731,7 +734,7 @@ namespace Quasardb.Native
         [DllImport(LIB_NAME, CallingConvention = CALL_CONV), SuppressUnmanagedCodeSecurity]
         internal static extern qdb_error qdb_bulk_reader_get_data(
             [In] qdb_reader_handle reader,
-            [Out] out qdb_bulk_reader_table_data* data,
+            [Out] out qdb_bulk_reader_table_data** data,
             [In] qdb_size_t rows_to_get);
 
         #endregion

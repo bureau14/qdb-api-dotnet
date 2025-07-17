@@ -8,6 +8,7 @@ using Quasardb.Native;
 
 using qdb_char_ptr_ptr = System.IntPtr;
 using qdb_size_t = System.UIntPtr;
+using qdb_bulk_reader_table_data = Quasardb.Native.qdb_exp_batch_push_table_data;
 
 namespace Quasardb.TimeSeries.Reader
 {
@@ -79,7 +80,7 @@ namespace Quasardb.TimeSeries.Reader
             try
             {
                 qdb_bulk_reader_table* tblPtr = null;
-                qdb_size_t tblCount = 0;
+                qdb_size_t tblCount = (qdb_size_t)0;
                 if (tables != null)
                 {
                     tblCount = (qdb_size_t)tables.Length;
@@ -97,7 +98,7 @@ namespace Quasardb.TimeSeries.Reader
                 }
 
                 qdb_char_ptr_ptr colPtr = IntPtr.Zero;
-                qdb_size_t colCount = 0;
+                qdb_size_t colCount = (qdb_size_t)0;
                 if (columns != null)
                 {
                     colCount = (qdb_size_t)columns.Length;
@@ -128,7 +129,7 @@ namespace Quasardb.TimeSeries.Reader
 
         public override bool IsInvalid => _handle == null || _handle.IsInvalid;
 
-        public QdbBulkReaderResult GetData(ulong rowsToGet = 0)
+        public QdbBulkReaderResult GetData(long rowsToGet = 0)
         {
             qdb_bulk_reader_table_data* data;
             var err = qdb_api.qdb_bulk_reader_get_data(_reader, &data, (qdb_size_t)rowsToGet);
