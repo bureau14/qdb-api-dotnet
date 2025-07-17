@@ -7,6 +7,7 @@ using Quasardb.TimeSeries;
 using Quasardb.Query;
 using Quasardb.TimeSeries.ExpWriter;
 using Quasardb.TimeSeries.Writer;
+using Quasardb.TimeSeries.Reader;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
@@ -466,6 +467,14 @@ namespace Quasardb
         public QdbTableExpWriter ExpWriter(QdbTableExpWriterOptions options)
         {
             return new QdbTableExpWriter(_handle, new string[] {}, options);
+        }
+
+        /// <summary>
+        /// Returns a bulk reader associated with the specified tables and columns.
+        /// </summary>
+        public QdbBulkReader BulkReader(string[] columns, QdbBulkReaderTable[] tables)
+        {
+            return new QdbBulkReader(_handle, columns, tables);
         }
 
         /// <summary>
