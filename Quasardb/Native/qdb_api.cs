@@ -720,7 +720,7 @@ namespace Quasardb.Native
             [In] qdb_exp_batch_push_table* tables,
             [In] qdb_exp_batch_push_table_schema* schemas,
             [In] long table_count);
-///*
+
         #region Functions specific to bulk reader
 
         [DllImport(LIB_NAME, CallingConvention = CALL_CONV), SuppressUnmanagedCodeSecurity]
@@ -735,11 +735,11 @@ namespace Quasardb.Native
         [DllImport(LIB_NAME, CallingConvention = CALL_CONV), SuppressUnmanagedCodeSecurity]
         internal static extern qdb_error qdb_bulk_reader_get_data(
             [In] qdb_reader_handle reader,
-            [Out] out qdb_bulk_reader_table_data** data,
+            [Out] out qdb_bulk_reader_table_data* data,
             [In] qdb_size_t rows_to_get);
 
         #endregion
-//*/
+
         #region Functions specific to local tables
 
         [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]

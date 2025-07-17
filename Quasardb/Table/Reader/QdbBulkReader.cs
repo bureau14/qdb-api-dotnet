@@ -132,7 +132,7 @@ namespace Quasardb.TimeSeries.Reader
         public QdbBulkReaderResult GetData(long rowsToGet = 0)
         {
             qdb_bulk_reader_table_data* data;
-            var err = qdb_api.qdb_bulk_reader_get_data(_reader, out &data, (qdb_size_t)rowsToGet);
+            var err = qdb_api.qdb_bulk_reader_get_data(_reader, out data, (qdb_size_t)rowsToGet);
             if (err == qdb_error.qdb_e_iterator_end)
                 return null;
             QdbExceptionThrower.ThrowIfNeededWithMsg(_handle, err);
