@@ -10,6 +10,7 @@ using qdb_time_t = System.Int64;
 using qdb_uint_t = System.UInt64;
 using size_t = System.UIntPtr;
 using qdb_char_ptr_ptr = System.IntPtr;
+using qdb_reader_handle = System.IntPtr;
 
 // ReSharper disable BuiltInTypeReferenceStyle
 // ReSharper disable InconsistentNaming
