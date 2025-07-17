@@ -295,9 +295,14 @@ namespace Quasardb.Tests.Table
             }
             try
             {
-                object instance = FormatterServices.GetUninitializedObject(type);
-                GCHandle.Alloc(instance, GCHandleType.Pinned).Free();
-                return true;
+                object instance = type.IsValueType ? Activator.CreateInstance(type) : null;
+                if (instance != null)
+                {
+                    GCHandle.Alloc(instance, GCHandleType.Pinned).Free();
+                    return true;
+                }
+                // For reference types, we cannot guarantee blittability this way, so return false.
+                return false;
             }
             catch
             {
