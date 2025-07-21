@@ -164,7 +164,7 @@ namespace Quasardb.TimeSeries.Reader
             }
         }
 
-        private unsafe IEnumerable<QdbBulkRow> ExtractRows(QdbBulkReaderResult result)
+        private IEnumerable<QdbBulkRow> ExtractRows(QdbBulkReaderResult result)
         {
             var row = new QdbBulkRow(result.DataPtr);
             long count = result.RowCount;
