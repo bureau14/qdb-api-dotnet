@@ -47,7 +47,8 @@ namespace Quasardb.TimeSeries.Reader
 
         public override bool IsInvalid => _handle == null || _handle.IsInvalid;
 
-        internal qdb_bulk_reader_table_data* Data => _data;
+        internal unsafe qdb_bulk_reader_table_data* Data => _data;
+        internal long RowCount => (long)Data->row_count;
     }
 
     internal static class BulkReaderHelper
@@ -68,7 +69,7 @@ namespace Quasardb.TimeSeries.Reader
         }
     }
 
-    public unsafe sealed class QdbBulkReader : SafeHandle
+    public unsafe sealed class QdbBulkReader : SafeHandle, IEnumerable<QdbBulkRow>
     {
         readonly qdb_handle _handle;
         readonly IntPtr _reader;
@@ -138,5 +139,55 @@ namespace Quasardb.TimeSeries.Reader
             QdbExceptionThrower.ThrowIfNeededWithMsg(_handle, err);
             return new QdbBulkReaderResult(_handle, data);
         }
+
+        public IEnumerator<QdbBulkRow> GetEnumerator()
+        {
+            foreach (var row in GetRowsSafe()) yield return row;
+        }
+
+        private IEnumerable<QdbBulkRow> GetRowsSafe()
+        {
+            foreach (var result in EnumerateResults())
+            {
+                using (result)
+                {
+                    foreach (var row in ExtractRows(result))
+                        yield return row;
+                }
+            }
+        }
+
+        private unsafe List<QdbBulkRow> ExtractRows(QdbBulkReaderResult result)
+        {
+            var rows = new List<QdbBulkRow>();
+
+            long count = (long)result.Data->row_count;
+            for (long i = 0; i < count; ++i)
+            {
+                var row = new QdbBulkRow(result.Data); // here we can use unsafe
+                row.RowIndex = i;
+                rows.Add(row);
+            }
+
+            return rows;
+        }
+        private IEnumerable<QdbBulkReaderResult> EnumerateResults()
+        {
+            QdbBulkReaderResult result = null;
+            try
+            {
+                while ((result = GetData()) != null)
+                {
+                    yield return result;
+                    result = null; // duty on Dispose in GetRowsSafe()
+                }
+            }
+            finally
+            {
+                result?.Dispose();
+            }
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

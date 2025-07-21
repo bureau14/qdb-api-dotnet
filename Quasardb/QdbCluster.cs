@@ -1,17 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Microsoft.Extensions.Logging;
 using Quasardb.Exceptions;
 using Quasardb.Native;
-using Quasardb.TimeSeries;
 using Quasardb.Query;
+using Quasardb.TimeSeries;
 using Quasardb.TimeSeries.ExpWriter;
-using Quasardb.TimeSeries.Writer;
 using Quasardb.TimeSeries.Reader;
+using Quasardb.TimeSeries.Writer;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
-using Microsoft.Extensions.Logging;
 using System.Runtime.InteropServices.ComTypes;
+using System.Text;
 
 namespace Quasardb
 {
