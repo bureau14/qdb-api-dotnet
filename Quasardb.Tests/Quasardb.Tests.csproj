@@ -10,6 +10,7 @@
     <IsTestProject>true</IsTestProject>
     <UseNETCoreGenerator>true</UseNETCoreGenerator>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
