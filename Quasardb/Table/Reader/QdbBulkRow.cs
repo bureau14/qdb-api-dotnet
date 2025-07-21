@@ -15,15 +15,19 @@ namespace Quasardb.TimeSeries.Reader
         readonly string[] _columnNames;
         readonly qdb_exp_batch_push_column* _columns;
 
-        internal QdbBulkRow(qdb_bulk_reader_table_data* data, string[] columnNames, long rowIndex)
+        internal QdbBulkRow(IntPtr data)
         {
-            _data = data;
-            _columns = data->columns;
-            _columnNames = columnNames;
-            RowIndex = rowIndex;
+            var p = (qdb_bulk_reader_table_data*)data;
+            _data = p;
+            _columns = p->columns;
+            _columnNames = new string[(long)p->column_count];
+            for (int i = 0; i < _columnNames.Length; i++)
+            {
+                _columnNames[i] = Marshal.PtrToStringAnsi(_columns[i].name);
+            }
         }
 
-        internal long RowIndex { get; }
+        internal long RowIndex { get; set; }
 
         public DateTime Timestamp
         {

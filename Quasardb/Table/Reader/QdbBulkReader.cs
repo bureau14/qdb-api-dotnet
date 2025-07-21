@@ -48,6 +48,7 @@ namespace Quasardb.TimeSeries.Reader
         public override bool IsInvalid => _handle == null || _handle.IsInvalid;
 
         internal unsafe qdb_bulk_reader_table_data* Data => _data;
+        internal IntPtr DataPtr => (IntPtr)_data;
         internal long RowCount => (long)Data->row_count;
     }
 
@@ -69,7 +70,7 @@ namespace Quasardb.TimeSeries.Reader
         }
     }
 
-    public unsafe sealed class QdbBulkReader : SafeHandle, IEnumerable<QdbBulkRow>
+    public sealed class QdbBulkReader : SafeHandle, IEnumerable<QdbBulkRow>
     {
         readonly qdb_handle _handle;
         readonly IntPtr _reader;
@@ -80,37 +81,40 @@ namespace Quasardb.TimeSeries.Reader
             var pins = new List<GCHandle>();
             try
             {
-                qdb_bulk_reader_table* tblPtr = null;
-                qdb_size_t tblCount = (qdb_size_t)0;
-                if (tables != null)
+                unsafe
                 {
-                    tblCount = (qdb_size_t)tables.Length;
-                    var nativeTables = new qdb_bulk_reader_table[tables.Length];
-                    for (int i = 0; i < tables.Length; i++)
+                    qdb_bulk_reader_table* tblPtr = null;
+                    qdb_size_t tblCount = (qdb_size_t)0;
+                    if (tables != null)
                     {
-                        nativeTables[i].name = BulkReaderHelper.ConvertCharArray(tables[i].Name, ref pins);
-                        var ranges = new qdb_ts_range[tables[i].Ranges.Length];
-                        for (int j = 0; j < ranges.Length; j++)
-                            ranges[j] = tables[i].Ranges[j].ToNative();
-                        nativeTables[i].ranges = (qdb_ts_range*)BulkReaderHelper.ConvertArray(ranges, ref pins);
-                        nativeTables[i].range_count = (qdb_size_t)ranges.Length;
+                        tblCount = (qdb_size_t)tables.Length;
+                        var nativeTables = new qdb_bulk_reader_table[tables.Length];
+                        for (int i = 0; i < tables.Length; i++)
+                        {
+                            nativeTables[i].name = BulkReaderHelper.ConvertCharArray(tables[i].Name, ref pins);
+                            var ranges = new qdb_ts_range[tables[i].Ranges.Length];
+                            for (int j = 0; j < ranges.Length; j++)
+                                ranges[j] = tables[i].Ranges[j].ToNative();
+                            nativeTables[i].ranges = (qdb_ts_range*)BulkReaderHelper.ConvertArray(ranges, ref pins);
+                            nativeTables[i].range_count = (qdb_size_t)ranges.Length;
+                        }
+                        tblPtr = (qdb_bulk_reader_table*)BulkReaderHelper.ConvertArray(nativeTables, ref pins);
                     }
-                    tblPtr = (qdb_bulk_reader_table*)BulkReaderHelper.ConvertArray(nativeTables, ref pins);
-                }
 
-                qdb_char_ptr_ptr colPtr = IntPtr.Zero;
-                qdb_size_t colCount = (qdb_size_t)0;
-                if (columns != null)
-                {
-                    colCount = (qdb_size_t)columns.Length;
-                    IntPtr[] arr = new IntPtr[columns.Length];
-                    for (int i = 0; i < columns.Length; i++)
-                        arr[i] = BulkReaderHelper.ConvertCharArray(columns[i], ref pins);
-                    colPtr = BulkReaderHelper.ConvertArray(arr, ref pins);
-                }
+                    qdb_char_ptr_ptr colPtr = IntPtr.Zero;
+                    qdb_size_t colCount = (qdb_size_t)0;
+                    if (columns != null)
+                    {
+                        colCount = (qdb_size_t)columns.Length;
+                        IntPtr[] arr = new IntPtr[columns.Length];
+                        for (int i = 0; i < columns.Length; i++)
+                            arr[i] = BulkReaderHelper.ConvertCharArray(columns[i], ref pins);
+                        colPtr = BulkReaderHelper.ConvertArray(arr, ref pins);
+                    }
 
-                var err = qdb_api.qdb_bulk_reader_fetch(_handle, colPtr, colCount, tblPtr, tblCount, out _reader);
-                QdbExceptionThrower.ThrowIfNeededWithMsg(_handle, err);
+                    var err = qdb_api.qdb_bulk_reader_fetch(_handle, colPtr, colCount, tblPtr, tblCount, out _reader);
+                    QdbExceptionThrower.ThrowIfNeededWithMsg(_handle, err);
+                }
             }
             finally
             {
@@ -132,12 +136,15 @@ namespace Quasardb.TimeSeries.Reader
 
         public QdbBulkReaderResult GetData(long rowsToGet = 0)
         {
-            qdb_bulk_reader_table_data* data;
-            var err = qdb_api.qdb_bulk_reader_get_data(_reader, out data, (qdb_size_t)rowsToGet);
-            if (err == qdb_error.qdb_e_iterator_end)
-                return null;
-            QdbExceptionThrower.ThrowIfNeededWithMsg(_handle, err);
-            return new QdbBulkReaderResult(_handle, data);
+            unsafe
+            {
+                qdb_bulk_reader_table_data* data;
+                var err = qdb_api.qdb_bulk_reader_get_data(_reader, out data, (qdb_size_t)rowsToGet);
+                if (err == qdb_error.qdb_e_iterator_end)
+                    return null;
+                QdbExceptionThrower.ThrowIfNeededWithMsg(_handle, err);
+                return new QdbBulkReaderResult(_handle, data);
+            }
         }
 
         public IEnumerator<QdbBulkRow> GetEnumerator()
@@ -157,22 +164,15 @@ namespace Quasardb.TimeSeries.Reader
             }
         }
 
-        private unsafe List<QdbBulkRow> ExtractRows(QdbBulkReaderResult result)
+        private unsafe IEnumerable<QdbBulkRow> ExtractRows(QdbBulkReaderResult result)
         {
-            var columns = result.Data->columns;
-            string[] columnNames = new string[(long)result.Data->column_count];
-            for (int i = 0; i < columnNames.Length; i++)
-            {
-                columnNames[i] = Marshal.PtrToStringAnsi(columns[i].name);
-            }
-
-            var rows = new List<QdbBulkRow>();
+            var row = new QdbBulkRow(result.DataPtr);
             long count = result.RowCount;
             for (long i = 0; i < count; ++i)
             {
-                rows.Add(new QdbBulkRow(result.Data, columnNames, i));
+                row.RowIndex = i;
+                yield return row;
             }
-            return rows;
         }
         private IEnumerable<QdbBulkReaderResult> EnumerateResults()
         {
