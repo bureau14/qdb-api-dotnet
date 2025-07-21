@@ -159,16 +159,19 @@ namespace Quasardb.TimeSeries.Reader
 
         private unsafe List<QdbBulkRow> ExtractRows(QdbBulkReaderResult result)
         {
-            var rows = new List<QdbBulkRow>();
-
-            long count = (long)result.Data->row_count;
-            for (long i = 0; i < count; ++i)
+            var columns = result.Data->columns;
+            string[] columnNames = new string[(long)result.Data->column_count];
+            for (int i = 0; i < columnNames.Length; i++)
             {
-                var row = new QdbBulkRow(result.Data); // here we can use unsafe
-                row.RowIndex = i;
-                rows.Add(row);
+                columnNames[i] = Marshal.PtrToStringAnsi(columns[i].name);
             }
 
+            var rows = new List<QdbBulkRow>();
+            long count = result.RowCount;
+            for (long i = 0; i < count; ++i)
+            {
+                rows.Add(new QdbBulkRow(result.Data, columnNames, i));
+            }
             return rows;
         }
         private IEnumerable<QdbBulkReaderResult> EnumerateResults()

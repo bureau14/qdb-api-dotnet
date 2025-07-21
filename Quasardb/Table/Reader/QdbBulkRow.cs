@@ -9,24 +9,21 @@ using qdb_bulk_reader_table_data = Quasardb.Native.qdb_exp_batch_push_table_data
 
 namespace Quasardb.TimeSeries.Reader
 {
-    public unsafe class QdbBulkRow : IEnumerable<QdbBulkCell>
+    public unsafe struct QdbBulkRow : IEnumerable<QdbBulkCell>
     {
         readonly qdb_bulk_reader_table_data* _data;
         readonly string[] _columnNames;
         readonly qdb_exp_batch_push_column* _columns;
 
-        internal QdbBulkRow(qdb_bulk_reader_table_data* data)
+        internal QdbBulkRow(qdb_bulk_reader_table_data* data, string[] columnNames, long rowIndex)
         {
             _data = data;
             _columns = data->columns;
-            _columnNames = new string[(long)data->column_count];
-            for (int i = 0; i < _columnNames.Length; i++)
-            {
-                _columnNames[i] = Marshal.PtrToStringAnsi(_columns[i].name);
-            }
+            _columnNames = columnNames;
+            RowIndex = rowIndex;
         }
 
-        internal long RowIndex { get; set; }
+        internal long RowIndex { get; }
 
         public DateTime Timestamp
         {
