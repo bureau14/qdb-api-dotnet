@@ -97,6 +97,11 @@ namespace Quasardb.TimeSeries.Reader
         readonly IntPtr _reader;
 
         /// <summary>
+        /// Gets or sets the index of the current row.
+        /// </summary>
+        public long rowsToGet { get; set; } = 0;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="QdbBulkReader"/> class.
         /// </summary>
         /// <param name="handle">Native QuasarDB handle.</param>
@@ -184,8 +189,6 @@ namespace Quasardb.TimeSeries.Reader
         /// <inheritdoc />
         public IEnumerator<QdbBulkRow> GetEnumerator()
         {
-            // TODO: Maybe need to manage rowsToGet better?
-            long rowsToGet = 0;
             foreach (var row in GetRowsSafe(rowsToGet)) yield return row;
         }
 

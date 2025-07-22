@@ -123,11 +123,11 @@ namespace Quasardb.Tests.Table
             string[] strings,
             DateTime[] timestamps)
         {
-            var batch = _cluster.ExpWriter(new string[] { ts }, options);
+            var batch = _cluster.ExpWriter([ts], options);
 
             for (int index = 0; index < doubles.Length; index++)
             {
-                batch.Add(ts, timestamps[index], new object[] { blobs[index], doubles[index], int64s[index], strings[index], timestamps[index], strings[index] });
+                batch.Add(ts, timestamps[index], [blobs[index], doubles[index], int64s[index], strings[index], timestamps[index], strings[index]]);
             }
             return batch;
         }
@@ -140,7 +140,7 @@ namespace Quasardb.Tests.Table
             string[] strings,
             DateTime[] timestamps)
         {
-            var batch = _cluster.ExpWriter(new string[] { ts }, options);
+            var batch = _cluster.ExpWriter([ts], options);
 
             batch.SetTimestamps(ts, timestamps.ToList());
             batch.SetColumn(ts, "the_blob", blobs.ToList());
@@ -161,7 +161,7 @@ namespace Quasardb.Tests.Table
             DateTime[] timestamps,
             DateTime?[] timestamps_values)
         {
-            var batch = _cluster.ExpWriter(new string[] { ts }, options);
+            var batch = _cluster.ExpWriter([ts], options);
 
             batch.SetTimestamps(ts, timestamps.ToList());
             batch.SetColumn(ts, "the_blob", blobs.ToList());
@@ -181,11 +181,11 @@ namespace Quasardb.Tests.Table
             string[] strings,
             DateTime[] timestamps)
         {
-            var batch = _cluster.ExpWriter(new string[] { ts }, options);
+            var batch = _cluster.ExpWriter([ts], options);
 
             for (int index = 0; index < doubles.Length; index++)
             {
-                batch.Add(ts, timestamps[index], new object[] { blobs[index], doubles[index], int64s[index], strings[index], timestamps[index], strings[index] });
+                batch.Add(ts, timestamps[index], [blobs[index], doubles[index], int64s[index], strings[index], timestamps[index], strings[index]]);
             }
             return batch;
         }
@@ -391,11 +391,11 @@ namespace Quasardb.Tests.Table
             var strings = new object[5] { null, null, null, "Running 🏃 is faster than swimming 🏊.", null };
             var timestamps = MakeTimestamps(5);
 
-            var batch = _cluster.ExpWriter(new string[] { ts.Alias }, new QdbTableExpWriterOptions().Transactional());
+            var batch = _cluster.ExpWriter([ts.Alias], new QdbTableExpWriterOptions().Transactional());
 
             for (int index = 0; index < doubles.Length; index++)
             {
-                batch.Add(ts.Alias, timestamps[index], new object[] { blobs[index], doubles[index], int64s[index], strings[index], timestamps[index], strings[index] });
+                batch.Add(ts.Alias, timestamps[index], [blobs[index], doubles[index], int64s[index], strings[index], timestamps[index], strings[index]]);
             }
 
             batch.Push();
@@ -430,8 +430,8 @@ namespace Quasardb.Tests.Table
             var blobs = MakeBlobArray(10);
             var timestamps = MakeTimestamps(10);
 
-            var batch = _cluster.ExpWriter(new string[] { ts.Alias }, new QdbTableExpWriterOptions().Transactional());
-            batch.Add("the_wrong_name", timestamps[0], new object[] { });
+            var batch = _cluster.ExpWriter([ts.Alias], new QdbTableExpWriterOptions().Transactional());
+            batch.Add("the_wrong_name", timestamps[0], []);
 
             batch.Push();
         }
@@ -498,7 +498,7 @@ namespace Quasardb.Tests.Table
             // push with remove duplicate on all columns
             {
                 var deduplicate_columns = new Dictionary<string, string[]>();
-                deduplicate_columns.Add(ts.Alias, new string[] { "the_blob", "the_double", "the_int64", "the_ts", "the_symbol" });
+                deduplicate_columns.Add(ts.Alias, ["the_blob", "the_double", "the_int64", "the_ts", "the_symbol"]);
                 var batch = InsertByName(ts.Alias, new QdbTableExpWriterOptions().Transactional().RemoveDuplicate(deduplicate_columns), blobs, doubles, int64s, strings, timestamps);
                 batch.Push();
             }
@@ -533,7 +533,7 @@ namespace Quasardb.Tests.Table
                 var new_int64s = MakeInt64Array(10);
 
                 var deduplicate_columns = new Dictionary<string, string[]>();
-                deduplicate_columns.Add(ts.Alias, new string[] { "the_ts" });
+                deduplicate_columns.Add(ts.Alias, ["the_ts"]);
                 var batch = InsertByName(ts.Alias, new QdbTableExpWriterOptions().Transactional().RemoveDuplicate(deduplicate_columns), new_blobs, new_doubles, new_int64s, new_strings, timestamps);
                 batch.Push();
             }
@@ -546,26 +546,36 @@ namespace Quasardb.Tests.Table
         {
             QdbTable ts1 = CreateTableWithoutSymbol();
             QdbTable ts2 = CreateTableWithoutSymbol();
+            QdbTable ts3 = CreateTableWithoutSymbol();
+            QdbTable ts4 = CreateTableWithoutSymbol();
+            QdbTable ts5 = CreateTableWithoutSymbol();
 
-            var blobs = MakeBlobArray(10);
-            var doubles = MakeDoubleArray(10);
-            var int64s = MakeInt64Array(10);
-            var strings = MakeStringArray(10);
-            var timestamps = MakeTimestamps(10);
+            var count = 10000;
+            var blobs = MakeBlobArray(count);
+            var doubles = MakeDoubleArray(count);
+            var int64s = MakeInt64Array(count);
+            var strings = MakeStringArray(count);
+            var timestamps = MakeTimestamps(count);
 
-            var batch = _cluster.ExpWriter(new string[] { ts1.Alias, ts2.Alias }, new QdbTableExpWriterOptions().Transactional());
+            var batch = _cluster.ExpWriter([ts1.Alias, ts2.Alias, ts3.Alias, ts4.Alias, ts5.Alias], new QdbTableExpWriterOptions().Transactional());
 
-            for (int index = 0; index < doubles.Length; index++)
+            for (int i = 0; i < count; i++)
             {
                 // TODO(vianney): Investigate why inserting symbols when there is more than one table does not work
-                batch.Add(ts1.Alias, timestamps[index], new object[] { blobs[index], doubles[index], int64s[index], strings[index], timestamps[index] });
-                batch.Add(ts2.Alias, timestamps[index], new object[] { blobs[index], doubles[index], int64s[index], strings[index], timestamps[index] });
+                batch.Add(ts1.Alias, timestamps[i], [blobs[i], doubles[i], int64s[i], strings[i], timestamps[i]]);
+                batch.Add(ts2.Alias, timestamps[i], [blobs[i], doubles[i], int64s[i], strings[i], timestamps[i]]);
+                batch.Add(ts3.Alias, timestamps[i], [blobs[i], doubles[i], int64s[i], strings[i], timestamps[i]]);
+                batch.Add(ts4.Alias, timestamps[i], [blobs[i], doubles[i], int64s[i], strings[i], timestamps[i]]);
+                batch.Add(ts5.Alias, timestamps[i], [blobs[i], doubles[i], int64s[i], strings[i], timestamps[i]]);
             }
 
             batch.Push();
 
             CheckTablesWithoutSymbol(ts1, blobs, doubles, int64s, strings, timestamps);
             CheckTablesWithoutSymbol(ts2, blobs, doubles, int64s, strings, timestamps);
+            CheckTablesWithoutSymbol(ts3, blobs, doubles, int64s, strings, timestamps);
+            CheckTablesWithoutSymbol(ts4, blobs, doubles, int64s, strings, timestamps);
+            CheckTablesWithoutSymbol(ts5, blobs, doubles, int64s, strings, timestamps);
         }
 
         [TestMethod]
@@ -574,19 +584,20 @@ namespace Quasardb.Tests.Table
             QdbTable ts1 = CreateTableWithoutSymbol();
             QdbTable ts2 = CreateTableWithoutSymbol();
 
-            var blobs = MakeBlobArray(10);
-            var doubles = MakeDoubleArray(10);
-            var int64s = MakeInt64Array(10);
-            var strings = MakeStringArray(10);
-            var timestamps = MakeTimestamps(10);
+            var count = 1000;
+            var blobs = MakeBlobArray(count);
+            var doubles = MakeDoubleArray(count);
+            var int64s = MakeInt64Array(count);
+            var strings = MakeStringArray(count);
+            var timestamps = MakeTimestamps(count);
 
             var batch = _cluster.ExpWriter(new QdbTableExpWriterOptions().Transactional());
 
-            for (int index = 0; index < doubles.Length; index++)
+            for (int i = 0; i < count; i++)
             {
                 // TODO(vianney): Investigate why inserting symbols when there is more than one table does not work
-                batch.Add(ts1.Alias, timestamps[index], new object[] { blobs[index], doubles[index], int64s[index], strings[index], timestamps[index] });
-                batch.Add(ts2.Alias, timestamps[index], new object[] { blobs[index], doubles[index], int64s[index], strings[index], timestamps[index] });
+                batch.Add(ts1.Alias, timestamps[i], [blobs[i], doubles[i], int64s[i], strings[i], timestamps[i]]);
+                batch.Add(ts2.Alias, timestamps[i], [blobs[i], doubles[i], int64s[i], strings[i], timestamps[i]]);
             }
 
             batch.Push();
@@ -601,23 +612,24 @@ namespace Quasardb.Tests.Table
             QdbTable ts1 = CreateTableWithoutSymbol();
             QdbTable ts2 = CreateTableWithoutSymbol();
 
-            var blobs = MakeBlobArray(10);
-            var doubles = MakeDoubleArray(10);
-            var int64s = MakeInt64Array(10);
-            var strings = MakeStringArray(10);
-            var timestamps = MakeTimestamps(10);
+            var count = 1000;
+            var blobs = MakeBlobArray(count);
+            var doubles = MakeDoubleArray(count);
+            var int64s = MakeInt64Array(count);
+            var strings = MakeStringArray(count);
+            var timestamps = MakeTimestamps(count);
 
             var batch = _cluster.ExpWriter(new QdbTableExpWriterOptions().Transactional());
 
-            for (int index = 0; index < doubles.Length; index++)
+            for (int i = 0; i < count; i++)
             {
                 // TODO(vianney): Investigate why inserting symbols when there is more than one table does not work
-                batch.Add(ts1.Alias, timestamps[index], new object[] { blobs[index], doubles[index], int64s[index], strings[index], timestamps[index] });
+                batch.Add(ts1.Alias, timestamps[i], [blobs[i], doubles[i], int64s[i], strings[i], timestamps[i]]);
             }
             batch.Push();
-            for (int index = 0; index < doubles.Length; index++)
+            for (int i = 0; i < count; i++)
             {
-                batch.Add(ts2.Alias, timestamps[index], new object[] { blobs[index], doubles[index], int64s[index], strings[index], timestamps[index] });
+                batch.Add(ts2.Alias, timestamps[i], [blobs[i], doubles[i], int64s[i], strings[i], timestamps[i]]);
             }
             batch.Push();
             CheckTablesWithoutSymbol(ts1, blobs, doubles, int64s, strings, timestamps);
