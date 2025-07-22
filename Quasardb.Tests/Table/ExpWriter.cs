@@ -561,7 +561,6 @@ namespace Quasardb.Tests.Table
 
             for (int i = 0; i < count; i++)
             {
-                // TODO(vianney): Investigate why inserting symbols when there is more than one table does not work
                 batch.Add(ts1.Alias, timestamps[i], [blobs[i], doubles[i], int64s[i], strings[i], timestamps[i]]);
                 batch.Add(ts2.Alias, timestamps[i], [blobs[i], doubles[i], int64s[i], strings[i], timestamps[i]]);
                 batch.Add(ts3.Alias, timestamps[i], [blobs[i], doubles[i], int64s[i], strings[i], timestamps[i]]);
@@ -595,7 +594,6 @@ namespace Quasardb.Tests.Table
 
             for (int i = 0; i < count; i++)
             {
-                // TODO(vianney): Investigate why inserting symbols when there is more than one table does not work
                 batch.Add(ts1.Alias, timestamps[i], [blobs[i], doubles[i], int64s[i], strings[i], timestamps[i]]);
                 batch.Add(ts2.Alias, timestamps[i], [blobs[i], doubles[i], int64s[i], strings[i], timestamps[i]]);
             }
@@ -623,7 +621,6 @@ namespace Quasardb.Tests.Table
 
             for (int i = 0; i < count; i++)
             {
-                // TODO(vianney): Investigate why inserting symbols when there is more than one table does not work
                 batch.Add(ts1.Alias, timestamps[i], [blobs[i], doubles[i], int64s[i], strings[i], timestamps[i]]);
             }
             batch.Push();
