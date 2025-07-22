@@ -12,11 +12,26 @@ using qdb_bulk_reader_table_data = Quasardb.Native.qdb_exp_batch_push_table_data
 
 namespace Quasardb.TimeSeries.Reader
 {
+    /// <summary>
+    /// Represents a QuasarDB bulk reader input specification for a single table.
+    /// </summary>
     public struct QdbBulkReaderTable
     {
+        /// <summary>
+        /// Gets the name of the table.
+        /// </summary>
         public string Name { get; }
+
+        /// <summary>
+        /// Gets the time ranges to query.
+        /// </summary>
         public QdbTimeInterval[] Ranges { get; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QdbBulkReaderTable"/> struct.
+        /// </summary>
+        /// <param name="name">Table name.</param>
+        /// <param name="ranges">Time intervals to read from the table.</param>
         public QdbBulkReaderTable(string name, IEnumerable<QdbTimeInterval> ranges)
         {
             Name = name;
@@ -24,17 +39,26 @@ namespace Quasardb.TimeSeries.Reader
         }
     }
 
+    /// <summary>
+    /// Represents the result of a bulk read operation.
+    /// </summary>
     public unsafe sealed class QdbBulkReaderResult : SafeHandle
     {
         readonly qdb_handle _handle;
         readonly qdb_bulk_reader_table_data* _data;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QdbBulkReaderResult"/> class.
+        /// </summary>
+        /// <param name="handle">Native QuasarDB handle.</param>
+        /// <param name="data">Pointer to native bulk table data.</param>
         internal QdbBulkReaderResult(qdb_handle handle, qdb_bulk_reader_table_data* data) : base(IntPtr.Zero, true)
         {
             _handle = handle;
             _data = data;
         }
 
+        /// <inheritdoc />
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
         protected override bool ReleaseHandle()
         {
@@ -45,36 +69,39 @@ namespace Quasardb.TimeSeries.Reader
             return true;
         }
 
+        /// <inheritdoc />
         public override bool IsInvalid => _handle == null || _handle.IsInvalid;
 
+        /// <summary>
+        /// Gets the raw native pointer to the data.
+        /// </summary>
         internal unsafe qdb_bulk_reader_table_data* Data => _data;
+
+        /// <summary>
+        /// Gets the native pointer as <see cref="IntPtr"/>.
+        /// </summary>
         internal IntPtr DataPtr => (IntPtr)_data;
+
+        /// <summary>
+        /// Gets the number of rows in the result.
+        /// </summary>
         internal long RowCount => (long)Data->row_count;
     }
 
-    internal static class BulkReaderHelper
-    {
-        internal static IntPtr ConvertCharArray(string str, ref List<GCHandle> pins)
-        {
-            var content = System.Text.Encoding.UTF8.GetBytes(str);
-            GCHandle pin = GCHandle.Alloc(content, GCHandleType.Pinned);
-            pins.Add(pin);
-            return pin.AddrOfPinnedObject();
-        }
-
-        internal static IntPtr ConvertArray<T>(T[] array, ref List<GCHandle> pins)
-        {
-            GCHandle pin = GCHandle.Alloc(array, GCHandleType.Pinned);
-            pins.Add(pin);
-            return pin.AddrOfPinnedObject();
-        }
-    }
-
+    /// <summary>
+    /// Reads time series data from QuasarDB in bulk.
+    /// </summary>
     public sealed class QdbBulkReader : SafeHandle, IEnumerable<QdbBulkRow>
     {
         readonly qdb_handle _handle;
         readonly IntPtr _reader;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QdbBulkReader"/> class.
+        /// </summary>
+        /// <param name="handle">Native QuasarDB handle.</param>
+        /// <param name="columns">Column names to query.</param>
+        /// <param name="tables">Tables and time ranges to query.</param>
         internal QdbBulkReader(qdb_handle handle, string[] columns, QdbBulkReaderTable[] tables) : base(IntPtr.Zero, true)
         {
             _handle = handle;
@@ -122,6 +149,7 @@ namespace Quasardb.TimeSeries.Reader
             }
         }
 
+        /// <inheritdoc />
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
         protected override bool ReleaseHandle()
         {
@@ -132,8 +160,14 @@ namespace Quasardb.TimeSeries.Reader
             return true;
         }
 
+        /// <inheritdoc />
         public override bool IsInvalid => _handle == null || _handle.IsInvalid;
 
+        /// <summary>
+        /// Retrieves the next chunk of rows from the reader.
+        /// </summary>
+        /// <param name="rowsToGet">Number of rows to retrieve. Zero means all available.</param>
+        /// <returns>The next <see cref="QdbBulkReaderResult"/> or <c>null</c> if the end is reached.</returns>
         public QdbBulkReaderResult GetData(long rowsToGet = 0)
         {
             unsafe
@@ -147,10 +181,14 @@ namespace Quasardb.TimeSeries.Reader
             }
         }
 
+        /// <inheritdoc />
         public IEnumerator<QdbBulkRow> GetEnumerator()
         {
             foreach (var row in GetRowsSafe()) yield return row;
         }
+
+        /// <inheritdoc />
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
 
         private IEnumerable<QdbBulkRow> GetRowsSafe()
         {
@@ -174,6 +212,7 @@ namespace Quasardb.TimeSeries.Reader
                 yield return row;
             }
         }
+
         private IEnumerable<QdbBulkReaderResult> EnumerateResults()
         {
             QdbBulkReaderResult result = null;
@@ -182,7 +221,7 @@ namespace Quasardb.TimeSeries.Reader
                 while ((result = GetData()) != null)
                 {
                     yield return result;
-                    result = null; // duty on Dispose in GetRowsSafe()
+                    result = null;
                 }
             }
             finally
@@ -190,7 +229,32 @@ namespace Quasardb.TimeSeries.Reader
                 result?.Dispose();
             }
         }
+    }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+    /// <summary>
+    /// Internal helper class for pinning and marshalling bulk reader arrays.
+    /// </summary>
+    internal static class BulkReaderHelper
+    {
+        /// <summary>
+        /// Converts a string to a pinned UTF-8 array and returns pointer to it.
+        /// </summary>
+        internal static IntPtr ConvertCharArray(string str, ref List<GCHandle> pins)
+        {
+            var content = System.Text.Encoding.UTF8.GetBytes(str);
+            GCHandle pin = GCHandle.Alloc(content, GCHandleType.Pinned);
+            pins.Add(pin);
+            return pin.AddrOfPinnedObject();
+        }
+
+        /// <summary>
+        /// Converts a managed array to pinned memory and returns pointer.
+        /// </summary>
+        internal static IntPtr ConvertArray<T>(T[] array, ref List<GCHandle> pins)
+        {
+            GCHandle pin = GCHandle.Alloc(array, GCHandleType.Pinned);
+            pins.Add(pin);
+            return pin.AddrOfPinnedObject();
+        }
     }
 }

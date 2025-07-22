@@ -4,19 +4,33 @@ using Quasardb.Native;
 
 namespace Quasardb.TimeSeries.Reader
 {
+    /// <summary>
+    /// Represents a single cell in a bulk-read operation from a QuasarDB time series table.
+    /// </summary>
     public unsafe class QdbBulkCell
     {
         readonly qdb_exp_batch_push_column* _column;
         readonly long _index;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QdbBulkCell"/> class.
+        /// </summary>
+        /// <param name="column">The native column pointer.</param>
+        /// <param name="index">The index of the cell in the column.</param>
         internal QdbBulkCell(qdb_exp_batch_push_column* column, long index)
         {
             _column = column;
             _index = index;
         }
 
+        /// <summary>
+        /// Gets the type of the column.
+        /// </summary>
         public QdbColumnType Type => (QdbColumnType)_column->data_type;
 
+        /// <summary>
+        /// Gets the value of the cell as an object.
+        /// </summary>
         public object Value
         {
             get
@@ -39,6 +53,9 @@ namespace Quasardb.TimeSeries.Reader
             }
         }
 
+        /// <summary>
+        /// Gets the value of the cell as a nullable double.
+        /// </summary>
         public double? DoubleValue
         {
             get
@@ -50,6 +67,9 @@ namespace Quasardb.TimeSeries.Reader
             }
         }
 
+        /// <summary>
+        /// Gets the value of the cell as a byte array.
+        /// </summary>
         public byte[] BlobValue
         {
             get
@@ -63,6 +83,9 @@ namespace Quasardb.TimeSeries.Reader
             }
         }
 
+        /// <summary>
+        /// Gets the value of the cell as a nullable 64-bit integer.
+        /// </summary>
         public long? Int64Value
         {
             get
@@ -74,6 +97,9 @@ namespace Quasardb.TimeSeries.Reader
             }
         }
 
+        /// <summary>
+        /// Gets the value of the cell as a string.
+        /// </summary>
         public string StringValue
         {
             get
@@ -87,6 +113,9 @@ namespace Quasardb.TimeSeries.Reader
             }
         }
 
+        /// <summary>
+        /// Gets the value of the cell as a nullable <see cref="DateTime"/>.
+        /// </summary>
         public DateTime? TimestampValue
         {
             get
