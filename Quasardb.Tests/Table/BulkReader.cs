@@ -100,6 +100,40 @@ namespace Quasardb.Tests.Table
         }
 
         [TestMethod]
+        public void Ok_BulkReaderSingleTableAllData()
+        {
+            var ts = CreateTableWithoutSymbol();
+            var count = 10000;
+            var blobs = MakeBlobArray(count);
+            var doubles = MakeDoubleArray(count);
+            var ints = MakeInt64Array(count);
+            var strings = MakeStringArray(count);
+            var timestamps = MakeTimestamps(count);
+
+            var batch = _cluster.ExpWriter([ts.Alias], new QdbTableExpWriterOptions().Transactional());
+            for (int i = 0; i < count; i++)
+                batch.Add(ts.Alias, timestamps[i], [blobs[i], doubles[i], ints[i], strings[i], timestamps[i]]);
+            batch.Push();
+
+            var reader = _cluster.BulkReader(["the_blob", "the_double", "the_int64", "the_string", "the_ts"],
+                new QdbBulkReaderTable[] { new(ts.Alias, null) });
+
+            int idx = 0;
+            foreach (var row in reader)
+            {
+                Assert.AreEqual(ts.Alias, row[0].StringValue);
+                Assert.AreEqual(timestamps[idx], row.Timestamp);
+                CollectionAssert.AreEqual(blobs[idx], row[1].BlobValue);
+                Assert.AreEqual(doubles[idx], row[2].DoubleValue);
+                Assert.AreEqual(ints[idx], row[3].Int64Value);
+                Assert.AreEqual(strings[idx], row[4].StringValue);
+                Assert.AreEqual(timestamps[idx], row[5].TimestampValue);
+                idx++;
+            }
+            Assert.AreEqual(count, idx);
+        }
+
+        [TestMethod]
         public void Ok_BulkReaderMultiTable()
         {
             var ts1 = CreateTableWithoutSymbol();

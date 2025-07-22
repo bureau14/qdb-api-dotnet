@@ -27,6 +27,17 @@ namespace Quasardb.Tests.Entry.Blob
 
 
         [TestMethod]
+        public void NoError_WithZeroLengthContent()
+        {
+            var blob = QdbTestCluster.CreateEmptyBlob();
+
+            blob.Put(Array.Empty<byte>());
+            var result = blob.Get();
+
+            Assert.IsNull(result);
+        }
+
+        [TestMethod]
         public void ThrowsAliasAlreadyExists_WhenCalledTwice()
         {
             var blob = QdbTestCluster.CreateEmptyBlob();

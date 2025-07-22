@@ -143,10 +143,24 @@ namespace Quasardb
             _factory = new QdbEntryFactory(_handle);
         }
 
+        internal bool _disposed;
+
         /// <inheritdoc />
-        ~QdbCluster()
+        protected override void Dispose(bool disposing)
         {
-            this.Dispose();
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    _logger?.Stop();
+                    _logger = null;
+                }
+
+                base.Dispose(disposing);
+                _disposed = true;
+                if (disposing)
+                    GC.SuppressFinalize(this);
+            }
         }
 
         /// <summary>
