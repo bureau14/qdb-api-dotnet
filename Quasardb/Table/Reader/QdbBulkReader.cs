@@ -184,15 +184,17 @@ namespace Quasardb.TimeSeries.Reader
         /// <inheritdoc />
         public IEnumerator<QdbBulkRow> GetEnumerator()
         {
-            foreach (var row in GetRowsSafe()) yield return row;
+            // TODO: Maybe need to manage rowsToGet better?
+            long rowsToGet = 0;
+            foreach (var row in GetRowsSafe(rowsToGet)) yield return row;
         }
 
         /// <inheritdoc />
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
 
-        private IEnumerable<QdbBulkRow> GetRowsSafe()
+        private IEnumerable<QdbBulkRow> GetRowsSafe(long rowsToGet = 0)
         {
-            foreach (var result in EnumerateResults())
+            foreach (var result in EnumerateResults(rowsToGet))
             {
                 using (result)
                 {
@@ -213,12 +215,12 @@ namespace Quasardb.TimeSeries.Reader
             }
         }
 
-        private IEnumerable<QdbBulkReaderResult> EnumerateResults()
+        private IEnumerable<QdbBulkReaderResult> EnumerateResults(long rowsToGet = 0)
         {
             QdbBulkReaderResult result = null;
             try
             {
-                while ((result = GetData()) != null)
+                while ((result = GetData(rowsToGet)) != null)
                 {
                     yield return result;
                     result = null;
