@@ -45,9 +45,9 @@ namespace Quasardb.Query
             /// </summary>
             Full = qdb_query_continuous_mode.qdb_query_continuous_full,
             /// <summary>
-            /// NewValuesOnly will only deliver updates values.
+            /// NewValuesOnly will only deliver updated values.
             /// </summary>
-            NewValuesOnly = qdb_query_continuous_mode.qdb_query_continuous_full,
+            NewValuesOnly = qdb_query_continuous_mode.qdb_query_continuous_new_values_only,
         }
 
         internal unsafe QdbContinuousQuery(qdb_handle handle, string query, Mode mode, TimeSpan refresh_rate, Func<QdbQueryResult, int> callback) : base(IntPtr.Zero, true)
