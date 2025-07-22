@@ -40,7 +40,7 @@ namespace Quasardb
     /// <summary>
     /// A connection to a quasardb database.
     /// </summary>
-    public sealed class QdbCluster : SafeHandle
+    public sealed class QdbCluster : SafeHandle, IDisposable
     {
         readonly qdb_handle _handle;
         readonly QdbEntryFactory _factory;
