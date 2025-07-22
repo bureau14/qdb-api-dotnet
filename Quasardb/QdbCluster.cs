@@ -512,11 +512,11 @@ namespace Quasardb
         /// is dependent on the complexity of the query.</remarks>
         /// <param name="query">The string representing the query to perform.</param>
         /// <param name="mode">The continuous query mode, one of (Full, NewValuesOnly).</param>
-        /// <param name="refresh_rate_ms">The resfresh rate of the query, in milliseconds.</param>
+        /// <param name="refresh_rate">The resfresh rate of the query, in milliseconds.</param>
         /// <param name="callback">Your callback function, it will be invoked with the result from the query.</param>
         /// <returns>A <see cref="QdbContinuousQuery" /> holding the results of the query.</returns>
         /// <seealso cref="QdbContinuousQuery"/>
-        public QdbContinuousQuery ContinuousQuery(string query, QdbContinuousQuery.Mode mode, int refresh_rate_ms, Func<QdbQueryResult, int> callback)
+        public QdbContinuousQuery ContinuousQuery(string query, QdbContinuousQuery.Mode mode, TimeSpan refresh_rate, Func<QdbQueryResult, int> callback)
         {
             if (string.IsNullOrEmpty(query))
             {
@@ -528,7 +528,7 @@ namespace Quasardb
                 throw new ArgumentNullException(nameof(callback));
             }
 
-            return new QdbContinuousQuery(_handle, query, mode, refresh_rate_ms, callback);
+            return new QdbContinuousQuery(_handle, query, mode, refresh_rate, callback);
         }
 
         /// <summary>

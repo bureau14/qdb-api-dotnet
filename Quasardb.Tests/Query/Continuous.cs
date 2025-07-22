@@ -18,7 +18,7 @@ namespace Quasardb.Tests.Query
 
             var latest = 0;
 
-            _cluster.ContinuousQuery(String.Format("SELECT $timestamp, col FROM {0}", alias), QdbContinuousQuery.Mode.Full, 100, (result) =>
+            _cluster.ContinuousQuery(String.Format("SELECT $timestamp, col FROM {0}", alias), QdbContinuousQuery.Mode.Full, TimeSpan.FromMilliseconds(100), (result) =>
             {
                 if (result == null) return 0;
 
@@ -58,7 +58,7 @@ namespace Quasardb.Tests.Query
 
             waitHandle.WaitOne();
             waitHandle.Reset();
-            
+
             _cluster.Query(String.Format("INSERT INTO {0}($timestamp, col) VALUES(2021-01-02, 2)", alias));
 
             waitHandle.WaitOne();
@@ -74,7 +74,7 @@ namespace Quasardb.Tests.Query
 
             var latest = 0;
 
-            _cluster.ContinuousQuery(String.Format("SELECT $timestamp, col FROM {0}", alias), QdbContinuousQuery.Mode.NewValuesOnly, 100, (result) =>
+            _cluster.ContinuousQuery(String.Format("SELECT $timestamp, col FROM {0}", alias), QdbContinuousQuery.Mode.NewValuesOnly, TimeSpan.FromMilliseconds(100), (result) =>
             {
                 if (result == null) return 0;
 
