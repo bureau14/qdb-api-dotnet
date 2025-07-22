@@ -166,12 +166,11 @@ namespace Quasardb.TimeSeries.ExpWriter
             _table_data = new List<QdbTableExpWriterData>();
             _table_name_to_index = new Dictionary<string, int>();
 
-            int table_index = 0;
-            foreach (var table in tables)
+            for (int table_index = 0; table_index < tables.Length; table_index++)
             {
+                var table = tables[table_index];
                 _table_name_to_index[table] = table_index;
                 _table_data.Add(initialize_table(handle, table));
-                table_index++;
             }
         }
 
@@ -468,9 +467,11 @@ namespace Quasardb.TimeSeries.ExpWriter
             {
                 throw new QdbException(String.Format("Number of values provided {0} does not match the number of columns {1}", valueCount, columnCount));
             }
-            long column_index = 0;
-            foreach (var val in values)
+
+            var span = values.AsSpan();
+            for (int column_index = 0; column_index < span.Length; column_index++)
             {
+                var val = span[column_index];
                 var column_type = _table_data[table_index].columns[column_index].type;
                 if (val != null)
                 {
@@ -497,7 +498,6 @@ namespace Quasardb.TimeSeries.ExpWriter
                         _table_data[table_index].data[column_index].strings.Add(get_string(val));
                         break;
                 }
-                column_index++;
             }
             _table_data[table_index].timestamps.Add(TimeConverter.ToTimespec(timestamp));
         }
@@ -520,11 +520,10 @@ namespace Quasardb.TimeSeries.ExpWriter
         public void Push()
         {
             var tables = new qdb_exp_batch_push_table[_tables.Count];
-            int index = 0;
-            foreach (var table in _tables)
+            for (int index = 0; index < _tables.Count; index++)
             {
+                var table = _tables[index];
                 tables[index] = ExpWriterHelper.convert_table(table, _options, _table_data[index].timestamps.ToArray(), _table_data[index].columns, _table_data[index].data, ref _pins);
-                index++;
             }
             var tables_arr = (qdb_exp_batch_push_table*)ExpWriterHelper.convert_array(tables, ref _pins);
             var err = qdb_api.qdb_exp_batch_push(_handle, _options.Mode(), tables_arr, _schemas, _tables.Count);
@@ -615,9 +614,10 @@ namespace Quasardb.TimeSeries.ExpWriter
 
         internal static void reset_data(qdb_ts_column_info_ex[] columns, ref QdbColumnData[] data)
         {
-            long column_index = 0;
-            foreach (var column in columns)
+            var span = columns.AsSpan();
+            for (int column_index = 0; column_index < span.Length; column_index++)
             {
+                var column = span[column_index];
                 switch (column.type)
                 {
                     case qdb_ts_column_type.qdb_ts_column_double:
@@ -639,7 +639,6 @@ namespace Quasardb.TimeSeries.ExpWriter
                     case qdb_ts_column_type.qdb_ts_column_uninitialized:
                         break;
                 }
-                column_index++;
             }
         }
 

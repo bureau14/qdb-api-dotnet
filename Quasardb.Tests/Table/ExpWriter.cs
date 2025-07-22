@@ -583,7 +583,7 @@ namespace Quasardb.Tests.Table
             QdbTable ts1 = CreateTableWithoutSymbol();
             QdbTable ts2 = CreateTableWithoutSymbol();
 
-            var count = 1000;
+            var count = 10000;
             var blobs = MakeBlobArray(count);
             var doubles = MakeDoubleArray(count);
             var int64s = MakeInt64Array(count);
@@ -610,7 +610,7 @@ namespace Quasardb.Tests.Table
             QdbTable ts1 = CreateTableWithoutSymbol();
             QdbTable ts2 = CreateTableWithoutSymbol();
 
-            var count = 1000;
+            var count = 10000;
             var blobs = MakeBlobArray(count);
             var doubles = MakeDoubleArray(count);
             var int64s = MakeInt64Array(count);

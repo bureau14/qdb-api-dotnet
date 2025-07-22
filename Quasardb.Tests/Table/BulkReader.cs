@@ -68,7 +68,7 @@ namespace Quasardb.Tests.Table
         public void Ok_BulkReaderSingleTable()
         {
             var ts = CreateTableWithoutSymbol();
-            var count = 1000;
+            var count = 10000;
             var blobs = MakeBlobArray(count);
             var doubles = MakeDoubleArray(count);
             var ints = MakeInt64Array(count);
@@ -105,18 +105,18 @@ namespace Quasardb.Tests.Table
             var ts1 = CreateTableWithoutSymbol();
             var ts2 = CreateTableWithoutSymbol();
 
-            var count = 1000;
+            var count = 10000;
             var blobs = MakeBlobArray(count);
             var doubles = MakeDoubleArray(count);
             var ints = MakeInt64Array(count);
             var strings = MakeStringArray(count);
-            var timestamps = MakeTimestamps(count);
+            var timestamps = MakeTimestamps(count * 2);
 
             var batch = _cluster.ExpWriter([ts1.Alias, ts2.Alias], new QdbTableExpWriterOptions().Transactional());
             for (int i = 0; i < count; i++)
             {
                 batch.Add(ts1.Alias, timestamps[i], [blobs[i], doubles[i], ints[i], strings[i], timestamps[i]]);
-                batch.Add(ts2.Alias, timestamps[i], [blobs[i], doubles[i], ints[i], strings[i], timestamps[i]]);
+                batch.Add(ts2.Alias, timestamps[i + count], [blobs[i], doubles[i], ints[i], strings[i], timestamps[i]]);
             }
             batch.Push();
 
@@ -125,10 +125,20 @@ namespace Quasardb.Tests.Table
             reader.rowsToGet = count / 4;
 
             var aliases = new List<string>();
+            int idx = 0;
             foreach (var row in reader)
             {
                 aliases.Add(row[0].StringValue);
+
+                Assert.AreEqual(timestamps[idx], row.Timestamp);
+                CollectionAssert.AreEqual(blobs[idx % count], row[1].BlobValue);
+                Assert.AreEqual(doubles[idx % count], row[2].DoubleValue);
+                Assert.AreEqual(ints[idx % count], row[3].Int64Value);
+                Assert.AreEqual(strings[idx % count], row[4].StringValue);
+                Assert.AreEqual(timestamps[idx % count], row[5].TimestampValue);
+                idx++;
             }
+            Assert.AreEqual(count * 2, idx);
 
             var expected = Enumerable.Repeat(ts1.Alias, count).Concat(Enumerable.Repeat(ts2.Alias, count)).ToArray();
             CollectionAssert.AreEqual(expected, aliases);
