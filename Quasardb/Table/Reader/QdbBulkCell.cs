@@ -59,7 +59,7 @@ namespace Quasardb.TimeSeries.Reader
                 qdb_blob blob = _column->data.blobs[_index];
                 if (blob.content == null)
                     return null;
-                return Helper.GetBytes(new IntPtr(blob.content), (int)blob.content_size);
+                return Helper.GetBytes(new IntPtr(blob.content), blob.content_size);
             }
         }
 

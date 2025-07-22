@@ -27,7 +27,7 @@ namespace Quasardb
                 },
                 (ref qdb_operation op) =>
                 {
-                    return Helper.GetBytes(op.args.blob_get.content, (int)op.args.blob_get.content_size);
+                    return Helper.GetBytes(op.args.blob_get.content, op.args.blob_get.content_size);
                 });
         }
 
@@ -103,7 +103,7 @@ namespace Quasardb
                     newContentPin.Free();
                     comparandPin.Free();
 
-                    return Helper.GetBytes(op.args.blob_cas.original_content, (int)op.args.blob_cas.original_content_size);
+                    return Helper.GetBytes(op.args.blob_cas.original_content, op.args.blob_cas.original_content_size);
                 });
         }
 
@@ -130,7 +130,7 @@ namespace Quasardb
                 {
                     newContentPin.Free();
 
-                    return Helper.GetBytes(op.args.blob_get_and_update.original_content, (int)op.args.blob_get_and_update.original_content_size);
+                    return Helper.GetBytes(op.args.blob_get_and_update.original_content, op.args.blob_get_and_update.original_content_size);
                 });
         }
     }
