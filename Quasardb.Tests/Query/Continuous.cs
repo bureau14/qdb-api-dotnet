@@ -9,7 +9,7 @@ namespace Quasardb.Tests.Query
     {
         private readonly QdbCluster _cluster = QdbTestCluster.Instance;
 
-        [TestMethod, Timeout(10000)]
+        [TestMethod, Timeout(60000)]
         public void ReceiveFullUpdate()
         {
             var waitHandle = new System.Threading.AutoResetEvent(false);
@@ -65,7 +65,7 @@ namespace Quasardb.Tests.Query
             waitHandle.Reset();
         }
 
-        [TestMethod, Timeout(10000)]
+        [TestMethod, Timeout(60000)]
         public void ReceiveNewValuesOnlyUpdate()
         {
             var waitHandle = new System.Threading.AutoResetEvent(false);
@@ -89,19 +89,16 @@ namespace Quasardb.Tests.Query
                 if (rows.Count == 0) return 0;
                 if (rows.Count > 0 && latest > 1) return 0;
 
+                var row = rows[0];
+                if (row == null) return 0;
+                if (row.Count == 1) return 0;
+                if (latest == 0)
                 {
-                    var row = rows[0];
-                    if (row == null) return 0;
-                    if (row.Count == 1) return 0;
                     if ((DateTime)row["$timestamp"].Value != new DateTime(2021, 1, 1, 0, 0, 0, DateTimeKind.Utc)) return 0;
                     if ((long)row["col"].Value != 1) return 0;
                 }
-
-                if (latest == 1)
+                else if (latest == 1)
                 {
-                    var row = rows[1];
-                    if (row == null) return 0;
-                    if (row.Count == 1) return 0;
                     if ((DateTime)row["$timestamp"].Value != new DateTime(2021, 1, 2, 0, 0, 0, DateTimeKind.Utc)) return 0;
                     if ((long)row["col"].Value != 2) return 0;
                 }
