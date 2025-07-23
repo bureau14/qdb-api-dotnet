@@ -27,7 +27,7 @@ namespace Quasardb
                 },
                 (ref qdb_operation op) =>
                 {
-                    return Helper.GetBytes(op.args.blob_get.content, (int)op.args.blob_get.content_size);
+                    return Helper.GetBytes(op.args.blob_get.content, op.args.blob_get.content_size);
                 });
         }
 
@@ -45,21 +45,30 @@ namespace Quasardb
 
         private IQdbFuture PutOrUpdate(qdb_operation_type type, byte[] content, DateTime? expiryTime)
         {
-            var pin = GCHandle.Alloc(content, GCHandleType.Pinned);
+            GCHandle pin = default;
+            try
+            {
+                pin = GCHandle.Alloc(content, GCHandleType.Pinned);
 
-            return AddOperation(
-                (ref qdb_operation op) =>
-                {
-                    op.type = type;
-                    op.alias = Alias;
-                    op.args.blob_set.content = pin.AddrOfPinnedObject();
-                    op.args.blob_set.content_size = (UIntPtr) content.Length;
-                    op.args.blob_set.expiry = qdb_time.FromOptionalDateTime(expiryTime);
-                },
-                (ref qdb_operation op) =>
-                {
-                    pin.Free();
-                });
+                return AddOperation(
+                    (ref qdb_operation op) =>
+                    {
+                        op.type = type;
+                        op.alias = Alias;
+                        op.args.blob_set.content = pin.AddrOfPinnedObject();
+                        op.args.blob_set.content_size = (UIntPtr)content.Length;
+                        op.args.blob_set.expiry = qdb_time.FromOptionalDateTime(expiryTime);
+                    },
+                    (ref qdb_operation op) =>
+                    {
+                        pin.Free();
+                    });
+            }
+            catch
+            {
+                if (pin.IsAllocated) pin.Free();
+                throw;
+            }
         }
 
 
@@ -84,27 +93,38 @@ namespace Quasardb
         /// <seealso cref="QdbBlob.CompareAndSwap"/>
         public IQdbFuture<byte[]> CompareAndSwap(byte[] newContent, byte[] comparand, DateTime? expiryTime = null)
         {
-            var newContentPin = GCHandle.Alloc(newContent, GCHandleType.Pinned);
-            var comparandPin = GCHandle.Alloc(comparand, GCHandleType.Pinned);
+            GCHandle newContentPin = default;
+            GCHandle comparandPin = default;
+            try
+            {
+                newContentPin = GCHandle.Alloc(newContent, GCHandleType.Pinned);
+                comparandPin = GCHandle.Alloc(comparand, GCHandleType.Pinned);
 
-            return AddOperation(
-                (ref qdb_operation op) =>
-                {
-                    op.type = qdb_operation_type.qdb_op_blob_cas;
-                    op.alias = Alias;
-                    op.args.blob_cas.new_content = newContentPin.AddrOfPinnedObject();
-                    op.args.blob_cas.new_content_size = (UIntPtr)newContent.Length;
-                    op.args.blob_cas.comparand = comparandPin.AddrOfPinnedObject();
-                    op.args.blob_cas.comparand_size = (UIntPtr)comparand.Length;
-                    op.args.blob_cas.expiry = qdb_time.FromOptionalDateTime(expiryTime);
-                },
-                (ref qdb_operation op) =>
-                {
-                    newContentPin.Free();
-                    comparandPin.Free();
+                return AddOperation(
+                    (ref qdb_operation op) =>
+                    {
+                        op.type = qdb_operation_type.qdb_op_blob_cas;
+                        op.alias = Alias;
+                        op.args.blob_cas.new_content = newContentPin.AddrOfPinnedObject();
+                        op.args.blob_cas.new_content_size = (UIntPtr)newContent.Length;
+                        op.args.blob_cas.comparand = comparandPin.AddrOfPinnedObject();
+                        op.args.blob_cas.comparand_size = (UIntPtr)comparand.Length;
+                        op.args.blob_cas.expiry = qdb_time.FromOptionalDateTime(expiryTime);
+                    },
+                    (ref qdb_operation op) =>
+                    {
+                        newContentPin.Free();
+                        comparandPin.Free();
 
-                    return Helper.GetBytes(op.args.blob_cas.original_content, (int)op.args.blob_cas.original_content_size);
-                });
+                        return Helper.GetBytes(op.args.blob_cas.original_content, op.args.blob_cas.original_content_size);
+                    });
+            }
+            catch
+            {
+                if (newContentPin.IsAllocated) newContentPin.Free();
+                if (comparandPin.IsAllocated) comparandPin.Free();
+                throw;
+            }
         }
 
         /// <summary>
@@ -115,23 +135,32 @@ namespace Quasardb
         /// <returns>A future that will contain the result of the operation after the batch is run.</returns>
         public IQdbFuture<byte[]> GetAndUpdate(byte[] newContent, DateTime? expiryTime = null)
         {
-            var newContentPin = GCHandle.Alloc(newContent, GCHandleType.Pinned);
+            GCHandle newContentPin = default;
+            try
+            {
+                newContentPin = GCHandle.Alloc(newContent, GCHandleType.Pinned);
 
-            return AddOperation(
-                (ref qdb_operation op) =>
-                {
-                    op.type = qdb_operation_type.qdb_op_blob_get_and_update;
-                    op.alias = Alias;
-                    op.args.blob_get_and_update.new_content = newContentPin.AddrOfPinnedObject();
-                    op.args.blob_get_and_update.new_content_size = (UIntPtr)newContent.Length;
-                    op.args.blob_get_and_update.expiry = qdb_time.FromOptionalDateTime(expiryTime);
-                },
-                (ref qdb_operation op) =>
-                {
-                    newContentPin.Free();
+                return AddOperation(
+                    (ref qdb_operation op) =>
+                    {
+                        op.type = qdb_operation_type.qdb_op_blob_get_and_update;
+                        op.alias = Alias;
+                        op.args.blob_get_and_update.new_content = newContentPin.AddrOfPinnedObject();
+                        op.args.blob_get_and_update.new_content_size = (UIntPtr)newContent.Length;
+                        op.args.blob_get_and_update.expiry = qdb_time.FromOptionalDateTime(expiryTime);
+                    },
+                    (ref qdb_operation op) =>
+                    {
+                        newContentPin.Free();
 
-                    return Helper.GetBytes(op.args.blob_get_and_update.original_content, (int)op.args.blob_get_and_update.original_content_size);
-                });
+                        return Helper.GetBytes(op.args.blob_get_and_update.original_content, op.args.blob_get_and_update.original_content_size);
+                    });
+            }
+            catch
+            {
+                if (newContentPin.IsAllocated) newContentPin.Free();
+                throw;
+            }
         }
     }
 }

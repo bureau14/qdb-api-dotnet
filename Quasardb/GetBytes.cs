@@ -11,17 +11,31 @@ namespace Quasardb
         /// <summary>
         /// Safely Get Bytes
         /// </summary>
-        public static byte[] GetBytes(IntPtr Pointer, int size)
+        public static byte[] GetBytes(IntPtr pointer, int size)
         {
-            // CAUTION: limited to 32 bits!!!
-            if (size == 0)
+            if (size == 0 || pointer == IntPtr.Zero)
                 return null;
-            if (Pointer == IntPtr.Zero)
-                return null;
+
             var buffer = new byte[size];
-            Marshal.Copy(Pointer, buffer, 0, size);
+            Marshal.Copy(pointer, buffer, 0, size);
             return buffer;
         }
-    }
 
+        /// <summary>
+        /// Safely get bytes from an unmanaged buffer using a <see cref="UIntPtr"/> size.
+        /// </summary>
+        [CLSCompliant(false)]
+        public static byte[] GetBytes(IntPtr pointer, UIntPtr size)
+        {
+            long length = (long)size;
+
+            if (length == 0 || pointer == IntPtr.Zero)
+                return null;
+
+            if (length > int.MaxValue)
+                throw new ArgumentOutOfRangeException(nameof(size), "Buffer too large.");
+
+            return GetBytes(pointer, (int)length);
+        }
+    }
 }

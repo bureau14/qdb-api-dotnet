@@ -61,7 +61,7 @@ namespace Quasardb.TimeSeries
                 return new QdbBlobPoint(TimeConverter.ToDateTime(pt.timestamp), null);
             }
 
-            var content = Helper.GetBytes(new IntPtr(pt.content), (int)pt.content_size);
+            var content = Helper.GetBytes(new IntPtr(pt.content), pt.content_size);
             return new QdbBlobPoint(TimeConverter.ToDateTime(pt.timestamp), content);
         }
 
@@ -101,7 +101,7 @@ namespace Quasardb.TimeSeries
                 return new QdbStringPoint(TimeConverter.ToDateTime(pt.timestamp), null);
             }
 
-            var content = Helper.GetBytes(new IntPtr(pt.content), (int)pt.content_size);
+            var content = Helper.GetBytes(new IntPtr(pt.content), pt.content_size);
             return new QdbStringPoint(TimeConverter.ToDateTime(pt.timestamp), System.Text.Encoding.UTF8.GetString(content));
         }
 

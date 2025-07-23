@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Quasardb.TimeSeries
 {
@@ -98,14 +99,7 @@ namespace Quasardb.TimeSeries
             if (Value == null || other == null)
                 return Value == other;
 
-            // TODO: replace by SequenceEquals once we drop Framework 2.0
-            if (Value.Length != other.Length) return false;
-            for (var i = 0; i < Value.Length; i++)
-            {
-                if (Value[i] != other[i])
-                    return false;
-            }
-            return true;
+            return Value.SequenceEqual(other);
         }
     }
 

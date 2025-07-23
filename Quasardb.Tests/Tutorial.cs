@@ -84,7 +84,7 @@ namespace Quasardb.Tests.Tutorial
                 // when creating the table, i.e. 0 means "open", 1 means "close" and 2 means
                 // "volume":
                 var openValue = row[0].DoubleValue;
-                var closealue = row[1].DoubleValue;
+                var closeValue = row[1].DoubleValue;
                 var volumeValue = row[2].Int64Value;
             }
             // bulk-read-end
