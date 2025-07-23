@@ -1,16 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Microsoft.Extensions.Logging;
 using Quasardb.Exceptions;
 using Quasardb.Native;
-using Quasardb.TimeSeries;
 using Quasardb.Query;
+using Quasardb.TimeSeries;
 using Quasardb.TimeSeries.ExpWriter;
+using Quasardb.TimeSeries.Reader;
 using Quasardb.TimeSeries.Writer;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
-using Microsoft.Extensions.Logging;
 using System.Runtime.InteropServices.ComTypes;
+using System.Text;
 
 namespace Quasardb
 {
@@ -38,7 +40,7 @@ namespace Quasardb
     /// <summary>
     /// A connection to a quasardb database.
     /// </summary>
-    public sealed class QdbCluster : SafeHandle
+    public sealed class QdbCluster : SafeHandle, IDisposable
     {
         readonly qdb_handle _handle;
         readonly QdbEntryFactory _factory;
@@ -141,10 +143,24 @@ namespace Quasardb
             _factory = new QdbEntryFactory(_handle);
         }
 
+        internal bool _disposed;
+
         /// <inheritdoc />
-        ~QdbCluster()
+        protected override void Dispose(bool disposing)
         {
-            this.Dispose();
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    _logger?.Stop();
+                    _logger = null;
+                }
+
+                base.Dispose(disposing);
+                _disposed = true;
+                if (disposing)
+                    GC.SuppressFinalize(this);
+            }
         }
 
         /// <summary>
@@ -469,6 +485,14 @@ namespace Quasardb
         }
 
         /// <summary>
+        /// Returns a bulk reader associated with the specified tables and columns.
+        /// </summary>
+        public QdbBulkReader BulkReader(string[] columns, QdbBulkReaderTable[] tables)
+        {
+            return new QdbBulkReader(_handle, columns, tables);
+        }
+
+        /// <summary>
         /// Run the provided query and creates a table directory with the results.
         /// </summary>
         /// <remarks>Queries are transactional. The complexity of this function
@@ -488,11 +512,11 @@ namespace Quasardb
         /// is dependent on the complexity of the query.</remarks>
         /// <param name="query">The string representing the query to perform.</param>
         /// <param name="mode">The continuous query mode, one of (Full, NewValuesOnly).</param>
-        /// <param name="refresh_rate_ms">The resfresh rate of the query, in milliseconds.</param>
+        /// <param name="refresh_rate">The resfresh rate of the query, in milliseconds.</param>
         /// <param name="callback">Your callback function, it will be invoked with the result from the query.</param>
         /// <returns>A <see cref="QdbContinuousQuery" /> holding the results of the query.</returns>
         /// <seealso cref="QdbContinuousQuery"/>
-        public QdbContinuousQuery ContinuousQuery(string query, QdbContinuousQuery.Mode mode, int refresh_rate_ms, Func<QdbQueryResult, int> callback)
+        public QdbContinuousQuery ContinuousQuery(string query, QdbContinuousQuery.Mode mode, TimeSpan refresh_rate, Func<QdbQueryResult, int> callback)
         {
             if (string.IsNullOrEmpty(query))
             {
@@ -504,7 +528,7 @@ namespace Quasardb
                 throw new ArgumentNullException(nameof(callback));
             }
 
-            return new QdbContinuousQuery(_handle, query, mode, refresh_rate_ms, callback);
+            return new QdbContinuousQuery(_handle, query, mode, refresh_rate, callback);
         }
 
         /// <summary>

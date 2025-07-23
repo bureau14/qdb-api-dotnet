@@ -315,7 +315,7 @@ namespace Quasardb.Tests.Query
                 for (int i = 0; i < 10L; ++i)
                 {
                     var row = rows[i];
-                    Assert.AreEqual(startTime.AddSeconds(i), row[0].TimestampValue);
+                    Assert.AreEqual(startTime.AddSeconds(i).ToLocalTime(), row[0].TimestampValue);
                     Assert.AreEqual(ts.Alias, row[1].StringValue);
                     Assert.AreEqual(insertedDoubleData[i].Value, row[2].Value);
                 }

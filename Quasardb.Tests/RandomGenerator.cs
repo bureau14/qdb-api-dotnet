@@ -3,10 +3,11 @@ using System.Threading;
 
 namespace Quasardb.Tests
 {
-    class RandomGenerator
+    static class RandomGenerator
     {
-        static readonly Random _rand = new Random();
-        static long _uniqueId = DateTime.Now.Ticks;
+        private static readonly ThreadLocal<Random> _rand = new ThreadLocal<Random>(() => new Random());
+
+        private static long _uniqueId = DateTime.Now.Ticks;
 
         public static string CreateUniqueAlias()
         {
@@ -15,8 +16,11 @@ namespace Quasardb.Tests
 
         public static byte[] CreateRandomContent()
         {
-            var buffer = new byte[_rand.Next(10, 20)];
-            _rand.NextBytes(buffer);
+            // create thread safe Random
+            var rand = _rand.Value ?? new Random();
+
+            var buffer = new byte[rand.Next(10, 20)];
+            rand.NextBytes(buffer);
             return buffer;
         }
     }
