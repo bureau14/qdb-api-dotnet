@@ -72,12 +72,12 @@ namespace Quasardb.Query
 
         private unsafe byte[] PayloadToByteArray(qdb_point_result_blob_payload payload) 
         {
-            return Helper.GetBytes(new IntPtr(payload.content), (int)payload.content_size);
+            return Helper.GetBytes(new IntPtr(payload.content), payload.content_size);
         }
 
         private unsafe byte[] PayloadToByteArray(qdb_point_result_string_payload payload) 
         {
-            return Helper.GetBytes(new IntPtr(payload.content), (int)payload.content_size);
+            return Helper.GetBytes(new IntPtr(payload.content), payload.content_size);
         }
 
         /// <summary>
@@ -216,7 +216,7 @@ namespace Quasardb.Query
                     throw new InvalidCastException();
                 var arr = new byte[(int)_result.blob_array_payload.array_size][];
                 for (var i = 0L; i < (long)_result.blob_array_payload.array_size; i++)
-                    arr[i] = Helper.GetBytes(new IntPtr(_result.blob_array_payload.content[i].content), (int)_result.blob_array_payload.content[i].content_size);
+                    arr[i] = Helper.GetBytes(new IntPtr(_result.blob_array_payload.content[i].content), _result.blob_array_payload.content[i].content_size);
                 return arr;
             }
         }
@@ -256,7 +256,7 @@ namespace Quasardb.Query
                 Encoding enc = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true);
                 for (var i = 0L; i < (long)_result.string_array_payload.array_size; i++)
                 {
-                    var content = Helper.GetBytes(new IntPtr(_result.string_array_payload.content[i].data), (int)_result.string_array_payload.content[i].length);
+                    var content = Helper.GetBytes(new IntPtr(_result.string_array_payload.content[i].data), _result.string_array_payload.content[i].length);
                     arr[i] = (content == null ? null : enc.GetString(content));
                 }
                 return arr;

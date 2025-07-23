@@ -30,25 +30,34 @@ namespace Quasardb
         public IQdbFuture<bool> HasTag(string tag)
         {
             var tagBytes = Encoding.UTF8.GetBytes(tag);
-            var pin = GCHandle.Alloc(tagBytes, GCHandleType.Pinned);
+            GCHandle pin = default;
+            try
+            {
+                pin = GCHandle.Alloc(tagBytes, GCHandleType.Pinned);
 
-            return AddOperation(
-                (ref qdb_operation op) =>
-                {
-                    op.type = qdb_operation_type.qdb_op_has_tag;
-                    op.alias = Alias;
-                    op.args.has_tag.tag = pin.AddrOfPinnedObject();
-                },
-                (ref qdb_operation op) =>
-                {
-                    pin.Free();
+                return AddOperation(
+                    (ref qdb_operation op) =>
+                    {
+                        op.type = qdb_operation_type.qdb_op_has_tag;
+                        op.alias = Alias;
+                        op.args.has_tag.tag = pin.AddrOfPinnedObject();
+                    },
+                    (ref qdb_operation op) =>
+                    {
+                        pin.Free();
 
-                    // HACK: workaround a known bug in quasardb 2.0.0
-                    if (op.error == qdb_error.qdb_e_alias_not_found)
-                        op.error = qdb_error.qdb_e_tag_not_set;
+                        // HACK: workaround a known bug in quasardb 2.0.0
+                        if (op.error == qdb_error.qdb_e_alias_not_found)
+                            op.error = qdb_error.qdb_e_tag_not_set;
 
-                    return op.error == qdb_error.qdb_e_ok;
-                });
+                        return op.error == qdb_error.qdb_e_ok;
+                    });
+            }
+            catch
+            {
+                pin.Free();
+                throw;
+            }
         }
 
         internal IQdbFuture AddOperation(MarshalFunc marshal, UnmarshalFunc unmarshal = null)
