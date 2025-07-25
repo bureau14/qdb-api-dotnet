@@ -316,6 +316,19 @@ namespace Quasardb
         }
 
         /// <summary>
+        /// Returns a <see cref="QdbString" /> attached to the specified alias.
+        /// </summary>
+        /// <remarks>No operation is performed in the database.</remarks>
+        /// <param name="alias">The alias (i.e. key) of the string in the database.</param>
+        /// <returns>A string associated to the specified alias.</returns>
+        /// <seealso cref="QdbString"/>
+        public QdbString String(string alias)
+        {
+            if (alias == null) throw new ArgumentNullException(nameof(alias));
+            return new QdbString(_handle, alias);
+        }
+
+        /// <summary>
         /// Returns a <see cref="QdbInteger" /> attached to the specified alias.
         /// </summary>
         /// <remarks>No operation is performed in the database.</remarks>
