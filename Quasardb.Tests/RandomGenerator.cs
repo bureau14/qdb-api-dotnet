@@ -23,5 +23,11 @@ namespace Quasardb.Tests
             rand.NextBytes(buffer);
             return buffer;
         }
+
+        public static string CreateRandomString()
+        {
+            // reuse byte generator for simplicity
+            return Convert.ToBase64String(CreateRandomContent());
+        }
     }
 }
