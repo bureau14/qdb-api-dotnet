@@ -316,6 +316,45 @@ namespace Quasardb
         }
 
         /// <summary>
+        /// Returns a <see cref="QdbInteger" /> attached to the specified alias.
+        /// </summary>
+        /// <remarks>No operation is performed in the database.</remarks>
+        /// <param name="alias">The alias (i.e. key) of the integer in the database.</param>
+        /// <returns>An integer associated to the specified alias.</returns>
+        /// <seealso cref="QdbInteger"/>
+        public QdbInteger Integer(string alias)
+        {
+            if (alias == null) throw new ArgumentNullException(nameof(alias));
+            return new QdbInteger(_handle, alias);
+        }
+
+        /// <summary>
+        /// Returns a <see cref="QdbDouble" /> attached to the specified alias.
+        /// </summary>
+        /// <remarks>No operation is performed in the database.</remarks>
+        /// <param name="alias">The alias (i.e. key) of the double in the database.</param>
+        /// <returns>An double associated to the specified alias.</returns>
+        /// <seealso cref="QdbDouble"/>
+        public QdbDouble Double(string alias)
+        {
+            if (alias == null) throw new ArgumentNullException(nameof(alias));
+            return new QdbDouble(_handle, alias);
+        }
+
+        /// <summary>
+        /// Returns a <see cref="QdbTimestamp" /> attached to the specified alias.
+        /// </summary>
+        /// <remarks>No operation is performed in the database.</remarks>
+        /// <param name="alias">The alias (i.e. key) of the timestamp in the database.</param>
+        /// <returns>An timestamp associated to the specified alias.</returns>
+        /// <seealso cref="QdbTimestamp"/>
+        public QdbTimestamp Timestamp(string alias)
+        {
+            if (alias == null) throw new ArgumentNullException(nameof(alias));
+            return new QdbTimestamp(_handle, alias);
+        }
+
+        /// <summary>
         /// Returns a collection of <see cref="QdbBlob" />  matching the given criteria.
         /// </summary>
         /// <param name="selector">The criteria to filter the blobs.</param>
@@ -368,19 +407,6 @@ namespace Quasardb
                 foreach (var alias in aliases)
                     yield return alias;
             }
-        }
-
-        /// <summary>
-        /// Returns a <see cref="QdbInteger" /> attached to the specified alias.
-        /// </summary>
-        /// <remarks>No operation is performed in the database.</remarks>
-        /// <param name="alias">The alias (i.e. key) of the integer in the database.</param>
-        /// <returns>An integer associated to the specified alias.</returns>
-        /// <seealso cref="QdbInteger"/>
-        public QdbInteger Integer(string alias)
-        {
-            if (alias == null) throw new ArgumentNullException(nameof(alias));
-            return new QdbInteger(_handle, alias);
         }
 
         /// <summary>
