@@ -24,6 +24,25 @@ namespace Quasardb.Tests.Entry.Timestamp
         }
 
         [TestMethod]
+        public void ThrowIncompatibleType()
+        {
+            var alias = RandomGenerator.CreateUniqueAlias();
+            var ts = QdbTestCluster.CreateEmptyTimestamp(alias);
+
+            QdbTestCluster.CreateBlob(alias);
+
+            try
+            {
+                ts.Add(TimeSpan.FromSeconds(1));
+                Assert.Fail("No exception thrown");
+            }
+            catch (QdbIncompatibleTypeException e)
+            {
+                Assert.AreEqual(ts.Alias, e.Alias);
+            }
+        }
+
+        [TestMethod]
         public void ReturnsSum()
         {
             var ts = QdbTestCluster.CreateEmptyTimestamp();
