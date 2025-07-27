@@ -1,10 +1,11 @@
-using System;
-using System.Linq;
-using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb.Exceptions;
 using Quasardb.TimeSeries;
 using Quasardb.TimeSeries.Writer;
+using System;
+using System.Linq;
+using System.Reflection.Metadata;
+using System.Threading;
 
 namespace Quasardb.Tests.Entry.Table
 {
@@ -101,6 +102,13 @@ namespace Quasardb.Tests.Entry.Table
             QdbStringPointCollection stringPoints,
             QdbTimestampPointCollection timestampPoints)
         {
+            if (ts == null) throw new ArgumentNullException(nameof(ts));
+            if (blobPoints == null) throw new ArgumentNullException(nameof(blobPoints));
+            if (doublePoints == null) throw new ArgumentNullException(nameof(doublePoints));
+            if (int64Points == null) throw new ArgumentNullException(nameof(int64Points));
+            if (stringPoints == null) throw new ArgumentNullException(nameof(stringPoints));
+            if (timestampPoints == null) throw new ArgumentNullException(nameof(timestampPoints));
+
             var writer = ts.Writer();
             for (int i = 0; i < 10; ++i)
             {
@@ -121,6 +129,13 @@ namespace Quasardb.Tests.Entry.Table
             QdbStringPointCollection stringPoints,
             QdbTimestampPointCollection timestampPoints)
         {
+            if (ts == null) throw new ArgumentNullException(nameof(ts));
+            if (blobPoints == null) throw new ArgumentNullException(nameof(blobPoints));
+            if (doublePoints == null) throw new ArgumentNullException(nameof(doublePoints));
+            if (int64Points == null) throw new ArgumentNullException(nameof(int64Points));
+            if (stringPoints == null) throw new ArgumentNullException(nameof(stringPoints));
+            if (timestampPoints == null) throw new ArgumentNullException(nameof(timestampPoints));
+
             var blobColumn = ts.BlobColumns["the_blob"];
             CollectionAssert.AreEqual(blobPoints.ToArray(), blobColumn.Points().ToArray());
 

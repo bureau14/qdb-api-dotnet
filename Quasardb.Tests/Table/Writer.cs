@@ -111,6 +111,15 @@ namespace Quasardb.Tests.Table
             QdbTimestampPointCollection timestampPoints,
             QdbStringPointCollection symbolPoints)
         {
+            if (ts1 == null) throw new ArgumentNullException(nameof(ts1));
+            if (ts2 == null) throw new ArgumentNullException(nameof(ts2));
+            if (blobPoints == null) throw new ArgumentNullException(nameof(blobPoints));
+            if (doublePoints == null) throw new ArgumentNullException(nameof(doublePoints));
+            if (int64Points == null) throw new ArgumentNullException(nameof(int64Points));
+            if (stringPoints == null) throw new ArgumentNullException(nameof(stringPoints));
+            if (timestampPoints == null) throw new ArgumentNullException(nameof(timestampPoints));
+            if (symbolPoints == null) throw new ArgumentNullException(nameof(symbolPoints));
+
             var batch = _cluster.Writer(new QdbBatchColumnDefinition[]{
                 new QdbBatchColumnDefinition(ts1.Alias, "the_blob"),
                 new QdbBatchColumnDefinition(ts1.Alias, "the_double"),
@@ -140,6 +149,14 @@ namespace Quasardb.Tests.Table
             QdbTimestampPointCollection timestampPoints,
             QdbStringPointCollection symbolPoints)
         {
+            if (ts1 == null) throw new ArgumentNullException(nameof(ts1));
+            if (ts2 == null) throw new ArgumentNullException(nameof(ts2));
+            if (blobPoints == null) throw new ArgumentNullException(nameof(blobPoints));
+            if (doublePoints == null) throw new ArgumentNullException(nameof(doublePoints));
+            if (int64Points == null) throw new ArgumentNullException(nameof(int64Points));
+            if (stringPoints == null) throw new ArgumentNullException(nameof(stringPoints));
+            if (timestampPoints == null) throw new ArgumentNullException(nameof(timestampPoints));
+
             var blobColumn = ts1.BlobColumns["the_blob"];
             CollectionAssert.AreEqual(blobPoints.ToArray(), blobColumn.Points().ToArray());
 

@@ -123,6 +123,13 @@ namespace Quasardb.Tests.Table
             string[] strings,
             DateTime[] timestamps)
         {
+            if (ts == null) throw new ArgumentNullException(nameof(ts));
+            if (blobs == null) throw new ArgumentNullException(nameof(blobs));
+            if (doubles == null) throw new ArgumentNullException(nameof(doubles));
+            if (int64s == null) throw new ArgumentNullException(nameof(int64s));
+            if (strings == null) throw new ArgumentNullException(nameof(strings));
+            if (timestamps == null) throw new ArgumentNullException(nameof(timestamps));
+
             var batch = _cluster.ExpWriter([ts], options);
 
             for (int index = 0; index < doubles.Length; index++)
@@ -140,6 +147,13 @@ namespace Quasardb.Tests.Table
             string[] strings,
             DateTime[] timestamps)
         {
+            if (ts == null) throw new ArgumentNullException(nameof(ts));
+            if (blobs == null) throw new ArgumentNullException(nameof(blobs));
+            if (doubles == null) throw new ArgumentNullException(nameof(doubles));
+            if (int64s == null) throw new ArgumentNullException(nameof(int64s));
+            if (strings == null) throw new ArgumentNullException(nameof(strings));
+            if (timestamps == null) throw new ArgumentNullException(nameof(timestamps));
+
             var batch = _cluster.ExpWriter([ts], options);
 
             batch.SetTimestamps(ts, timestamps.ToList());
@@ -161,6 +175,13 @@ namespace Quasardb.Tests.Table
             DateTime[] timestamps,
             DateTime?[] timestamps_values)
         {
+            if (ts == null) throw new ArgumentNullException(nameof(ts));
+            if (blobs == null) throw new ArgumentNullException(nameof(blobs));
+            if (doubles == null) throw new ArgumentNullException(nameof(doubles));
+            if (int64s == null) throw new ArgumentNullException(nameof(int64s));
+            if (strings == null) throw new ArgumentNullException(nameof(strings));
+            if (timestamps == null) throw new ArgumentNullException(nameof(timestamps));
+
             var batch = _cluster.ExpWriter([ts], options);
 
             batch.SetTimestamps(ts, timestamps.ToList());
@@ -181,6 +202,13 @@ namespace Quasardb.Tests.Table
             string[] strings,
             DateTime[] timestamps)
         {
+            if (ts == null) throw new ArgumentNullException(nameof(ts));
+            if (blobs == null) throw new ArgumentNullException(nameof(blobs));
+            if (doubles == null) throw new ArgumentNullException(nameof(doubles));
+            if (int64s == null) throw new ArgumentNullException(nameof(int64s));
+            if (strings == null) throw new ArgumentNullException(nameof(strings));
+            if (timestamps == null) throw new ArgumentNullException(nameof(timestamps));
+
             var batch = _cluster.ExpWriter([ts], options);
 
             for (int index = 0; index < doubles.Length; index++)
@@ -193,11 +221,19 @@ namespace Quasardb.Tests.Table
         public static void CheckTables(QdbTable ts,
             byte[][] blobs,
             double[] doubles,
-            long[] ints,
+            long[] int64s,
             string[] strings,
             DateTime[] timestamps,
             string[] symbols)
         {
+            if (ts == null) throw new ArgumentNullException(nameof(ts));
+            if (blobs == null) throw new ArgumentNullException(nameof(blobs));
+            if (doubles == null) throw new ArgumentNullException(nameof(doubles));
+            if (int64s == null) throw new ArgumentNullException(nameof(int64s));
+            if (strings == null) throw new ArgumentNullException(nameof(strings));
+            if (timestamps == null) throw new ArgumentNullException(nameof(timestamps));
+            if (symbols == null) throw new ArgumentNullException(nameof(symbols));
+
             var blob_arr = ts.BlobColumns["the_blob"].Points().ToArray();
             var double_arr = ts.DoubleColumns["the_double"].Points().ToArray();
             var int_arr = ts.Int64Columns["the_int64"].Points().ToArray();
@@ -207,7 +243,7 @@ namespace Quasardb.Tests.Table
 
             Assert.AreEqual(blob_arr.Length, blobs.Length);
             Assert.AreEqual(double_arr.Length, doubles.Length);
-            Assert.AreEqual(int_arr.Length, ints.Length);
+            Assert.AreEqual(int_arr.Length, int64s.Length);
             Assert.AreEqual(ts_arr.Length, timestamps.Length);
             Assert.AreEqual(string_arr.Length, strings.Length);
             Assert.AreEqual(symbol_arr.Length, symbols.Length);
@@ -216,7 +252,7 @@ namespace Quasardb.Tests.Table
                 Assert.AreEqual(blob_arr[idx].Time, timestamps[idx]);
                 CollectionAssert.AreEqual(blob_arr[idx].Value, blobs[idx]);
                 Assert.AreEqual(double_arr[idx].Value, doubles[idx]);
-                Assert.AreEqual(int_arr[idx].Value, ints[idx]);
+                Assert.AreEqual(int_arr[idx].Value, int64s[idx]);
                 Assert.AreEqual(string_arr[idx].Value, strings[idx]);
                 Assert.AreEqual(ts_arr[idx].Value, timestamps[idx]);
                 if (symbols != null)
@@ -229,12 +265,21 @@ namespace Quasardb.Tests.Table
         public static void CheckTablesWithNull(QdbTable ts,
             byte[][] blobs,
             double?[] doubles,
-            long?[] ints,
+            long?[] int64s,
             string[] strings,
             DateTime[] timestamps,
             DateTime?[] timestamp_values,
             string[] symbols)
         {
+            if (ts == null) throw new ArgumentNullException(nameof(ts));
+            if (blobs == null) throw new ArgumentNullException(nameof(blobs));
+            if (doubles == null) throw new ArgumentNullException(nameof(doubles));
+            if (int64s == null) throw new ArgumentNullException(nameof(int64s));
+            if (strings == null) throw new ArgumentNullException(nameof(strings));
+            if (timestamps == null) throw new ArgumentNullException(nameof(timestamps));
+            if (timestamp_values == null) throw new ArgumentNullException(nameof(timestamp_values));
+            if (symbols == null) throw new ArgumentNullException(nameof(symbols));
+
             var blob_arr = ts.BlobColumns["the_blob"].Points().ToArray();
             var double_arr = ts.DoubleColumns["the_double"].Points().ToArray();
             var int_arr = ts.Int64Columns["the_int64"].Points().ToArray();
@@ -244,7 +289,7 @@ namespace Quasardb.Tests.Table
 
             Assert.AreEqual(blob_arr.Length, blobs.Length);
             Assert.AreEqual(double_arr.Length, doubles.Length);
-            Assert.AreEqual(int_arr.Length, ints.Length);
+            Assert.AreEqual(int_arr.Length, int64s.Length);
             Assert.AreEqual(ts_arr.Length, timestamp_values.Length);
             Assert.AreEqual(string_arr.Length, strings.Length);
             Assert.AreEqual(symbol_arr.Length, symbols.Length);
@@ -253,7 +298,7 @@ namespace Quasardb.Tests.Table
                 Assert.AreEqual(blob_arr[idx].Time, timestamps[idx]);
                 CollectionAssert.AreEqual(blob_arr[idx].Value, blobs[idx]);
                 Assert.AreEqual(double_arr[idx].Value, doubles[idx]);
-                Assert.AreEqual(int_arr[idx].Value, ints[idx]);
+                Assert.AreEqual(int_arr[idx].Value, int64s[idx]);
                 Assert.AreEqual(string_arr[idx].Value, strings[idx]);
                 Assert.AreEqual(ts_arr[idx].Value, timestamp_values[idx]);
                 if (symbols != null)
@@ -266,10 +311,17 @@ namespace Quasardb.Tests.Table
         public static void CheckTablesWithoutSymbol(QdbTable ts,
             byte[][] blobs,
             double[] doubles,
-            long[] ints,
+            long[] int64s,
             string[] strings,
             DateTime[] timestamps)
         {
+            if (ts == null) throw new ArgumentNullException(nameof(ts));
+            if (blobs == null) throw new ArgumentNullException(nameof(blobs));
+            if (doubles == null) throw new ArgumentNullException(nameof(doubles));
+            if (int64s == null) throw new ArgumentNullException(nameof(int64s));
+            if (strings == null) throw new ArgumentNullException(nameof(strings));
+            if (timestamps == null) throw new ArgumentNullException(nameof(timestamps));
+
             var blob_arr = ts.BlobColumns["the_blob"].Points().ToArray();
             var double_arr = ts.DoubleColumns["the_double"].Points().ToArray();
             var int_arr = ts.Int64Columns["the_int64"].Points().ToArray();
@@ -280,7 +332,7 @@ namespace Quasardb.Tests.Table
                 Assert.AreEqual(blob_arr[idx].Time, timestamps[idx]);
                 CollectionAssert.AreEqual(blob_arr[idx].Value, blobs[idx]);
                 Assert.AreEqual(double_arr[idx].Value, doubles[idx]);
-                Assert.AreEqual(int_arr[idx].Value, ints[idx]);
+                Assert.AreEqual(int_arr[idx].Value, int64s[idx]);
                 Assert.AreEqual(string_arr[idx].Value, strings[idx]);
                 Assert.AreEqual(ts_arr[idx].Value, timestamps[idx]);
             }
@@ -288,6 +340,8 @@ namespace Quasardb.Tests.Table
 
         public static bool IsBlittable(Type type)
         {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+
             if (type.IsArray)
             {
                 var elem = type.GetElementType();

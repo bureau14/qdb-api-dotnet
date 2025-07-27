@@ -1,10 +1,11 @@
-using System;
-using System.Linq;
-using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb.Exceptions;
 using Quasardb.Query;
 using Quasardb.TimeSeries;
+using System;
+using System.Linq;
+using System.Reflection.Metadata;
+using System.Text;
 
 namespace Quasardb.Tests.Query
 {
@@ -28,6 +29,8 @@ namespace Quasardb.Tests.Query
 
         public static QdbBlobPointCollection InsertBlobPoints(QdbTable ts, DateTime time, int count)
         {
+            if (ts == null) throw new ArgumentNullException(nameof(ts));
+
             Random random = new Random();
             var r = new QdbBlobPointCollection(count);
 
@@ -45,6 +48,8 @@ namespace Quasardb.Tests.Query
 
         public static QdbDoublePointCollection InsertDoublePoints(QdbTable ts, DateTime time, int count)
         {
+            if (ts == null) throw new ArgumentNullException(nameof(ts));
+
             Random random = new Random();
             var r = new QdbDoublePointCollection(count);
 
@@ -61,6 +66,8 @@ namespace Quasardb.Tests.Query
 
         public static QdbInt64PointCollection InsertInt64Points(QdbTable ts, DateTime time, int count)
         {
+            if (ts == null) throw new ArgumentNullException(nameof(ts));
+
             Random random = new Random();
             var r = new QdbInt64PointCollection(count);
 
@@ -87,6 +94,8 @@ namespace Quasardb.Tests.Query
 
         public static QdbStringPointCollection InsertStringPoints(QdbTable ts, DateTime time, int count)
         {
+            if (ts == null) throw new ArgumentNullException(nameof(ts));
+
             var r = new QdbStringPointCollection(count);
 
             var column = ts.StringColumns["the_string"];
@@ -103,6 +112,8 @@ namespace Quasardb.Tests.Query
 
         public static QdbStringPointCollection InsertInvalidStringPoints(QdbTable ts, DateTime time, int count)
         {
+            if (ts == null) throw new ArgumentNullException(nameof(ts));
+
             var r = new QdbStringPointCollection(count);
 
             var column = ts.StringColumns["the_string"];
@@ -121,6 +132,8 @@ namespace Quasardb.Tests.Query
 
         public static QdbTimestampPointCollection InsertTimestampPoints(QdbTable ts, DateTime time, int count)
         {
+            if (ts == null) throw new ArgumentNullException(nameof(ts));
+
             Random random = new Random();
             var r = new QdbTimestampPointCollection(count);
 
