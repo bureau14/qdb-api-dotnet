@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -26,7 +26,7 @@ namespace Quasardb.Tests.Query
             return ts;
         }
 
-        public QdbBlobPointCollection InsertBlobPoints(QdbTable ts, DateTime time, int count)
+        public static QdbBlobPointCollection InsertBlobPoints(QdbTable ts, DateTime time, int count)
         {
             Random random = new Random();
             var r = new QdbBlobPointCollection(count);
@@ -43,7 +43,7 @@ namespace Quasardb.Tests.Query
             return r;
         }
 
-        public QdbDoublePointCollection InsertDoublePoints(QdbTable ts, DateTime time, int count)
+        public static QdbDoublePointCollection InsertDoublePoints(QdbTable ts, DateTime time, int count)
         {
             Random random = new Random();
             var r = new QdbDoublePointCollection(count);
@@ -59,7 +59,7 @@ namespace Quasardb.Tests.Query
             return r;
         }
 
-        public QdbInt64PointCollection InsertInt64Points(QdbTable ts, DateTime time, int count)
+        public static QdbInt64PointCollection InsertInt64Points(QdbTable ts, DateTime time, int count)
         {
             Random random = new Random();
             var r = new QdbInt64PointCollection(count);
@@ -85,7 +85,7 @@ namespace Quasardb.Tests.Query
             return randomString;
         }
 
-        public QdbStringPointCollection InsertStringPoints(QdbTable ts, DateTime time, int count)
+        public static QdbStringPointCollection InsertStringPoints(QdbTable ts, DateTime time, int count)
         {
             var r = new QdbStringPointCollection(count);
 
@@ -101,7 +101,7 @@ namespace Quasardb.Tests.Query
             return r;
         }
 
-        public QdbStringPointCollection InsertInvalidStringPoints(QdbTable ts, DateTime time, int count)
+        public static QdbStringPointCollection InsertInvalidStringPoints(QdbTable ts, DateTime time, int count)
         {
             var r = new QdbStringPointCollection(count);
 
@@ -119,7 +119,7 @@ namespace Quasardb.Tests.Query
             return r;
         }
 
-        public QdbTimestampPointCollection InsertTimestampPoints(QdbTable ts, DateTime time, int count)
+        public static QdbTimestampPointCollection InsertTimestampPoints(QdbTable ts, DateTime time, int count)
         {
             Random random = new Random();
             var r = new QdbTimestampPointCollection(count);
@@ -135,7 +135,7 @@ namespace Quasardb.Tests.Query
             return r;
         }
 
-        private void CheckColumns(QdbColumnNameCollection columns)
+        private static void CheckColumns(QdbColumnNameCollection columns)
         {
             Assert.AreEqual(7, columns.Count);
             Assert.AreEqual("$timestamp", columns[0]);

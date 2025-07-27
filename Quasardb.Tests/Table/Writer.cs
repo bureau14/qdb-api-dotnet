@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -28,7 +28,7 @@ namespace Quasardb.Tests.Table
             return ts;
         }
 
-        public QdbBlobPointCollection CreateBlobPoints(DateTime time, int count)
+        public static QdbBlobPointCollection CreateBlobPoints(DateTime time, int count)
         {
             Random random = new Random();
             var r = new QdbBlobPointCollection(count);
@@ -43,7 +43,7 @@ namespace Quasardb.Tests.Table
             return r;
         }
 
-        public QdbDoublePointCollection CreateDoublePoints(DateTime time, int count)
+        public static QdbDoublePointCollection CreateDoublePoints(DateTime time, int count)
         {
             Random random = new Random();
             var r = new QdbDoublePointCollection(count);
@@ -56,7 +56,7 @@ namespace Quasardb.Tests.Table
             return r;
         }
 
-        public QdbInt64PointCollection CreateInt64Points(DateTime time, int count)
+        public static QdbInt64PointCollection CreateInt64Points(DateTime time, int count)
         {
             Random random = new Random();
             var r = new QdbInt64PointCollection(count);
@@ -76,7 +76,7 @@ namespace Quasardb.Tests.Table
                 .Select(s => s[r.Next(s.Length)]).ToArray());
         }
 
-        public QdbStringPointCollection CreateStringPoints(DateTime time, int count)
+        public static QdbStringPointCollection CreateStringPoints(DateTime time, int count)
         {
             Random random = new Random();
             var r = new QdbStringPointCollection(count);
@@ -89,7 +89,7 @@ namespace Quasardb.Tests.Table
             return r;
         }
 
-        public QdbTimestampPointCollection CreateTimestampPoints(DateTime time, int count)
+        public static QdbTimestampPointCollection CreateTimestampPoints(DateTime time, int count)
         {
             Random random = new Random();
             var r = new QdbTimestampPointCollection(count);
@@ -132,7 +132,7 @@ namespace Quasardb.Tests.Table
             return batch;
         }
 
-        public void CheckTables(QdbTable ts1, QdbTable ts2,
+        public static void CheckTables(QdbTable ts1, QdbTable ts2,
             QdbBlobPointCollection blobPoints,
             QdbDoublePointCollection doublePoints,
             QdbInt64PointCollection int64Points,

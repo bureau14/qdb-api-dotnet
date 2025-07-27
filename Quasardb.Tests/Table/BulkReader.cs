@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb.TimeSeries;
 using Quasardb.TimeSeries.ExpWriter;
@@ -13,7 +13,7 @@ namespace Quasardb.Tests.Table
     {
         readonly QdbCluster _cluster = QdbTestCluster.Instance;
 
-        DateTime[] MakeTimestamps(int count)
+        static DateTime[] MakeTimestamps(int count)
         {
             var r = new DateTime[count];
             var date = DateTime.Parse("2021-01-01T00:00:00Z");
@@ -22,7 +22,7 @@ namespace Quasardb.Tests.Table
             return r;
         }
 
-        byte[][] MakeBlobArray(int count)
+        static byte[][] MakeBlobArray(int count)
         {
             var r = new byte[count][];
             for (int i = 0; i < count; ++i)
@@ -30,21 +30,21 @@ namespace Quasardb.Tests.Table
             return r;
         }
 
-        double[] MakeDoubleArray(int count)
+        static double[] MakeDoubleArray(int count)
         {
             var r = new double[count];
             for (int i = 0; i < count; ++i) r[i] = i;
             return r;
         }
 
-        long[] MakeInt64Array(int count)
+        static long[] MakeInt64Array(int count)
         {
             var r = new long[count];
             for (int i = 0; i < count; ++i) r[i] = i;
             return r;
         }
 
-        string[] MakeStringArray(int count)
+        static string[] MakeStringArray(int count)
         {
             var r = new string[count];
             for (int i = 0; i < count; ++i) r[i] = i.ToString();

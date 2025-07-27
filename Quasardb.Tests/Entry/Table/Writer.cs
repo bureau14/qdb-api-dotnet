@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -11,7 +11,7 @@ namespace Quasardb.Tests.Entry.Table
     [TestClass]
     public class Writer
     {
-        public QdbTable CreateTable(string alias = null)
+        public static QdbTable CreateTable(string alias = null)
         {
             var ts = QdbTestCluster.Instance.Table(alias ?? RandomGenerator.CreateUniqueAlias());
             ts.Create(new QdbColumnDefinition[] {
@@ -24,7 +24,7 @@ namespace Quasardb.Tests.Entry.Table
             return ts;
         }
 
-        public QdbBlobPointCollection CreateBlobPoints(DateTime time, int count)
+        public static QdbBlobPointCollection CreateBlobPoints(DateTime time, int count)
         {
             Random random = new Random();
             var r = new QdbBlobPointCollection(count);
@@ -39,7 +39,7 @@ namespace Quasardb.Tests.Entry.Table
             return r;
         }
 
-        public QdbDoublePointCollection CreateDoublePoints(DateTime time, int count)
+        public static QdbDoublePointCollection CreateDoublePoints(DateTime time, int count)
         {
             Random random = new Random();
             var r = new QdbDoublePointCollection(count);
@@ -52,7 +52,7 @@ namespace Quasardb.Tests.Entry.Table
             return r;
         }
 
-        public QdbInt64PointCollection CreateInt64Points(DateTime time, int count)
+        public static QdbInt64PointCollection CreateInt64Points(DateTime time, int count)
         {
             Random random = new Random();
             var r = new QdbInt64PointCollection(count);
@@ -65,7 +65,7 @@ namespace Quasardb.Tests.Entry.Table
             return r;
         }
 
-        public QdbTimestampPointCollection CreateTimestampPoints(DateTime time, int count)
+        public static QdbTimestampPointCollection CreateTimestampPoints(DateTime time, int count)
         {
             Random random = new Random();
             var r = new QdbTimestampPointCollection(count);
@@ -78,7 +78,7 @@ namespace Quasardb.Tests.Entry.Table
             return r;
         }
 
-        public QdbStringPointCollection CreateStringPoints(DateTime time, int count)
+        public static QdbStringPointCollection CreateStringPoints(DateTime time, int count)
         {
             Random random = new Random();
             var r = new QdbStringPointCollection(count);
@@ -93,7 +93,7 @@ namespace Quasardb.Tests.Entry.Table
             return r;
         }
 
-        public QdbTableWriter Insert(QdbTable ts,
+        public static QdbTableWriter Insert(QdbTable ts,
             DateTime startTime,
             QdbBlobPointCollection blobPoints,
             QdbDoublePointCollection doublePoints,
@@ -114,7 +114,7 @@ namespace Quasardb.Tests.Entry.Table
             return writer;
         }
 
-        public void CheckTable(QdbTable ts,
+        public static void CheckTable(QdbTable ts,
             QdbBlobPointCollection blobPoints,
             QdbDoublePointCollection doublePoints,
             QdbInt64PointCollection int64Points,

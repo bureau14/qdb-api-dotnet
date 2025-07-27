@@ -9,7 +9,7 @@ namespace Quasardb.Tests.Entry.Table
     [TestClass]
     public class StreamReader
     {
-        public QdbTable CreateTable(string alias = null)
+        public static QdbTable CreateTable(string alias = null)
         {
             var ts = QdbTestCluster.Instance.Table(alias ?? RandomGenerator.CreateUniqueAlias());
             ts.Create(new QdbColumnDefinition[] {
@@ -22,7 +22,7 @@ namespace Quasardb.Tests.Entry.Table
             return ts;
         }
 
-        public QdbBlobPointCollection InsertBlobPoints(QdbTable ts, DateTime time, int count)
+        public static QdbBlobPointCollection InsertBlobPoints(QdbTable ts, DateTime time, int count)
         {
             Random random = new Random();
             var r = new QdbBlobPointCollection(count);
@@ -39,7 +39,7 @@ namespace Quasardb.Tests.Entry.Table
             return r;
         }
 
-        public QdbDoublePointCollection InsertDoublePoints(QdbTable ts, DateTime time, int count)
+        public static QdbDoublePointCollection InsertDoublePoints(QdbTable ts, DateTime time, int count)
         {
             Random random = new Random();
             var r = new QdbDoublePointCollection(count);
@@ -55,7 +55,7 @@ namespace Quasardb.Tests.Entry.Table
             return r;
         }
 
-        public QdbInt64PointCollection InsertInt64Points(QdbTable ts, DateTime time, int count)
+        public static QdbInt64PointCollection InsertInt64Points(QdbTable ts, DateTime time, int count)
         {
             Random random = new Random();
             var r = new QdbInt64PointCollection(count);
@@ -71,7 +71,7 @@ namespace Quasardb.Tests.Entry.Table
             return r;
         }
 
-        public QdbTimestampPointCollection InsertTimestampPoints(QdbTable ts, DateTime time, int count)
+        public static QdbTimestampPointCollection InsertTimestampPoints(QdbTable ts, DateTime time, int count)
         {
             Random random = new Random();
             var r = new QdbTimestampPointCollection(count);
@@ -87,7 +87,7 @@ namespace Quasardb.Tests.Entry.Table
             return r;
         }
 
-        public QdbStringPointCollection InsertStringPoints(QdbTable ts, DateTime time, int count)
+        public static QdbStringPointCollection InsertStringPoints(QdbTable ts, DateTime time, int count)
         {
             Random random = new Random();
             var r = new QdbStringPointCollection(count);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
@@ -18,7 +18,7 @@ namespace Quasardb.Tests.Table
     {
         private readonly QdbCluster _cluster = QdbTestCluster.Instance;
 
-        public DateTime[] MakeTimestamps(int count)
+        public static DateTime[] MakeTimestamps(int count)
         {
             Random random = new Random();
             var r = new DateTime[count];
@@ -31,7 +31,7 @@ namespace Quasardb.Tests.Table
             return r;
         }
 
-        public byte[][] MakeBlobArray(int count)
+        public static byte[][] MakeBlobArray(int count)
         {
             var r = new byte[count][];
 
@@ -42,7 +42,7 @@ namespace Quasardb.Tests.Table
             return r;
         }
 
-        public double[] MakeDoubleArray(int count)
+        public static double[] MakeDoubleArray(int count)
         {
             var r = new double[count];
 
@@ -53,7 +53,7 @@ namespace Quasardb.Tests.Table
             return r;
         }
 
-        public long[] MakeInt64Array(int count)
+        public static long[] MakeInt64Array(int count)
         {
             var r = new long[count];
 
@@ -71,7 +71,7 @@ namespace Quasardb.Tests.Table
                 .Select(s => s[r.Next(s.Length)]).ToArray());
         }
 
-        public string[] MakeStringArray(int count)
+        public static string[] MakeStringArray(int count)
         {
             Random random = new Random();
             var r = new string[count];
@@ -83,7 +83,7 @@ namespace Quasardb.Tests.Table
             return r;
         }
 
-        public DateTime[] CreateTimestampPoints(int count)
+        public static DateTime[] CreateTimestampPoints(int count)
         {
             return MakeTimestamps(count);
         }
@@ -190,7 +190,7 @@ namespace Quasardb.Tests.Table
             return batch;
         }
 
-        public void CheckTables(QdbTable ts,
+        public static void CheckTables(QdbTable ts,
             byte[][] blobs,
             double[] doubles,
             long[] ints,
@@ -226,7 +226,7 @@ namespace Quasardb.Tests.Table
             }
         }
 
-        public void CheckTablesWithNull(QdbTable ts,
+        public static void CheckTablesWithNull(QdbTable ts,
             byte[][] blobs,
             double?[] doubles,
             long?[] ints,
@@ -263,7 +263,7 @@ namespace Quasardb.Tests.Table
             }
         }
 
-        public void CheckTablesWithoutSymbol(QdbTable ts,
+        public static void CheckTablesWithoutSymbol(QdbTable ts,
             byte[][] blobs,
             double[] doubles,
             long[] ints,
