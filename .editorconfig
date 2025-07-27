@@ -57,3 +57,9 @@ dotnet_diagnostic.CA1052.severity = warning   # Static holder types should be St
 # Suppress some less useful warnings (optional)
 dotnet_diagnostic.CA1707.severity = none      # Identifiers should not contain underscores
 
+# ❗ Use of var instead of explicit types
+dotnet_diagnostic.IDE0007.severity = warning   # Use 'var' instead of explicit type
+
+# ❗ Unused variable
+dotnet_diagnostic.CS0168.severity = warning    # Variable declared but never used
+dotnet_diagnostic.CS0219.severity = warning    # Variable assigned but never used

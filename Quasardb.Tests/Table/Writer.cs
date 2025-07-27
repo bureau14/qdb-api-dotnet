@@ -30,10 +30,10 @@ namespace Quasardb.Tests.Table
 
         public static QdbBlobPointCollection CreateBlobPoints(DateTime time, int count)
         {
-            Random random = new Random();
+            var random = new Random();
             var r = new QdbBlobPointCollection(count);
 
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 var value = new byte[32];
                 random.NextBytes(value);
@@ -45,10 +45,10 @@ namespace Quasardb.Tests.Table
 
         public static QdbDoublePointCollection CreateDoublePoints(DateTime time, int count)
         {
-            Random random = new Random();
+            var random = new Random();
             var r = new QdbDoublePointCollection(count);
 
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 r.Add(time, random.NextDouble());
                 time = time.AddSeconds(1);
@@ -58,10 +58,10 @@ namespace Quasardb.Tests.Table
 
         public static QdbInt64PointCollection CreateInt64Points(DateTime time, int count)
         {
-            Random random = new Random();
+            var random = new Random();
             var r = new QdbInt64PointCollection(count);
 
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 r.Add(time, random.Next());
                 time = time.AddSeconds(1);
@@ -78,10 +78,10 @@ namespace Quasardb.Tests.Table
 
         public static QdbStringPointCollection CreateStringPoints(DateTime time, int count)
         {
-            Random random = new Random();
+            var random = new Random();
             var r = new QdbStringPointCollection(count);
 
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 r.Add(time, RandomString(32, random));
                 time = time.AddSeconds(1);
@@ -91,10 +91,10 @@ namespace Quasardb.Tests.Table
 
         public static QdbTimestampPointCollection CreateTimestampPoints(DateTime time, int count)
         {
-            Random random = new Random();
+            var random = new Random();
             var r = new QdbTimestampPointCollection(count);
 
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 r.Add(time, DateTime.Today.AddSeconds(random.NextDouble()));
                 time = time.AddSeconds(1);
@@ -128,7 +128,7 @@ namespace Quasardb.Tests.Table
                 new QdbBatchColumnDefinition(ts2.Alias, "the_ts"),
                 new QdbBatchColumnDefinition(ts2.Alias, "the_symbol"),
             });
-            for (int i = 0; i < 10; ++i)
+            for (var i = 0; i < 10; ++i)
             {
                 batch.StartRow(startTime.AddSeconds(i));
                 batch.SetBlob("the_blob", blobPoints[i].Value);

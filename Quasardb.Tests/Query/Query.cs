@@ -31,11 +31,11 @@ namespace Quasardb.Tests.Query
         {
             if (ts == null) throw new ArgumentNullException(nameof(ts));
 
-            Random random = new Random();
+            var random = new Random();
             var r = new QdbBlobPointCollection(count);
 
             var column = ts.BlobColumns["the_blob"];
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 var value = new byte[32];
                 random.NextBytes(value);
@@ -50,11 +50,11 @@ namespace Quasardb.Tests.Query
         {
             if (ts == null) throw new ArgumentNullException(nameof(ts));
 
-            Random random = new Random();
+            var random = new Random();
             var r = new QdbDoublePointCollection(count);
 
             var column = ts.DoubleColumns["the_double"];
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 var value = random.NextDouble();
                 column.Insert(time, value);
@@ -68,11 +68,11 @@ namespace Quasardb.Tests.Query
         {
             if (ts == null) throw new ArgumentNullException(nameof(ts));
 
-            Random random = new Random();
+            var random = new Random();
             var r = new QdbInt64PointCollection(count);
 
             var column = ts.Int64Columns["the_int64"];
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 var value = random.Next();
                 column.Insert(time, value);
@@ -99,7 +99,7 @@ namespace Quasardb.Tests.Query
             var r = new QdbStringPointCollection(count);
 
             var column = ts.StringColumns["the_string"];
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 var value = GenerateRandomAlphanumericString(32);
 
@@ -121,7 +121,7 @@ namespace Quasardb.Tests.Query
             byte[] bytes = { (byte)'\xfe', (byte)'\xfe', (byte)'\xff', (byte)'\xff' };
             var value = Encoding.UTF8.GetString(bytes);
 
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 column.Insert(time, value);
                 r.Add(time, value);
@@ -134,11 +134,11 @@ namespace Quasardb.Tests.Query
         {
             if (ts == null) throw new ArgumentNullException(nameof(ts));
 
-            Random random = new Random();
+            var random = new Random();
             var r = new QdbTimestampPointCollection(count);
 
             var column = ts.TimestampColumns["the_ts"];
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 var value = DateTime.Today.AddSeconds(random.NextDouble());
                 column.Insert(time, value);
@@ -255,7 +255,7 @@ namespace Quasardb.Tests.Query
         public void ReturnsNullValues()
         {
             QdbTable ts = CreateTable();
-            for (int i = 0; i < 10L; ++i)
+            for (var i = 0; i < 10L; ++i)
             {
                 _cluster.Query($"INSERT INTO {ts.Alias} ($timestamp, the_blob, the_double, the_int64, the_string, the_ts) VALUES (now(), NULL, NULL, NULL, NULL, NULL)");
             }
@@ -266,7 +266,7 @@ namespace Quasardb.Tests.Query
 
                 var rows = results.Rows;
                 Assert.AreEqual(10L, rows.Count);
-                for (int i = 0; i < 10L; ++i)
+                for (var i = 0; i < 10L; ++i)
                 {
                     var row = rows[i];
                     Assert.AreEqual(null, row["the_blob"].Value);
@@ -297,7 +297,7 @@ namespace Quasardb.Tests.Query
 
                 var rows = results.Rows;
                 Assert.AreEqual(10L, rows.Count);
-                for (int i = 0; i < 10L; ++i)
+                for (var i = 0; i < 10L; ++i)
                 {
                     var row = rows[i];
                     Assert.AreEqual(insertedDoubleData[i].Value, row[0].Value);
@@ -325,7 +325,7 @@ namespace Quasardb.Tests.Query
 
                 var rows = results.Rows;
                 Assert.AreEqual(10L, rows.Count);
-                for (int i = 0; i < 10L; ++i)
+                for (var i = 0; i < 10L; ++i)
                 {
                     var row = rows[i];
                     Assert.AreEqual(startTime.AddSeconds(i).ToLocalTime(), row[0].TimestampValue);
@@ -400,7 +400,7 @@ namespace Quasardb.Tests.Query
 
                 var rows = results.Rows;
                 Assert.AreEqual(10L, rows.Count);
-                for (int i = 0; i < 10L; ++i)
+                for (var i = 0; i < 10L; ++i)
                 {
                     var row = rows[i];
                     CollectionAssert.AreEqual(insertedBlobData[i].Value, row["the_blob"].BlobValue);

@@ -26,11 +26,11 @@ namespace Quasardb.Tests.Entry.Table
         {
             if (ts == null) throw new ArgumentNullException(nameof(ts));
 
-            Random random = new Random();
+            var random = new Random();
             var r = new QdbBlobPointCollection(count);
 
             var column = ts.BlobColumns["the_blob"];
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 var value = new byte[32];
                 random.NextBytes(value);
@@ -45,11 +45,11 @@ namespace Quasardb.Tests.Entry.Table
         {
             if (ts == null) throw new ArgumentNullException(nameof(ts));
 
-            Random random = new Random();
+            var random = new Random();
             var r = new QdbDoublePointCollection(count);
 
             var column = ts.DoubleColumns["the_double"];
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 var value = random.NextDouble();
                 column.Insert(time, value);
@@ -63,11 +63,11 @@ namespace Quasardb.Tests.Entry.Table
         {
             if (ts == null) throw new ArgumentNullException(nameof(ts));
 
-            Random random = new Random();
+            var random = new Random();
             var r = new QdbInt64PointCollection(count);
 
             var column = ts.Int64Columns["the_int64"];
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 var value = random.Next();
                 column.Insert(time, value);
@@ -81,11 +81,11 @@ namespace Quasardb.Tests.Entry.Table
         {
             if (ts == null) throw new ArgumentNullException(nameof(ts));
 
-            Random random = new Random();
+            var random = new Random();
             var r = new QdbTimestampPointCollection(count);
 
             var column = ts.TimestampColumns["the_ts"];
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 var value = DateTime.Today.AddSeconds(random.NextDouble());
                 column.Insert(time, value);
@@ -99,11 +99,11 @@ namespace Quasardb.Tests.Entry.Table
         {
             if (ts == null) throw new ArgumentNullException(nameof(ts));
 
-            Random random = new Random();
+            var random = new Random();
             var r = new QdbStringPointCollection(count);
 
             var column = ts.StringColumns["the_string"];
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 string value = "content";
                 column.Insert(time, value);
@@ -141,7 +141,7 @@ namespace Quasardb.Tests.Entry.Table
 
             var reader = ts.StreamReader(new QdbTimeInterval(startTime, startTime.AddSeconds(10)));
 
-            for (int i = 0; i < insertedBlobData.Count; i++)
+            for (var i = 0; i < insertedBlobData.Count; i++)
             {
                 var row = reader.NextRow();
                 Assert.AreEqual(startTime.AddSeconds(i), row.Timestamp);
@@ -175,7 +175,7 @@ namespace Quasardb.Tests.Entry.Table
 
             var reader = ts.StreamReader(new QdbTimeInterval(startTime, startTime.AddSeconds(10)));
 
-            for (int i = 0; i < insertedBlobData.Count; i++)
+            for (var i = 0; i < insertedBlobData.Count; i++)
             {
                 var row = reader.NextRow();
                 Assert.AreEqual(startTime.AddSeconds(i), row.Timestamp);
@@ -205,7 +205,7 @@ namespace Quasardb.Tests.Entry.Table
             }, new QdbTimeInterval(startTime, startTime.AddSeconds(10)));
 
             int index = 0;
-            for (int i = 0; i < insertedDoubleData.Count; i++)
+            for (var i = 0; i < insertedDoubleData.Count; i++)
             {
                 var row = reader.NextRow();
                 Assert.AreEqual(startTime.AddSeconds(i), row.Timestamp);
@@ -235,7 +235,7 @@ namespace Quasardb.Tests.Entry.Table
             });
 
             int[] mapping = new int[] { 0, 5 };
-            for (int i = 0; i < 2; i++)
+            for (var i = 0; i < 2; i++)
             {
                 var row = reader.NextRow();
                 int index = mapping[i];

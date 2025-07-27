@@ -17,7 +17,7 @@ namespace Quasardb.Tests.Table
         {
             var r = new DateTime[count];
             var date = DateTime.Parse("2021-01-01T00:00:00Z");
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
                 r[i] = date.AddSeconds(i);
             return r;
         }
@@ -25,7 +25,7 @@ namespace Quasardb.Tests.Table
         static byte[][] MakeBlobArray(int count)
         {
             var r = new byte[count][];
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
                 r[i] = System.Text.Encoding.UTF8.GetBytes("Running 🏃 is faster than swimming 🏊.");
             return r;
         }
@@ -33,21 +33,21 @@ namespace Quasardb.Tests.Table
         static double[] MakeDoubleArray(int count)
         {
             var r = new double[count];
-            for (int i = 0; i < count; ++i) r[i] = i;
+            for (var i = 0; i < count; ++i) r[i] = i;
             return r;
         }
 
         static long[] MakeInt64Array(int count)
         {
             var r = new long[count];
-            for (int i = 0; i < count; ++i) r[i] = i;
+            for (var i = 0; i < count; ++i) r[i] = i;
             return r;
         }
 
         static string[] MakeStringArray(int count)
         {
             var r = new string[count];
-            for (int i = 0; i < count; ++i) r[i] = i.ToString();
+            for (var i = 0; i < count; ++i) r[i] = i.ToString();
             return r;
         }
 
@@ -76,7 +76,7 @@ namespace Quasardb.Tests.Table
             var timestamps = MakeTimestamps(count);
 
             var batch = _cluster.ExpWriter([ts.Alias], new QdbTableExpWriterOptions().Transactional());
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
                 batch.Add(ts.Alias, timestamps[i], [blobs[i], doubles[i], ints[i], strings[i], timestamps[i]]);
             batch.Push();
 
@@ -111,7 +111,7 @@ namespace Quasardb.Tests.Table
             var timestamps = MakeTimestamps(count);
 
             var batch = _cluster.ExpWriter([ts.Alias], new QdbTableExpWriterOptions().Transactional());
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
                 batch.Add(ts.Alias, timestamps[i], [blobs[i], doubles[i], ints[i], strings[i], timestamps[i]]);
             batch.Push();
 
@@ -147,7 +147,7 @@ namespace Quasardb.Tests.Table
             var timestamps = MakeTimestamps(count * 2);
 
             var batch = _cluster.ExpWriter([ts1.Alias, ts2.Alias], new QdbTableExpWriterOptions().Transactional());
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
                 batch.Add(ts1.Alias, timestamps[i], [blobs[i], doubles[i], ints[i], strings[i], timestamps[i]]);
                 batch.Add(ts2.Alias, timestamps[i + count], [blobs[i], doubles[i], ints[i], strings[i], timestamps[i]]);

@@ -166,7 +166,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             _table_data = new List<QdbTableExpWriterData>();
             _table_name_to_index = new Dictionary<string, int>();
 
-            for (int table_index = 0; table_index < tables.Length; table_index++)
+            for (var table_index = 0; table_index < tables.Length; table_index++)
             {
                 var table = tables[table_index];
                 _table_name_to_index[table] = table_index;
@@ -469,7 +469,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             }
 
             var span = values.AsSpan();
-            for (int column_index = 0; column_index < span.Length; column_index++)
+            for (var column_index = 0; column_index < span.Length; column_index++)
             {
                 var val = span[column_index];
                 var column_type = _table_data[table_index].columns[column_index].type;
@@ -520,7 +520,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         public void Push()
         {
             var tables = new qdb_exp_batch_push_table[_tables.Count];
-            for (int index = 0; index < _tables.Count; index++)
+            for (var index = 0; index < _tables.Count; index++)
             {
                 var table = _tables[index];
                 tables[index] = ExpWriterHelper.convert_table(table, _options, _table_data[index].timestamps.ToArray(), _table_data[index].columns, _table_data[index].data, ref _pins);
@@ -615,7 +615,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         internal static void reset_data(qdb_ts_column_info_ex[] columns, ref QdbColumnData[] data)
         {
             var span = columns.AsSpan();
-            for (int column_index = 0; column_index < span.Length; column_index++)
+            for (var column_index = 0; column_index < span.Length; column_index++)
             {
                 var column = span[column_index];
                 switch (column.type)
@@ -644,7 +644,7 @@ namespace Quasardb.TimeSeries.ExpWriter
 
         internal static qdb_blob convert_blob(byte[] arr, ref List<GCHandle> pins)
         {
-            GCHandle pin = GCHandle.Alloc(arr, GCHandleType.Pinned);
+            var pin = GCHandle.Alloc(arr, GCHandleType.Pinned);
             var b = new qdb_blob((byte*)pin.AddrOfPinnedObject(), (qdb_size_t)arr.Length);
             pins.Add(pin);
             return b;
@@ -653,7 +653,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         internal static qdb_sized_string convert_string(string str, ref List<GCHandle> pins)
         {
             var content = System.Text.Encoding.UTF8.GetBytes(str);
-            GCHandle pin = GCHandle.Alloc(content, GCHandleType.Pinned);
+            var pin = GCHandle.Alloc(content, GCHandleType.Pinned);
             var ss = new qdb_sized_string((byte*)pin.AddrOfPinnedObject(), (qdb_size_t)content.Length);
             pins.Add(pin);
             return ss;
@@ -662,14 +662,14 @@ namespace Quasardb.TimeSeries.ExpWriter
         internal static IntPtr convert_char_array(string str, ref List<GCHandle> pins)
         {
             var content = System.Text.Encoding.UTF8.GetBytes(str + '\0');
-            GCHandle pin = GCHandle.Alloc(content, GCHandleType.Pinned);
+            var pin = GCHandle.Alloc(content, GCHandleType.Pinned);
             pins.Add(pin);
             return pin.AddrOfPinnedObject();
         }
 
         internal unsafe static IntPtr convert_array<T>(T[] array, ref List<GCHandle> pins)
         {
-            GCHandle pin = GCHandle.Alloc(array, GCHandleType.Pinned);
+            var pin = GCHandle.Alloc(array, GCHandleType.Pinned);
             pins.Add(pin);
             return pin.AddrOfPinnedObject();
         }
@@ -706,7 +706,7 @@ namespace Quasardb.TimeSeries.ExpWriter
         static qdb_exp_batch_push_column[] convert_columns(qdb_ts_column_info_ex[] infos, QdbColumnData[] data, ref qdb_size_t columnCount, ref List<GCHandle> pins)
         {
             var columns = new List<qdb_exp_batch_push_column>();
-            for (int index = 0; index < infos.Length; index++)
+            for (var index = 0; index < infos.Length; index++)
             {
                 if (data[index] != null)
                 {
@@ -757,7 +757,7 @@ namespace Quasardb.TimeSeries.ExpWriter
             else
             {
                 IntPtr[] dep_columns = new IntPtr[deduplicated_columns.Length];
-                for (int i = 0; i < deduplicated_columns.Length; i++)
+                for (var i = 0; i < deduplicated_columns.Length; i++)
                 {
                     dep_columns[i] = convert_char_array(deduplicated_columns[i], ref pins);
                 }
