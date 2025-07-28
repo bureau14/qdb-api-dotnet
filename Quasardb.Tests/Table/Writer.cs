@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -28,12 +28,12 @@ namespace Quasardb.Tests.Table
             return ts;
         }
 
-        public QdbBlobPointCollection CreateBlobPoints(DateTime time, int count)
+        public static QdbBlobPointCollection CreateBlobPoints(DateTime time, int count)
         {
-            Random random = new Random();
+            var random = new Random();
             var r = new QdbBlobPointCollection(count);
 
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 var value = new byte[32];
                 random.NextBytes(value);
@@ -43,12 +43,12 @@ namespace Quasardb.Tests.Table
             return r;
         }
 
-        public QdbDoublePointCollection CreateDoublePoints(DateTime time, int count)
+        public static QdbDoublePointCollection CreateDoublePoints(DateTime time, int count)
         {
-            Random random = new Random();
+            var random = new Random();
             var r = new QdbDoublePointCollection(count);
 
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 r.Add(time, random.NextDouble());
                 time = time.AddSeconds(1);
@@ -56,12 +56,12 @@ namespace Quasardb.Tests.Table
             return r;
         }
 
-        public QdbInt64PointCollection CreateInt64Points(DateTime time, int count)
+        public static QdbInt64PointCollection CreateInt64Points(DateTime time, int count)
         {
-            Random random = new Random();
+            var random = new Random();
             var r = new QdbInt64PointCollection(count);
 
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 r.Add(time, random.Next());
                 time = time.AddSeconds(1);
@@ -76,12 +76,12 @@ namespace Quasardb.Tests.Table
                 .Select(s => s[r.Next(s.Length)]).ToArray());
         }
 
-        public QdbStringPointCollection CreateStringPoints(DateTime time, int count)
+        public static QdbStringPointCollection CreateStringPoints(DateTime time, int count)
         {
-            Random random = new Random();
+            var random = new Random();
             var r = new QdbStringPointCollection(count);
 
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 r.Add(time, RandomString(32, random));
                 time = time.AddSeconds(1);
@@ -89,12 +89,12 @@ namespace Quasardb.Tests.Table
             return r;
         }
 
-        public QdbTimestampPointCollection CreateTimestampPoints(DateTime time, int count)
+        public static QdbTimestampPointCollection CreateTimestampPoints(DateTime time, int count)
         {
-            Random random = new Random();
+            var random = new Random();
             var r = new QdbTimestampPointCollection(count);
 
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 r.Add(time, DateTime.Today.AddSeconds(random.NextDouble()));
                 time = time.AddSeconds(1);
@@ -111,6 +111,15 @@ namespace Quasardb.Tests.Table
             QdbTimestampPointCollection timestampPoints,
             QdbStringPointCollection symbolPoints)
         {
+            if (ts1 == null) throw new ArgumentNullException(nameof(ts1));
+            if (ts2 == null) throw new ArgumentNullException(nameof(ts2));
+            if (blobPoints == null) throw new ArgumentNullException(nameof(blobPoints));
+            if (doublePoints == null) throw new ArgumentNullException(nameof(doublePoints));
+            if (int64Points == null) throw new ArgumentNullException(nameof(int64Points));
+            if (stringPoints == null) throw new ArgumentNullException(nameof(stringPoints));
+            if (timestampPoints == null) throw new ArgumentNullException(nameof(timestampPoints));
+            if (symbolPoints == null) throw new ArgumentNullException(nameof(symbolPoints));
+
             var batch = _cluster.Writer(new QdbBatchColumnDefinition[]{
                 new QdbBatchColumnDefinition(ts1.Alias, "the_blob"),
                 new QdbBatchColumnDefinition(ts1.Alias, "the_double"),
@@ -119,7 +128,7 @@ namespace Quasardb.Tests.Table
                 new QdbBatchColumnDefinition(ts2.Alias, "the_ts"),
                 new QdbBatchColumnDefinition(ts2.Alias, "the_symbol"),
             });
-            for (int i = 0; i < 10; ++i)
+            for (var i = 0; i < 10; ++i)
             {
                 batch.StartRow(startTime.AddSeconds(i));
                 batch.SetBlob("the_blob", blobPoints[i].Value);
@@ -132,7 +141,7 @@ namespace Quasardb.Tests.Table
             return batch;
         }
 
-        public void CheckTables(QdbTable ts1, QdbTable ts2,
+        public static void CheckTables(QdbTable ts1, QdbTable ts2,
             QdbBlobPointCollection blobPoints,
             QdbDoublePointCollection doublePoints,
             QdbInt64PointCollection int64Points,
@@ -140,6 +149,14 @@ namespace Quasardb.Tests.Table
             QdbTimestampPointCollection timestampPoints,
             QdbStringPointCollection symbolPoints)
         {
+            if (ts1 == null) throw new ArgumentNullException(nameof(ts1));
+            if (ts2 == null) throw new ArgumentNullException(nameof(ts2));
+            if (blobPoints == null) throw new ArgumentNullException(nameof(blobPoints));
+            if (doublePoints == null) throw new ArgumentNullException(nameof(doublePoints));
+            if (int64Points == null) throw new ArgumentNullException(nameof(int64Points));
+            if (stringPoints == null) throw new ArgumentNullException(nameof(stringPoints));
+            if (timestampPoints == null) throw new ArgumentNullException(nameof(timestampPoints));
+
             var blobColumn = ts1.BlobColumns["the_blob"];
             CollectionAssert.AreEqual(blobPoints.ToArray(), blobColumn.Points().ToArray());
 

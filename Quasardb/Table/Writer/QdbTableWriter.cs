@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
@@ -61,7 +61,7 @@ namespace Quasardb.TimeSeries.Writer
 
         internal long IndexOf(string column)
         {
-            for (int i = 0; i < (int)_columns.Count; ++i)
+            for (var i = 0; i < (int)_columns.Count; ++i)
             {
                 if (_columns[i].column == column)
                     return i;
