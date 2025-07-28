@@ -5,7 +5,6 @@
     <ProjectGuid>{BE25CD87-9FB3-4CBA-87C5-5928F3CCB5C9}</ProjectGuid>
     <TargetFrameworks>net8.0;net6.0;net5.0;netcoreapp3.1</TargetFrameworks>
     <OutputType>Library</OutputType>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <IsTestProject>true</IsTestProject>
     <UseNETCoreGenerator>true</UseNETCoreGenerator>
@@ -17,14 +16,12 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <DefineConstants>$(DefineConstants);RELEASE;TRACE</DefineConstants>
     <DebugSymbols>false</DebugSymbols>
     <DebugType>portable</DebugType>
     <Optimize>true</Optimize>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">

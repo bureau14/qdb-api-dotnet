@@ -6,13 +6,13 @@ namespace Quasardb
     static class TimeConverter
     {
         const long MinSeconds = -62135596800; // 01/01/0001 00:00:00
-        const long MaxSeconds = 253402300799; // 31/12/1969 23:59:59
-        static DateTime _epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        const long MaxSeconds = 253402300799; // 31/12/9999 23:59:59
+        static readonly DateTime _epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         const long NanosPerTick = 100;
         const long TicksPerSecond = 1000000000 / NanosPerTick;
 
-        internal static qdb_timespec NullTimespec = new qdb_timespec
+        internal static readonly qdb_timespec NullTimespec = new qdb_timespec
         {
             tv_sec = long.MinValue,
             tv_nsec = long.MinValue

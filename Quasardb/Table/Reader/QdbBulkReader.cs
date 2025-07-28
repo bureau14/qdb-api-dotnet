@@ -116,16 +116,16 @@ namespace Quasardb.TimeSeries.Reader
                 unsafe
                 {
                     qdb_bulk_reader_table* tblPtr = null;
-                    qdb_size_t tblCount = (qdb_size_t)0;
+                    var tblCount = (qdb_size_t)0;
                     if (tables != null)
                     {
                         tblCount = (qdb_size_t)tables.Length;
                         var nativeTables = new qdb_bulk_reader_table[tables.Length];
-                        for (int i = 0; i < tables.Length; i++)
+                        for (var i = 0; i < tables.Length; i++)
                         {
                             nativeTables[i].name = BulkReaderHelper.ConvertCharArray(tables[i].Name, ref pins);
                             var ranges = new qdb_ts_range[tables[i].Ranges.Length];
-                            for (int j = 0; j < ranges.Length; j++)
+                            for (var j = 0; j < ranges.Length; j++)
                                 ranges[j] = tables[i].Ranges[j].ToNative();
                             nativeTables[i].ranges = (qdb_ts_range*)BulkReaderHelper.ConvertArray(ranges, ref pins);
                             nativeTables[i].range_count = (qdb_size_t)ranges.Length;
@@ -134,12 +134,12 @@ namespace Quasardb.TimeSeries.Reader
                     }
 
                     qdb_char_ptr_ptr colPtr = IntPtr.Zero;
-                    qdb_size_t colCount = (qdb_size_t)0;
+                    var colCount = (qdb_size_t)0;
                     if (columns != null)
                     {
                         colCount = (qdb_size_t)columns.Length;
-                        IntPtr[] arr = new IntPtr[columns.Length];
-                        for (int i = 0; i < columns.Length; i++)
+                        var arr = new IntPtr[columns.Length];
+                        for (var i = 0; i < columns.Length; i++)
                             arr[i] = BulkReaderHelper.ConvertCharArray(columns[i], ref pins);
                         colPtr = BulkReaderHelper.ConvertArray(arr, ref pins);
                     }
@@ -210,8 +210,8 @@ namespace Quasardb.TimeSeries.Reader
         private IEnumerable<QdbBulkRow> ExtractRows(QdbBulkReaderResult result)
         {
             var row = new QdbBulkRow(result.DataPtr);
-            long count = result.RowCount;
-            for (long i = 0; i < count; ++i)
+            var count = result.RowCount;
+            for (var i = 0; i < count; ++i)
             {
                 row.RowIndex = i;
                 yield return row;
@@ -247,7 +247,7 @@ namespace Quasardb.TimeSeries.Reader
         internal static IntPtr ConvertCharArray(string str, ref List<GCHandle> pins)
         {
             var content = System.Text.Encoding.UTF8.GetBytes(str);
-            GCHandle pin = GCHandle.Alloc(content, GCHandleType.Pinned);
+            var pin = GCHandle.Alloc(content, GCHandleType.Pinned);
             pins.Add(pin);
             return pin.AddrOfPinnedObject();
         }
@@ -257,7 +257,7 @@ namespace Quasardb.TimeSeries.Reader
         /// </summary>
         internal static IntPtr ConvertArray<T>(T[] array, ref List<GCHandle> pins)
         {
-            GCHandle pin = GCHandle.Alloc(array, GCHandleType.Pinned);
+            var pin = GCHandle.Alloc(array, GCHandleType.Pinned);
             pins.Add(pin);
             return pin.AddrOfPinnedObject();
         }

@@ -28,7 +28,7 @@ namespace Quasardb.TimeSeries.Reader
             _data = p;
             _columns = p->columns;
             _columnNames = new string[(long)p->column_count];
-            for (int i = 0; i < _columnNames.Length; i++)
+            for (var i = 0; i < _columnNames.Length; i++)
             {
                 _columnNames[i] = Marshal.PtrToStringAnsi(_columns[i].name);
             }
@@ -95,7 +95,7 @@ namespace Quasardb.TimeSeries.Reader
         /// <returns>The index of the column if found, otherwise -1.</returns>
         internal long IndexOf(string column)
         {
-            for (int i = 0; i < _columnNames.Length; i++)
+            for (var i = 0; i < _columnNames.Length; i++)
                 if (_columnNames[i] == column)
                     return i;
             return -1;

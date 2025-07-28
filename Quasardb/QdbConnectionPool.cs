@@ -94,7 +94,7 @@ namespace Quasardb
         public QdbConnectionPool(QdbConnectionFactory factory, int size)
         {
             _connections = new BlockingCollection<QdbCluster>(size);
-            for (int i = 0; i < size; i++)
+            for (var i = 0; i < size; i++)
             {
                 _connections.Add(factory.Create());
             }

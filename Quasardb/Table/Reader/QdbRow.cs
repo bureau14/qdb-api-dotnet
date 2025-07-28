@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -27,13 +27,13 @@ namespace Quasardb.TimeSeries.Reader
             _table = table;
             _alias = alias;
             _columns = new qdb_ts_column_info[(long)columns.Count];
-            for (int i = 0; i < (long)columns.Count; ++i)
+            for (var i = 0; i < (long)columns.Count; ++i)
                 _columns[i] = columns[i];
         }
 
         internal int IndexOf(string column)
         {
-            for (int i = 0; i < _columns.Length; ++i)
+            for (var i = 0; i < _columns.Length; ++i)
             {
                 if (_columns[i].name == column)
                     return i;
