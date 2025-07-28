@@ -62,7 +62,7 @@ namespace Quasardb.TimeSeries.Reader
             {
                 if (Type != QdbColumnType.Double)
                     throw new InvalidCastException();
-                double v = _column->data.doubles[_index];
+                var v = _column->data.doubles[_index];
                 return double.IsNaN(v) ? (double?)null : v;
             }
         }
@@ -92,7 +92,7 @@ namespace Quasardb.TimeSeries.Reader
             {
                 if (Type != QdbColumnType.Int64)
                     throw new InvalidCastException();
-                long v = _column->data.ints[_index];
+                var v = _column->data.ints[_index];
                 return v == unchecked((long)0x8000000000000000) ? (long?)null : v;
             }
         }

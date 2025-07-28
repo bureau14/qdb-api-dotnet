@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Runtime.Serialization.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization.Json;
 
 public class UserKey
 {
@@ -11,7 +12,7 @@ public class UserKey
 namespace Quasardb.Tests
 {
     [TestClass]
-    public class DaemonRunner
+    public static class DaemonRunner
     {
         public static bool UseSecurity { get; private set; }
         public static string ClusterUrl { get; private set; }
@@ -28,6 +29,8 @@ namespace Quasardb.Tests
         [AssemblyInitialize]
         public static void StartDaemon(TestContext testContext)
         {
+            if (testContext == null) throw new ArgumentNullException(nameof(testContext));
+
             UseSecurity = testContext.Properties["useSecurity"]?.Equals("true") ?? false;
             ClusterUrl = UseSecurity ? SecureClusterUrl : InsecureClusterUrl;
 

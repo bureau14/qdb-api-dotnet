@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb.Exceptions;
@@ -9,7 +9,7 @@ namespace Quasardb.Tests.Entry.Table
     [TestClass]
     public class Reader
     {
-        public QdbTable CreateTable(string alias = null)
+        public static QdbTable CreateTable(string alias = null)
         {
             var ts = QdbTestCluster.Instance.Table(alias ?? RandomGenerator.CreateUniqueAlias());
             ts.Create(new QdbColumnDefinition[] {
@@ -22,13 +22,15 @@ namespace Quasardb.Tests.Entry.Table
             return ts;
         }
 
-        public QdbBlobPointCollection InsertBlobPoints(QdbTable ts, DateTime time, int count)
+        public static QdbBlobPointCollection InsertBlobPoints(QdbTable ts, DateTime time, int count)
         {
-            Random random = new Random();
+            if (ts == null) throw new ArgumentNullException(nameof(ts));
+
+            var random = new Random();
             var r = new QdbBlobPointCollection(count);
 
             var column = ts.BlobColumns["the_blob"];
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 var value = new byte[32];
                 random.NextBytes(value);
@@ -39,13 +41,15 @@ namespace Quasardb.Tests.Entry.Table
             return r;
         }
 
-        public QdbDoublePointCollection InsertDoublePoints(QdbTable ts, DateTime time, int count)
+        public static QdbDoublePointCollection InsertDoublePoints(QdbTable ts, DateTime time, int count)
         {
-            Random random = new Random();
+            if (ts == null) throw new ArgumentNullException(nameof(ts));
+
+            var random = new Random();
             var r = new QdbDoublePointCollection(count);
 
             var column = ts.DoubleColumns["the_double"];
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 var value = random.NextDouble();
                 column.Insert(time, value);
@@ -55,13 +59,15 @@ namespace Quasardb.Tests.Entry.Table
             return r;
         }
 
-        public QdbInt64PointCollection InsertInt64Points(QdbTable ts, DateTime time, int count)
+        public static QdbInt64PointCollection InsertInt64Points(QdbTable ts, DateTime time, int count)
         {
-            Random random = new Random();
+            if (ts == null) throw new ArgumentNullException(nameof(ts));
+
+            var random = new Random();
             var r = new QdbInt64PointCollection(count);
 
             var column = ts.Int64Columns["the_int64"];
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 var value = random.Next();
                 column.Insert(time, value);
@@ -71,13 +77,15 @@ namespace Quasardb.Tests.Entry.Table
             return r;
         }
 
-        public QdbTimestampPointCollection InsertTimestampPoints(QdbTable ts, DateTime time, int count)
+        public static QdbTimestampPointCollection InsertTimestampPoints(QdbTable ts, DateTime time, int count)
         {
-            Random random = new Random();
+            if (ts == null) throw new ArgumentNullException(nameof(ts));
+
+            var random = new Random();
             var r = new QdbTimestampPointCollection(count);
 
             var column = ts.TimestampColumns["the_ts"];
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 var value = DateTime.Today.AddSeconds(random.NextDouble());
                 column.Insert(time, value);
@@ -87,13 +95,15 @@ namespace Quasardb.Tests.Entry.Table
             return r;
         }
 
-        public QdbStringPointCollection InsertStringPoints(QdbTable ts, DateTime time, int count)
+        public static QdbStringPointCollection InsertStringPoints(QdbTable ts, DateTime time, int count)
         {
-            Random random = new Random();
+            if (ts == null) throw new ArgumentNullException(nameof(ts));
+
+            var random = new Random();
             var r = new QdbStringPointCollection(count);
 
             var column = ts.StringColumns["the_string"];
-            for (int i = 0; i < count; ++i)
+            for (var i = 0; i < count; ++i)
             {
                 string value = "content";
                 column.Insert(time, value);

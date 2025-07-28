@@ -26,7 +26,7 @@ Create and update an atomic integer:
     cluster.Integer("my counter").Put(1934);
     cluster.Integer("my counter").Add(22);
 
-[Got to the official documentation](https://doc.quasardb.net/dotnet)
+[Go to the official documentation](https://doc.quasardb.net/dotnet)
 
 ### Compiling
 

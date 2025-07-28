@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ namespace Quasardb.Tests.Cluster
     [TestClass]
     public class ConnectionPool
     {
-        public QdbConnectionPool CreatePool(int size)
+        public static QdbConnectionPool CreatePool(int size)
         {
             var factory = new QdbConnectionFactory(DaemonRunner.ClusterUrl);
 

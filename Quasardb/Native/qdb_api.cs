@@ -360,6 +360,86 @@ namespace Quasardb.Native
 
         #endregion
 
+        #region Functions specific to string
+
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_string_compare_and_swap(
+            [In] qdb_handle handle,
+            [In][MarshalAs(ALIAS_TYPE)] string alias,
+            [In][MarshalAs(ALIAS_TYPE)] string new_value,
+            [In] size_t new_value_length,
+            [In][MarshalAs(ALIAS_TYPE)] string comparand,
+            [In] size_t comparand_length,
+            [In] qdb_time_t expiry_time,
+            [Out] out pointer_t original_value,
+            [Out] out size_t original_value_length);
+
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_string_get(
+            [In] qdb_handle handle,
+            [In][MarshalAs(ALIAS_TYPE)] string alias,
+            [Out] out pointer_t content,
+            [Out] out size_t content_length);
+
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_string_get_and_remove(
+            [In] qdb_handle handle,
+            [In][MarshalAs(ALIAS_TYPE)] string alias,
+            [Out] out pointer_t content,
+            [Out] out size_t content_length);
+
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_string_get_and_update(
+            [In] qdb_handle handle,
+            [In][MarshalAs(ALIAS_TYPE)] string alias,
+            [In][MarshalAs(ALIAS_TYPE)] string update_content,
+            [In] size_t update_content_length,
+            [In] qdb_time_t expiry_time,
+            [Out] out pointer_t get_content,
+            [Out] out size_t get_content_length);
+
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_string_put(
+            [In] qdb_handle handle,
+            [In][MarshalAs(ALIAS_TYPE)] string alias,
+            [In][MarshalAs(ALIAS_TYPE)] string content,
+            [In] size_t content_length,
+            [In] qdb_time_t expiry_time);
+
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_string_update(
+            [In] qdb_handle handle,
+            [In][MarshalAs(ALIAS_TYPE)] string alias,
+            [In][MarshalAs(ALIAS_TYPE)] string content,
+            [In] size_t content_length,
+            [In] qdb_time_t expiry_time);
+
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_string_remove_if(
+            [In] qdb_handle handle,
+            [In][MarshalAs(ALIAS_TYPE)] string alias,
+            [In][MarshalAs(ALIAS_TYPE)] string comparand,
+            [In] size_t comparand_length);
+
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_string_scan(
+            [In] qdb_handle handle,
+            [In][MarshalAs(ALIAS_TYPE)] string pattern,
+            [In] qdb_size_t pattern_length,
+            [In] qdb_int_t max_count,
+            [Out] out pointer_t aliases,
+            [Out] out size_t alias_count);
+
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_string_scan_regex(
+            [In] qdb_handle handle,
+            [In][MarshalAs(ALIAS_TYPE)] string pattern,
+            [In] qdb_int_t max_count,
+            [Out] out pointer_t aliases,
+            [Out] out size_t alias_count);
+
+        #endregion
+
         #region Functions specific to integers
 
         [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
@@ -388,6 +468,68 @@ namespace Quasardb.Native
             [In][MarshalAs(ALIAS_TYPE)] string alias,
             [In] qdb_int_t value,
             [In] qdb_time_t expiry_time);
+
+        #endregion
+
+        #region Functions specific to double
+
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_double_add(
+            [In] qdb_handle handle,
+            [In, MarshalAs(ALIAS_TYPE)] string alias,
+            [In] double value,
+            [Out] out double result);
+
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_double_get(
+            [In] qdb_handle handle,
+            [In][MarshalAs(ALIAS_TYPE)] string alias,
+            [Out] out double value);
+
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_double_put(
+            [In] qdb_handle handle,
+            [In][MarshalAs(ALIAS_TYPE)] string alias,
+            [In] double value,
+            [In] qdb_time_t expiry_time);
+
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_double_update(
+            [In] qdb_handle handle,
+            [In][MarshalAs(ALIAS_TYPE)] string alias,
+            [In] double value,
+            [In] qdb_time_t expiry_time);
+
+        #endregion
+
+        #region Functions specific to timestamps
+
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_timestamp_put(
+            [In] qdb_handle handle,
+            [In, MarshalAs(ALIAS_TYPE)] string alias,
+            [In] qdb_timespec* value,
+            [In] qdb_time_t expiry_time);
+
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_timestamp_update(
+            [In] qdb_handle handle,
+            [In, MarshalAs(ALIAS_TYPE)] string alias,
+            [In] qdb_timespec* value,
+            [In] qdb_time_t expiry_time);
+
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_timestamp_get(
+            [In] qdb_handle handle,
+            [In, MarshalAs(ALIAS_TYPE)] string alias,
+            [Out] out qdb_timespec value);
+
+        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
+        internal static extern qdb_error qdb_timestamp_add(
+            [In] qdb_handle handle,
+            [In, MarshalAs(ALIAS_TYPE)] string alias,
+            [In] qdb_timespec* addend,
+            [Out] out qdb_timespec result);
 
         #endregion
 
