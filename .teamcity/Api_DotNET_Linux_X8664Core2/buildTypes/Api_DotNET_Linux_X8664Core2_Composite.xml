@@ -12,6 +12,10 @@
         <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
         <artifact sourcePath="** =&gt; dotnet6.0/" />
       </dependency>
+      <dependency id="ARTIFACT_DEPENDENCY_1833" sourceBuildTypeId="Api_DotNET_Linux_X8664Core2_DotNET8" cleanDestination="false">
+        <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
+        <artifact sourcePath="** =&gt; dotnet8.0/" />
+      </dependency>
     </artifact-dependencies>
     <dependencies>
       <depend-on sourceBuildTypeId="Api_DotNET_Linux_X8664Core2_DotNET6">
