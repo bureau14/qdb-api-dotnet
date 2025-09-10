@@ -15,16 +15,6 @@
       <param name="platform" value="windows-64bit-core2" />
     </parameters>
     <build-runners order="RUNNER_304, RUNNER_306, RUNNER_86, RUNNER_14, RUNNER_310, RUNNER_308, RUNNER_296, RUNNER_21, RUNNER_6, RUNNER_302, RUNNER_92, RUNNER_9, RUNNER_307">
-      <runner id="RUNNER_304" name="Set nightly build number based on date" type="jetbrains_powershell">
-        <parameters>
-          <param name="jetbrains_powershell_execution" value="PS1" />
-          <param name="jetbrains_powershell_noprofile" value="true" />
-          <param name="jetbrains_powershell_script_code"><![CDATA[echo "##teamcity[setParameter name='env.BUILD_START_TIMESTAMP' value='$([DateTime]::UtcNow.ToString("yyyyMMddhhmm"))']"
-# echo $Env:BUILD_START_TIMESTAMP]]></param>
-          <param name="jetbrains_powershell_script_mode" value="CODE" />
-          <param name="teamcity.step.mode" value="default" />
-        </parameters>
-      </runner>
       <runner id="RUNNER_306" name="NuGet Installer" type="jb.nuget.installer">
         <parameters>
           <param name="nuget.path" value="%teamcity.tool.NuGet.CommandLine.DEFAULT%" />
