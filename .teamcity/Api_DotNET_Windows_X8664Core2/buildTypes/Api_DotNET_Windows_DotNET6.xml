@@ -4,7 +4,6 @@
   <description />
   <settings ref="Api_DotNET_Build">
     <parameters>
-      <param name="BuildConfiguration" value="Release" />
       <param name="dotnet_version" value="6.0" />
       <param name="platform" value="windows-64bit-core2" />
     </parameters>
