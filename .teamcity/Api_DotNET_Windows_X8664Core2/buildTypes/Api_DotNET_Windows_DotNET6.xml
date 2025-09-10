@@ -5,7 +5,6 @@
   <settings ref="Api_DotNET_Build">
     <parameters>
       <param name="BuildConfiguration" value="Release" />
-      <param name="dotnet.framework" value=".NETCoreApp,Version=v6.0" />
       <param name="dotnet_framework" value=".NETCoreApp,Version=v6.0" />
       <param name="platform" value="windows-64bit-core2" />
     </parameters>
