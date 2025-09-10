@@ -2,7 +2,11 @@
 <build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="300520a5-3cf9-474c-b241-e988df2fc50c" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2025.3/project-config.xsd">
   <name>dotNET 6</name>
   <description />
-  <settings ref="Api_DotNET_Build">
+  <settings>
+    <inherits>
+      <ref id="Api_DotNET_Build" />
+      <ref id="Api_DotNET_LinuxBuild" />
+    </inherits>
     <parameters>
       <param name="dotnet_framework" value=".NETCoreApp,Version=v6.0" spec="text display='normal' readOnly='true' validationMode='any'" />
     </parameters>
