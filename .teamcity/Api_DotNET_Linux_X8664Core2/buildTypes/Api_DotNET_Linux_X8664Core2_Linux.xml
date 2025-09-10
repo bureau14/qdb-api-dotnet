@@ -2,6 +2,6 @@
 <build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2025.3/project-config.xsd">
   <name>dotNET 8</name>
   <description />
-  <settings ref="Api_DotNET_Linux_Build" />
+  <settings ref="Api_DotNET_Build" />
 </build-type>
 
