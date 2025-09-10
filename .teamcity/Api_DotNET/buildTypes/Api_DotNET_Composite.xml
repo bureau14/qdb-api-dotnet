@@ -7,12 +7,6 @@
       <option name="buildConfigurationType" value="COMPOSITE" />
       <option name="showDependenciesChanges" value="true" />
     </options>
-    <artifact-dependencies>
-      <dependency id="ARTIFACT_DEPENDENCY_1" sourceBuildTypeId="Api_DotNET_Windows_Net5" cleanDestination="false">
-        <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
-        <artifact sourcePath="**" />
-      </dependency>
-    </artifact-dependencies>
   </settings>
 </build-type>
 
