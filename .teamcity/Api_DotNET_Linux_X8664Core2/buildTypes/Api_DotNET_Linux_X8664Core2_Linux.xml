@@ -2,6 +2,10 @@
 <build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2025.3/project-config.xsd">
   <name>dotNET 8</name>
   <description />
-  <settings ref="Api_DotNET_Build" />
+  <settings ref="Api_DotNET_Build">
+    <parameters>
+      <param name="dotnet_framework" value=".NETCoreApp,Version=v8.0" spec="text display='normal' readOnly='true' validationMode='any'" />
+    </parameters>
+  </settings>
 </build-type>
 
