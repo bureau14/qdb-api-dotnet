@@ -8,16 +8,6 @@
       <param name="platform" value="windows-64bit-core2" />
     </parameters>
     <build-runners order="RUNNER_304, RUNNER_306, RUNNER_86, RUNNER_14, RUNNER_310, RUNNER_308, RUNNER_296, RUNNER_21, RUNNER_6, RUNNER_302, RUNNER_92, RUNNER_9, RUNNER_307">
-      <runner id="RUNNER_306" name="NuGet Installer" type="jb.nuget.installer">
-        <parameters>
-          <param name="nuget.path" value="%teamcity.tool.NuGet.CommandLine.DEFAULT%" />
-          <param name="nuget.updatePackages" value="" />
-          <param name="nuget.updatePackages.mode" value="sln" />
-          <param name="nuget.use.restore" value="restore" />
-          <param name="sln.path" value="Quasardb.sln" />
-          <param name="teamcity.step.mode" value="default" />
-        </parameters>
-      </runner>
       <runner id="RUNNER_310" name="Build Documentation" type="dotnet">
         <parameters>
           <param name="command" value="msbuild" />
