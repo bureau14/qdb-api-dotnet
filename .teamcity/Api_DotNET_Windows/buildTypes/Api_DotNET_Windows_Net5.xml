@@ -2,7 +2,7 @@
 <build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2025.3/project-config.xsd">
   <name>dotNET 5</name>
   <description />
-  <settings ref="Api_DotNET_Build">
+  <settings ref="Api_DotNET_Windows_Build">
     <disabled-settings>
       <setting-ref ref="RUNNER_6" />
       <setting-ref ref="RUNNER_92" />
