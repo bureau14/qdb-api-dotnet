@@ -6,24 +6,7 @@
     <parameters>
       <param name="dotnet_version" value="8.0" />
     </parameters>
-    <build-runners order="NuGet_Installer, RUNNER_86, RUNNER_14, RUNNER_296, RUNNER_21, RUNNER_302, Create_NuGet_package, RUNNER_9">
-      <runner id="Create_NuGet_package" name="Create NuGet package" type="jb.nuget.pack">
-        <conditions>
-          <contains name="teamcity.agent.jvm.os.name" value="Windows" />
-        </conditions>
-        <parameters>
-          <param name="nuget.pack.as.artifact" value="true" />
-          <param name="nuget.pack.commandline" value="-NoDefaultExcludes" />
-          <param name="nuget.pack.output.clean" value="true" />
-          <param name="nuget.pack.output.directory" value="nuget-pack-out" />
-          <param name="nuget.pack.project.dir" value="as_is" />
-          <param name="nuget.pack.properties" value="Configuration=Release" />
-          <param name="nuget.pack.specFile" value="Quasardb/Quasardb.csproj" />
-          <param name="nuget.path" value="%teamcity.tool.NuGet.CommandLine.DEFAULT%" />
-          <param name="teamcity.step.mode" value="default" />
-        </parameters>
-      </runner>
-    </build-runners>
+    <build-runners order="NuGet_Installer, RUNNER_86, RUNNER_14, RUNNER_296, RUNNER_21, RUNNER_302, Create_NuGet_package, RUNNER_9" />
   </settings>
 </build-type>
 
