@@ -78,7 +78,7 @@
     </vcs-settings>
     <requirements>
       <equals id="RQ_199" name="teamcity.agent.jvm.os.arch" value="%os_arch%" />
-      <equals id="RQ_200" name="teamcity.agent.jvm.os.name" value="%os_name%" />
+      <contains id="RQ_200" name="teamcity.agent.jvm.os.name" value="%os_name%" />
     </requirements>
     <build-extensions>
       <extension id="perfmon" type="perfmon">
