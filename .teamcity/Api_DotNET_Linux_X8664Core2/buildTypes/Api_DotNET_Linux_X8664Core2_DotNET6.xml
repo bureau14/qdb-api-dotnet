@@ -4,7 +4,7 @@
   <description />
   <settings ref="Api_DotNET_Build">
     <parameters>
-      <param name="dotnet_framework" value=".NETCoreApp,Version=v10.0" spec="text display='normal' readOnly='true' validationMode='any'" />
+      <param name="dotnet_framework" value=".NETCoreApp,Version=v6.0" spec="text display='normal' readOnly='true' validationMode='any'" />
     </parameters>
   </settings>
 </build-type>
