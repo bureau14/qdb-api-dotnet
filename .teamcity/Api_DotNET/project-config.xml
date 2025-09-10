@@ -3,6 +3,7 @@
   <name>dotNET</name>
   <parameters>
     <param name="env.CMAKE_BUILD_TYPE" value="Release" />
+    <param name="env.NUGET_ENABLE_LEGACY_CSPROJ_PACK" value="true" />
     <param name="qdb.nuget.package.suffix" value="-Suffix nightly.%build.counter%" />
   </parameters>
   <project-extensions>
