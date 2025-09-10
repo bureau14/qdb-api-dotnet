@@ -3,6 +3,9 @@
   <name>dotNET 6</name>
   <description />
   <settings ref="Api_DotNET_Build">
+    <disabled-settings>
+      <setting-ref ref="RUNNER_308" />
+    </disabled-settings>
     <parameters>
       <param name="dotnet_version" value="6.0" />
       <param name="platform" value="windows-64bit-core2" />
