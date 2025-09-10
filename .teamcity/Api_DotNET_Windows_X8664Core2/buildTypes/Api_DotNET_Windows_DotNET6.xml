@@ -6,6 +6,7 @@
     <parameters>
       <param name="BuildConfiguration" value="Release" />
       <param name="dotnet_framework" value=".NETCoreApp,Version=v6.0" />
+      <param name="dotnet_version" value="6.0" />
       <param name="platform" value="windows-64bit-core2" />
     </parameters>
     <build-runners order="RUNNER_304, RUNNER_306, RUNNER_86, RUNNER_14, RUNNER_310, RUNNER_308, RUNNER_296, RUNNER_21, RUNNER_6, RUNNER_302, RUNNER_92, RUNNER_9, RUNNER_307">
