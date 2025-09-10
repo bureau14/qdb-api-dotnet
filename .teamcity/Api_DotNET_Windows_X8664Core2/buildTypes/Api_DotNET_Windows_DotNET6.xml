@@ -3,9 +3,6 @@
   <name>dotNET 6</name>
   <description />
   <settings ref="Api_DotNET_Build">
-    <disabled-settings>
-      <setting-ref ref="RUNNER_308" />
-    </disabled-settings>
     <parameters>
       <param name="dotnet_version" value="6.0" />
       <param name="platform" value="windows-64bit-core2" />
@@ -19,14 +16,6 @@
           <param name="msbuild.version" value="MSBuild_17_Windows" />
           <param name="paths" value="Quasardb.Documentation\Quasardb.Documentation.shfbproj" />
           <param name="teamcity.step.mode" value="default" />
-        </parameters>
-      </runner>
-      <runner id="RUNNER_308" name="Restore Tests" type="simpleRunner">
-        <parameters>
-          <param name="script.content" value="dotnet.exe restore" />
-          <param name="teamcity.build.workingDir" value="Quasardb.Tests" />
-          <param name="teamcity.step.mode" value="default" />
-          <param name="use.custom.script" value="true" />
         </parameters>
       </runner>
     </build-runners>
