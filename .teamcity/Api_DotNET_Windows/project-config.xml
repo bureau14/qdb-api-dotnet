@@ -3,6 +3,7 @@
   <name>Windows</name>
   <parameters>
     <param name="dotnet_home" value="C:\Program Files\dotnet\" spec="text display='normal' readOnly='true' validationMode='any'" />
+    <param name="os_name" value="Windows" spec="text display='normal' readOnly='true' validationMode='any'" />
   </parameters>
 </project>
 
