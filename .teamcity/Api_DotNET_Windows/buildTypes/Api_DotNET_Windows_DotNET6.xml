@@ -2,7 +2,11 @@
 <build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2025.3/project-config.xsd">
   <name>dotNET 6</name>
   <description />
-  <settings ref="Api_DotNET_Windows_Build">
+  <settings>
+    <inherits>
+      <ref id="Api_DotNET_Windows_Build" />
+      <ref id="Api_DotNET_Build" />
+    </inherits>
     <disabled-settings>
       <setting-ref ref="RUNNER_6" />
       <setting-ref ref="RUNNER_92" />
@@ -10,6 +14,7 @@
     <parameters>
       <param name="dotnet.framework" value=".NETCoreApp,Version=v6.0" />
       <param name="dotnet.version" value="net6.0" />
+      <param name="dotnet_framework" value=".NETCoreApp,Version=v6.0" />
       <param name="platform" value="windows-64bit-core2" />
     </parameters>
     <build-runners order="RUNNER_304, RUNNER_306, RUNNER_86, RUNNER_14, RUNNER_310, RUNNER_308, RUNNER_296, RUNNER_21, RUNNER_6, RUNNER_302, RUNNER_92, RUNNER_9, RUNNER_307">
@@ -123,31 +128,7 @@
         <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
         <artifact sourcePath="*-c-api.tar.zst!**/*=&gt;qdb&#xD;&#xA;*-server.tar.zst!bin/*=&gt;qdb/bin&#xD;&#xA;*-utils.tar.zst!bin/*=&gt;qdb/bin&#xD;&#xA;&#xD;&#xA;*-windows-64bit-core2-c-api.tar.zst!bin/*=&gt;Quasardb/win64" />
       </dependency>
-      <dependency id="ARTIFACT_DEPENDENCY_3" sourceBuildTypeId="Quasardb_Artifacts_Release_Windows_X86Haswell" cleanDestination="false">
-        <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
-        <artifact sourcePath="*-windows-32bit-c-api.tar.zst!bin/*=&gt;Quasardb/win32" />
-      </dependency>
     </artifact-dependencies>
-    <dependencies>
-      <depend-on sourceBuildTypeId="Quasardb_Artifacts_Release_Linux_X8664Core2_Composite">
-        <options>
-          <option name="take-started-build-with-same-revisions" value="true" />
-          <option name="take-successful-builds-only" value="true" />
-        </options>
-      </depend-on>
-      <depend-on sourceBuildTypeId="Quasardb_Artifacts_Release_Windows_X8664Core2">
-        <options>
-          <option name="take-started-build-with-same-revisions" value="true" />
-          <option name="take-successful-builds-only" value="true" />
-        </options>
-      </depend-on>
-      <depend-on sourceBuildTypeId="Quasardb_Artifacts_Release_Windows_X86Haswell">
-        <options>
-          <option name="take-started-build-with-same-revisions" value="true" />
-          <option name="take-successful-builds-only" value="true" />
-        </options>
-      </depend-on>
-    </dependencies>
   </settings>
 </build-type>
 
