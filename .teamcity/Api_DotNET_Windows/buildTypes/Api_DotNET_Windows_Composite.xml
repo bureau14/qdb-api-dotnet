@@ -7,6 +7,9 @@
       <option name="buildConfigurationType" value="COMPOSITE" />
       <option name="showDependenciesChanges" value="true" />
     </options>
+    <vcs-settings>
+      <vcs-entry-ref root-id="QdbApiDotnet" />
+    </vcs-settings>
     <dependencies>
       <depend-on sourceBuildTypeId="Api_DotNET_Windows_X8664Core2_Composite">
         <options>
