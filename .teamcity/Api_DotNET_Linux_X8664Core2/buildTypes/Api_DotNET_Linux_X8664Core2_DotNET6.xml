@@ -3,9 +3,6 @@
   <name>dotNET 6</name>
   <description />
   <settings ref="Api_DotNET_LinuxBuild">
-    <parameters>
-      <param name="dotnet_framework" value=".NETCoreApp,Version=v6.0" spec="text display='normal' readOnly='true' validationMode='any'" />
-    </parameters>
     <build-runners order="NuGet_Installer, RUNNER_86, RUNNER_14, RUNNER_296, RUNNER_21, RUNNER_302, Create_NuGet_package, RUNNER_9">
       <runner id="NuGet_Installer" name="NuGet Installer" type="jb.nuget.installer">
         <conditions>
