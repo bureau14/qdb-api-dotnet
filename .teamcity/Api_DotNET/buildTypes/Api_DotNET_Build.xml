@@ -76,6 +76,9 @@
     <vcs-settings>
       <vcs-entry-ref root-id="QdbApiDotnet" />
     </vcs-settings>
+    <requirements>
+      <equals id="RQ_199" name="teamcity.agent.jvm.os.arch" value="%os_arch%" />
+    </requirements>
     <build-extensions>
       <extension id="perfmon" type="perfmon">
         <parameters>
