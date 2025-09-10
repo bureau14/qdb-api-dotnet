@@ -14,7 +14,7 @@
       </dependency>
     </artifact-dependencies>
     <dependencies>
-      <depend-on sourceBuildTypeId="Api_DotNET_Linux_X8664Core2_Linux">
+      <depend-on sourceBuildTypeId="Api_DotNET_Linux_X8664Core2_DotNET8">
         <options>
           <option name="run-build-if-dependency-failed" value="RUN_ADD_PROBLEM" />
           <option name="take-started-build-with-same-revisions" value="true" />
