@@ -10,7 +10,6 @@
       <option name="showDependenciesChanges" value="true" />
     </options>
     <parameters>
-      <param name="env.NUGET_ENABLE_LEGACY_CSPROJ_PACK" value="true" />
       <param name="platform" value="linux-64bit-core2" />
     </parameters>
     <build-runners>
