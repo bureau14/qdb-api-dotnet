@@ -65,14 +65,6 @@
           <param name="vstest.version" value="VSTest_CrossPlatform" />
         </parameters>
       </runner>
-      <runner id="RUNNER_9" name="Stop services" type="simpleRunner">
-        <parameters>
-          <param name="command.executable" value="bash" />
-          <param name="command.parameters" value="scripts/tests/setup/stop-services.sh" />
-          <param name="teamcity.step.mode" value="execute_always" />
-          <param name="use.custom.script" value="" />
-        </parameters>
-      </runner>
       <runner id="Create_NuGet_package" name="Create NuGet package" type="jb.nuget.pack">
         <conditions>
           <contains name="teamcity.agent.jvm.os.name" value="Windows" />
@@ -87,6 +79,14 @@
           <param name="nuget.pack.specFile" value="Quasardb/Quasardb.csproj" />
           <param name="nuget.path" value="%teamcity.tool.NuGet.CommandLine.DEFAULT%" />
           <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_9" name="Stop services" type="simpleRunner">
+        <parameters>
+          <param name="command.executable" value="bash" />
+          <param name="command.parameters" value="scripts/tests/setup/stop-services.sh" />
+          <param name="teamcity.step.mode" value="execute_always" />
+          <param name="use.custom.script" value="" />
         </parameters>
       </runner>
     </build-runners>
