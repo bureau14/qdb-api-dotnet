@@ -9,6 +9,9 @@
       <option name="executionTimeoutMin" value="20" />
       <option name="showDependenciesChanges" value="true" />
     </options>
+    <parameters>
+      <param name="dotnet_framework" value=".NETCoreApp,Version=v%dotnet_version%" />
+    </parameters>
     <build-runners>
       <runner id="RUNNER_86" name="Start services" type="simpleRunner">
         <parameters>
