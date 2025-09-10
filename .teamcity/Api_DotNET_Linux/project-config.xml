@@ -2,7 +2,6 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" parent-id="Api_DotNET" uuid="6df7d7c8-0c76-494b-8a72-8a7cdd085aab" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2025.3/project-config.xsd">
   <name>Linux</name>
   <parameters>
-    <param name="dotnet_home" value="%system.dotnet8.home%" spec="text display='normal' readOnly='true' validationMode='any'" />
     <param name="os_name" value="Linux" spec="text display='normal' readOnly='true' validationMode='any'" />
   </parameters>
 </project>
