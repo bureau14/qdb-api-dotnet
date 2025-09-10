@@ -5,7 +5,6 @@
   <settings ref="Api_DotNET_Build">
     <parameters>
       <param name="dotnet_version" value="8.0" />
-      <param name="platform" value="windows-64bit-core2" />
     </parameters>
     <build-runners order="NuGet_Installer, RUNNER_86, RUNNER_14, RUNNER_310, RUNNER_296, RUNNER_21, RUNNER_302, Create_NuGet_package, RUNNER_9">
       <runner id="RUNNER_310" name="Build Documentation" type="dotnet">
