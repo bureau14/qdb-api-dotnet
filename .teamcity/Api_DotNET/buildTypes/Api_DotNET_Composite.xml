@@ -8,6 +8,10 @@
       <option name="showDependenciesChanges" value="true" />
     </options>
     <artifact-dependencies>
+      <dependency id="ARTIFACT_DEPENDENCY_1835" sourceBuildTypeId="Api_DotNET_Linux_Composite" cleanDestination="false">
+        <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
+        <artifact sourcePath="** =&gt; linux/" />
+      </dependency>
       <dependency id="ARTIFACT_DEPENDENCY_1805" sourceBuildTypeId="Api_DotNET_Windows_Composite" cleanDestination="false">
         <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
         <artifact sourcePath="** =&gt; windows/" />
