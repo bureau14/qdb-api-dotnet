@@ -2,14 +2,40 @@
 <build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="300520a5-3cf9-474c-b241-e988df2fc50c" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2025.3/project-config.xsd">
   <name>dotNET 6</name>
   <description />
-  <settings>
-    <inherits>
-      <ref id="Api_DotNET_Build" />
-      <ref id="Api_DotNET_LinuxBuild" />
-    </inherits>
+  <settings ref="Api_DotNET_LinuxBuild">
     <parameters>
       <param name="dotnet_framework" value=".NETCoreApp,Version=v6.0" spec="text display='normal' readOnly='true' validationMode='any'" />
     </parameters>
+    <build-runners order="NuGet_Installer, RUNNER_86, RUNNER_14, RUNNER_296, RUNNER_21, RUNNER_302, Create_NuGet_package, RUNNER_9">
+      <runner id="NuGet_Installer" name="NuGet Installer" type="jb.nuget.installer">
+        <conditions>
+          <contains name="teamcity.agent.jvm.os.name" value="Windows" />
+        </conditions>
+        <parameters>
+          <param name="nuget.path" value="%teamcity.tool.NuGet.CommandLine.DEFAULT%" />
+          <param name="nuget.updatePackages.mode" value="sln" />
+          <param name="nuget.use.restore" value="restore" />
+          <param name="sln.path" value="Quasardb.sln" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
+      <runner id="Create_NuGet_package" name="Create NuGet package" type="jb.nuget.pack">
+        <conditions>
+          <contains name="teamcity.agent.jvm.os.name" value="Windows" />
+        </conditions>
+        <parameters>
+          <param name="nuget.pack.as.artifact" value="true" />
+          <param name="nuget.pack.commandline" value="-NoDefaultExcludes" />
+          <param name="nuget.pack.output.clean" value="true" />
+          <param name="nuget.pack.output.directory" value="nuget-pack-out" />
+          <param name="nuget.pack.project.dir" value="as_is" />
+          <param name="nuget.pack.properties" value="Configuration=Release" />
+          <param name="nuget.pack.specFile" value="Quasardb/Quasardb.csproj" />
+          <param name="nuget.path" value="%teamcity.tool.NuGet.CommandLine.DEFAULT%" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
+    </build-runners>
   </settings>
 </build-type>
 
