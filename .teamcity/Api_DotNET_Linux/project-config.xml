@@ -3,6 +3,7 @@
   <name>Linux</name>
   <parameters>
     <param name="dotnet_home" value="%system.dotnet8.home%" spec="text display='normal' readOnly='true' validationMode='any'" />
+    <param name="os_name" value="Linux" spec="text display='normal' readOnly='true' validationMode='any'" />
   </parameters>
 </project>
 
