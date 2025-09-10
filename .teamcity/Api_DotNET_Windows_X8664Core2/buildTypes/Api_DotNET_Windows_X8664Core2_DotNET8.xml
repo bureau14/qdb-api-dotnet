@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="65516b49-d282-4b28-989b-a0f31608e0b5" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2025.3/project-config.xsd">
+  <name>dotNET 8</name>
+  <description />
+  <settings ref="Api_DotNET_Build">
+    <parameters>
+      <param name="dotnet_version" value="6.0" />
+      <param name="platform" value="windows-64bit-core2" />
+    </parameters>
+    <build-runners order="NuGet_Installer, RUNNER_86, RUNNER_14, RUNNER_310, RUNNER_296, RUNNER_21, RUNNER_302, Create_NuGet_package, RUNNER_9">
+      <runner id="RUNNER_310" name="Build Documentation" type="dotnet">
+        <parameters>
+          <param name="command" value="msbuild" />
+          <param name="configuration" value="Release" />
+          <param name="dotNetCoverage.dotCover.home.path" value="%teamcity.tool.JetBrains.dotCover.CommandLineTools.DEFAULT%" />
+          <param name="msbuild.version" value="MSBuild_17_Windows" />
+          <param name="paths" value="Quasardb.Documentation\Quasardb.Documentation.shfbproj" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
+    </build-runners>
+    <requirements>
+      <contains id="RQ_1" name="teamcity.agent.jvm.os.name" value="Windows" />
+    </requirements>
+    <artifact-dependencies>
+      <dependency id="ARTIFACT_DEPENDENCY_1" sourceBuildTypeId="Quasardb_Artifacts_Release_Linux_X8664Core2_Composite" cleanDestination="false">
+        <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
+        <artifact sourcePath="*-linux-64bit-core2-c-api.tar.zst!lib/*=&gt;Quasardb/linux" />
+      </dependency>
+      <dependency id="ARTIFACT_DEPENDENCY_2" sourceBuildTypeId="Quasardb_Artifacts_Release_Windows_X8664Core2" cleanDestination="false">
+        <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
+        <artifact sourcePath="*-c-api.tar.zst!**/*=&gt;qdb&#xD;&#xA;*-server.tar.zst!bin/*=&gt;qdb/bin&#xD;&#xA;*-utils.tar.zst!bin/*=&gt;qdb/bin&#xD;&#xA;&#xD;&#xA;*-windows-64bit-core2-c-api.tar.zst!bin/*=&gt;Quasardb/win64" />
+      </dependency>
+    </artifact-dependencies>
+  </settings>
+</build-type>
+
