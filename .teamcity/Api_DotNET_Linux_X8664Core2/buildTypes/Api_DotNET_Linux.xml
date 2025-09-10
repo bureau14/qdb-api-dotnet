@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2021.1/project-config.xsd">
+<build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2025.3/project-config.xsd">
   <name>Linux</name>
   <description />
   <settings ref="Api_DotNET_Build">
@@ -8,14 +8,11 @@
       <param name="dotnet.version" value="net8.0" />
       <param name="platform" value="linux-64bit-core2" />
     </parameters>
-    <build-runners />
-    <vcs-settings />
     <requirements>
       <equals id="RQ_1" name="teamcity.agent.jvm.os.name" value="Linux" />
       <equals id="RQ_2" name="teamcity.agent.jvm.os.arch" value="amd64" />
       <exists id="RQ_193" name="DotNetCoreRuntime8.0_Path" />
     </requirements>
-    <build-triggers />
     <artifact-dependencies>
       <dependency id="ARTIFACT_DEPENDENCY_1" sourceBuildTypeId="Quasardb_Artifacts_Release_Linux_X8664Core2_Composite" cleanDestination="false">
         <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
@@ -50,7 +47,6 @@
         </options>
       </depend-on>
     </dependencies>
-    <cleanup />
   </settings>
 </build-type>
 
