@@ -45,7 +45,7 @@
           <param name="command" value="vstest" />
           <param name="dotNetCoverage.dotCover.home.path" value="%teamcity.tool.JetBrains.dotCover.CommandLineTools.DEFAULT%" />
           <param name="framework" value="%dotnet_framework%" />
-          <param name="paths" value="&quot;Quasardb.Tests/bin/**/Quasardb.Tests.dll&quot;" />
+          <param name="paths" value="&quot;Quasardb.Tests/bin/Release/net%dotnet_version%/Quasardb.Tests.dll&quot;" />
           <param name="platform" value="x64" />
           <param name="teamcity.step.mode" value="default" />
           <param name="test.settingsFile" value="Quasardb.Tests/insecure.runsettings" />
