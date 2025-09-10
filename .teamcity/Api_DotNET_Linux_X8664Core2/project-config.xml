@@ -5,5 +5,6 @@
     <param name="os_arch" value="amd64" spec="text display='normal' readOnly='true' validationMode='any'" />
     <param name="platform" value="linux-64bit-core2" />
   </parameters>
+  <buildTypesOrder order="Api_DotNET_Linux_X8664Core2_DotNET6,Api_DotNET_Linux_X8664Core2_DotNET8,Api_DotNET_Linux_X8664Core2_DotNET10" />
 </project>
 
