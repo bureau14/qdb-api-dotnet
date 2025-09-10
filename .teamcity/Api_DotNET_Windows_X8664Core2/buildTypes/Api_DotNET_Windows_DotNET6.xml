@@ -3,9 +3,6 @@
   <name>dotNET 6</name>
   <description />
   <settings ref="Api_DotNET_Build">
-    <disabled-settings>
-      <setting-ref ref="RUNNER_92" />
-    </disabled-settings>
     <parameters>
       <param name="BuildConfiguration" value="Release" />
       <param name="dotnet.framework" value=".NETCoreApp,Version=v6.0" />
@@ -39,19 +36,6 @@
           <param name="teamcity.build.workingDir" value="Quasardb.Tests" />
           <param name="teamcity.step.mode" value="default" />
           <param name="use.custom.script" value="true" />
-        </parameters>
-      </runner>
-      <runner id="RUNNER_92" name="Test - secure (x86)" type="dotnet">
-        <parameters>
-          <param name="args" value="/blame" />
-          <param name="command" value="vstest" />
-          <param name="dotNetCoverage.dotCover.home.path" value="%teamcity.tool.JetBrains.dotCover.CommandLineTools.DEFAULT%" />
-          <param name="framework" value="%dotnet.framework%" />
-          <param name="paths" value="&quot;Quasardb.Tests/bin/%BuildConfiguration%/%dotnet.version%/Quasardb.Tests.dll&quot;" />
-          <param name="platform" value="x86" />
-          <param name="teamcity.step.mode" value="default" />
-          <param name="test.settingsFile" value="Quasardb.Tests/secure.runsettings" />
-          <param name="vstest.version" value="VSTest_CrossPlatform" />
         </parameters>
       </runner>
       <runner id="RUNNER_307" name="Create NuGet package" type="jb.nuget.pack">
