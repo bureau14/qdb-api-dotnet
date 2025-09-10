@@ -49,19 +49,6 @@
           <param name="teamcity.step.mode" value="default" />
         </parameters>
       </runner>
-      <runner id="RUNNER_21" name="Test - insecure (x64)" type="dotnet">
-        <parameters>
-          <param name="args" value="/blame" />
-          <param name="command" value="vstest" />
-          <param name="dotNetCoverage.dotCover.home.path" value="%teamcity.tool.JetBrains.dotCover.CommandLineTools.DEFAULT%" />
-          <param name="framework" value="%dotnet_framework%" />
-          <param name="paths" value="&quot;Quasardb.Tests/bin/%BuildConfiguration/net6.0/Quasardb.Tests.dll&quot;" />
-          <param name="platform" value="x64" />
-          <param name="teamcity.step.mode" value="default" />
-          <param name="test.settingsFile" value="Quasardb.Tests/insecure.runsettings" />
-          <param name="vstest.version" value="VSTest_CrossPlatform" />
-        </parameters>
-      </runner>
     </build-runners>
     <requirements>
       <contains id="RQ_1" name="teamcity.agent.jvm.os.name" value="Windows" />
