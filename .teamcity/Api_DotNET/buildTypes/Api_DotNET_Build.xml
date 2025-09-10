@@ -10,7 +10,6 @@
       <option name="showDependenciesChanges" value="true" />
     </options>
     <disabled-settings>
-      <setting-ref ref="RUNNER_301" />
       <setting-ref ref="RUNNER_303" />
     </disabled-settings>
     <parameters>
@@ -70,19 +69,6 @@
           <param name="platform" value="x64" />
           <param name="teamcity.step.mode" value="default" />
           <param name="test.settingsFile" value="Quasardb.Tests/secure.runsettings" />
-          <param name="vstest.version" value="VSTest_CrossPlatform" />
-        </parameters>
-      </runner>
-      <runner id="RUNNER_301" name="Test - insecure (x86)" type="dotnet">
-        <parameters>
-          <param name="args" value="/blame" />
-          <param name="command" value="vstest" />
-          <param name="dotNetCoverage.dotCover.home.path" value="%teamcity.tool.JetBrains.dotCover.CommandLineTools.DEFAULT%" />
-          <param name="framework" value="%dotnet.framework%" />
-          <param name="paths" value="&quot;Quasardb.Tests/bin/%BuildConfiguration%/%dotnet.version%/Quasardb.Tests.dll&quot;" />
-          <param name="platform" value="x86" />
-          <param name="teamcity.step.mode" value="default" />
-          <param name="test.settingsFile" value="Quasardb.Tests/insecure.runsettings" />
           <param name="vstest.version" value="VSTest_CrossPlatform" />
         </parameters>
       </runner>
