@@ -7,6 +7,12 @@
       <option name="buildConfigurationType" value="COMPOSITE" />
       <option name="showDependenciesChanges" value="true" />
     </options>
+    <artifact-dependencies>
+      <dependency id="ARTIFACT_DEPENDENCY_1834" sourceBuildTypeId="Api_DotNET_Linux_X8664Core2_Composite" cleanDestination="false">
+        <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
+        <artifact sourcePath="** =&gt; x86_64-core2/" />
+      </dependency>
+    </artifact-dependencies>
     <dependencies>
       <depend-on sourceBuildTypeId="Api_DotNET_Linux_X8664Core2_Composite">
         <options>
