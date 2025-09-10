@@ -13,7 +13,7 @@
       <param name="env.CMAKE_BUILD_TYPE" value="Release" />
       <param name="env.NUGET_ENABLE_LEGACY_CSPROJ_PACK" value="true" />
       <param name="platform" value="linux-64bit-core2" />
-      <param name="qdb.nuget.package.suffix" value="-Suffix nightly.%env.BUILD_START_TIMESTAMP%" spec="text label='NuGet package suffix' description='Clear if building a release' display='prompt' validationMode='any'" />
+      <param name="qdb.nuget.package.suffix" value="-Suffix nightly.%build.counter%" spec="text label='NuGet package suffix' description='Clear if building a release' display='prompt' validationMode='any'" />
     </parameters>
     <build-runners>
       <runner id="RUNNER_86" name="Start services" type="simpleRunner">
