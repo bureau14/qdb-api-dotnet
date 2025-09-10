@@ -7,6 +7,12 @@
       <option name="buildConfigurationType" value="COMPOSITE" />
       <option name="showDependenciesChanges" value="true" />
     </options>
+    <artifact-dependencies>
+      <dependency id="ARTIFACT_DEPENDENCY_1802" sourceBuildTypeId="Api_DotNET_Windows_DotNET6" cleanDestination="false">
+        <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
+        <artifact sourcePath="** =&gt; dotnet6/" />
+      </dependency>
+    </artifact-dependencies>
     <dependencies>
       <depend-on sourceBuildTypeId="Api_DotNET_Windows_DotNET6">
         <options>
