@@ -43,15 +43,6 @@
           <param name="use.custom.script" value="true" />
         </parameters>
       </runner>
-      <runner id="RUNNER_296" name="Build Tests" type="dotnet">
-        <parameters>
-          <param name="command" value="build" />
-          <param name="configuration" value="%BuildConfiguration%" />
-          <param name="dotNetCoverage.dotCover.home.path" value="%teamcity.tool.JetBrains.dotCover.CommandLineTools.DEFAULT%" />
-          <param name="paths" value="Quasardb.Tests/Quasardb.Tests.csproj" />
-          <param name="teamcity.step.mode" value="execute_if_failed" />
-        </parameters>
-      </runner>
       <runner id="RUNNER_21" name="Test - insecure (x64)" type="dotnet">
         <parameters>
           <param name="args" value="/blame" />
