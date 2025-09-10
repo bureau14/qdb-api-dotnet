@@ -13,6 +13,18 @@
       <param name="dotnet_framework" value=".NETCoreApp,Version=v%dotnet_version%" />
     </parameters>
     <build-runners>
+      <runner id="NuGet_Installer" name="NuGet Installer" type="jb.nuget.installer">
+        <conditions>
+          <contains name="teamcity.agent.jvm.os.name" value="Windows" />
+        </conditions>
+        <parameters>
+          <param name="nuget.path" value="%teamcity.tool.NuGet.CommandLine.DEFAULT%" />
+          <param name="nuget.updatePackages.mode" value="sln" />
+          <param name="nuget.use.restore" value="restore" />
+          <param name="sln.path" value="Quasardb.sln" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
       <runner id="RUNNER_86" name="Start services" type="simpleRunner">
         <parameters>
           <param name="command.executable" value="bash" />
@@ -87,18 +99,6 @@
           <param name="command.parameters" value="scripts/tests/setup/stop-services.sh" />
           <param name="teamcity.step.mode" value="execute_always" />
           <param name="use.custom.script" value="" />
-        </parameters>
-      </runner>
-      <runner id="NuGet_Installer" name="NuGet Installer" type="jb.nuget.installer">
-        <conditions>
-          <contains name="teamcity.agent.jvm.os.name" value="Windows" />
-        </conditions>
-        <parameters>
-          <param name="nuget.path" value="%teamcity.tool.NuGet.CommandLine.DEFAULT%" />
-          <param name="nuget.updatePackages.mode" value="sln" />
-          <param name="nuget.use.restore" value="restore" />
-          <param name="sln.path" value="Quasardb.sln" />
-          <param name="teamcity.step.mode" value="default" />
         </parameters>
       </runner>
     </build-runners>
