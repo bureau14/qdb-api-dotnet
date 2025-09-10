@@ -9,9 +9,6 @@
       <option name="executionTimeoutMin" value="20" />
       <option name="showDependenciesChanges" value="true" />
     </options>
-    <parameters>
-      <param name="platform" value="linux-64bit-core2" />
-    </parameters>
     <build-runners>
       <runner id="RUNNER_86" name="Start services" type="simpleRunner">
         <parameters>
