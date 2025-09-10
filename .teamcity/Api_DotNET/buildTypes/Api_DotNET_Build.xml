@@ -26,7 +26,6 @@
           <param name="command" value="build" />
           <param name="configuration" value="Release" />
           <param name="dotNetCoverage.dotCover.home.path" value="%teamcity.tool.JetBrains.dotCover.CommandLineTools.DEFAULT%" />
-          <param name="framework" value="%dotnet_framework%" />
           <param name="paths" value="Quasardb/Quasardb.csproj" />
           <param name="teamcity.step.mode" value="execute_if_failed" />
         </parameters>
