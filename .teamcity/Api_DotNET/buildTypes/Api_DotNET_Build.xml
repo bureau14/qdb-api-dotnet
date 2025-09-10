@@ -15,7 +15,6 @@
     </disabled-settings>
     <parameters>
       <param name="BuildConfiguration" value="Release" />
-      <param name="dotnet.framework" value="" />
       <param name="dotnet.version" value="" />
       <param name="env.BUILD_START_TIMESTAMP" value="" />
       <param name="env.CMAKE_BUILD_TYPE" value="Release" />
