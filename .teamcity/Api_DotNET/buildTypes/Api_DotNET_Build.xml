@@ -18,7 +18,6 @@
       <param name="env.BUILD_START_TIMESTAMP" value="" />
       <param name="env.CMAKE_BUILD_TYPE" value="Release" />
       <param name="env.NUGET_ENABLE_LEGACY_CSPROJ_PACK" value="true" />
-      <param name="platform" value="" />
       <param name="qdb.nuget.package.suffix" value="-Suffix nightly.%env.BUILD_START_TIMESTAMP%" spec="text label='NuGet package suffix' description='Clear if building a release' display='prompt' validationMode='any'" />
     </parameters>
     <build-runners>
