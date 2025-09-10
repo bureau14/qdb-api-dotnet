@@ -49,15 +49,6 @@
           <param name="teamcity.step.mode" value="default" />
         </parameters>
       </runner>
-      <runner id="RUNNER_14" name="Build" type="dotnet">
-        <parameters>
-          <param name="command" value="build" />
-          <param name="configuration" value="Release" />
-          <param name="dotNetCoverage.dotCover.home.path" value="%teamcity.tool.JetBrains.dotCover.CommandLineTools.DEFAULT%" />
-          <param name="paths" value="Quasardb/Quasardb.csproj" />
-          <param name="teamcity.step.mode" value="execute_if_failed" />
-        </parameters>
-      </runner>
       <runner id="RUNNER_296" name="Build Tests" type="dotnet">
         <parameters>
           <param name="command" value="build" />
