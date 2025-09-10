@@ -9,9 +9,6 @@
       <option name="executionTimeoutMin" value="20" />
       <option name="showDependenciesChanges" value="true" />
     </options>
-    <parameters>
-      <param name="env.DOTNET_HOME" value="%dotnet_home%" spec="text display='hidden' readOnly='true' validationMode='any'" />
-    </parameters>
     <build-runners>
       <runner id="RUNNER_86" name="Start services" type="simpleRunner">
         <parameters>
