@@ -10,7 +10,6 @@
     <parameters>
       <param name="BuildConfiguration" value="Release" />
       <param name="dotnet.framework" value=".NETCoreApp,Version=v6.0" />
-      <param name="dotnet.version" value="net6.0" />
       <param name="dotnet_framework" value=".NETCoreApp,Version=v6.0" />
       <param name="platform" value="windows-64bit-core2" />
     </parameters>
