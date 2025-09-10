@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="4b3bd8b0-981c-4201-9fe0-152aa0e37084" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2025.3/project-config.xsd">
+  <name>Linux Build</name>
+  <settings>
+    <options>
+      <option name="artifactRules" value="Quasardb.Documentation/Help/**/*.*=&gt;qdb-api-dotnet-help.zip&#xA;StreamDemo\bin\Release\*.exe=&gt;qdb-api-dotnet-streamdemo.zip&#xA;StreamDemo\bin\Release\**\*.dll=&gt;qdb-api-dotnet-streamdemo.zip" />
+      <option name="checkoutMode" value="ON_SERVER" />
+      <option name="cleanBuild" value="true" />
+      <option name="executionTimeoutMin" value="20" />
+      <option name="showDependenciesChanges" value="true" />
+    </options>
+    <parameters>
+      <param name="dotnet_framework" value=".NETCoreApp,Version=v%dotnet_version%" />
+    </parameters>
+    <build-runners>
+      <runner id="NuGet_Installer" name="NuGet Installer" type="jb.nuget.installer">
+        <conditions>
+          <contains name="teamcity.agent.jvm.os.name" value="Windows" />
+        </conditions>
+        <parameters>
+          <param name="nuget.path" value="%teamcity.tool.NuGet.CommandLine.DEFAULT%" />
+          <param name="nuget.updatePackages.mode" value="sln" />
+          <param name="nuget.use.restore" value="restore" />
+          <param name="sln.path" value="Quasardb.sln" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_86" name="Start services" type="simpleRunner">
+        <parameters>
+          <param name="command.executable" value="bash" />
+          <param name="command.parameters" value="scripts/tests/setup/start-services.sh" />
+          <param name="teamcity.step.mode" value="default" />
+          <param name="use.custom.script" value="" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_14" name="Build" type="dotnet">
+        <parameters>
+          <param name="command" value="build" />
+          <param name="configuration" value="Release" />
+          <param name="dotNetCoverage.dotCover.home.path" value="%teamcity.tool.JetBrains.dotCover.CommandLineTools.DEFAULT%" />
+          <param name="paths" value="Quasardb/Quasardb.csproj" />
+          <param name="teamcity.step.mode" value="execute_if_failed" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_296" name="Build Tests" type="dotnet">
+        <parameters>
+          <param name="command" value="build" />
+          <param name="configuration" value="Release" />
+          <param name="dotNetCoverage.dotCover.home.path" value="%teamcity.tool.JetBrains.dotCover.CommandLineTools.DEFAULT%" />
+          <param name="paths" value="Quasardb.Tests/Quasardb.Tests.csproj" />
+          <param name="teamcity.step.mode" value="execute_if_failed" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_21" name="Test - insecure (x64)" type="dotnet">
+        <parameters>
+          <param name="args" value="/blame" />
+          <param name="command" value="vstest" />
+          <param name="dotNetCoverage.dotCover.home.path" value="%teamcity.tool.JetBrains.dotCover.CommandLineTools.DEFAULT%" />
+          <param name="framework" value="%dotnet_framework%" />
+          <param name="paths" value="&quot;Quasardb.Tests/bin/Release/net%dotnet_version%/Quasardb.Tests.dll&quot;" />
+          <param name="platform" value="x64" />
+          <param name="teamcity.step.mode" value="default" />
+          <param name="test.settingsFile" value="Quasardb.Tests/insecure.runsettings" />
+          <param name="vstest.version" value="VSTest_CrossPlatform" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_302" name="Test - secure (x64)" type="dotnet">
+        <parameters>
+          <param name="args" value="/blame" />
+          <param name="command" value="vstest" />
+          <param name="dotNetCoverage.dotCover.home.path" value="%teamcity.tool.JetBrains.dotCover.CommandLineTools.DEFAULT%" />
+          <param name="framework" value="%dotnet_framework%" />
+          <param name="paths" value="&quot;Quasardb.Tests/bin/Release/net%dotnet_version%/Quasardb.Tests.dll&quot;" />
+          <param name="platform" value="auto" />
+          <param name="teamcity.step.mode" value="default" />
+          <param name="test.settingsFile" value="Quasardb.Tests/secure.runsettings" />
+          <param name="vstest.version" value="VSTest_CrossPlatform" />
+        </parameters>
+      </runner>
+      <runner id="Create_NuGet_package" name="Create NuGet package" type="jb.nuget.pack">
+        <conditions>
+          <contains name="teamcity.agent.jvm.os.name" value="Windows" />
+        </conditions>
+        <parameters>
+          <param name="nuget.pack.as.artifact" value="true" />
+          <param name="nuget.pack.commandline" value="-NoDefaultExcludes" />
+          <param name="nuget.pack.output.clean" value="true" />
+          <param name="nuget.pack.output.directory" value="nuget-pack-out" />
+          <param name="nuget.pack.project.dir" value="as_is" />
+          <param name="nuget.pack.properties" value="Configuration=Release" />
+          <param name="nuget.pack.specFile" value="Quasardb/Quasardb.csproj" />
+          <param name="nuget.path" value="%teamcity.tool.NuGet.CommandLine.DEFAULT%" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_9" name="Stop services" type="simpleRunner">
+        <parameters>
+          <param name="command.executable" value="bash" />
+          <param name="command.parameters" value="scripts/tests/setup/stop-services.sh" />
+          <param name="teamcity.step.mode" value="execute_always" />
+          <param name="use.custom.script" value="" />
+        </parameters>
+      </runner>
+    </build-runners>
+    <vcs-settings>
+      <vcs-entry-ref root-id="QdbApiDotnet" />
+    </vcs-settings>
+    <requirements>
+      <equals id="RQ_199" name="teamcity.agent.jvm.os.arch" value="%os_arch%" />
+      <contains id="RQ_200" name="teamcity.agent.jvm.os.name" value="%os_name%" />
+    </requirements>
+    <build-extensions>
+      <extension id="perfmon" type="perfmon">
+        <parameters>
+          <param name="teamcity.perfmon.feature.enabled" value="true" />
+        </parameters>
+      </extension>
+      <extension id="swabra" type="swabra">
+        <parameters>
+          <param name="swabra.enabled" value="swabra.after.build" />
+          <param name="swabra.processes" value="kill" />
+        </parameters>
+      </extension>
+    </build-extensions>
+    <artifact-dependencies>
+      <dependency id="ARTIFACT_DEPENDENCY_1" sourceBuildTypeId="Quasardb_Artifacts_Release_Linux_X8664Core2_Composite" cleanDestination="false">
+        <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
+        <artifact sourcePath="*-c-api.tar.zst!**/*=&gt;qdb&#xD;&#xA;*-server.tar.zst!bin/*=&gt;qdb/bin&#xD;&#xA;*-utils.*!bin/*=&gt;qdb/bin&#xD;&#xA;&#xD;&#xA;*-linux-64bit-core2-c-api.tar.zst!lib/*=&gt;Quasardb/linux" />
+      </dependency>
+      <dependency id="ARTIFACT_DEPENDENCY_2" sourceBuildTypeId="Quasardb_Artifacts_Release_Windows_X8664Core2" cleanDestination="false">
+        <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
+        <artifact sourcePath="*-windows-64bit-core2-c-api.tar.zst!bin/*=&gt;Quasardb/win64" />
+      </dependency>
+      <dependency id="ARTIFACT_DEPENDENCY_3" sourceBuildTypeId="Quasardb_Artifacts_Release_Windows_X86Haswell" cleanDestination="false">
+        <revisionRule name="sameChainOrLastFinished" revision="latest.sameChainOrLastFinished" />
+        <artifact sourcePath="*-windows-32bit-c-api.tar.zst!bin/*=&gt;Quasardb/win32" />
+      </dependency>
+    </artifact-dependencies>
+    <dependencies>
+      <depend-on sourceBuildTypeId="Quasardb_Artifacts_Release_Windows_X8664Core2">
+        <options>
+          <option name="take-started-build-with-same-revisions" value="true" />
+          <option name="take-successful-builds-only" value="true" />
+        </options>
+      </depend-on>
+      <depend-on sourceBuildTypeId="Quasardb_Artifacts_Release_Windows_X86Haswell">
+        <options>
+          <option name="take-started-build-with-same-revisions" value="true" />
+          <option name="take-successful-builds-only" value="true" />
+        </options>
+      </depend-on>
+      <depend-on sourceBuildTypeId="Quasardb_Artifacts_Release_Linux_X8664Core2_Composite">
+        <options>
+          <option name="take-started-build-with-same-revisions" value="true" />
+          <option name="take-successful-builds-only" value="true" />
+        </options>
+      </depend-on>
+    </dependencies>
+  </settings>
+</template>
+
