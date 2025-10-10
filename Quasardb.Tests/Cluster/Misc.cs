@@ -113,8 +113,7 @@ namespace Quasardb.Tests.Cluster
         }
 
         [TestMethod]
-        [ExpectedException(typeof(QdbRemoteSystemException))]
-        public void SetCompression_Fast_ThrowsRemoteSystemException_NotImplemented()
+        public void SetCompression_Fast_ThrowsNothing()
         {
             QdbTestCluster.Instance.SetCompression(Quasardb.QdbCompression.Fast);
         }
