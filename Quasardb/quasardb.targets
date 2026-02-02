@@ -6,12 +6,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)\..\win32\qdb_api.dll">
-      <Link>win32\qdb_api.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
    <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)\..\win64\qdb_api.dll">
         <Link>win64\qdb_api.dll</Link>

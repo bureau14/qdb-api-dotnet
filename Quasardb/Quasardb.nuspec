@@ -15,7 +15,6 @@
     <files>
         <file src="quasardb.targets" target="build\quasardb.targets" />
         <file src="bin\Release\netstandard2.0\linux\libqdb_api.so" target="linux\libqdb_api.so" />
-        <file src="bin\Release\netstandard2.0\win32\qdb_api.dll" target="win32\qdb_api.dll" />
         <file src="bin\Release\netstandard2.0\win64\qdb_api.dll" target="win64\qdb_api.dll" />
     </files>
 </package>
