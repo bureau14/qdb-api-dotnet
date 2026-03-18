@@ -421,7 +421,7 @@ namespace Quasardb.Tests.Query
         public void ReturnsArrayAccum()
         {
             string alias = RandomGenerator.CreateUniqueAlias();
-            _cluster.Query(String.Format("CREATE TABLE {0} (col1 DOUBLE)", alias));
+            _cluster.Query(String.Format("CREATE TABLE {0} ($timestamp TIMESTAMP, col1 DOUBLE)", alias));
             _cluster.Query(String.Format("INSERT INTO {0} ($timestamp, col1) values (2017-01-01, 10), (2017-01-01, 20), (2017-01-01, null), (2017-01-01, 21)", alias));
 
             var results = _cluster.Query(String.Format("SELECT $timestamp, array_accum(col1) FROM {0} in range(2017, +1d) group by 1day", alias));

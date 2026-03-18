@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
@@ -343,18 +343,7 @@ namespace Quasardb.TimeSeries
         /// <exception cref="QdbInvalidArgumentException">If shard size is less than one millisecond or greater than maximum allowed length.</exception>
         public void Create(TimeSpan shardSize, IEnumerable<QdbColumnDefinition> columnDefinitions)
         {
-            var count = Helpers.GetCountOrDefault(columnDefinitions);
-            var columns = new InteropableList<qdb_ts_column_info_ex>(count);
-
-            foreach (var def in columnDefinitions)
-            {
-                columns.Add(new qdb_ts_column_info_ex
-                {
-                    name = def.Name,
-                    type = def.Type,
-                    symtable = def.Symtable
-                });
-            }
+            var columns = NormalizeCreateColumns(columnDefinitions);
 
             var err = qdb_api.qdb_ts_create_ex(
                 Handle, Alias,
@@ -362,6 +351,65 @@ namespace Quasardb.TimeSeries
                         (double)qdb_duration.qdb_d_millisecond),
                 columns.Buffer, columns.Count, 0);
             QdbExceptionThrower.ThrowIfNeeded(err, alias: Alias);
+        }
+
+        private static InteropableList<qdb_ts_column_info_ex> NormalizeCreateColumns(IEnumerable<QdbColumnDefinition> columnDefinitions)
+        {
+            var definitions = columnDefinitions ?? Array.Empty<QdbColumnDefinition>();
+            var count = Helpers.GetCountOrDefault(definitions);
+            var userColumns = new List<qdb_ts_column_info_ex>(count);
+            QdbColumnDefinition timestampDefinition = null;
+
+            foreach (var def in definitions)
+            {
+                if (def == null)
+                {
+                    throw new ArgumentException("Column definitions cannot contain null values.", nameof(columnDefinitions));
+                }
+
+                if (def.Name == "$timestamp")
+                {
+                    if (timestampDefinition != null)
+                    {
+                        throw new ArgumentException("The $timestamp column can only be specified once.", nameof(columnDefinitions));
+                    }
+
+                    if (def.Type != qdb_ts_column_type.qdb_ts_column_timestamp)
+                    {
+                        throw new ArgumentException("The $timestamp column must have TIMESTAMP type.", nameof(columnDefinitions));
+                    }
+
+                    if (!string.IsNullOrEmpty(def.Symtable))
+                    {
+                        throw new ArgumentException("The $timestamp column cannot define symbols.", nameof(columnDefinitions));
+                    }
+
+                    timestampDefinition = def;
+                    continue;
+                }
+
+                userColumns.Add(ToNativeColumnInfo(def));
+            }
+
+            var columns = new InteropableList<qdb_ts_column_info_ex>(userColumns.Count + 1);
+            columns.Add(ToNativeColumnInfo(timestampDefinition ?? new QdbTimestampColumnDefinition("$timestamp")));
+
+            foreach (var column in userColumns)
+            {
+                columns.Add(column);
+            }
+
+            return columns;
+        }
+
+        private static qdb_ts_column_info_ex ToNativeColumnInfo(QdbColumnDefinition definition)
+        {
+            return new qdb_ts_column_info_ex
+            {
+                name = definition.Name,
+                type = definition.Type,
+                symtable = definition.Symtable
+            };
         }
 
         /// <summary>
