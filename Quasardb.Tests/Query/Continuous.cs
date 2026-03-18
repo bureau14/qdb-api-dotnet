@@ -14,7 +14,7 @@ namespace Quasardb.Tests.Query
         {
             var waitHandle = new System.Threading.AutoResetEvent(false);
             var alias = RandomGenerator.CreateUniqueAlias();
-            _cluster.Query(String.Format("CREATE TABLE {0}(col int64)", alias));
+            _cluster.Query(String.Format("CREATE TABLE {0}($timestamp TIMESTAMP, col int64)", alias));
 
             var latest = 0;
 
@@ -70,7 +70,7 @@ namespace Quasardb.Tests.Query
         {
             var waitHandle = new System.Threading.AutoResetEvent(false);
             var alias = RandomGenerator.CreateUniqueAlias();
-            _cluster.Query(String.Format("CREATE TABLE {0}(col int64)", alias));
+            _cluster.Query(String.Format("CREATE TABLE {0}($timestamp TIMESTAMP, col int64)", alias));
 
             var latest = 0;
 
