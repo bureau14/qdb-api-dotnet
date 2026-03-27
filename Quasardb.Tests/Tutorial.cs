@@ -95,31 +95,28 @@ namespace Quasardb.Tests.Tutorial
             var closes = new QdbDoublePointCollection { { new DateTime(2019, 02, 01), 3.50 }, { new DateTime(2019, 02, 02), 3.55 } };
             var volumes = new QdbInt64PointCollection { { new DateTime(2019, 02, 01), 10000 }, { new DateTime(2019, 02, 02), 7500 } };
 
-            // Retrieve the different columns from our table
-            var openCol = ts.DoubleColumns["open"];
-            var closeCol = ts.DoubleColumns["close"];
-            var volumeCol = ts.Int64Columns["volume"];
-
-            // Insert data for each column
-            openCol.Insert(opens);
-            closeCol.Insert(closes);
-            volumeCol.Insert(volumes);
+            var columnWriter = ts.Writer();
+            for (var i = 0; i < opens.Count; ++i)
+            {
+                columnWriter.StartRow(opens[i].Time);
+                columnWriter.SetDouble("open", opens[i].Value);
+                columnWriter.SetDouble("close", closes[i].Value);
+                columnWriter.SetInt64("volume", volumes[i].Value);
+            }
+            columnWriter.Push();
             // column-insert-end
 
             // column-get-start
-            // using the same columns we used for the insertion
-            // we can retrieve the points from a specific range
             var range = new QdbTimeInterval(new DateTime(2019, 02, 01), new DateTime(2019, 02, 02));
-
-            openCol.Points(range);
-
-            // you can now inspect the values in the enumerable Points
-            var resultPoints = openCol.Points();
+            var resultPoints = ts.Reader(new QdbColumnDefinition[]
+            {
+                new QdbDoubleColumnDefinition("open")
+            }, range);
             // column-get-end
             var ptEnum = resultPoints.GetEnumerator();
             ptEnum.MoveNext();
-            Assert.AreEqual(ptEnum.Current.Time, opens[0].Time);
-            Assert.AreEqual(ptEnum.Current.Value, opens[0].Value);
+            Assert.AreEqual(ptEnum.Current.Timestamp, opens[0].Time);
+            Assert.AreEqual(ptEnum.Current[0].DoubleValue, opens[0].Value);
 
             // query-start
             // Execute the query

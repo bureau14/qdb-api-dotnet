@@ -156,24 +156,25 @@ namespace Quasardb.Tests.Table
             if (int64Points == null) throw new ArgumentNullException(nameof(int64Points));
             if (stringPoints == null) throw new ArgumentNullException(nameof(stringPoints));
             if (timestampPoints == null) throw new ArgumentNullException(nameof(timestampPoints));
+            if (symbolPoints == null) throw new ArgumentNullException(nameof(symbolPoints));
 
-            var blobColumn = ts1.BlobColumns["the_blob"];
-            CollectionAssert.AreEqual(blobPoints.ToArray(), blobColumn.Points().ToArray());
+            var ts1Rows = ts1.Reader().ToArray();
+            Assert.AreEqual(blobPoints.Count, ts1Rows.Length);
+            for (var i = 0; i < ts1Rows.Length; ++i)
+            {
+                CollectionAssert.AreEqual(blobPoints[i].Value, ts1Rows[i]["the_blob"].BlobValue);
+                Assert.AreEqual(doublePoints[i].Value, ts1Rows[i]["the_double"].DoubleValue);
+                Assert.AreEqual(int64Points[i].Value, ts1Rows[i]["the_int64"].Int64Value);
+            }
 
-            var doubleColumn = ts1.DoubleColumns["the_double"];
-            CollectionAssert.AreEqual(doublePoints.ToArray(), doubleColumn.Points().ToArray());
-
-            var int64Column = ts1.Int64Columns["the_int64"];
-            CollectionAssert.AreEqual(int64Points.ToArray(), int64Column.Points().ToArray());
-
-            var stringColumn = ts2.StringColumns["the_string"];
-            CollectionAssert.AreEqual(stringPoints.ToArray(), stringColumn.Points().ToArray());
-
-            var timestampColumn = ts2.TimestampColumns["the_ts"];
-            CollectionAssert.AreEqual(timestampPoints.ToArray(), timestampColumn.Points().ToArray());
-            
-            var symbolColumn = ts2.StringColumns["the_symbol"];
-            CollectionAssert.AreEqual(symbolPoints.ToArray(), symbolColumn.Points().ToArray());
+            var ts2Rows = ts2.Reader().ToArray();
+            Assert.AreEqual(stringPoints.Count, ts2Rows.Length);
+            for (var i = 0; i < ts2Rows.Length; ++i)
+            {
+                Assert.AreEqual(stringPoints[i].Value, ts2Rows[i]["the_string"].StringValue);
+                Assert.AreEqual(timestampPoints[i].Value, ts2Rows[i]["the_ts"].TimestampValue);
+                Assert.AreEqual(symbolPoints[i].Value, ts2Rows[i]["the_symbol"].StringValue);
+            }
         }
 
         [TestMethod]

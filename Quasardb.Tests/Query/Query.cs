@@ -33,16 +33,17 @@ namespace Quasardb.Tests.Query
 
             var random = new Random();
             var r = new QdbBlobPointCollection(count);
-
-            var column = ts.BlobColumns["the_blob"];
+            var writer = ts.Writer(new QdbColumnDefinition[] { new QdbBlobColumnDefinition("the_blob") });
             for (var i = 0; i < count; ++i)
             {
                 var value = new byte[32];
                 random.NextBytes(value);
-                column.Insert(time, value);
+                writer.StartRow(time);
+                writer.SetBlob("the_blob", value);
                 r.Add(time, value);
                 time = time.AddSeconds(1);
             }
+            writer.Push();
             return r;
         }
 
@@ -52,15 +53,16 @@ namespace Quasardb.Tests.Query
 
             var random = new Random();
             var r = new QdbDoublePointCollection(count);
-
-            var column = ts.DoubleColumns["the_double"];
+            var writer = ts.Writer(new QdbColumnDefinition[] { new QdbDoubleColumnDefinition("the_double") });
             for (var i = 0; i < count; ++i)
             {
                 var value = random.NextDouble();
-                column.Insert(time, value);
+                writer.StartRow(time);
+                writer.SetDouble("the_double", value);
                 r.Add(time, value);
                 time = time.AddSeconds(1);
             }
+            writer.Push();
             return r;
         }
 
@@ -70,15 +72,16 @@ namespace Quasardb.Tests.Query
 
             var random = new Random();
             var r = new QdbInt64PointCollection(count);
-
-            var column = ts.Int64Columns["the_int64"];
+            var writer = ts.Writer(new QdbColumnDefinition[] { new QdbInt64ColumnDefinition("the_int64") });
             for (var i = 0; i < count; ++i)
             {
                 var value = random.Next();
-                column.Insert(time, value);
+                writer.StartRow(time);
+                writer.SetInt64("the_int64", value);
                 r.Add(time, value);
                 time = time.AddSeconds(1);
             }
+            writer.Push();
             return r;
         }
 
@@ -97,16 +100,17 @@ namespace Quasardb.Tests.Query
             if (ts == null) throw new ArgumentNullException(nameof(ts));
 
             var r = new QdbStringPointCollection(count);
-
-            var column = ts.StringColumns["the_string"];
+            var writer = ts.Writer(new QdbColumnDefinition[] { new QdbStringColumnDefinition("the_string") });
             for (var i = 0; i < count; ++i)
             {
                 var value = GenerateRandomAlphanumericString(32);
 
-                column.Insert(time, value);
+                writer.StartRow(time);
+                writer.SetString("the_string", value);
                 r.Add(time, value);
                 time = time.AddSeconds(1);
             }
+            writer.Push();
             return r;
         }
 
@@ -115,18 +119,19 @@ namespace Quasardb.Tests.Query
             if (ts == null) throw new ArgumentNullException(nameof(ts));
 
             var r = new QdbStringPointCollection(count);
-
-            var column = ts.StringColumns["the_string"];
+            var writer = ts.Writer(new QdbColumnDefinition[] { new QdbStringColumnDefinition("the_string") });
 
             byte[] bytes = { (byte)'\xfe', (byte)'\xfe', (byte)'\xff', (byte)'\xff' };
             var value = Encoding.UTF8.GetString(bytes);
 
             for (var i = 0; i < count; ++i)
             {
-                column.Insert(time, value);
+                writer.StartRow(time);
+                writer.SetString("the_string", value);
                 r.Add(time, value);
                 time = time.AddSeconds(1);
             }
+            writer.Push();
             return r;
         }
 
@@ -136,15 +141,16 @@ namespace Quasardb.Tests.Query
 
             var random = new Random();
             var r = new QdbTimestampPointCollection(count);
-
-            var column = ts.TimestampColumns["the_ts"];
+            var writer = ts.Writer(new QdbColumnDefinition[] { new QdbTimestampColumnDefinition("the_ts") });
             for (var i = 0; i < count; ++i)
             {
                 var value = DateTime.Today.AddSeconds(random.NextDouble());
-                column.Insert(time, value);
+                writer.StartRow(time);
+                writer.SetTimestamp("the_ts", value);
                 r.Add(time, value);
                 time = time.AddSeconds(1);
             }
+            writer.Push();
             return r;
         }
 

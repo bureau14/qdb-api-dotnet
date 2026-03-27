@@ -234,30 +234,24 @@ namespace Quasardb.Tests.Table
             if (timestamps == null) throw new ArgumentNullException(nameof(timestamps));
             if (symbols == null) throw new ArgumentNullException(nameof(symbols));
 
-            var blob_arr = ts.BlobColumns["the_blob"].Points().ToArray();
-            var double_arr = ts.DoubleColumns["the_double"].Points().ToArray();
-            var int_arr = ts.Int64Columns["the_int64"].Points().ToArray();
-            var string_arr = ts.StringColumns["the_string"].Points().ToArray();
-            var ts_arr = ts.TimestampColumns["the_ts"].Points().ToArray();
-            var symbol_arr = ts.StringColumns["the_symbol"].Points().ToArray();
-
-            Assert.AreEqual(blob_arr.Length, blobs.Length);
-            Assert.AreEqual(double_arr.Length, doubles.Length);
-            Assert.AreEqual(int_arr.Length, int64s.Length);
-            Assert.AreEqual(ts_arr.Length, timestamps.Length);
-            Assert.AreEqual(string_arr.Length, strings.Length);
-            Assert.AreEqual(symbol_arr.Length, symbols.Length);
+            var rows = ts.Reader().ToArray();
+            Assert.AreEqual(rows.Length, blobs.Length);
+            Assert.AreEqual(rows.Length, doubles.Length);
+            Assert.AreEqual(rows.Length, int64s.Length);
+            Assert.AreEqual(rows.Length, timestamps.Length);
+            Assert.AreEqual(rows.Length, strings.Length);
+            Assert.AreEqual(rows.Length, symbols.Length);
             for (var idx = 0; idx < timestamps.Length; idx++)
             {
-                Assert.AreEqual(blob_arr[idx].Time, timestamps[idx]);
-                CollectionAssert.AreEqual(blob_arr[idx].Value, blobs[idx]);
-                Assert.AreEqual(double_arr[idx].Value, doubles[idx]);
-                Assert.AreEqual(int_arr[idx].Value, int64s[idx]);
-                Assert.AreEqual(string_arr[idx].Value, strings[idx]);
-                Assert.AreEqual(ts_arr[idx].Value, timestamps[idx]);
+                Assert.AreEqual(rows[idx].Timestamp, timestamps[idx]);
+                CollectionAssert.AreEqual(rows[idx]["the_blob"].BlobValue, blobs[idx]);
+                Assert.AreEqual(rows[idx]["the_double"].DoubleValue, doubles[idx]);
+                Assert.AreEqual(rows[idx]["the_int64"].Int64Value, int64s[idx]);
+                Assert.AreEqual(rows[idx]["the_string"].StringValue, strings[idx]);
+                Assert.AreEqual(rows[idx]["the_ts"].TimestampValue, timestamps[idx]);
                 if (symbols != null)
                 {
-                    Assert.AreEqual(symbol_arr[idx].Value, symbols[idx]);
+                    Assert.AreEqual(rows[idx]["the_symbol"].StringValue, symbols[idx]);
                 }
             }
         }
@@ -280,30 +274,24 @@ namespace Quasardb.Tests.Table
             if (timestamp_values == null) throw new ArgumentNullException(nameof(timestamp_values));
             if (symbols == null) throw new ArgumentNullException(nameof(symbols));
 
-            var blob_arr = ts.BlobColumns["the_blob"].Points().ToArray();
-            var double_arr = ts.DoubleColumns["the_double"].Points().ToArray();
-            var int_arr = ts.Int64Columns["the_int64"].Points().ToArray();
-            var string_arr = ts.StringColumns["the_string"].Points().ToArray();
-            var ts_arr = ts.TimestampColumns["the_ts"].Points().ToArray();
-            var symbol_arr = ts.StringColumns["the_symbol"].Points().ToArray();
-
-            Assert.AreEqual(blob_arr.Length, blobs.Length);
-            Assert.AreEqual(double_arr.Length, doubles.Length);
-            Assert.AreEqual(int_arr.Length, int64s.Length);
-            Assert.AreEqual(ts_arr.Length, timestamp_values.Length);
-            Assert.AreEqual(string_arr.Length, strings.Length);
-            Assert.AreEqual(symbol_arr.Length, symbols.Length);
+            var rows = ts.Reader().ToArray();
+            Assert.AreEqual(rows.Length, blobs.Length);
+            Assert.AreEqual(rows.Length, doubles.Length);
+            Assert.AreEqual(rows.Length, int64s.Length);
+            Assert.AreEqual(rows.Length, timestamp_values.Length);
+            Assert.AreEqual(rows.Length, strings.Length);
+            Assert.AreEqual(rows.Length, symbols.Length);
             for (var idx = 0; idx < timestamps.Length; idx++)
             {
-                Assert.AreEqual(blob_arr[idx].Time, timestamps[idx]);
-                CollectionAssert.AreEqual(blob_arr[idx].Value, blobs[idx]);
-                Assert.AreEqual(double_arr[idx].Value, doubles[idx]);
-                Assert.AreEqual(int_arr[idx].Value, int64s[idx]);
-                Assert.AreEqual(string_arr[idx].Value, strings[idx]);
-                Assert.AreEqual(ts_arr[idx].Value, timestamp_values[idx]);
+                Assert.AreEqual(rows[idx].Timestamp, timestamps[idx]);
+                CollectionAssert.AreEqual(rows[idx]["the_blob"].BlobValue, blobs[idx]);
+                Assert.AreEqual(rows[idx]["the_double"].DoubleValue, doubles[idx]);
+                Assert.AreEqual(rows[idx]["the_int64"].Int64Value, int64s[idx]);
+                Assert.AreEqual(rows[idx]["the_string"].StringValue, strings[idx]);
+                Assert.AreEqual(rows[idx]["the_ts"].TimestampValue, timestamp_values[idx]);
                 if (symbols != null)
                 {
-                    Assert.AreEqual(symbol_arr[idx].Value, symbols[idx]);
+                    Assert.AreEqual(rows[idx]["the_symbol"].StringValue, symbols[idx]);
                 }
             }
         }
@@ -322,19 +310,15 @@ namespace Quasardb.Tests.Table
             if (strings == null) throw new ArgumentNullException(nameof(strings));
             if (timestamps == null) throw new ArgumentNullException(nameof(timestamps));
 
-            var blob_arr = ts.BlobColumns["the_blob"].Points().ToArray();
-            var double_arr = ts.DoubleColumns["the_double"].Points().ToArray();
-            var int_arr = ts.Int64Columns["the_int64"].Points().ToArray();
-            var string_arr = ts.StringColumns["the_string"].Points().ToArray();
-            var ts_arr = ts.TimestampColumns["the_ts"].Points().ToArray();
+            var rows = ts.Reader().ToArray();
             for (var idx = 0; idx < timestamps.Length; idx++)
             {
-                Assert.AreEqual(blob_arr[idx].Time, timestamps[idx]);
-                CollectionAssert.AreEqual(blob_arr[idx].Value, blobs[idx]);
-                Assert.AreEqual(double_arr[idx].Value, doubles[idx]);
-                Assert.AreEqual(int_arr[idx].Value, int64s[idx]);
-                Assert.AreEqual(string_arr[idx].Value, strings[idx]);
-                Assert.AreEqual(ts_arr[idx].Value, timestamps[idx]);
+                Assert.AreEqual(rows[idx].Timestamp, timestamps[idx]);
+                CollectionAssert.AreEqual(rows[idx]["the_blob"].BlobValue, blobs[idx]);
+                Assert.AreEqual(rows[idx]["the_double"].DoubleValue, doubles[idx]);
+                Assert.AreEqual(rows[idx]["the_int64"].Int64Value, int64s[idx]);
+                Assert.AreEqual(rows[idx]["the_string"].StringValue, strings[idx]);
+                Assert.AreEqual(rows[idx]["the_ts"].TimestampValue, timestamps[idx]);
             }
         }
 
@@ -457,21 +441,16 @@ namespace Quasardb.Tests.Table
             // convert int64s[2] value to long for tests
             int64s[2] = (long)(int)int64s[2];
 
-            var blob_arr = ts.BlobColumns["the_blob"].Points().ToArray();
-            var double_arr = ts.DoubleColumns["the_double"].Points().ToArray();
-            var int_arr = ts.Int64Columns["the_int64"].Points().ToArray();
-            var string_arr = ts.StringColumns["the_string"].Points().ToArray();
-            var ts_arr = ts.TimestampColumns["the_ts"].Points().ToArray();
-            var symbol_arr = ts.StringColumns["the_symbol"].Points().ToArray();
+            var rows = ts.Reader().ToArray();
             for (var idx = 0; idx < timestamps.Length; idx++)
             {
-                Assert.AreEqual(blob_arr[idx].Time, timestamps[idx]);
-                CollectionAssert.AreEqual(blob_arr[idx].Value, blobs[idx]);
-                Assert.AreEqual(double_arr[idx].Value, doubles[idx]);
-                Assert.AreEqual(int_arr[idx].Value, int64s[idx]);
-                Assert.AreEqual(string_arr[idx].Value, strings[idx]);
-                Assert.AreEqual(ts_arr[idx].Value, timestamps[idx]);
-                Assert.AreEqual(symbol_arr[idx].Value, strings[idx]);
+                Assert.AreEqual(rows[idx].Timestamp, timestamps[idx]);
+                CollectionAssert.AreEqual(rows[idx]["the_blob"].BlobValue, blobs[idx]);
+                Assert.AreEqual(rows[idx]["the_double"].DoubleValue, doubles[idx]);
+                Assert.AreEqual(rows[idx]["the_int64"].Int64Value, int64s[idx]);
+                Assert.AreEqual(rows[idx]["the_string"].StringValue, strings[idx]);
+                Assert.AreEqual(rows[idx]["the_ts"].TimestampValue, timestamps[idx]);
+                Assert.AreEqual(rows[idx]["the_symbol"].StringValue, strings[idx]);
             }
         }
 
