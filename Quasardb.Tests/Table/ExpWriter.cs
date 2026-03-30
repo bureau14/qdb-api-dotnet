@@ -21,8 +21,15 @@ namespace Quasardb.Tests.Table
             if (value == null)
                 return null;
 
-            var result = Convert.ToDouble(value);
-            return double.IsNaN(result) ? (double?)null : result;
+            return Convert.ToDouble(value);
+        }
+
+        private static long? ToExpectedInt64(object value)
+        {
+            if (value == null)
+                return null;
+
+            return Convert.ToInt64(value);
         }
 
         private static void AssertNullableDouble(double? actual, double? expected)
@@ -38,22 +45,7 @@ namespace Quasardb.Tests.Table
 
         private static void AssertNullableDouble(double? actual, object expected)
         {
-            var normalizedActual = actual.HasValue && double.IsNaN(actual.Value) ? (double?)null : actual;
-            var normalizedExpected = ToExpectedDouble(expected);
-
-            if (!normalizedActual.HasValue && !normalizedExpected.HasValue)
-                return;
-
-            Assert.AreEqual(normalizedActual, normalizedExpected);
-        }
-
-        private static long? ToExpectedInt64(object value)
-        {
-            if (value == null)
-                return null;
-
-            var result = Convert.ToInt64(value);
-            return result == long.MinValue ? (long?)null : result;
+            AssertNullableDouble(actual, ToExpectedDouble(expected));
         }
 
         private static void AssertNullableInt64(long? actual, long? expected)
@@ -69,13 +61,7 @@ namespace Quasardb.Tests.Table
 
         private static void AssertNullableInt64(long? actual, object expected)
         {
-            var normalizedActual = actual == long.MinValue ? (long?)null : actual;
-            var normalizedExpected = ToExpectedInt64(expected);
-
-            if (!normalizedActual.HasValue && !normalizedExpected.HasValue)
-                return;
-
-            Assert.AreEqual(normalizedActual, normalizedExpected);
+            AssertNullableInt64(actual, ToExpectedInt64(expected));
         }
 
         private static void AssertNullableTimestamp(DateTime? actual, DateTime? expected)
