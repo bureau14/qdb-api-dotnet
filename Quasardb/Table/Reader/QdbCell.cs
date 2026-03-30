@@ -21,6 +21,8 @@ namespace Quasardb.TimeSeries.Reader
         private readonly string _alias;
         private readonly qdb_ts_column_info _column;
         private readonly qdb_size_t _index;
+        private readonly bool _isSnapshot;
+        private readonly object _snapshotValue;
 
         internal QdbCell(IntPtr table, string alias, qdb_ts_column_info column, qdb_size_t index)
         {
@@ -28,6 +30,17 @@ namespace Quasardb.TimeSeries.Reader
             _alias = alias;
             _column = column;
             _index = index;
+            _isSnapshot = false;
+        }
+
+        internal QdbCell(string alias, qdb_ts_column_info column, object snapshotValue)
+        {
+            _table = IntPtr.Zero;
+            _alias = alias;
+            _column = column;
+            _index = (qdb_size_t)0;
+            _isSnapshot = true;
+            _snapshotValue = snapshotValue;
         }
 
         /// <summary>
@@ -71,6 +84,8 @@ namespace Quasardb.TimeSeries.Reader
             {
                 if (Type != QdbColumnType.Double)
                     throw new InvalidCastException();
+                if (_isSnapshot)
+                    return _snapshotValue == null ? (double?)null : (double)_snapshotValue;
                 var err = qdb_api.qdb_ts_row_get_double(
                     _table, _index,
                     out double value);
@@ -91,6 +106,8 @@ namespace Quasardb.TimeSeries.Reader
             {
                 if (Type != QdbColumnType.Blob)
                     throw new InvalidCastException();
+                if (_isSnapshot)
+                    return (byte[])_snapshotValue;
                 var err = qdb_api.qdb_ts_row_get_blob_no_copy(
                     _table, _index,
                     out pointer_t content, out size_t length);
@@ -111,6 +128,8 @@ namespace Quasardb.TimeSeries.Reader
             {
                 if (Type != QdbColumnType.Int64)
                     throw new InvalidCastException();
+                if (_isSnapshot)
+                    return _snapshotValue == null ? (long?)null : (long)_snapshotValue;
                 var err = qdb_api.qdb_ts_row_get_int64(
                     _table, _index,
                     out qdb_int_t value);
@@ -129,8 +148,10 @@ namespace Quasardb.TimeSeries.Reader
         {
             get
             {
-                if (Type != QdbColumnType.String)
+                if (Type != QdbColumnType.String && Type != QdbColumnType.Symbol)
                     throw new InvalidCastException();
+                if (_isSnapshot)
+                    return (string)_snapshotValue;
 
                 var err = qdb_api.qdb_ts_row_get_string_no_copy(
                     _table, _index,
@@ -156,6 +177,8 @@ namespace Quasardb.TimeSeries.Reader
             {
                 if (Type != QdbColumnType.Timestamp)
                     throw new InvalidCastException();
+                if (_isSnapshot)
+                    return _snapshotValue == null ? (DateTime?)null : (DateTime)_snapshotValue;
                 var err = qdb_api.qdb_ts_row_get_timestamp(
                     _table, _index,
                     out qdb_timespec value);

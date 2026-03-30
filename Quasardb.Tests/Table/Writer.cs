@@ -162,18 +162,18 @@ namespace Quasardb.Tests.Table
             Assert.AreEqual(blobPoints.Count, ts1Rows.Length);
             for (var i = 0; i < ts1Rows.Length; ++i)
             {
-                CollectionAssert.AreEqual(blobPoints[i].Value, ts1Rows[i]["the_blob"].BlobValue);
-                Assert.AreEqual(doublePoints[i].Value, ts1Rows[i]["the_double"].DoubleValue);
-                Assert.AreEqual(int64Points[i].Value, ts1Rows[i]["the_int64"].Int64Value);
+                CollectionAssert.AreEqual(ts1Rows[i]["the_blob"].BlobValue, blobPoints[i].Value);
+                Assert.AreEqual(ts1Rows[i]["the_double"].DoubleValue, doublePoints[i].Value);
+                Assert.AreEqual(ts1Rows[i]["the_int64"].Int64Value, int64Points[i].Value);
             }
 
             var ts2Rows = ts2.Reader().ToArray();
             Assert.AreEqual(stringPoints.Count, ts2Rows.Length);
             for (var i = 0; i < ts2Rows.Length; ++i)
             {
-                Assert.AreEqual(stringPoints[i].Value, ts2Rows[i]["the_string"].StringValue);
-                Assert.AreEqual(timestampPoints[i].Value, ts2Rows[i]["the_ts"].TimestampValue);
-                Assert.AreEqual(symbolPoints[i].Value, ts2Rows[i]["the_symbol"].StringValue);
+                Assert.AreEqual(ts2Rows[i]["the_string"].StringValue, stringPoints[i].Value);
+                Assert.AreEqual(ts2Rows[i]["the_ts"].TimestampValue, timestampPoints[i].Value);
+                Assert.AreEqual(ts2Rows[i]["the_symbol"].StringValue, symbolPoints[i].Value);
             }
         }
 

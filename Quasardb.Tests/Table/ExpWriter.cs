@@ -8,8 +8,6 @@ using Quasardb.TimeSeries;
 using Quasardb.TimeSeries.ExpWriter;
 
 using System.Runtime.InteropServices;
-using System.Runtime.Serialization;
-using System.Reflection;
 
 namespace Quasardb.Tests.Table
 {
@@ -17,6 +15,79 @@ namespace Quasardb.Tests.Table
     unsafe public class ExpWriterTests
     {
         private readonly QdbCluster _cluster = QdbTestCluster.Instance;
+
+        private static double? ToExpectedDouble(object value)
+        {
+            if (value == null)
+                return null;
+
+            var result = Convert.ToDouble(value);
+            return double.IsNaN(result) ? (double?)null : result;
+        }
+
+        private static void AssertNullableDouble(double? actual, double? expected)
+        {
+            var normalizedActual = actual.HasValue && double.IsNaN(actual.Value) ? (double?)null : actual;
+            var normalizedExpected = expected.HasValue && double.IsNaN(expected.Value) ? (double?)null : expected;
+
+            if (!normalizedActual.HasValue && !normalizedExpected.HasValue)
+                return;
+
+            Assert.AreEqual(normalizedActual, normalizedExpected);
+        }
+
+        private static void AssertNullableDouble(double? actual, object expected)
+        {
+            var normalizedActual = actual.HasValue && double.IsNaN(actual.Value) ? (double?)null : actual;
+            var normalizedExpected = ToExpectedDouble(expected);
+
+            if (!normalizedActual.HasValue && !normalizedExpected.HasValue)
+                return;
+
+            Assert.AreEqual(normalizedActual, normalizedExpected);
+        }
+
+        private static long? ToExpectedInt64(object value)
+        {
+            if (value == null)
+                return null;
+
+            var result = Convert.ToInt64(value);
+            return result == long.MinValue ? (long?)null : result;
+        }
+
+        private static void AssertNullableInt64(long? actual, long? expected)
+        {
+            var normalizedActual = actual == long.MinValue ? (long?)null : actual;
+            var normalizedExpected = expected == long.MinValue ? (long?)null : expected;
+
+            if (!normalizedActual.HasValue && !normalizedExpected.HasValue)
+                return;
+
+            Assert.AreEqual(normalizedActual, normalizedExpected);
+        }
+
+        private static void AssertNullableInt64(long? actual, object expected)
+        {
+            var normalizedActual = actual == long.MinValue ? (long?)null : actual;
+            var normalizedExpected = ToExpectedInt64(expected);
+
+            if (!normalizedActual.HasValue && !normalizedExpected.HasValue)
+                return;
+
+            Assert.AreEqual(normalizedActual, normalizedExpected);
+        }
+
+        private static void AssertNullableTimestamp(DateTime? actual, DateTime? expected)
+        {
+            var normalizedActual = actual == DateTime.MinValue ? (DateTime?)null : actual;
+            var normalizedExpected = expected == DateTime.MinValue ? (DateTime?)null : expected;
+
+            if (!normalizedActual.HasValue && !normalizedExpected.HasValue)
+                return;
+
+            Assert.AreEqual(normalizedActual, normalizedExpected);
+        }
 
         public static DateTime[] MakeTimestamps(int count)
         {
@@ -238,10 +309,10 @@ namespace Quasardb.Tests.Table
             Assert.AreEqual(rows.Length, blobs.Length);
             Assert.AreEqual(rows.Length, doubles.Length);
             Assert.AreEqual(rows.Length, int64s.Length);
-            Assert.AreEqual(rows.Length, timestamps.Length);
             Assert.AreEqual(rows.Length, strings.Length);
+            Assert.AreEqual(rows.Length, timestamps.Length);
             Assert.AreEqual(rows.Length, symbols.Length);
-            for (var idx = 0; idx < timestamps.Length; idx++)
+            for (var idx = 0; idx < rows.Length; idx++)
             {
                 Assert.AreEqual(rows[idx].Timestamp, timestamps[idx]);
                 CollectionAssert.AreEqual(rows[idx]["the_blob"].BlobValue, blobs[idx]);
@@ -249,10 +320,7 @@ namespace Quasardb.Tests.Table
                 Assert.AreEqual(rows[idx]["the_int64"].Int64Value, int64s[idx]);
                 Assert.AreEqual(rows[idx]["the_string"].StringValue, strings[idx]);
                 Assert.AreEqual(rows[idx]["the_ts"].TimestampValue, timestamps[idx]);
-                if (symbols != null)
-                {
-                    Assert.AreEqual(rows[idx]["the_symbol"].StringValue, symbols[idx]);
-                }
+                Assert.AreEqual(rows[idx]["the_symbol"].StringValue, symbols[idx]);
             }
         }
 
@@ -278,21 +346,19 @@ namespace Quasardb.Tests.Table
             Assert.AreEqual(rows.Length, blobs.Length);
             Assert.AreEqual(rows.Length, doubles.Length);
             Assert.AreEqual(rows.Length, int64s.Length);
-            Assert.AreEqual(rows.Length, timestamp_values.Length);
             Assert.AreEqual(rows.Length, strings.Length);
+            Assert.AreEqual(rows.Length, timestamps.Length);
+            Assert.AreEqual(rows.Length, timestamp_values.Length);
             Assert.AreEqual(rows.Length, symbols.Length);
-            for (var idx = 0; idx < timestamps.Length; idx++)
+            for (var idx = 0; idx < rows.Length; idx++)
             {
                 Assert.AreEqual(rows[idx].Timestamp, timestamps[idx]);
                 CollectionAssert.AreEqual(rows[idx]["the_blob"].BlobValue, blobs[idx]);
-                Assert.AreEqual(rows[idx]["the_double"].DoubleValue, doubles[idx]);
-                Assert.AreEqual(rows[idx]["the_int64"].Int64Value, int64s[idx]);
+                AssertNullableDouble(rows[idx]["the_double"].DoubleValue, doubles[idx]);
+                AssertNullableInt64(rows[idx]["the_int64"].Int64Value, int64s[idx]);
                 Assert.AreEqual(rows[idx]["the_string"].StringValue, strings[idx]);
-                Assert.AreEqual(rows[idx]["the_ts"].TimestampValue, timestamp_values[idx]);
-                if (symbols != null)
-                {
-                    Assert.AreEqual(rows[idx]["the_symbol"].StringValue, symbols[idx]);
-                }
+                AssertNullableTimestamp(rows[idx]["the_ts"].TimestampValue, timestamp_values[idx]);
+                Assert.AreEqual(rows[idx]["the_symbol"].StringValue, symbols[idx]);
             }
         }
 
@@ -311,7 +377,12 @@ namespace Quasardb.Tests.Table
             if (timestamps == null) throw new ArgumentNullException(nameof(timestamps));
 
             var rows = ts.Reader().ToArray();
-            for (var idx = 0; idx < timestamps.Length; idx++)
+            Assert.AreEqual(rows.Length, blobs.Length);
+            Assert.AreEqual(rows.Length, doubles.Length);
+            Assert.AreEqual(rows.Length, int64s.Length);
+            Assert.AreEqual(rows.Length, strings.Length);
+            Assert.AreEqual(rows.Length, timestamps.Length);
+            for (var idx = 0; idx < rows.Length; idx++)
             {
                 Assert.AreEqual(rows[idx].Timestamp, timestamps[idx]);
                 CollectionAssert.AreEqual(rows[idx]["the_blob"].BlobValue, blobs[idx]);
@@ -442,12 +513,17 @@ namespace Quasardb.Tests.Table
             int64s[2] = (long)(int)int64s[2];
 
             var rows = ts.Reader().ToArray();
-            for (var idx = 0; idx < timestamps.Length; idx++)
+            Assert.AreEqual(rows.Length, blobs.Length);
+            Assert.AreEqual(rows.Length, doubles.Length);
+            Assert.AreEqual(rows.Length, int64s.Length);
+            Assert.AreEqual(rows.Length, strings.Length);
+            Assert.AreEqual(rows.Length, timestamps.Length);
+            for (var idx = 0; idx < rows.Length; idx++)
             {
                 Assert.AreEqual(rows[idx].Timestamp, timestamps[idx]);
                 CollectionAssert.AreEqual(rows[idx]["the_blob"].BlobValue, blobs[idx]);
-                Assert.AreEqual(rows[idx]["the_double"].DoubleValue, doubles[idx]);
-                Assert.AreEqual(rows[idx]["the_int64"].Int64Value, int64s[idx]);
+                AssertNullableDouble(rows[idx]["the_double"].DoubleValue, doubles[idx]);
+                AssertNullableInt64(rows[idx]["the_int64"].Int64Value, int64s[idx]);
                 Assert.AreEqual(rows[idx]["the_string"].StringValue, strings[idx]);
                 Assert.AreEqual(rows[idx]["the_ts"].TimestampValue, timestamps[idx]);
                 Assert.AreEqual(rows[idx]["the_symbol"].StringValue, strings[idx]);
