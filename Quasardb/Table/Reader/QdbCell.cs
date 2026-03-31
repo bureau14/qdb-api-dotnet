@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using Quasardb.Exceptions;
 using Quasardb.Native;
@@ -92,7 +92,7 @@ namespace Quasardb.TimeSeries.Reader
                 if (err == qdb_error.qdb_e_element_not_found)
                     return null;
                 QdbExceptionThrower.ThrowIfNeeded(err, alias: _alias, column: _column.name);
-                return value;
+                return double.IsNaN(value) ? (double?)null : value;
             }
         }
 
@@ -136,7 +136,7 @@ namespace Quasardb.TimeSeries.Reader
                 if (err == qdb_error.qdb_e_element_not_found)
                     return null;
                 QdbExceptionThrower.ThrowIfNeeded(err, alias: _alias, column: _column.name);
-                return value;
+                return value == long.MinValue ? (long?)null : value;
             }
         }
 
@@ -185,7 +185,7 @@ namespace Quasardb.TimeSeries.Reader
                 if (err == qdb_error.qdb_e_element_not_found)
                     return null;
                 QdbExceptionThrower.ThrowIfNeeded(err, alias: _alias, column: _column.name);
-                return TimeConverter.ToDateTime(value);
+                return TimeConverter.ToNullableDateTime(value);
             }
         }
     }
