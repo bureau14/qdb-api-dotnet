@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using Quasardb.Exceptions;
 using Quasardb.Native;
 
 namespace Quasardb.TimeSeries

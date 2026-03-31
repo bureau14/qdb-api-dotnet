@@ -57,11 +57,6 @@ namespace Quasardb.Tests.Table
             return r;
         }
 
-        public static DateTime[] CreateTimestampPoints(int count)
-        {
-            return MakeTimestamps(count);
-        }
-
         public QdbTable CreateTable(string alias = null)
         {
             var ts = _cluster.Table(alias ?? RandomGenerator.CreateUniqueAlias());

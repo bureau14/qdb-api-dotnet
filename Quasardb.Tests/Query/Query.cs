@@ -4,7 +4,6 @@ using Quasardb.Query;
 using Quasardb.TimeSeries;
 using System;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Text;
 
 namespace Quasardb.Tests.Query
