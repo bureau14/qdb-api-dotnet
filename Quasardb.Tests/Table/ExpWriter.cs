@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb.Exceptions;
 using Quasardb.TimeSeries;
 using Quasardb.TimeSeries.ExpWriter;
+using Quasardb.TimeSeries.Reader;
 
 using System.Runtime.InteropServices;
 
@@ -15,6 +16,7 @@ namespace Quasardb.Tests.Table
     unsafe public class ExpWriterTests
     {
         private readonly QdbCluster _cluster = QdbTestCluster.Instance;
+        private const string UnicodeString = "Running 🏃 is faster than swimming 🏊.";
 
         public static DateTime[] MakeTimestamps(int count)
         {
@@ -193,7 +195,7 @@ namespace Quasardb.Tests.Table
             return batch;
         }
 
-        public static void CheckTables(QdbTable ts,
+        public void CheckTables(QdbTable ts,
             byte[][] blobs,
             double[] doubles,
             long[] int64s,
@@ -209,26 +211,33 @@ namespace Quasardb.Tests.Table
             if (timestamps == null) throw new ArgumentNullException(nameof(timestamps));
             if (symbols == null) throw new ArgumentNullException(nameof(symbols));
 
-            var rows = ts.Reader().ToArray();
-            Assert.AreEqual(rows.Length, blobs.Length);
-            Assert.AreEqual(rows.Length, doubles.Length);
-            Assert.AreEqual(rows.Length, int64s.Length);
-            Assert.AreEqual(rows.Length, strings.Length);
-            Assert.AreEqual(rows.Length, timestamps.Length);
-            Assert.AreEqual(rows.Length, symbols.Length);
-            for (var idx = 0; idx < rows.Length; idx++)
+            Assert.AreEqual(blobs.Length, doubles.Length);
+            Assert.AreEqual(blobs.Length, int64s.Length);
+            Assert.AreEqual(blobs.Length, strings.Length);
+            Assert.AreEqual(blobs.Length, timestamps.Length);
+            Assert.AreEqual(blobs.Length, symbols.Length);
+
+            using (var reader = _cluster.BulkReader(["the_blob", "the_double", "the_int64", "the_string", "the_ts", "the_symbol"],
+                       [new QdbBulkReaderTable(ts.Alias, null)]))
             {
-                Assert.AreEqual(rows[idx].Timestamp, timestamps[idx]);
-                CollectionAssert.AreEqual(rows[idx]["the_blob"].BlobValue, blobs[idx]);
-                Assert.AreEqual(rows[idx]["the_double"].DoubleValue, doubles[idx]);
-                Assert.AreEqual(rows[idx]["the_int64"].Int64Value, int64s[idx]);
-                Assert.AreEqual(rows[idx]["the_string"].StringValue, strings[idx]);
-                Assert.AreEqual(rows[idx]["the_ts"].TimestampValue, timestamps[idx]);
-                Assert.AreEqual(rows[idx]["the_symbol"].StringValue, symbols[idx]);
+                var idx = 0;
+                foreach (var row in reader)
+                {
+                    Assert.AreEqual(row.Timestamp, timestamps[idx]);
+                    CollectionAssert.AreEqual(row[1].BlobValue, blobs[idx]);
+                    Assert.AreEqual(row[2].DoubleValue, doubles[idx]);
+                    Assert.AreEqual(row[3].Int64Value, int64s[idx]);
+                    Assert.AreEqual(row[4].StringValue, strings[idx]);
+                    Assert.AreEqual(row[5].TimestampValue, timestamps[idx]);
+                    Assert.AreEqual(row[6].StringValue, symbols[idx]);
+                    idx++;
+                }
+
+                Assert.AreEqual(idx, blobs.Length);
             }
         }
 
-        public static void CheckTablesWithNull(QdbTable ts,
+        public void CheckTablesWithNull(QdbTable ts,
             byte[][] blobs,
             double?[] doubles,
             long?[] int64s,
@@ -246,27 +255,34 @@ namespace Quasardb.Tests.Table
             if (timestamp_values == null) throw new ArgumentNullException(nameof(timestamp_values));
             if (symbols == null) throw new ArgumentNullException(nameof(symbols));
 
-            var rows = ts.Reader().ToArray();
-            Assert.AreEqual(rows.Length, blobs.Length);
-            Assert.AreEqual(rows.Length, doubles.Length);
-            Assert.AreEqual(rows.Length, int64s.Length);
-            Assert.AreEqual(rows.Length, strings.Length);
-            Assert.AreEqual(rows.Length, timestamps.Length);
-            Assert.AreEqual(rows.Length, timestamp_values.Length);
-            Assert.AreEqual(rows.Length, symbols.Length);
-            for (var idx = 0; idx < rows.Length; idx++)
+            Assert.AreEqual(blobs.Length, doubles.Length);
+            Assert.AreEqual(blobs.Length, int64s.Length);
+            Assert.AreEqual(blobs.Length, strings.Length);
+            Assert.AreEqual(blobs.Length, timestamps.Length);
+            Assert.AreEqual(blobs.Length, timestamp_values.Length);
+            Assert.AreEqual(blobs.Length, symbols.Length);
+
+            using (var reader = _cluster.BulkReader(["the_blob", "the_double", "the_int64", "the_string", "the_ts", "the_symbol"],
+                       [new QdbBulkReaderTable(ts.Alias, null)]))
             {
-                Assert.AreEqual(rows[idx].Timestamp, timestamps[idx]);
-                CollectionAssert.AreEqual(rows[idx]["the_blob"].BlobValue, blobs[idx]);
-                Assert.AreEqual(rows[idx]["the_double"].DoubleValue, doubles[idx]);
-                Assert.AreEqual(rows[idx]["the_int64"].Int64Value, int64s[idx]);
-                Assert.AreEqual(rows[idx]["the_string"].StringValue, strings[idx]);
-                Assert.AreEqual(rows[idx]["the_ts"].TimestampValue, timestamp_values[idx]);
-                Assert.AreEqual(rows[idx]["the_symbol"].StringValue, symbols[idx]);
+                var idx = 0;
+                foreach (var row in reader)
+                {
+                    Assert.AreEqual(row.Timestamp, timestamps[idx]);
+                    CollectionAssert.AreEqual(row[1].BlobValue, blobs[idx]);
+                    Assert.AreEqual(row[2].DoubleValue, doubles[idx]);
+                    Assert.AreEqual(row[3].Int64Value, int64s[idx]);
+                    Assert.AreEqual(row[4].StringValue, strings[idx]);
+                    Assert.AreEqual(row[5].TimestampValue, timestamp_values[idx]);
+                    Assert.AreEqual(row[6].StringValue, symbols[idx]);
+                    idx++;
+                }
+
+                Assert.AreEqual(idx, blobs.Length);
             }
         }
 
-        public static void CheckTablesWithoutSymbol(QdbTable ts,
+        public void CheckTablesWithoutSymbol(QdbTable ts,
             byte[][] blobs,
             double[] doubles,
             long[] int64s,
@@ -280,20 +296,27 @@ namespace Quasardb.Tests.Table
             if (strings == null) throw new ArgumentNullException(nameof(strings));
             if (timestamps == null) throw new ArgumentNullException(nameof(timestamps));
 
-            var rows = ts.Reader().ToArray();
-            Assert.AreEqual(rows.Length, blobs.Length);
-            Assert.AreEqual(rows.Length, doubles.Length);
-            Assert.AreEqual(rows.Length, int64s.Length);
-            Assert.AreEqual(rows.Length, strings.Length);
-            Assert.AreEqual(rows.Length, timestamps.Length);
-            for (var idx = 0; idx < rows.Length; idx++)
+            Assert.AreEqual(blobs.Length, doubles.Length);
+            Assert.AreEqual(blobs.Length, int64s.Length);
+            Assert.AreEqual(blobs.Length, strings.Length);
+            Assert.AreEqual(blobs.Length, timestamps.Length);
+
+            using (var reader = _cluster.BulkReader(["the_blob", "the_double", "the_int64", "the_string", "the_ts"],
+                       [new QdbBulkReaderTable(ts.Alias, null)]))
             {
-                Assert.AreEqual(rows[idx].Timestamp, timestamps[idx]);
-                CollectionAssert.AreEqual(rows[idx]["the_blob"].BlobValue, blobs[idx]);
-                Assert.AreEqual(rows[idx]["the_double"].DoubleValue, doubles[idx]);
-                Assert.AreEqual(rows[idx]["the_int64"].Int64Value, int64s[idx]);
-                Assert.AreEqual(rows[idx]["the_string"].StringValue, strings[idx]);
-                Assert.AreEqual(rows[idx]["the_ts"].TimestampValue, timestamps[idx]);
+                var idx = 0;
+                foreach (var row in reader)
+                {
+                    Assert.AreEqual(row.Timestamp, timestamps[idx]);
+                    CollectionAssert.AreEqual(row[1].BlobValue, blobs[idx]);
+                    Assert.AreEqual(row[2].DoubleValue, doubles[idx]);
+                    Assert.AreEqual(row[3].Int64Value, int64s[idx]);
+                    Assert.AreEqual(row[4].StringValue, strings[idx]);
+                    Assert.AreEqual(row[5].TimestampValue, timestamps[idx]);
+                    idx++;
+                }
+
+                Assert.AreEqual(idx, blobs.Length);
             }
         }
 
@@ -361,10 +384,10 @@ namespace Quasardb.Tests.Table
         {
             QdbTable ts = CreateTable();
 
-            var blobs = new byte[5][] { System.Text.Encoding.UTF8.GetBytes("Running 🏃 is faster than swimming 🏊."), null, null, null, null };
+            var blobs = new byte[5][] { System.Text.Encoding.UTF8.GetBytes(UnicodeString), null, null, null, null };
             var doubles = new double?[5] { null, 1.1, null, null, null };
             var int64s = new long?[5] { null, null, 1, null, null };
-            var strings = new string[5] { null, null, null, "Running 🏃 is faster than swimming 🏊.", null };
+            var strings = new string[5] { null, null, null, UnicodeString, null };
             var timestamps = MakeTimestamps(5);
             var timestamp_values = new DateTime?[5] { null, null, null, DateTime.Parse("2021-01-01T00:00:00Z"), null };
 
@@ -398,10 +421,10 @@ namespace Quasardb.Tests.Table
         {
             QdbTable ts = CreateTable();
 
-            var blobs = new byte[5][] { System.Text.Encoding.UTF8.GetBytes("Running 🏃 is faster than swimming 🏊."), null, null, null, null };
+            var blobs = new byte[5][] { System.Text.Encoding.UTF8.GetBytes(UnicodeString), null, null, null, null };
             var doubles = new object[5] { null, 1.1, null, null, null };
             var int64s = new object[5] { null, null, 1, null, null };
-            var strings = new object[5] { null, null, null, "Running 🏃 is faster than swimming 🏊.", null };
+            var strings = new object[5] { null, null, null, UnicodeString, null };
             var timestamps = MakeTimestamps(5);
 
             var batch = _cluster.ExpWriter([ts.Alias], new QdbTableExpWriterOptions().Transactional());
@@ -757,4 +780,5 @@ namespace Quasardb.Tests.Table
         }
     }
 }
+
 

@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.InteropServices;
 using Quasardb.Native;
 
 namespace Quasardb.TimeSeries.Reader
@@ -109,7 +108,10 @@ namespace Quasardb.TimeSeries.Reader
                 qdb_sized_string str = _column->data.strings[_index];
                 if (str.data == null)
                     return null;
-                return Marshal.PtrToStringAnsi(new IntPtr(str.data), (int)str.length);
+                var value = Helper.GetBytes(new IntPtr(str.data), str.length);
+                if (value == null)
+                    return null;
+                return System.Text.Encoding.UTF8.GetString(value);
             }
         }
 
