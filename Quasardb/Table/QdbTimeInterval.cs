@@ -48,8 +48,16 @@ namespace Quasardb.TimeSeries
         {
             return new qdb_ts_range
             {
-                begin = TimeConverter.ToTimespec(Begin),
-                end = TimeConverter.ToTimespec(End)
+                begin = Begin == DateTime.MinValue
+                    ? qdb_timespec.MinValue
+                    : Begin == DateTime.MaxValue
+                        ? qdb_timespec.MaxValue
+                        : TimeConverter.ToTimespec(Begin),
+                end = End == DateTime.MinValue
+                    ? qdb_timespec.MinValue
+                    : End == DateTime.MaxValue
+                        ? qdb_timespec.MaxValue
+                        : TimeConverter.ToTimespec(End)
             };
         }
     }

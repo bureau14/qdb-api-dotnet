@@ -25,13 +25,6 @@ namespace Quasardb.TimeSeries
             Symtable = symtable;
         }
 
-        internal QdbColumn(QdbTable series, string name, QdbColumnType type)
-        {
-            Series = series;
-            Name = name;
-            Type = type;
-        }
-
         /// <summary>
         /// The parent of the column
         /// </summary>
