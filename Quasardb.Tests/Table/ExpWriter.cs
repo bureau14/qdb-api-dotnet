@@ -18,48 +18,22 @@ namespace Quasardb.Tests.Table
 
         public static DateTime[] MakeTimestamps(int count)
         {
-            var random = new Random();
-            var r = new DateTime[count];
-
-            DateTime date = DateTime.Parse("2021-01-01T00:00:00Z");
-            for (var i = 0; i < count; ++i)
-            {
-                r[i] = date.AddSeconds(i);
-            }
-            return r;
+            return TableTestHelper.MakeTimestamps(count);
         }
 
         public static byte[][] MakeBlobArray(int count)
         {
-            var r = new byte[count][];
-
-            for (var i = 0; i < count; ++i)
-            {
-                r[i] = System.Text.Encoding.UTF8.GetBytes("Running 🏃 is faster than swimming 🏊.");
-            }
-            return r;
+            return TableTestHelper.MakeBlobArray(count);
         }
 
         public static double[] MakeDoubleArray(int count)
         {
-            var r = new double[count];
-
-            for (var i = 0; i < count; ++i)
-            {
-                r[i] = (double)i;
-            }
-            return r;
+            return TableTestHelper.MakeDoubleArray(count);
         }
 
         public static long[] MakeInt64Array(int count)
         {
-            var r = new long[count];
-
-            for (var i = 0; i < count; ++i)
-            {
-                r[i] = (long)i;
-            }
-            return r;
+            return TableTestHelper.MakeInt64Array(count);
         }
 
         public static string RandomString(int length, Random r)
@@ -102,7 +76,10 @@ namespace Quasardb.Tests.Table
 
         public QdbTable CreateTableWithoutSymbol(string alias = null)
         {
-            var ts = _cluster.Table(alias ?? RandomGenerator.CreateUniqueAlias());
+            if (alias == null)
+                return TableTestHelper.CreateTableWithoutSymbol(_cluster);
+
+            var ts = _cluster.Table(alias);
             ts.Create(new QdbColumnDefinition[] {
                 new QdbBlobColumnDefinition("the_blob"),
                 new QdbDoubleColumnDefinition("the_double"),
@@ -780,3 +757,4 @@ namespace Quasardb.Tests.Table
         }
     }
 }
+
