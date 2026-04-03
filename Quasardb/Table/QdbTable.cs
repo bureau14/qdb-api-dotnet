@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using Quasardb.Exceptions;
 using Quasardb.Native;
@@ -34,188 +33,21 @@ namespace Quasardb.TimeSeries
                 QdbExceptionThrower.ThrowIfNeeded(err, alias: alias);
 
                 foreach (var column in columns)
-                {
-                    yield return MakeColumn(column.type, column.name);
-                }
+                    yield return MakeColumn(column.type, column.name, column.symtable);
             }
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        QdbColumn MakeColumn(qdb_ts_column_type type, string name)
+        QdbColumn MakeColumn(qdb_ts_column_type type, string name, string symtable)
         {
-            switch (type)
+            if (type == qdb_ts_column_type.qdb_ts_column_string || type == qdb_ts_column_type.qdb_ts_column_symbol)
             {
-                case qdb_ts_column_type.qdb_ts_column_double:
-                    return new QdbDoubleColumn(_series, name);
-                case qdb_ts_column_type.qdb_ts_column_blob:
-                    return new QdbBlobColumn(_series, name);
-                case qdb_ts_column_type.qdb_ts_column_int64:
-                    return new QdbInt64Column(_series, name);
-                case qdb_ts_column_type.qdb_ts_column_timestamp:
-                    return new QdbTimestampColumn(_series, name);
-                case qdb_ts_column_type.qdb_ts_column_string:
-                case qdb_ts_column_type.qdb_ts_column_symbol:
-                    return new QdbStringColumn(_series, name);
-                default:
-                    return new QdbUnknownColumn(_series, name, type);
+                return new QdbColumn(_series, name, type, symtable);
             }
+
+            return new QdbColumn(_series, name, type);
         }
-    }
-
-    /// <summary>
-    /// A collection of columns contains double-precision floating point values.
-    /// </summary>
-    public class QdbDoubleColumnCollection : IEnumerable<QdbDoubleColumn>
-    {
-        internal readonly QdbTable _series;
-
-        internal QdbDoubleColumnCollection(QdbTable series)
-        {
-            _series = series;
-        }
-
-        /// <summary>
-        /// Gets the columns with the specified name
-        /// </summary>
-        /// <param name="name">The name of the column</param>
-        public QdbDoubleColumn this[string name] => new QdbDoubleColumn(_series, name);
-
-        /// <inheritdoc />
-        public IEnumerator<QdbDoubleColumn> GetEnumerator()
-        {
-            foreach (var col in new QdbColumnCollection(_series))
-            {
-                if (col is QdbDoubleColumn doubleColumn)
-                    yield return doubleColumn;
-            }
-        }
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-    }
-
-    /// <summary>
-    /// A collection of columns of blobs
-    /// </summary>
-    public class QdbBlobColumnCollection : IEnumerable<QdbBlobColumn>
-    {
-        readonly QdbTable _series;
-
-        internal QdbBlobColumnCollection(QdbTable series)
-        {
-            _series = series;
-        }
-
-        /// <summary>
-        /// Gets the columns with the specified name
-        /// </summary>
-        /// <param name="name">The name of the column</param>
-        public QdbBlobColumn this[string name] => new QdbBlobColumn(_series, name);
-
-        /// <inheritdoc />
-        public IEnumerator<QdbBlobColumn> GetEnumerator()
-        {
-            foreach (var col in new QdbColumnCollection(_series))
-            {
-                if (col is QdbBlobColumn blobColumn)
-                    yield return blobColumn;
-            }
-        }
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-    }
-
-    /// <summary>
-    /// A collection of columns contains int64 point values.
-    /// </summary>
-    public class QdbInt64ColumnCollection : IEnumerable<QdbInt64Column>
-    {
-        internal readonly QdbTable _series;
-
-        internal QdbInt64ColumnCollection(QdbTable series)
-        {
-            _series = series;
-        }
-
-        /// <summary>
-        /// Gets the columns with the specified name
-        /// </summary>
-        /// <param name="name">The name of the column</param>
-        public QdbInt64Column this[string name] => new QdbInt64Column(_series, name);
-
-        /// <inheritdoc />
-        public IEnumerator<QdbInt64Column> GetEnumerator()
-        {
-            foreach (var col in new QdbColumnCollection(_series))
-            {
-                if (col is QdbInt64Column int64Column)
-                    yield return int64Column;
-            }
-        }
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-    }
-
-    /// <summary>
-    /// A collection of columns contains string point values.
-    /// </summary>
-    public class QdbStringColumnCollection : IEnumerable<QdbStringColumn>
-    {
-        internal readonly QdbTable _series;
-
-        internal QdbStringColumnCollection(QdbTable series)
-        {
-            _series = series;
-        }
-
-        /// <summary>
-        /// Gets the columns with the specified name
-        /// </summary>
-        /// <param name="name">The name of the column</param>
-        public QdbStringColumn this[string name] => new QdbStringColumn(_series, name);
-
-        /// <inheritdoc />
-        public IEnumerator<QdbStringColumn> GetEnumerator()
-        {
-            foreach (var col in new QdbColumnCollection(_series))
-            {
-                if (col is QdbStringColumn stringColumn)
-                    yield return stringColumn;
-            }
-        }
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-    }
-
-    /// <summary>
-    /// A collection of columns contains timestamp point values.
-    /// </summary>
-    public class QdbTimestampColumnCollection : IEnumerable<QdbTimestampColumn>
-    {
-        internal readonly QdbTable _series;
-
-        internal QdbTimestampColumnCollection(QdbTable series)
-        {
-            _series = series;
-        }
-
-        /// <summary>
-        /// Gets the columns with the specified name
-        /// </summary>
-        /// <param name="name">The name of the column</param>
-        public QdbTimestampColumn this[string name] => new QdbTimestampColumn(_series, name);
-
-        /// <inheritdoc />
-        public IEnumerator<QdbTimestampColumn> GetEnumerator()
-        {
-            foreach (var col in new QdbColumnCollection(_series))
-            {
-                if (col is QdbTimestampColumn timestampColumn)
-                    yield return timestampColumn;
-            }
-        }
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
     /// <summary>
@@ -225,43 +57,13 @@ namespace Quasardb.TimeSeries
     {
         internal QdbTable(qdb_handle handle, string alias) : base(handle, alias)
         {
-            DoubleColumns = new QdbDoubleColumnCollection(this);
             Columns = new QdbColumnCollection(this);
-            BlobColumns = new QdbBlobColumnCollection(this);
-            Int64Columns = new QdbInt64ColumnCollection(this);
-            StringColumns = new QdbStringColumnCollection(this);
-            TimestampColumns = new QdbTimestampColumnCollection(this);
         }
-
-        /// <summary>
-        /// The columns of the table that contains blobs.
-        /// </summary>
-        public QdbBlobColumnCollection BlobColumns { get; }
 
         /// <summary>
         /// The columns of the table.
         /// </summary>
         public QdbColumnCollection Columns { get; }
-
-        /// <summary>
-        /// The columns of the table that contains double-precision floating-point values.
-        /// </summary>
-        public QdbDoubleColumnCollection DoubleColumns { get; }
-
-        /// <summary>
-        /// The columns of the table that contains int64 point values.
-        /// </summary>
-        public QdbInt64ColumnCollection Int64Columns { get; }
-
-        /// <summary>
-        /// The columns of the table that contains string point values.
-        /// </summary>
-        public QdbStringColumnCollection StringColumns { get; }
-
-        /// <summary>
-        /// The columns of the table that contains timestamp point values.
-        /// </summary>
-        public QdbTimestampColumnCollection TimestampColumns { get; }
 
         /// <summary>
         /// Returns the shard size of a table.
@@ -447,50 +249,6 @@ namespace Quasardb.TimeSeries
                 columns.Buffer, columns.Count);
             QdbExceptionThrower.ThrowIfNeeded(err, alias: Alias);
         }
-
-        #region Timestamps
-
-        /// <summary>
-        /// Gets all the timestamps in the table
-        /// </summary>
-        /// <returns>All the timestamps in the table</returns>
-        public IEnumerable<DateTime> Timestamps()
-        {
-            return Timestamps(QdbTimeInterval.Everything);
-        }
-
-        /// <summary>
-        /// Gets all the timestamps in an interval
-        /// </summary>
-        /// <param name="interval">The time interval to scan</param>
-        /// <returns>All the timestamps in the interval</returns>
-        public IEnumerable<DateTime> Timestamps(QdbTimeInterval interval)
-        {
-            return Timestamps(new[] { interval });
-        }
-
-        /// <summary>
-        /// Gets all the timestamps in each interval
-        /// </summary>
-        /// <param name="intervals">The time intervals to scan</param>
-        /// <returns>All the timestamps in each interval</returns>
-        public IEnumerable<DateTime> Timestamps(IEnumerable<QdbTimeInterval> intervals)
-        {
-            var ranges = new InteropableList<qdb_ts_range>(Helpers.GetCountOrDefault(intervals));
-            foreach (var interval in intervals)
-                ranges.Add(interval.ToNative());
-            using (var timestamps = new qdb_buffer<qdb_timespec>(Handle))
-            {
-                var error = qdb_api.qdb_ts_get_timestamps(Handle, Alias, null, ranges.Buffer, ranges.Count,
-                    out timestamps.Pointer, out timestamps.Size);
-                QdbExceptionThrower.ThrowIfNeeded(error, alias: Alias);
-
-                foreach (var pt in timestamps)
-                    yield return TimeConverter.ToDateTime(pt);
-            }
-        }
-
-        #endregion
 
         /// <summary>
         /// Trim the table, so that it uses approximately the provided size.

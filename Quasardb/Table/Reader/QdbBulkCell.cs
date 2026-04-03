@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.InteropServices;
 using Quasardb.Native;
 
 namespace Quasardb.TimeSeries.Reader
@@ -93,7 +92,7 @@ namespace Quasardb.TimeSeries.Reader
                 if (Type != QdbColumnType.Int64)
                     throw new InvalidCastException();
                 var v = _column->data.ints[_index];
-                return v == unchecked((long)0x8000000000000000) ? (long?)null : v;
+                return v == long.MinValue ? (long?)null : v;
             }
         }
 
@@ -109,7 +108,10 @@ namespace Quasardb.TimeSeries.Reader
                 qdb_sized_string str = _column->data.strings[_index];
                 if (str.data == null)
                     return null;
-                return Marshal.PtrToStringAnsi(new IntPtr(str.data), (int)str.length);
+                var value = Helper.GetBytes(new IntPtr(str.data), str.length);
+                if (value == null)
+                    return null;
+                return System.Text.Encoding.UTF8.GetString(value);
             }
         }
 
@@ -123,9 +125,7 @@ namespace Quasardb.TimeSeries.Reader
                 if (Type != QdbColumnType.Timestamp)
                     throw new InvalidCastException();
                 qdb_timespec ts = _column->data.timestamps[_index];
-                if (ts.tv_sec == long.MinValue && ts.tv_nsec == long.MinValue)
-                    return null;
-                return TimeConverter.ToDateTime(ts);
+                return TimeConverter.ToNullableDateTime(ts);
             }
         }
     }

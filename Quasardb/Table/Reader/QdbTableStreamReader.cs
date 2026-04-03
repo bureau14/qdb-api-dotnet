@@ -16,14 +16,14 @@ namespace Quasardb.TimeSeries.Reader
         private readonly qdb_handle _handle;
         private readonly string _alias;
         private readonly IntPtr _table;
-        private QdbRow _row;
+        private readonly InteropableList<qdb_ts_column_info> _columns;
 
         internal QdbTableStreamReader(qdb_handle handle, string alias, IntPtr table, InteropableList<qdb_ts_column_info> columns) : base(IntPtr.Zero, true)
         {
             _handle = handle;
             _alias = alias;
             _table = table;
-            _row = new QdbRow(_table, alias, columns);
+            _columns = columns;
         }
 
         /// <inheritdoc />
@@ -53,8 +53,11 @@ namespace Quasardb.TimeSeries.Reader
             }
 
             QdbExceptionThrower.ThrowIfNeeded(err, alias: _alias);
-            _row.Timestamp = TimeConverter.ToDateTime(timestamp);
-            return _row;
+            var row = new QdbRow(_table, _alias, _columns)
+            {
+                Timestamp = TimeConverter.ToDateTime(timestamp)
+            };
+            return row.Snapshot();
         }
     }
 }
