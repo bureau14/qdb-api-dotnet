@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Quasardb.Native;
 
 namespace Quasardb
@@ -46,6 +46,11 @@ namespace Quasardb
             if (ts.tv_sec <= MinSeconds) return DateTime.MinValue;
             if (ts.tv_sec >= MaxSeconds) return DateTime.MaxValue;
             return _epoch.AddTicks(ts.tv_sec * TicksPerSecond + ts.tv_nsec / NanosPerTick);
+        }
+
+        internal static DateTime? ToNullableDateTime(qdb_timespec ts)
+        {
+            return IsNull(ts) ? (DateTime?)null : ToDateTime(ts);
         }
     }
 }

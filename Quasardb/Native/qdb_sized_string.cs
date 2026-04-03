@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text;
 using System.Runtime.InteropServices;
-
 // ReSharper disable BuiltInTypeReferenceStyle
 // ReSharper disable InconsistentNaming
 
@@ -25,9 +24,10 @@ namespace Quasardb.Native
         {
             if (length.ToUInt64() == 0UL) return string.Empty;
             if (length.ToUInt64() > int.MaxValue) throw new ArgumentException($"String is too long {length}");
-            // Allocates a managed String, copies a specified number of characters from an unmanaged ANSI or UTF-8 string into it,
-            // and widens each character to UTF-16.
-            return Marshal.PtrToStringAnsi(new IntPtr(data), (int)length);
+            var bytes = Helper.GetBytes(new IntPtr(data), length);
+            if (bytes == null)
+                return null;
+            return Encoding.UTF8.GetString(bytes);
         }
 
         public static implicit operator string(qdb_sized_string s)
@@ -38,3 +38,4 @@ namespace Quasardb.Native
         internal static qdb_sized_string Null => new qdb_sized_string { data = null, length = (qdb_size_t)0 };
     }
 }
+
