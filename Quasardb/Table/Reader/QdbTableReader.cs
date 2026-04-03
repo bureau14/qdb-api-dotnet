@@ -1,4 +1,4 @@
-﻿using Quasardb.Exceptions;
+using Quasardb.Exceptions;
 using Quasardb.Native;
 using System;
 using System.Collections;
@@ -16,14 +16,14 @@ namespace Quasardb.TimeSeries.Reader
         private readonly qdb_handle _handle;
         private readonly string _alias;
         private readonly IntPtr _table;
-        private QdbRow _row;
+        private readonly InteropableList<qdb_ts_column_info> _columns;
 
         internal QdbTableReader(qdb_handle handle, string alias, IntPtr table, InteropableList<qdb_ts_column_info> columns) : base(IntPtr.Zero, true)
         {
             _handle = handle;
             _alias = alias;
             _table = table;
-            _row = new QdbRow(_table, alias, columns);
+            _columns = columns;
         }
 
         /// <inheritdoc />
@@ -43,26 +43,29 @@ namespace Quasardb.TimeSeries.Reader
             get { return _handle == null || _handle.IsInvalid; }
         }
 
-        private bool NextRow()
+        private QdbRow NextRow()
         {
             var err = qdb_api.qdb_ts_table_next_row(_table, out qdb_timespec timestamp);
             if (err == qdb_error.qdb_e_iterator_end)
             {
-                _row = null;
-                return false;
+                return null;
             }
 
             QdbExceptionThrower.ThrowIfNeeded(err, alias: _alias);
-            _row.Timestamp = TimeConverter.ToDateTime(timestamp);
-            return true;
+            var row = new QdbRow(_table, _alias, _columns)
+            {
+                Timestamp = TimeConverter.ToDateTime(timestamp)
+            };
+            return row.Snapshot();
         }
 
         /// <inheritdoc />
         public IEnumerator<QdbRow> GetEnumerator()
         {
-            while (NextRow())
+            QdbRow row;
+            while ((row = NextRow()) != null)
             {
-                yield return _row;
+                yield return row;
             }
         }
 

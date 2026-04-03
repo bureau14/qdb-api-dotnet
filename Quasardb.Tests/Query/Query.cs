@@ -4,7 +4,6 @@ using Quasardb.Query;
 using Quasardb.TimeSeries;
 using System;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Text;
 
 namespace Quasardb.Tests.Query
@@ -33,13 +32,28 @@ namespace Quasardb.Tests.Query
 
             var random = new Random();
             var r = new QdbBlobPointCollection(count);
-
-            var column = ts.BlobColumns["the_blob"];
+            var writer = ts.Writer(new QdbColumnDefinition[] { new QdbBlobColumnDefinition("the_blob") });
             for (var i = 0; i < count; ++i)
             {
                 var value = new byte[32];
                 random.NextBytes(value);
-                column.Insert(time, value);
+                writer.StartRow(time);
+                writer.SetBlob("the_blob", value);
+                r.Add(time, value);
+                time = time.AddSeconds(1);
+            }
+            writer.Push();
+            return r;
+        }
+
+        private static QdbBlobPointCollection CreateBlobPoints(DateTime time, int count)
+        {
+            var random = new Random();
+            var r = new QdbBlobPointCollection(count);
+            for (var i = 0; i < count; ++i)
+            {
+                var value = new byte[32];
+                random.NextBytes(value);
                 r.Add(time, value);
                 time = time.AddSeconds(1);
             }
@@ -52,12 +66,26 @@ namespace Quasardb.Tests.Query
 
             var random = new Random();
             var r = new QdbDoublePointCollection(count);
-
-            var column = ts.DoubleColumns["the_double"];
+            var writer = ts.Writer(new QdbColumnDefinition[] { new QdbDoubleColumnDefinition("the_double") });
             for (var i = 0; i < count; ++i)
             {
                 var value = random.NextDouble();
-                column.Insert(time, value);
+                writer.StartRow(time);
+                writer.SetDouble("the_double", value);
+                r.Add(time, value);
+                time = time.AddSeconds(1);
+            }
+            writer.Push();
+            return r;
+        }
+
+        private static QdbDoublePointCollection CreateDoublePoints(DateTime time, int count)
+        {
+            var random = new Random();
+            var r = new QdbDoublePointCollection(count);
+            for (var i = 0; i < count; ++i)
+            {
+                var value = random.NextDouble();
                 r.Add(time, value);
                 time = time.AddSeconds(1);
             }
@@ -70,12 +98,26 @@ namespace Quasardb.Tests.Query
 
             var random = new Random();
             var r = new QdbInt64PointCollection(count);
-
-            var column = ts.Int64Columns["the_int64"];
+            var writer = ts.Writer(new QdbColumnDefinition[] { new QdbInt64ColumnDefinition("the_int64") });
             for (var i = 0; i < count; ++i)
             {
                 var value = random.Next();
-                column.Insert(time, value);
+                writer.StartRow(time);
+                writer.SetInt64("the_int64", value);
+                r.Add(time, value);
+                time = time.AddSeconds(1);
+            }
+            writer.Push();
+            return r;
+        }
+
+        private static QdbInt64PointCollection CreateInt64Points(DateTime time, int count)
+        {
+            var random = new Random();
+            var r = new QdbInt64PointCollection(count);
+            for (var i = 0; i < count; ++i)
+            {
+                var value = random.Next();
                 r.Add(time, value);
                 time = time.AddSeconds(1);
             }
@@ -97,13 +139,26 @@ namespace Quasardb.Tests.Query
             if (ts == null) throw new ArgumentNullException(nameof(ts));
 
             var r = new QdbStringPointCollection(count);
-
-            var column = ts.StringColumns["the_string"];
+            var writer = ts.Writer(new QdbColumnDefinition[] { new QdbStringColumnDefinition("the_string") });
             for (var i = 0; i < count; ++i)
             {
                 var value = GenerateRandomAlphanumericString(32);
 
-                column.Insert(time, value);
+                writer.StartRow(time);
+                writer.SetString("the_string", value);
+                r.Add(time, value);
+                time = time.AddSeconds(1);
+            }
+            writer.Push();
+            return r;
+        }
+
+        private static QdbStringPointCollection CreateStringPoints(DateTime time, int count)
+        {
+            var r = new QdbStringPointCollection(count);
+            for (var i = 0; i < count; ++i)
+            {
+                var value = GenerateRandomAlphanumericString(32);
                 r.Add(time, value);
                 time = time.AddSeconds(1);
             }
@@ -115,18 +170,19 @@ namespace Quasardb.Tests.Query
             if (ts == null) throw new ArgumentNullException(nameof(ts));
 
             var r = new QdbStringPointCollection(count);
-
-            var column = ts.StringColumns["the_string"];
+            var writer = ts.Writer(new QdbColumnDefinition[] { new QdbStringColumnDefinition("the_string") });
 
             byte[] bytes = { (byte)'\xfe', (byte)'\xfe', (byte)'\xff', (byte)'\xff' };
             var value = Encoding.UTF8.GetString(bytes);
 
             for (var i = 0; i < count; ++i)
             {
-                column.Insert(time, value);
+                writer.StartRow(time);
+                writer.SetString("the_string", value);
                 r.Add(time, value);
                 time = time.AddSeconds(1);
             }
+            writer.Push();
             return r;
         }
 
@@ -136,16 +192,67 @@ namespace Quasardb.Tests.Query
 
             var random = new Random();
             var r = new QdbTimestampPointCollection(count);
-
-            var column = ts.TimestampColumns["the_ts"];
+            var writer = ts.Writer(new QdbColumnDefinition[] { new QdbTimestampColumnDefinition("the_ts") });
             for (var i = 0; i < count; ++i)
             {
                 var value = DateTime.Today.AddSeconds(random.NextDouble());
-                column.Insert(time, value);
+                writer.StartRow(time);
+                writer.SetTimestamp("the_ts", value);
+                r.Add(time, value);
+                time = time.AddSeconds(1);
+            }
+            writer.Push();
+            return r;
+        }
+
+        private static QdbTimestampPointCollection CreateTimestampPoints(DateTime time, int count)
+        {
+            var random = new Random();
+            var r = new QdbTimestampPointCollection(count);
+            for (var i = 0; i < count; ++i)
+            {
+                var value = DateTime.Today.AddSeconds(random.NextDouble());
                 r.Add(time, value);
                 time = time.AddSeconds(1);
             }
             return r;
+        }
+
+        private static void InsertRows(
+            QdbTable ts,
+            QdbBlobPointCollection blobs,
+            QdbDoublePointCollection doubles,
+            QdbInt64PointCollection int64s,
+            QdbStringPointCollection strings,
+            QdbTimestampPointCollection timestamps)
+        {
+            if (ts == null) throw new ArgumentNullException(nameof(ts));
+            if (blobs == null) throw new ArgumentNullException(nameof(blobs));
+            if (doubles == null) throw new ArgumentNullException(nameof(doubles));
+            if (int64s == null) throw new ArgumentNullException(nameof(int64s));
+            if (strings == null) throw new ArgumentNullException(nameof(strings));
+            if (timestamps == null) throw new ArgumentNullException(nameof(timestamps));
+
+            var writer = ts.Writer(new QdbColumnDefinition[]
+            {
+                new QdbBlobColumnDefinition("the_blob"),
+                new QdbDoubleColumnDefinition("the_double"),
+                new QdbInt64ColumnDefinition("the_int64"),
+                new QdbStringColumnDefinition("the_string"),
+                new QdbTimestampColumnDefinition("the_ts"),
+            });
+
+            for (var i = 0; i < blobs.Count; ++i)
+            {
+                writer.StartRow(blobs[i].Time);
+                writer.SetBlob("the_blob", blobs[i].Value);
+                writer.SetDouble("the_double", doubles[i].Value);
+                writer.SetInt64("the_int64", int64s[i].Value);
+                writer.SetString("the_string", strings[i].Value);
+                writer.SetTimestamp("the_ts", timestamps[i].Value);
+            }
+
+            writer.Push();
         }
 
         private static void CheckColumns(QdbColumnNameCollection columns)
@@ -388,11 +495,12 @@ namespace Quasardb.Tests.Query
         {
             var startTime = DateTime.Now;
             QdbTable ts = CreateTable();
-            var insertedBlobData = InsertBlobPoints(ts, startTime, 10);
-            var insertedDoubleData = InsertDoublePoints(ts, startTime, 10);
-            var insertedInt64Data = InsertInt64Points(ts, startTime, 10);
-            var insertedStringData = InsertStringPoints(ts, startTime, 10);
-            var insertedTimestampData = InsertTimestampPoints(ts, startTime, 10);
+            var insertedBlobData = CreateBlobPoints(startTime, 10);
+            var insertedDoubleData = CreateDoublePoints(startTime, 10);
+            var insertedInt64Data = CreateInt64Points(startTime, 10);
+            var insertedStringData = CreateStringPoints(startTime, 10);
+            var insertedTimestampData = CreateTimestampPoints(startTime, 10);
+            InsertRows(ts, insertedBlobData, insertedDoubleData, insertedInt64Data, insertedStringData, insertedTimestampData);
             try
             {
                 var results = _cluster.Query("select * from " + ts.Alias);
