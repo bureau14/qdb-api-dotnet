@@ -32,13 +32,17 @@ namespace Quasardb.Tests.Table
             var idx = 0;
             foreach (var row in reader)
             {
-                Assert.AreEqual(ts.Alias, row[0].StringValue);
+                Assert.AreEqual(5, row.Count);
+                Assert.ThrowsException<Quasardb.Exceptions.QdbColumnNotFoundException>(() =>
+                {
+                    var _ = row["$table"];
+                });
                 Assert.AreEqual(timestamps[idx], row.Timestamp);
-                CollectionAssert.AreEqual(blobs[idx], row[1].BlobValue);
-                Assert.AreEqual(doubles[idx], row[2].DoubleValue);
-                Assert.AreEqual(ints[idx], row[3].Int64Value);
-                Assert.AreEqual(strings[idx], row[4].StringValue);
-                Assert.AreEqual(timestamps[idx], row[5].TimestampValue);
+                CollectionAssert.AreEqual(blobs[idx], row[0].BlobValue);
+                Assert.AreEqual(doubles[idx], row[1].DoubleValue);
+                Assert.AreEqual(ints[idx], row[2].Int64Value);
+                Assert.AreEqual(strings[idx], row[3].StringValue);
+                Assert.AreEqual(timestamps[idx], row[4].TimestampValue);
                 idx++;
             }
 
@@ -64,13 +68,13 @@ namespace Quasardb.Tests.Table
             var idx = 0;
             foreach (var row in reader)
             {
-                Assert.AreEqual(ts.Alias, row[0].StringValue);
+                Assert.AreEqual(5, row.Count);
                 Assert.AreEqual(timestamps[idx], row.Timestamp);
-                CollectionAssert.AreEqual(blobs[idx], row[1].BlobValue);
-                Assert.AreEqual(doubles[idx], row[2].DoubleValue);
-                Assert.AreEqual(ints[idx], row[3].Int64Value);
-                Assert.AreEqual(strings[idx], row[4].StringValue);
-                Assert.AreEqual(timestamps[idx], row[5].TimestampValue);
+                CollectionAssert.AreEqual(blobs[idx], row[0].BlobValue);
+                Assert.AreEqual(doubles[idx], row[1].DoubleValue);
+                Assert.AreEqual(ints[idx], row[2].Int64Value);
+                Assert.AreEqual(strings[idx], row[3].StringValue);
+                Assert.AreEqual(timestamps[idx], row[4].TimestampValue);
                 idx++;
             }
 
@@ -98,7 +102,7 @@ namespace Quasardb.Tests.Table
             }
             batch.Push();
 
-            var reader = _cluster.BulkReader(["the_blob", "the_double", "the_int64", "the_string", "the_ts"],
+            var reader = _cluster.BulkReader(["$table", "the_blob", "the_double", "the_int64", "the_string", "the_ts"],
                 new QdbBulkReaderTable[] { new(ts1.Alias, null), new(ts2.Alias, null) });
             reader.rowsToGet = count / 4;
 
@@ -106,8 +110,8 @@ namespace Quasardb.Tests.Table
             var idx = 0;
             foreach (var row in reader)
             {
+                Assert.AreEqual(6, row.Count);
                 aliases.Add(row[0].StringValue);
-
                 Assert.AreEqual(timestamps[idx], row.Timestamp);
                 CollectionAssert.AreEqual(blobs[idx % count], row[1].BlobValue);
                 Assert.AreEqual(doubles[idx % count], row[2].DoubleValue);
