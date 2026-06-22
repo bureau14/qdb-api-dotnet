@@ -219,12 +219,12 @@ namespace Quasardb.Tests.Table
                 foreach (var row in reader)
                 {
                     Assert.AreEqual(row.Timestamp, timestamps[idx]);
-                    CollectionAssert.AreEqual(row[1].BlobValue, blobs[idx]);
-                    Assert.AreEqual(row[2].DoubleValue, doubles[idx]);
-                    Assert.AreEqual(row[3].Int64Value, int64s[idx]);
-                    Assert.AreEqual(row[4].StringValue, strings[idx]);
-                    Assert.AreEqual(row[5].TimestampValue, timestamps[idx]);
-                    Assert.AreEqual(row[6].StringValue, symbols[idx]);
+                    CollectionAssert.AreEqual(row[0].BlobValue, blobs[idx]);
+                    Assert.AreEqual(row[1].DoubleValue, doubles[idx]);
+                    Assert.AreEqual(row[2].Int64Value, int64s[idx]);
+                    Assert.AreEqual(row[3].StringValue, strings[idx]);
+                    Assert.AreEqual(row[4].TimestampValue, timestamps[idx]);
+                    Assert.AreEqual(row[5].StringValue, symbols[idx]);
                     idx++;
                 }
 
@@ -264,12 +264,12 @@ namespace Quasardb.Tests.Table
                 foreach (var row in reader)
                 {
                     Assert.AreEqual(row.Timestamp, timestamps[idx]);
-                    CollectionAssert.AreEqual(row[1].BlobValue, blobs[idx]);
-                    Assert.AreEqual(row[2].DoubleValue, doubles[idx]);
-                    Assert.AreEqual(row[3].Int64Value, int64s[idx]);
-                    Assert.AreEqual(row[4].StringValue, strings[idx]);
-                    Assert.AreEqual(row[5].TimestampValue, timestamp_values[idx]);
-                    Assert.AreEqual(row[6].StringValue, symbols[idx]);
+                    CollectionAssert.AreEqual(row[0].BlobValue, blobs[idx]);
+                    Assert.AreEqual(row[1].DoubleValue, doubles[idx]);
+                    Assert.AreEqual(row[2].Int64Value, int64s[idx]);
+                    Assert.AreEqual(row[3].StringValue, strings[idx]);
+                    Assert.AreEqual(row[4].TimestampValue, timestamp_values[idx]);
+                    Assert.AreEqual(row[5].StringValue, symbols[idx]);
                     idx++;
                 }
 
@@ -303,11 +303,11 @@ namespace Quasardb.Tests.Table
                 foreach (var row in reader)
                 {
                     Assert.AreEqual(row.Timestamp, timestamps[idx]);
-                    CollectionAssert.AreEqual(row[1].BlobValue, blobs[idx]);
-                    Assert.AreEqual(row[2].DoubleValue, doubles[idx]);
-                    Assert.AreEqual(row[3].Int64Value, int64s[idx]);
-                    Assert.AreEqual(row[4].StringValue, strings[idx]);
-                    Assert.AreEqual(row[5].TimestampValue, timestamps[idx]);
+                    CollectionAssert.AreEqual(row[0].BlobValue, blobs[idx]);
+                    Assert.AreEqual(row[1].DoubleValue, doubles[idx]);
+                    Assert.AreEqual(row[2].Int64Value, int64s[idx]);
+                    Assert.AreEqual(row[3].StringValue, strings[idx]);
+                    Assert.AreEqual(row[4].TimestampValue, timestamps[idx]);
                     idx++;
                 }
 
