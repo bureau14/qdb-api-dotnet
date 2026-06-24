@@ -23,22 +23,8 @@ TEST_OUTPUT_DIR="${BASE_DIR}/Quasardb.Tests/bin/${BUILD_CONFIGURATION}/${DOTNET_
 INSECURE_SETTINGS="${BASE_DIR}/Quasardb.Tests/insecure.runsettings"
 SECURE_SETTINGS="${BASE_DIR}/Quasardb.Tests/secure.runsettings"
 
-path_for_dotnet() {
-    case "$(uname)" in
-        MINGW*|MSYS*|CYGWIN*)
-            cygpath -w "$1"
-            ;;
-        *)
-            printf '%s\n' "$1"
-            ;;
-    esac
-}
-
 run_vstest() {
-    env \
-      MSYS2_ARG_CONV_EXCL="*" \
-      MSYS_NO_PATHCONV="1" \
-      "${DOTNET}" vstest "$@"
+    run_without_msys_path_conversion "${DOTNET}" vstest "$@"
 }
 
 stage_native_libraries() {
@@ -61,13 +47,13 @@ stage_native_libraries() {
 
 stage_native_libraries
 
-DOTNET_TEST_DLL=$(path_for_dotnet "${TEST_OUTPUT_DIR}/Quasardb.Tests.dll")
-DOTNET_INSECURE_SETTINGS=$(path_for_dotnet "${INSECURE_SETTINGS}")
-DOTNET_SECURE_SETTINGS=$(path_for_dotnet "${SECURE_SETTINGS}")
-DOTNET_INSECURE_RESULTS_DIR=$(path_for_dotnet "${INSECURE_RESULTS_DIR}")
-DOTNET_SECURE_RESULTS_DIR=$(path_for_dotnet "${SECURE_RESULTS_DIR}")
-DOTNET_INSECURE_JUNIT=$(path_for_dotnet "${JUNIT_RESULTS_DIR}/insecure.xml")
-DOTNET_SECURE_JUNIT=$(path_for_dotnet "${JUNIT_RESULTS_DIR}/secure.xml")
+DOTNET_TEST_DLL=$(path_for_windows_native "${TEST_OUTPUT_DIR}/Quasardb.Tests.dll")
+DOTNET_INSECURE_SETTINGS=$(path_for_windows_native "${INSECURE_SETTINGS}")
+DOTNET_SECURE_SETTINGS=$(path_for_windows_native "${SECURE_SETTINGS}")
+DOTNET_INSECURE_RESULTS_DIR=$(path_for_windows_native "${INSECURE_RESULTS_DIR}")
+DOTNET_SECURE_RESULTS_DIR=$(path_for_windows_native "${SECURE_RESULTS_DIR}")
+DOTNET_INSECURE_JUNIT=$(path_for_windows_native "${JUNIT_RESULTS_DIR}/insecure.xml")
+DOTNET_SECURE_JUNIT=$(path_for_windows_native "${JUNIT_RESULTS_DIR}/secure.xml")
 
 set +e
 run_vstest \

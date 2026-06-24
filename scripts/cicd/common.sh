@@ -22,6 +22,24 @@ export DOTNET_VERSION
 export DOTNET_FRAMEWORK
 export DOTNET
 
+path_for_windows_native() {
+    case "$(uname)" in
+        MINGW*|MSYS*|CYGWIN*)
+            cygpath -w "$1"
+            ;;
+        *)
+            printf '%s\n' "$1"
+            ;;
+    esac
+}
+
+run_without_msys_path_conversion() {
+    env \
+      MSYS2_ARG_CONV_EXCL="*" \
+      MSYS_NO_PATHCONV="1" \
+      "$@"
+}
+
 echo "BUILD_CONFIGURATION: ${BUILD_CONFIGURATION}"
 echo "DOTNET_VERSION: ${DOTNET_VERSION}"
 echo "DOTNET_FRAMEWORK: ${DOTNET_FRAMEWORK}"
