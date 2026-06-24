@@ -37,7 +37,7 @@ plugins:
             output-dir: "Quasardb/win64"
             extract: true
             files:
-              - "*-c-api.zip!bin/*"
+              - "*-c-api.tar.zst!bin/*"
       upload:
         files:
           - "nuget-pack-out/*.nupkg"

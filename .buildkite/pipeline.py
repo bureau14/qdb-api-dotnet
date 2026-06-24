@@ -113,7 +113,7 @@ def _configure_artifact_downloads(step: dict, p: Platform, git_ref: str) -> None
 
         project.setdefault("git-ref", git_ref)
         if output_dir == "qdb/bin" and p.os == "windows":
-            project["files"] = ["*-server.zip!bin/*", "*-utils.zip!bin/*"]
+            project["files"] = ["*-server.tar.zst!bin/*", "*-utils.tar.zst!bin/*"]
 
         if output_dir == "Quasardb/linux":
             project.setdefault("variant", "linux-core2-release")
