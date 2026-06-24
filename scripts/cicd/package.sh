@@ -20,9 +20,10 @@ esac
 
 pushd "${PROJECT_ROOT}"
 
+MSBUILD_PATH="/c/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio/2022/BuildTools/MSBuild/Current/Bin/MSBuild.exe"
 if [[ -f Quasardb.Documentation/Quasardb.Documentation.shfbproj ]]; then
-    "${DOTNET}" msbuild Quasardb.Documentation/Quasardb.Documentation.shfbproj \
-        -p:Configuration="${BUILD_CONFIGURATION}"
+    "${MSBUILD_PATH}" Quasardb.Documentation/Quasardb.Documentation.shfbproj \
+        /p:Configuration="${BUILD_CONFIGURATION}"
 fi
 
 mkdir -p nuget-pack-out
