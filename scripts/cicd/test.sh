@@ -16,14 +16,14 @@ pushd "${PROJECT_ROOT}"
 status=0
 
 set +e
-"${DOTNET}" test Quasardb.Tests/Quasardb.Tests.csproj \
-    --configuration "${BUILD_CONFIGURATION}" \
-    --framework "${DOTNET_FRAMEWORK}" \
-    --no-build \
-    --settings Quasardb.Tests/insecure.runsettings \
-    --blame \
-    --results-directory "${INSECURE_RESULTS_DIR}" \
-    --logger:"junit;LogFilePath=${JUNIT_RESULTS_DIR}/insecure.xml;MethodFormat=Class;FailureBodyFormat=Verbose"
+"${DOTNET}" vstest \
+  "Quasardb.Tests/bin/${BUILD_CONFIGURATION}/${DOTNET_FRAMEWORK}/Quasardb.Tests.dll" \
+  /Settings:"Quasardb.Tests/insecure.runsettings" \
+  /Platform:x64 \
+  /Framework:".NETCoreApp,Version=v${DOTNET_FRAMEWORK#net}" \
+  /Blame \
+  /ResultsDirectory:"${INSECURE_RESULTS_DIR}" \
+  /Logger:"junit;LogFilePath=${JUNIT_RESULTS_DIR}/insecure.xml;MethodFormat=Class;FailureBodyFormat=Verbose"
 insecure_status=$?
 set -e
 
@@ -32,14 +32,14 @@ if [[ ${insecure_status} -ne 0 ]]; then
 fi
 
 set +e
-"${DOTNET}" test Quasardb.Tests/Quasardb.Tests.csproj \
-    --configuration "${BUILD_CONFIGURATION}" \
-    --framework "${DOTNET_FRAMEWORK}" \
-    --no-build \
-    --settings Quasardb.Tests/secure.runsettings \
-    --blame \
-    --results-directory "${SECURE_RESULTS_DIR}" \
-    --logger:"junit;LogFilePath=${JUNIT_RESULTS_DIR}/secure.xml;MethodFormat=Class;FailureBodyFormat=Verbose"
+"${DOTNET}" vstest \
+  "Quasardb.Tests/bin/${BUILD_CONFIGURATION}/${DOTNET_FRAMEWORK}/Quasardb.Tests.dll" \
+  /Settings:"Quasardb.Tests/secure.runsettings" \
+  /Platform:x64 \
+  /Framework:".NETCoreApp,Version=v${DOTNET_FRAMEWORK#net}" \
+  /Blame \
+  /ResultsDirectory:"${INSECURE_RESULTS_DIR}" \
+  /Logger:"junit;LogFilePath=${JUNIT_RESULTS_DIR}/insecure.xml;MethodFormat=Class;FailureBodyFormat=Verbose"
 secure_status=$?
 set -e
 
