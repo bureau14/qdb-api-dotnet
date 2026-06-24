@@ -15,8 +15,8 @@ pushd "${PROJECT_ROOT}"
 
 status=0
 
-cp -r Quasardb/linux Quasardb.Tests/bin/${BUILD_CONFIGURATION}/${DOTNET_FRAMEWORK}
-cp -r Quasardb/windows Quasardb.Tests/bin/${BUILD_CONFIGURATION}/${DOTNET_FRAMEWORK}
+cp -r Quasardb/linux/* Quasardb.Tests/bin/${BUILD_CONFIGURATION}/${DOTNET_FRAMEWORK}
+# cp -r Quasardb/windows/* Quasardb.Tests/bin/${BUILD_CONFIGURATION}/${DOTNET_FRAMEWORK}
 
 set +e
 "${DOTNET}" vstest \
