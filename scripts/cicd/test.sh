@@ -36,7 +36,8 @@ path_for_dotnet() {
 
 run_vstest() {
     env \
-      MSYS2_ARG_CONV_EXCL="/Settings:*;/Platform:*;/Framework:*;/Blame;/ResultsDirectory:*;/Logger:*${MSYS2_ARG_CONV_EXCL:+;${MSYS2_ARG_CONV_EXCL}}" \
+      MSYS2_ARG_CONV_EXCL="*" \
+      MSYS_NO_PATHCONV="1" \
       "${DOTNET}" vstest "$@"
 }
 
