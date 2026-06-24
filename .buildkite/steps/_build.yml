@@ -32,12 +32,12 @@ plugins:
             output-dir: "Quasardb/linux"
             extract: true
             files:
-              - "*-c-api.tar.zst!lib/libqdb_api.so"
+              - "*-c-api.tar.zst!lib/*"
           - project_id: "quasardb-build"
             output-dir: "Quasardb/win64"
             extract: true
             files:
-              - "*-c-api.zip!bin/qdb_api.dll"
+              - "*-c-api.zip!bin/*"
       upload:
         files:
           - "nuget-pack-out/*.nupkg"
