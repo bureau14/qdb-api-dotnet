@@ -14,6 +14,6 @@ case "$(uname)" in
 esac
 
 "${DOTNET}" build --configuration "${BUILD_CONFIGURATION}" Quasardb/Quasardb.csproj
-"${DOTNET}" build --configuration "${BUILD_CONFIGURATION}" --framework "${DOTNET_FRAMEWORK}" Quasardb.Tests/Quasardb.Tests.csproj
+"${DOTNET}" build --configuration "${BUILD_CONFIGURATION}" Quasardb.Tests/Quasardb.Tests.csproj
 
 popd
