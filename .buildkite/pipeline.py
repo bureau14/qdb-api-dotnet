@@ -126,20 +126,20 @@ def _configure_artifact_downloads(step: dict, p: Platform, git_ref: str) -> None
     plugin_config["download"]["projects"] = selected_projects
 
 
-# def _disable_artifact_upload(step: dict) -> None:
-#     """Remove qdb-artifacts upload/promote sections for non-packaging jobs."""
-#     plugin_config = _artifact_plugin_config(step)
-#     if plugin_config:
-#         plugin_config.pop("upload", None)
-#         plugin_config.pop("promote", None)
+def _disable_artifact_upload(step: dict) -> None:
+    """Remove qdb-artifacts upload/promote sections for non-packaging jobs."""
+    plugin_config = _artifact_plugin_config(step)
+    if plugin_config:
+        plugin_config.pop("upload", None)
+        plugin_config.pop("promote", None)
 
 
 def _apply_step_shape(step: dict, p: Platform) -> None:
     """Apply platform-specific template pruning shared by all .NET matrix rows."""
     return
     # apply_docker(step, p.docker_image, p.docker_volumes)
-    # if p.os != "windows":
-    #     _disable_artifact_upload(step)
+    if p.os != "windows":
+        _disable_artifact_upload(step)
 
 
 def generate_pipeline() -> Pipeline:
