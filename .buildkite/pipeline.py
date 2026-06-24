@@ -136,7 +136,8 @@ def _configure_artifact_downloads(step: dict, p: Platform, git_ref: str) -> None
 
 def _apply_step_shape(step: dict, p: Platform) -> None:
     """Apply platform-specific template pruning shared by all .NET matrix rows."""
-    apply_docker(step, p.docker_image, p.docker_volumes)
+    return
+    # apply_docker(step, p.docker_image, p.docker_volumes)
     # if p.os != "windows":
     #     _disable_artifact_upload(step)
 
