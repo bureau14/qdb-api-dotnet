@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
-set -eux -o pipefail
+SCRIPT_DIR="$(cd "$(dirname -- "${BASH_SOURCE[0]}")" >/dev/null && pwd)"
 
-THIS_SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" >/dev/null && pwd)
-source "${THIS_SCRIPT_DIR}/common.sh"
+source ${SCRIPT_DIR}/common.sh
+
+git config --global --add safe.directory '*'
+
+# No more errors should occur after here
+set -e -u -x
 
 pushd "${PROJECT_ROOT}"
 

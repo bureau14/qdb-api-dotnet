@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-set -eux -o pipefail
-
-THIS_SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" >/dev/null && pwd)
-PROJECT_ROOT=$(cd -- "${THIS_SCRIPT_DIR}/../.." >/dev/null && pwd)
-
 BUILD_CONFIGURATION=${BUILD_CONFIGURATION:-Release}
 DOTNET_VERSION=${DOTNET_VERSION:?DOTNET_VERSION is required, e.g. 6.0 or 8.0}
 DOTNET_FRAMEWORK=${DOTNET_FRAMEWORK:-net${DOTNET_VERSION}}
@@ -23,7 +18,6 @@ export DOTNET_VERSION
 export DOTNET_FRAMEWORK
 export DOTNET
 
-echo "PROJECT_ROOT: ${PROJECT_ROOT}"
 echo "BUILD_CONFIGURATION: ${BUILD_CONFIGURATION}"
 echo "DOTNET_VERSION: ${DOTNET_VERSION}"
 echo "DOTNET_FRAMEWORK: ${DOTNET_FRAMEWORK}"
