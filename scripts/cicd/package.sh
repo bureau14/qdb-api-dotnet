@@ -21,7 +21,8 @@ esac
 pushd "${PROJECT_ROOT}"
 
 if [[ -f Quasardb.Documentation/Quasardb.Documentation.shfbproj ]]; then
-    "${DOTNET}" msbuild Quasardb.Documentation/Quasardb.Documentation.shfbproj -c "${BUILD_CONFIGURATION}"
+    "${DOTNET}" msbuild Quasardb.Documentation/Quasardb.Documentation.shfbproj \
+        /p:Configuration="${BUILD_CONFIGURATION}"
 fi
 
 mkdir -p nuget-pack-out
