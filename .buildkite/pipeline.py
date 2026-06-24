@@ -58,7 +58,9 @@ GLOBAL_ENV: dict[str, str] = {
 }
 STEP_ENV: dict[str, dict[str, str]] = {}
 OS_ENV: dict[str, dict[str, str]] = {
-    "linux": {},
+    "linux": {
+        "DOTNET_PATH": "/usr/share/dotnet/dotnet"
+    },
     "windows": {},
 }
 OS_STEP_ENV: dict[str, dict[str, str]] = {}
