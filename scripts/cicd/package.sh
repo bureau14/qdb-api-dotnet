@@ -20,9 +20,10 @@ esac
 
 pushd "${PROJECT_ROOT}"
 
-MSBUILD_PATH="/c/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio/2022/BuildTools/MSBuild/Current/Bin/MSBuild.exe"
-if [[ -f Quasardb.Documentation/Quasardb.Documentation.shfbproj ]]; then
-    "${MSBUILD_PATH}" Quasardb.Documentation/Quasardb.Documentation.shfbproj \
+MSBUILD_PATH="/c/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/MSBuild.exe"
+DOCUMENTATION_PROJECT="${PROJECT_ROOT}/Quasardb.Documentation/Quasardb.Documentation.shfbproj"
+if [[ -f "${DOCUMENTATION_PROJECT}" ]]; then
+    "${MSBUILD_PATH}" "${DOCUMENTATION_PROJECT}" \
         /p:Configuration="${BUILD_CONFIGURATION}"
 fi
 
