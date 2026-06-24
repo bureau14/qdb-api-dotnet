@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+set +e
+
+SCRIPT_PATH="scripts/tests/setup/stop-services.sh"
+
+if [[ -f "${SCRIPT_PATH}" ]]; then
+    bash "${SCRIPT_PATH}"
+fi
+
+exit 0

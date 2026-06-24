@@ -1,0 +1,56 @@
+agents:
+  queue: "default-{queue}"
+
+retry:
+  automatic:
+      limit: 3
+
+label: "{name} ({slug})"
+key: "build-{slug}"
+
+timeout_in_minutes: 20
+
+commands:
+  - echo "+++ Start Services"
+  - bash scripts/tests/setup/start-services.sh
+  - echo "+++ Build"
+  - bash scripts/cicd/build.sh
+  - echo "+++ Test"
+  - bash scripts/cicd/test.sh
+  - echo "+++ Package"
+  - bash scripts/cicd/package.sh
+
+plugins:
+  - bureau14/qdb-artifacts#master:
+      download:
+        clean: true
+        projects:
+          - project_id: "quasardb-build"
+            output-dir: "qdb/bin"
+            extract: true
+            files:
+              - "*-server.tar.zst!bin/*"
+              - "*-utils.tar.zst!bin/*"
+          - project_id: "quasardb-build"
+            output-dir: "Quasardb/linux"
+            extract: true
+            files:
+              - "*-c-api.tar.zst!lib/libqdb_api.so"
+          - project_id: "quasardb-build"
+            output-dir: "Quasardb/win64"
+            extract: true
+            files:
+              - "*-c-api.zip!bin/qdb_api.dll"
+      upload:
+        files:
+          - "nuget-pack-out/*.nupkg"
+          - "Quasardb.Documentation/**/Help/**/*"
+          - "Quasardb.Documentation/**/*.chm"
+          - "Quasardb.Documentation/**/*.zip"
+        base_dir: "."
+      promote: {}
+  - bureau14/qdb-test-report#master:
+      title: "Test report {slug}"
+      job:
+        variant: {slug}
+        junit_input_path: "test-results/junit/*.xml"
