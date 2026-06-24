@@ -54,12 +54,12 @@ DOTNET_SECURE_JUNIT=$"${JUNIT_RESULTS_DIR}/secure.xml"
 set +e
 "${DOTNET}" vstest \
   "${DOTNET_TEST_DLL}" \
-  --Settings:"${DOTNET_INSECURE_SETTINGS}" \
-  --Platform:x64 \
-  --Framework:".NETCoreApp,Version=v${DOTNET_FRAMEWORK#net}" \
-  --Blame \
-  --ResultsDirectory:"${DOTNET_INSECURE_RESULTS_DIR}" \
-  --Logger:"junit;LogFilePath=${DOTNET_INSECURE_JUNIT};MethodFormat=Class;FailureBodyFormat=Verbose"
+  /Settings:"${DOTNET_INSECURE_SETTINGS}" \
+  /Platform:x64 \
+  /Framework:".NETCoreApp,Version=v${DOTNET_FRAMEWORK#net}" \
+  /Blame \
+  /ResultsDirectory:"${DOTNET_INSECURE_RESULTS_DIR}" \
+  /Logger:"junit;LogFilePath=${DOTNET_INSECURE_JUNIT};MethodFormat=Class;FailureBodyFormat=Verbose"
 insecure_status=$?
 set -e
 
@@ -70,12 +70,12 @@ fi
 set +e
 "${DOTNET}" vstest \
   "${DOTNET_TEST_DLL}" \
-  --Settings:"${DOTNET_SECURE_SETTINGS}" \
-  --Platform:x64 \
-  --Framework:".NETCoreApp,Version=v${DOTNET_FRAMEWORK#net}" \
-  --Blame \
-  --ResultsDirectory:"${DOTNET_SECURE_RESULTS_DIR}" \
-  --Logger:"junit;LogFilePath=${DOTNET_SECURE_JUNIT};MethodFormat=Class;FailureBodyFormat=Verbose"
+  /Settings:"${DOTNET_SECURE_SETTINGS}" \
+  /Platform:x64 \
+  /Framework:".NETCoreApp,Version=v${DOTNET_FRAMEWORK#net}" \
+  /Blame \
+  /ResultsDirectory:"${DOTNET_SECURE_RESULTS_DIR}" \
+  /Logger:"junit;LogFilePath=${DOTNET_SECURE_JUNIT};MethodFormat=Class;FailureBodyFormat=Verbose"
 secure_status=$?
 set -e
 
