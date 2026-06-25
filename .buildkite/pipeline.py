@@ -83,7 +83,7 @@ def _env(p: Platform, step_name: str, build_type: str, dotnet_version: str) -> d
     )
 
 
-def _artifact_plugin_config(step: dict) -> dict | None:
+def _get_artifact_plugin_config(step: dict) -> dict | None:
     """Return the qdb-artifacts plugin config for a generated step."""
     for plugin_dict in step.get("plugins", []):
         for plugin_name, plugin_config in plugin_dict.items():
@@ -92,53 +92,35 @@ def _artifact_plugin_config(step: dict) -> dict | None:
     return None
 
 
-def _configure_artifact_downloads(step: dict, p: Platform, git_ref: str) -> None:
+def _configure_artifact_plugin(step: dict, p: Platform, git_ref: str) -> None:
     """Keep only the native artifacts needed by this platform."""
-    plugin_config = _artifact_plugin_config(step)
+    # XXX: igor
+    # In this project API files need to be resolved to target/os specific directories
+    # we need additional logic to enforce this / add another script that does this and runs before build
+    plugin_config = _get_artifact_plugin_config(step)
     if not plugin_config:
         return
 
-    projects = plugin_config.get("download", {}).get("projects", [])
-    dependency_slug = p.slug("release")
+    resolved_projects = plugin_config.get("download", {}).get("projects", [])
 
-    required_output_dirs = {"qdb/bin", "Quasardb/linux"}
-    if p.os == "windows":
-        required_output_dirs.add("Quasardb/win64")
-
-    selected_projects = []
-    for project in projects:
-        output_dir = project.get("output-dir")
-        if output_dir not in required_output_dirs:
+    for project in resolved_projects:
+        if project.get("project_id") != "quasardb-build":
+            continue
+        if project.get("output-dir") != "resolved-on-pipeline-run":
             continue
 
-        project.setdefault("git-ref", git_ref)
-        if output_dir == "qdb/bin" and p.os == "windows":
-            project["files"] = ["*-server.tar.zst!bin/*", "*-utils.tar.zst!bin/*"]
+        if p.os == "windows":
+            project["output-dir"] = "Quasardb/win64"
+            project["files"] = ["*-c-api.tar.zst!lib/*"]
+        elif p.os == "linux":
+            project["output-dir"] = "Quasardb/linux"
+            project["files"] = ["*-c-api.tar.zst!lib/*"]
 
-        if output_dir == "Quasardb/linux":
-            project.setdefault("variant", "linux-core2-release")
-        elif output_dir == "Quasardb/win64":
-            project.setdefault("variant", "windows-core2-release")
-        else:
-            project.setdefault("variant", dependency_slug)
-        selected_projects.append(project)
-
-    plugin_config["download"]["projects"] = selected_projects
-
-
-def _disable_artifact_upload(step: dict) -> None:
-    """Remove qdb-artifacts upload/promote sections for non-packaging jobs."""
-    plugin_config = _artifact_plugin_config(step)
-    if plugin_config:
+    # XXX: igor
+    # packaging is only working on windows for now, skip upload on other platforms
+    if p.os != "windows":
         plugin_config.pop("upload", None)
         plugin_config.pop("promote", None)
-
-
-def _apply_step_shape(step: dict, p: Platform) -> None:
-    """Apply platform-specific template pruning shared by all .NET matrix rows."""
-    # apply_docker(step, p.docker_image, p.docker_volumes)
-    if p.os != "windows":
-        _disable_artifact_upload(step)
 
 
 def generate_pipeline() -> Pipeline:
@@ -170,8 +152,14 @@ def generate_pipeline() -> Pipeline:
                 env = _env(p, "build", bt, dotnet_version)
                 env.update(step.get("env") or {})
                 step["env"] = env
-                _configure_artifact_downloads(step, p, git_ref)
-                _apply_step_shape(step, p)
+                _configure_artifact_plugin(step, p, git_ref)
+                # XXX: igor
+                # we dont use docker for linux builds
+                # 1. RHEL7 does not support dependencies needed for dotnet 6 and 8 (libicu76)
+                # 2. Teamcity does not utilze docker builder
+                # once migrated to RHEL8 we can move to docker builder
+                # if p.os == "linux":
+                #     apply_docker(step)
                 set_artifact_plugin_options(step, artifact_vars_per_step)
 
                 # add step to group
