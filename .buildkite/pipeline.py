@@ -134,6 +134,7 @@ def generate_pipeline() -> Pipeline:
         for bt in BUILD_TYPES:
             for dotnet_version in DOTNET_VERSIONS:
                 dotnet_slug = f"dotnet{dotnet_version.split('.', 1)[0]}"
+                dependency_slug = p.slug(bt.lower())
                 slug = p.slug(bt.lower(), dotnet_slug)
                 variants.append(slug)
 
@@ -144,6 +145,7 @@ def generate_pipeline() -> Pipeline:
                 }
 
                 artifact_vars_per_step = {
+                    "download": {"variant": dependency_slug, "git-ref": git_ref},
                     "upload": {"variant": slug, "git-ref": git_ref},
                     "promote": {"variant": slug, "git-ref": git_ref},
                 }
