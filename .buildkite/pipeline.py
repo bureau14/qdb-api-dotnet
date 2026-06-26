@@ -98,6 +98,8 @@ def _configure_artifact_plugin(step: dict, p: Platform, git_ref: str) -> None:
     # XXX: igor
     # In this project API files need to be resolved to target/os specific directories
     # we need additional logic to enforce this / add another script that does this and runs before build
+    # for now we use this function to replace "resolved-on-pipeline-run" build-dir with a proper one
+    # based on target os
     plugin_config = _get_artifact_plugin_config(step)
     if not plugin_config:
         return
@@ -119,6 +121,7 @@ def _configure_artifact_plugin(step: dict, p: Platform, git_ref: str) -> None:
 
     # XXX: igor
     # packaging is only working on windows for now, skip upload on other platforms
+    # we will fix this later
     if p.os != "windows":
         plugin_config.pop("upload", None)
         plugin_config.pop("promote", None)
@@ -157,10 +160,10 @@ def generate_pipeline() -> Pipeline:
                 step["env"] = env
                 _configure_artifact_plugin(step, p, git_ref)
                 # XXX: igor
-                # we dont use docker for linux builds
-                # 1. RHEL7 does not support dependencies needed for dotnet 6 and 8 (libicu76)
-                # 2. Teamcity does not utilze docker builder
-                # once migrated to RHEL8 we can move to docker builder
+                # we can't use docker for linux builds as:
+                # * RHEL7 does not ship with dependencies needed for dotnet 6 and 8 (libicu76)
+                # Teamcity did not use docker builder so we match this behavior,
+                # once migrated to RHEL8 we can revisit adding dotnet to docker builder
                 # if p.os == "linux":
                 #     apply_docker(step)
                 set_artifact_plugin_options(step, artifact_vars_per_step)
