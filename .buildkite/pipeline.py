@@ -58,7 +58,8 @@ GLOBAL_ENV: dict[str, str] = {
 }
 STEP_ENV: dict[str, dict[str, str]] = {}
 OS_ENV: dict[str, dict[str, str]] = {
-    "linux": {"DOTNET_PATH": "$$QDB_CICD_AGENT_DOTNET_HOME"},
+    # "linux": {"DOTNET_PATH": "$$QDB_CICD_AGENT_DOTNET"},
+    "linux": {"DOTNET_PATH": "/usr/share/dotnet/dotnet"},
     "windows": {},
 }
 OS_STEP_ENV: dict[str, dict[str, str]] = {}
