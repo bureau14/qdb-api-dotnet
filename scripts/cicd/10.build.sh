@@ -6,7 +6,6 @@ source ${SCRIPT_DIR}/common.sh
 
 git config --global --add safe.directory '*'
 
-# No more errors should occur after here
 set -e -u -x
 
 pushd "${PROJECT_ROOT}"

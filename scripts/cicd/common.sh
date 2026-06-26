@@ -33,12 +33,15 @@ path_for_windows_native() {
     esac
 }
 
-run_without_msys_path_conversion() {
-    env \
-      MSYS2_ARG_CONV_EXCL="*" \
-      MSYS_NO_PATHCONV="1" \
-      "$@"
-}
+# run_without_msys_path_conversion() {
+#     # Some dotnet tooling requires options to be specified with `/`
+#     # on windows, when using mingw this is treated as unix path and automatically escaped
+#     # this function executes passed call with this feature disabled
+#     env \
+#       MSYS2_ARG_CONV_EXCL="*" \
+#       MSYS_NO_PATHCONV="1" \
+#       "$@"
+# }
 
 echo "BUILD_CONFIGURATION: ${BUILD_CONFIGURATION}"
 echo "DOTNET_VERSION: ${DOTNET_VERSION}"

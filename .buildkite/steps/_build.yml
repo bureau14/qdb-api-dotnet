@@ -8,14 +8,14 @@ key: "build-{slug}"
 timeout_in_minutes: 20
 
 commands:
+  - echo "+++ Build"
+  - bash scripts/cicd/10.build.sh
   - echo "+++ Start Services"
   - bash scripts/tests/setup/start-services.sh
-  - echo "+++ Build"
-  - bash scripts/cicd/build.sh
   - echo "+++ Test"
-  - bash scripts/cicd/test.sh
+  - bash scripts/cicd/20.test.sh
   - echo "+++ Package"
-  - bash scripts/cicd/package.sh
+  - bash scripts/cicd/30.package.sh
 
 plugins:
   - bureau14/qdb-artifacts#master:
