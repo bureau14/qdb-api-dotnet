@@ -29,11 +29,6 @@ prepare_environment() {
         MINGW*|MSYS*|CYGWIN*)
             mkdir -p "${TEST_OUTPUT_DIR}/win64"
             cp "${BASE_DIR}/Quasardb/win64/qdb_api.dll" "${TEST_OUTPUT_DIR}/win64/qdb_api.dll"
-            # Some dotnet tooling requires options to be specified with `/`
-            # on windows, when using mingw this is treated as unix path and automatically escaped
-            # this function executes passed call with this feature disabled
-            export MSYS2_ARG_CONV_EXCL="*"
-            export MSYS_NO_PATHCONV="1"
             ;;
         *)
             mkdir -p "${TEST_OUTPUT_DIR}/linux"
@@ -57,15 +52,23 @@ DOTNET_SECURE_RESULTS_DIR=$(path_for_windows_native "${SECURE_RESULTS_DIR}")
 DOTNET_INSECURE_JUNIT=$(path_for_windows_native "${JUNIT_RESULTS_DIR}/insecure.xml")
 DOTNET_SECURE_JUNIT=$(path_for_windows_native "${JUNIT_RESULTS_DIR}/secure.xml")
 
+run_vstest() {
+    # VSTest 17.11 accepts some documented --Option:value forms, but parses
+    # --Platform:x64 and --Framework:... as missing-value options plus stray
+    # test sources. Use native /Option:value arguments and disable MSYS path
+    # conversion so Git Bash/MinGW does not rewrite them as filesystem paths.
+    env MSYS2_ARG_CONV_EXCL="*" MSYS_NO_PATHCONV="1" "${DOTNET}" vstest "$@"
+}
+
 set +e
-"${DOTNET}" vstest \
+run_vstest \
   "${DOTNET_TEST_DLL}" \
-  --Settings:"${DOTNET_INSECURE_SETTINGS}" \
-  --Platform:x64 \
-  --Framework:".NETCoreApp,Version=v${DOTNET_FRAMEWORK#net}" \
-  --Blame \
-  --ResultsDirectory:"${DOTNET_INSECURE_RESULTS_DIR}" \
-  --Logger:"junit;LogFilePath=${DOTNET_INSECURE_JUNIT};MethodFormat=Class;FailureBodyFormat=Verbose"
+  /Settings:"${DOTNET_INSECURE_SETTINGS}" \
+  /Platform:x64 \
+  /Framework:".NETCoreApp,Version=v${DOTNET_FRAMEWORK#net}" \
+  /Blame \
+  /ResultsDirectory:"${DOTNET_INSECURE_RESULTS_DIR}" \
+  /Logger:"junit;LogFilePath=${DOTNET_INSECURE_JUNIT};MethodFormat=Class;FailureBodyFormat=Verbose"
 insecure_status=$?
 set -e
 
@@ -74,14 +77,14 @@ if [[ ${insecure_status} -ne 0 ]]; then
 fi
 
 set +e
-"${DOTNET}" vstest \
+run_vstest \
   "${DOTNET_TEST_DLL}" \
-  --Settings:"${DOTNET_SECURE_SETTINGS}" \
-  --Platform:x64 \
-  --Framework:".NETCoreApp,Version=v${DOTNET_FRAMEWORK#net}" \
-  --Blame \
-  --ResultsDirectory:"${DOTNET_SECURE_RESULTS_DIR}" \
-  --Logger:"junit;LogFilePath=${DOTNET_SECURE_JUNIT};MethodFormat=Class;FailureBodyFormat=Verbose"
+  /Settings:"${DOTNET_SECURE_SETTINGS}" \
+  /Platform:x64 \
+  /Framework:".NETCoreApp,Version=v${DOTNET_FRAMEWORK#net}" \
+  /Blame \
+  /ResultsDirectory:"${DOTNET_SECURE_RESULTS_DIR}" \
+  /Logger:"junit;LogFilePath=${DOTNET_SECURE_JUNIT};MethodFormat=Class;FailureBodyFormat=Verbose"
 secure_status=$?
 set -e
 
