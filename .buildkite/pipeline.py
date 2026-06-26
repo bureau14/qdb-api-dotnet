@@ -2,9 +2,9 @@
 """Buildkite dynamic pipeline generator for qdb-api-dotnet.
 
 Step templates in steps/*.yml define nearly-complete Buildkite steps with
-{placeholder} variables.  This script loads them, substitutes variables, and
-overlays environment variables and the Docker plugin per platform.
-
+{placeholder} variables. This script loads them, substitutes variables, and
+applies shared QuasarDB CI conventions for platform env, Docker, artifacts, and
+pipeline validation.
 Usage:
     python3 pipeline.py           # emit pipeline YAML to stdout
     python3 pipeline.py check     # validate without emitting
@@ -53,7 +53,6 @@ DOTNET_VERSIONS = ["6.0", "8.0"]
 
 # Environment variable layering: global → step → os → os+step → platform compilers.
 GLOBAL_ENV: dict[str, str] = {
-    "AWS_DEFAULT_REGION": "eu-west-1",
     "NUGET_ENABLE_LEGACY_CSPROJ_PACK": "true",
 }
 STEP_ENV: dict[str, dict[str, str]] = {}
@@ -157,7 +156,7 @@ def generate_pipeline() -> Pipeline:
                 env = _env(p, "build", bt, dotnet_version)
                 env.update(step.get("env") or {})
                 step["env"] = env
-                _configure_artifact_plugin(step, p, git_ref)
+                _configure_artifact_plugin(step, p)
                 # XXX: igor
                 # we can't use docker for linux builds as:
                 # * RHEL7 does not ship with dependencies needed for dotnet 6 and 8 (libicu76)
