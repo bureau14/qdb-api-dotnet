@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -eux -o pipefail
 
-git config --global --add safe.directory '*'
-
 THIS_SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" >/dev/null && pwd)
 PROJECT_ROOT=$(cd -- "${THIS_SCRIPT_DIR}/../.." >/dev/null && pwd)
 
