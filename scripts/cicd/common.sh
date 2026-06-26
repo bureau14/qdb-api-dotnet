@@ -29,6 +29,7 @@ path_for_windows_native() {
     case "$(uname)" in
         MINGW*|MSYS*|CYGWIN*)
             cygpath -w "$1"
+            ;;
         *)
             printf '%s\n' "$1"
             ;;
