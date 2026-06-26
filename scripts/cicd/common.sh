@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -eux -o pipefail
 
+git config --global --add safe.directory '*'
+
 THIS_SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" >/dev/null && pwd)
 PROJECT_ROOT=$(cd -- "${THIS_SCRIPT_DIR}/../.." >/dev/null && pwd)
 
@@ -23,25 +25,26 @@ export DOTNET_FRAMEWORK
 export DOTNET
 
 path_for_windows_native() {
+    # Converts path from unix style to windows style when running in mingw
     case "$(uname)" in
         MINGW*|MSYS*|CYGWIN*)
             cygpath -w "$1"
-            ;;
         *)
             printf '%s\n' "$1"
             ;;
     esac
 }
 
-# run_without_msys_path_conversion() {
-#     # Some dotnet tooling requires options to be specified with `/`
-#     # on windows, when using mingw this is treated as unix path and automatically escaped
-#     # this function executes passed call with this feature disabled
-#     env \
-#       MSYS2_ARG_CONV_EXCL="*" \
-#       MSYS_NO_PATHCONV="1" \
-#       "$@"
-# }
+case "$(uname)" in
+    MINGW*|MSYS*|CYGWIN*)
+        # `dotnet vstest` accepts options as `/` not `--`
+        # disable MSYS path conversion so Git Bash/MinGW does not rewrite them as filesystem paths.
+        export MSYS2_ARG_CONV_EXCL="*"
+        export MSYS_NO_PATHCONV="1"
+        ;;
+    *)
+        ;;
+esac
 
 echo "BUILD_CONFIGURATION: ${BUILD_CONFIGURATION}"
 echo "DOTNET_VERSION: ${DOTNET_VERSION}"
