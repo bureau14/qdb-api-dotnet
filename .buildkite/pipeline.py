@@ -91,7 +91,7 @@ def _get_artifact_plugin_config(step: dict) -> dict | None:
     return None
 
 
-def _configure_artifact_plugin(step: dict, p: Platform, git_ref: str) -> None:
+def _configure_artifact_plugin(step: dict, p: Platform) -> None:
     """Keep only the native artifacts needed by this platform."""
     # XXX: igor
     # In this project API files need to be resolved to target/os specific directories
