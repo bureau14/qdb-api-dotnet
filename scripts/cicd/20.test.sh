@@ -22,7 +22,6 @@ SECURE_SETTINGS="${BASE_DIR}/Quasardb.Tests/secure.runsettings"
 
 
 # Copy qdb api to test directory
-
 case "$(uname)" in
     MINGW*|MSYS*|CYGWIN*)
         mkdir -p "${TEST_OUTPUT_DIR}/win64"
@@ -31,22 +30,18 @@ case "$(uname)" in
     *)
         mkdir -p "${TEST_OUTPUT_DIR}/linux"
         cp "${BASE_DIR}/Quasardb/linux/libqdb_api.so" "${TEST_OUTPUT_DIR}/linux/libqdb_api.so"
-
-        # .NET's DllImport("qdb_api") probes the assembly directory, while the
-        # legacy qdb_api static loader probes ./linux/libqdb_api.so. Keep both
-        # layouts available so Linux vstest works outside a NuGet package.
         cp "${BASE_DIR}/Quasardb/linux/libqdb_api.so" "${TEST_OUTPUT_DIR}/libqdb_api.so"
         ;;
 esac
 
 
-DOTNET_TEST_DLL=$(path_for_windows_native "${TEST_OUTPUT_DIR}/Quasardb.Tests.dll")
-DOTNET_INSECURE_SETTINGS=$(path_for_windows_native "${INSECURE_SETTINGS}")
-DOTNET_SECURE_SETTINGS=$(path_for_windows_native "${SECURE_SETTINGS}")
-DOTNET_INSECURE_RESULTS_DIR=$(path_for_windows_native "${INSECURE_RESULTS_DIR}")
-DOTNET_SECURE_RESULTS_DIR=$(path_for_windows_native "${SECURE_RESULTS_DIR}")
-DOTNET_INSECURE_JUNIT=$(path_for_windows_native "${JUNIT_RESULTS_DIR}/insecure.xml")
-DOTNET_SECURE_JUNIT=$(path_for_windows_native "${JUNIT_RESULTS_DIR}/secure.xml")
+DOTNET_TEST_DLL=$(normalize_paths "${TEST_OUTPUT_DIR}/Quasardb.Tests.dll")
+DOTNET_INSECURE_SETTINGS=$(normalize_paths "${INSECURE_SETTINGS}")
+DOTNET_SECURE_SETTINGS=$(normalize_paths "${SECURE_SETTINGS}")
+DOTNET_INSECURE_RESULTS_DIR=$(normalize_paths "${INSECURE_RESULTS_DIR}")
+DOTNET_SECURE_RESULTS_DIR=$(normalize_paths "${SECURE_RESULTS_DIR}")
+DOTNET_INSECURE_JUNIT=$(normalize_paths "${JUNIT_RESULTS_DIR}/insecure.xml")
+DOTNET_SECURE_JUNIT=$(normalize_paths "${JUNIT_RESULTS_DIR}/secure.xml")
 
 set +e
 "${DOTNET}" vstest \

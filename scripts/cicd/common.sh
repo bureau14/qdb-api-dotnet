@@ -10,10 +10,14 @@ DOTNET_FRAMEWORK=${DOTNET_FRAMEWORK:-net${DOTNET_VERSION}}
 
 if [[ -n "${DOTNET_PATH:-}" ]]; then
     DOTNET="${DOTNET_PATH}"
-elif [[ -n "${DOTNET:-}" ]]; then
-    DOTNET="${DOTNET}"
 else
     DOTNET=dotnet
+fi
+
+if [[ -n "${NUGET_PATH:-}" ]]; then
+    NUGET="${NUGET_PATH}"
+else
+    NUGET=nuget
 fi
 
 export PROJECT_ROOT
@@ -21,8 +25,9 @@ export BUILD_CONFIGURATION
 export DOTNET_VERSION
 export DOTNET_FRAMEWORK
 export DOTNET
+export NUGET
 
-path_for_windows_native() {
+normalize_paths() {
     # Converts path from unix style to windows style when running in mingw
     case "$(uname)" in
         MINGW*|MSYS*|CYGWIN*)
