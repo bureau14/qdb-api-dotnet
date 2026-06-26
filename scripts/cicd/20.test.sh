@@ -24,7 +24,7 @@ INSECURE_SETTINGS="${BASE_DIR}/Quasardb.Tests/insecure.runsettings"
 SECURE_SETTINGS="${BASE_DIR}/Quasardb.Tests/secure.runsettings"
 
 run_vstest() {
-    run_without_msys_path_conversion "${DOTNET}" vstest "$@"
+    "${DOTNET}" vstest "$@"
 }
 
 prepare_environment() {
