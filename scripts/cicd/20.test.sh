@@ -23,9 +23,6 @@ TEST_OUTPUT_DIR="${BASE_DIR}/Quasardb.Tests/bin/${BUILD_CONFIGURATION}/${DOTNET_
 INSECURE_SETTINGS="${BASE_DIR}/Quasardb.Tests/insecure.runsettings"
 SECURE_SETTINGS="${BASE_DIR}/Quasardb.Tests/secure.runsettings"
 
-run_vstest() {
-    "${DOTNET}" vstest "$@"
-}
 
 prepare_environment() {
     case "$(uname)" in
@@ -61,7 +58,7 @@ DOTNET_INSECURE_JUNIT=$(path_for_windows_native "${JUNIT_RESULTS_DIR}/insecure.x
 DOTNET_SECURE_JUNIT=$(path_for_windows_native "${JUNIT_RESULTS_DIR}/secure.xml")
 
 set +e
-run_vstest \
+"${DOTNET}" vstest \
   "${DOTNET_TEST_DLL}" \
   --Settings:"${DOTNET_INSECURE_SETTINGS}" \
   --Platform:x64 \
@@ -77,7 +74,7 @@ if [[ ${insecure_status} -ne 0 ]]; then
 fi
 
 set +e
-run_vstest \
+"${DOTNET}" vstest \
   "${DOTNET_TEST_DLL}" \
   --Settings:"${DOTNET_SECURE_SETTINGS}" \
   --Platform:x64 \
@@ -88,6 +85,7 @@ run_vstest \
 secure_status=$?
 set -e
 
+# combine status of both test suites
 if [[ ${secure_status} -ne 0 && ${status} -eq 0 ]]; then
     status=${secure_status}
 fi

@@ -112,7 +112,7 @@ def _configure_artifact_plugin(step: dict, p: Platform, git_ref: str) -> None:
 
         if p.os == "windows":
             project["output-dir"] = "Quasardb/win64"
-            project["files"] = ["*-c-api.tar.zst!lib/*"]
+            project["files"] = ["*-c-api.tar.zst!bin/*.dll"]
         elif p.os == "linux":
             project["output-dir"] = "Quasardb/linux"
             project["files"] = ["*-c-api.tar.zst!lib/*"]
