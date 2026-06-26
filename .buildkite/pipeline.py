@@ -58,16 +58,16 @@ GLOBAL_ENV: dict[str, str] = {
 }
 STEP_ENV: dict[str, dict[str, str]] = {}
 OS_ENV: dict[str, dict[str, str]] = {
-    "linux": {
-        "DOTNET_PATH": "/usr/share/dotnet/dotnet"
-    },
+    "linux": {"DOTNET_PATH": "/usr/share/dotnet/dotnet"},
     "windows": {},
 }
 OS_STEP_ENV: dict[str, dict[str, str]] = {}
 CPU_ENV: dict[str, dict[str, str]] = {}
 
 
-def _env(p: Platform, step_name: str, build_type: str, dotnet_version: str) -> dict[str, str]:
+def _env(
+    p: Platform, step_name: str, build_type: str, dotnet_version: str
+) -> dict[str, str]:
     """Compose the full environment dict for one step."""
     return merge_env(
         GLOBAL_ENV,
