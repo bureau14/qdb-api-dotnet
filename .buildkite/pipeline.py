@@ -93,49 +93,9 @@ def _get_artifact_plugin_config(step: dict) -> dict | None:
 
 def _configure_artifact_plugin(step: dict, p: Platform) -> None:
     """Keep only the native artifacts needed by this platform."""
-    # qdb-api-dotnet references native C API files from fixed project-relative
-    # paths (Quasardb/linux and Quasardb/win64). The qdb-artifacts plugin can
-    # extract archive entries directly into those paths, so keep this mapping in
-    # the generated Buildkite config instead of adding a repo-local staging step.
     plugin_config = _get_artifact_plugin_config(step)
     if not plugin_config:
         return
-
-    resolved_projects = plugin_config.get("download", {}).get("projects", [])
-
-    for project in resolved_projects:
-        if project.get("project_id") != "quasardb-build":
-            continue
-        if project.get("output-dir") != "resolved-on-pipeline-run":
-            continue
-
-        if p.os == "windows":
-            project["output-dir"] = "Quasardb/win64"
-            project["files"] = ["*-c-api.zip!bin/qdb_api.dll"]
-
-            # XXX: igor
-            # NuGet packaging runs only on Windows, but Quasardb.nuspec builds a
-            # cross-platform package and includes both native payloads from the
-            # Quasardb build output:
-            #   bin/Release/netstandard2.0/win64/qdb_api.dll
-            #   bin/Release/netstandard2.0/linux/libqdb_api.so
-            # The project copies those files from Quasardb/win64 and
-            # Quasardb/linux during dotnet build, so the Windows packaging step
-            # must download the Linux C API artifact too. Pin its variant here;
-            # the shared artifact helper uses setdefault(), so this explicit
-            # Linux variant is not overwritten by the Windows step default.
-            resolved_projects.append(
-                {
-                    "project_id": "quasardb-build",
-                    "output-dir": "Quasardb/linux",
-                    "extract": True,
-                    "files": ["*-c-api.tar.zst!lib/libqdb_api.so"],
-                    "variant": "linux-amd64-core2-release",
-                }
-            )
-        elif p.os == "linux":
-            project["output-dir"] = "Quasardb/linux"
-            project["files"] = ["*-c-api.tar.zst!lib/libqdb_api.so"]
 
     # XXX: igor
     # packaging is done only on windows (multiplatform)
