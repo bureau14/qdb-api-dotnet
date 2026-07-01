@@ -55,3 +55,6 @@ mkdir -p nuget-pack-out
     -Properties "Configuration=${BUILD_CONFIGURATION}"
 
 popd
+
+ls -l documentation-pack-out
+ls -l nuget-pack-out
