@@ -48,9 +48,7 @@ plugins:
       upload:
         files:
           - "nuget-pack-out/*.nupkg"
-          - "Quasardb.Documentation/**/Help/**/*"
-          - "Quasardb.Documentation/**/*.chm"
-          - "Quasardb.Documentation/**/*.zip"
+          - "documentation-pack-out/*.zip"
         base_dir: "."
       promote: {}
   - bureau14/qdb-test-report#master:
