@@ -93,11 +93,10 @@ def _get_artifact_plugin_config(step: dict) -> dict | None:
 
 def _configure_artifact_plugin(step: dict, p: Platform) -> None:
     """Keep only the native artifacts needed by this platform."""
-    # XXX: igor
-    # In this project API files need to be resolved to target/os specific directories
-    # we need additional logic to enforce this / add another script that does this and runs before build
-    # for now we use this function to replace "resolved-on-pipeline-run" build-dir with a proper one
-    # based on target os
+    # qdb-api-dotnet references native C API files from fixed project-relative
+    # paths (Quasardb/linux and Quasardb/win64). The qdb-artifacts plugin can
+    # extract archive entries directly into those paths, so keep this mapping in
+    # the generated Buildkite config instead of adding a repo-local staging step.
     plugin_config = _get_artifact_plugin_config(step)
     if not plugin_config:
         return
@@ -112,14 +111,34 @@ def _configure_artifact_plugin(step: dict, p: Platform) -> None:
 
         if p.os == "windows":
             project["output-dir"] = "Quasardb/win64"
-            project["files"] = ["*-c-api.tar.zst!bin/*.dll"]
+            project["files"] = ["*-c-api.zip!bin/qdb_api.dll"]
+
+            # XXX: igor
+            # NuGet packaging runs only on Windows, but Quasardb.nuspec builds a
+            # cross-platform package and includes both native payloads from the
+            # Quasardb build output:
+            #   bin/Release/netstandard2.0/win64/qdb_api.dll
+            #   bin/Release/netstandard2.0/linux/libqdb_api.so
+            # The project copies those files from Quasardb/win64 and
+            # Quasardb/linux during dotnet build, so the Windows packaging step
+            # must download the Linux C API artifact too. Pin its variant here;
+            # the shared artifact helper uses setdefault(), so this explicit
+            # Linux variant is not overwritten by the Windows step default.
+            resolved_projects.append(
+                {
+                    "project_id": "quasardb-build",
+                    "output-dir": "Quasardb/linux",
+                    "extract": True,
+                    "files": ["*-c-api.tar.zst!lib/libqdb_api.so"],
+                    "variant": "linux-amd64-core2-release",
+                }
+            )
         elif p.os == "linux":
             project["output-dir"] = "Quasardb/linux"
-            project["files"] = ["*-c-api.tar.zst!lib/*"]
+            project["files"] = ["*-c-api.tar.zst!lib/libqdb_api.so"]
 
     # XXX: igor
-    # packaging is only working on windows for now, skip upload on other platforms
-    # we will fix this later
+    # packaging is done only on windows (multiplatform)
     if p.os != "windows":
         plugin_config.pop("upload", None)
         plugin_config.pop("promote", None)
