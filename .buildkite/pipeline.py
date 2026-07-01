@@ -97,6 +97,17 @@ def _configure_artifact_plugin(step: dict, p: Platform) -> None:
     if not plugin_config:
         return
 
+    if p.os != "windows":
+        # Windows C API files are needed only by the Windows build/package step.
+        # Linux jobs do not produce NuGet packages, so keep their downloads to
+        # the Linux native library plus qdb server/utils needed for tests.
+        projects = plugin_config.get("download", {}).get("projects", [])
+        plugin_config["download"]["projects"] = [
+            project
+            for project in projects
+            if project.get("output-dir") != "Quasardb/win64"
+        ]
+
     # XXX: igor
     # packaging is done only on windows (multiplatform)
     if p.os != "windows":
