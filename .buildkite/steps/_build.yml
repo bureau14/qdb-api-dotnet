@@ -47,8 +47,7 @@ plugins:
               - "*-c-api.tar.zst!lib/*.so"
       upload:
         files:
-          - "nuget-pack-out/*.nupkg"
-          - "documentation-pack-out/*.zip"
+          - "nuget-pack-out/*"
         base_dir: "."
       promote: {}
   - bureau14/qdb-test-report#master:
