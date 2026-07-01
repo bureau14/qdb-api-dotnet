@@ -33,7 +33,11 @@ if [[ -f "${DOCUMENTATION_PROJECT}" ]]; then
         pushd "${DOCUMENTATION_OUTPUT_DIR}"
         case "$(uname)" in
             MINGW*|MSYS*|CYGWIN*)
+                export MSYS2_ARG_CONV_EXCL=""
+                export MSYS_NO_PATHCONV="0"
                 7z a -tzip "documentation-pack-out/qdb-api-dotnet-help.zip" ./*
+                export MSYS2_ARG_CONV_EXCL="*"
+                export MSYS_NO_PATHCONV="1"
                 ;;
             *)
                 zip -r "documentation-pack-out/qdb-api-dotnet-help.zip" .
