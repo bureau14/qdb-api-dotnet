@@ -42,7 +42,7 @@ plugins:
           - project_id: "quasardb-build"
             output-dir: "Quasardb/linux"
             extract: true
-            variant: "linux-core2-release"
+            variant: "linux-amd64-core2-release"
             files:
               - "*-c-api.tar.zst!lib/libqdb_api.so"
       upload:
