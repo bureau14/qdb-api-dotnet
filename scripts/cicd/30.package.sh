@@ -4,21 +4,6 @@ set -e -u -x
 SCRIPT_DIR="$(cd "$(dirname -- "${BASH_SOURCE[0]}")" >/dev/null && pwd)"
 source ${SCRIPT_DIR}/common.sh
 
-archive_documentation() {
-    mkdir -p "${DOCUMENTATION_ARCHIVE_DIR}"
-    rm -f "${DOCUMENTATION_ARCHIVE}"
-
-    pushd "${DOCUMENTATION_OUTPUT_DIR}"
-    case "$(uname)" in
-        MINGW*|MSYS*|CYGWIN*)
-            7z a -tzip "${DOCUMENTATION_ARCHIVE}" ./*
-            ;;
-        *)
-            zip -r "${DOCUMENTATION_ARCHIVE}" .
-            ;;
-    esac
-    popd
-}
 
 case "$(uname)" in
     MINGW*|MSYS*|CYGWIN*)
@@ -34,8 +19,6 @@ pushd "${PROJECT_ROOT}"
 MSBUILD_PATH="/c/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/MSBuild.exe"
 DOCUMENTATION_PROJECT="${PROJECT_ROOT}/Quasardb.Documentation/Quasardb.Documentation.shfbproj"
 DOCUMENTATION_OUTPUT_DIR="${PROJECT_ROOT}/Quasardb.Documentation/Help"
-DOCUMENTATION_ARCHIVE_DIR="${PROJECT_ROOT}/documentation-pack-out"
-DOCUMENTATION_ARCHIVE="${DOCUMENTATION_ARCHIVE_DIR}/qdb-api-dotnet-help.zip"
 
 if [[ -f "${DOCUMENTATION_PROJECT}" ]]; then
     DOCUMENTATION_PROJECT_WIN=$(normalize_paths "${DOCUMENTATION_PROJECT}")
@@ -43,7 +26,20 @@ if [[ -f "${DOCUMENTATION_PROJECT}" ]]; then
         /p:Configuration="${BUILD_CONFIGURATION}"
 
     if [[ -d "${DOCUMENTATION_OUTPUT_DIR}" ]]; then
-        archive_documentation
+        
+        mkdir -p documentation-pack-out
+        rm -f "documentation-pack-out/qdb-api-dotnet-help.zip"
+
+        pushd "${DOCUMENTATION_OUTPUT_DIR}"
+        case "$(uname)" in
+            MINGW*|MSYS*|CYGWIN*)
+                7z a -tzip "documentation-pack-out/qdb-api-dotnet-help.zip" ./*
+                ;;
+            *)
+                zip -r "documentation-pack-out/qdb-api-dotnet-help.zip" .
+                ;;
+        esac
+        popd
     fi
 fi
 
