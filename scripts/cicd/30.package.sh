@@ -19,7 +19,11 @@ pushd "${PROJECT_ROOT}"
 MSBUILD_PATH="/c/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/MSBuild.exe"
 DOCUMENTATION_PROJECT="${PROJECT_ROOT}/Quasardb.Documentation/Quasardb.Documentation.shfbproj"
 DOCUMENTATION_OUTPUT_DIR="${PROJECT_ROOT}/Quasardb.Documentation/Help"
-DOCUMENTATION_ARCHIVE="${PROJECT_ROOT}/documentation-pack-out/qdb-api-dotnet-help.tar.gz"
+PACKAGING_OUTPUT_DIR="${PROJECT_ROOT}/packaging"
+DOCUMENTATION_ARCHIVE="${PACKAGING_OUTPUT_DIR}/qdb-api-dotnet-help.tar.gz"
+
+rm -rf "${PACKAGING_OUTPUT_DIR}"
+mkdir -p "${PACKAGING_OUTPUT_DIR}"
 
 if [[ -f "${DOCUMENTATION_PROJECT}" ]]; then
     DOCUMENTATION_PROJECT_WIN=$(normalize_paths "${DOCUMENTATION_PROJECT}")
@@ -27,8 +31,6 @@ if [[ -f "${DOCUMENTATION_PROJECT}" ]]; then
         /p:Configuration="${BUILD_CONFIGURATION}"
 
     if [[ -d "${DOCUMENTATION_OUTPUT_DIR}" ]]; then
-        
-        mkdir -p "$(dirname "${DOCUMENTATION_ARCHIVE}")"
         rm -f "${DOCUMENTATION_ARCHIVE}"
 
         pushd "${DOCUMENTATION_OUTPUT_DIR}"
@@ -37,14 +39,11 @@ if [[ -f "${DOCUMENTATION_PROJECT}" ]]; then
     fi
 fi
 
-mkdir -p nuget-pack-out
-
 "${NUGET}" pack Quasardb/Quasardb.nuspec \
     -BasePath Quasardb \
-    -OutputDirectory nuget-pack-out \
+    -OutputDirectory "${PACKAGING_OUTPUT_DIR}" \
     -Properties "Configuration=${BUILD_CONFIGURATION}"
 
 popd
 
-ls -l documentation-pack-out
-ls -l nuget-pack-out
+ls -l "${PACKAGING_OUTPUT_DIR}"
