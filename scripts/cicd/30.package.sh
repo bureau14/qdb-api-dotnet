@@ -19,7 +19,7 @@ pushd "${PROJECT_ROOT}"
 MSBUILD_PATH="/c/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/MSBuild.exe"
 DOCUMENTATION_PROJECT="${PROJECT_ROOT}/Quasardb.Documentation/Quasardb.Documentation.shfbproj"
 DOCUMENTATION_OUTPUT_DIR="${PROJECT_ROOT}/Quasardb.Documentation/Help"
-DOCUMENTATION_ARCHIVE="${PROJECT_ROOT}/documentation-pack-out/qdb-api-dotnet-help.zip"
+DOCUMENTATION_ARCHIVE="${PROJECT_ROOT}/documentation-pack-out/qdb-api-dotnet-help.tar"
 
 if [[ -f "${DOCUMENTATION_PROJECT}" ]]; then
     DOCUMENTATION_PROJECT_WIN=$(normalize_paths "${DOCUMENTATION_PROJECT}")
@@ -32,15 +32,7 @@ if [[ -f "${DOCUMENTATION_PROJECT}" ]]; then
         rm -f "${DOCUMENTATION_ARCHIVE}"
 
         pushd "${DOCUMENTATION_OUTPUT_DIR}"
-        case "$(uname)" in
-            MINGW*|MSYS*|CYGWIN*)
-                DOCUMENTATION_ARCHIVE_WIN=$(normalize_paths "${DOCUMENTATION_ARCHIVE}")
-                7z a -tzip "${DOCUMENTATION_ARCHIVE_WIN}" ./*
-                ;;
-            *)
-                zip -r "${DOCUMENTATION_ARCHIVE}" .
-                ;;
-        esac
+        tar -cf "${DOCUMENTATION_ARCHIVE}" .
         popd
     fi
 fi
