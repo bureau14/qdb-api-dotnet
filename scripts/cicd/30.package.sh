@@ -17,30 +17,30 @@ esac
 pushd "${PROJECT_ROOT}"
 
 MSBUILD_PATH="/c/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/MSBuild.exe"
+# MSBUILD_PATH="/c/Program Files (x86)/Microsoft Visual Studio/18/BuildTools/MSBuild//Current/Bin/MSBuild.exe"
 DOCUMENTATION_PROJECT="${PROJECT_ROOT}/Quasardb.Documentation/Quasardb.Documentation.shfbproj"
 DOCUMENTATION_OUTPUT_DIR="${PROJECT_ROOT}/Quasardb.Documentation/Help"
+DOCUMENTATION_ARCHIVE="${PROJECT_ROOT}/documentation-pack-out/qdb-api-dotnet-help.zip"
+# z7z="/c/Program Files/7-Zip/7z.exe"
 
 if [[ -f "${DOCUMENTATION_PROJECT}" ]]; then
     DOCUMENTATION_PROJECT_WIN=$(normalize_paths "${DOCUMENTATION_PROJECT}")
-    "${MSBUILD_PATH}" "${DOCUMENTATION_PROJECT_WIN}" \
-        /p:Configuration="${BUILD_CONFIGURATION}"
+    # "${MSBUILD_PATH}" "${DOCUMENTATION_PROJECT_WIN}" \
+    #     /p:Configuration="${BUILD_CONFIGURATION}"
 
     if [[ -d "${DOCUMENTATION_OUTPUT_DIR}" ]]; then
         
-        mkdir -p documentation-pack-out
-        rm -f "documentation-pack-out/qdb-api-dotnet-help.zip"
+        mkdir -p "$(dirname "${DOCUMENTATION_ARCHIVE}")"
+        rm -f "${DOCUMENTATION_ARCHIVE}"
 
         pushd "${DOCUMENTATION_OUTPUT_DIR}"
         case "$(uname)" in
             MINGW*|MSYS*|CYGWIN*)
-                export MSYS2_ARG_CONV_EXCL=""
-                export MSYS_NO_PATHCONV="0"
-                7z a -tzip "documentation-pack-out/qdb-api-dotnet-help.zip" ./*
-                export MSYS2_ARG_CONV_EXCL="*"
-                export MSYS_NO_PATHCONV="1"
+                DOCUMENTATION_ARCHIVE_WIN=$(normalize_paths "${DOCUMENTATION_ARCHIVE}")
+                "${z7z}" a -tzip "${DOCUMENTATION_ARCHIVE_WIN}" ./*
                 ;;
             *)
-                zip -r "documentation-pack-out/qdb-api-dotnet-help.zip" .
+                zip -r "${DOCUMENTATION_ARCHIVE}" .
                 ;;
         esac
         popd
