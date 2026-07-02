@@ -35,7 +35,7 @@ if [[ -f "${DOCUMENTATION_PROJECT}" ]]; then
         case "$(uname)" in
             MINGW*|MSYS*|CYGWIN*)
                 DOCUMENTATION_ARCHIVE_WIN=$(normalize_paths "${DOCUMENTATION_ARCHIVE}")
-                7zip a -tzip "${DOCUMENTATION_ARCHIVE_WIN}" ./*
+                7z a -tzip "${DOCUMENTATION_ARCHIVE_WIN}" ./*
                 ;;
             *)
                 zip -r "${DOCUMENTATION_ARCHIVE}" .
