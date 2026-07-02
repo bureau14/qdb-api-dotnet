@@ -33,7 +33,7 @@ plugins:
             extract: true
             variant: "windows-core2-release"
             files:
-              - "*-c-api.tar.zst!bin/qdb_api.dll"
+              - "*-c-api.tar.zst!bin/*.dll"
           # NuGet packaging runs on Windows, but the package is cross-platform:
           # Quasardb.nuspec includes both win64/qdb_api.dll and
           # linux/libqdb_api.so from the Quasardb build output. Keep all
@@ -44,7 +44,7 @@ plugins:
             extract: true
             variant: "linux-core2-release"
             files:
-              - "*-c-api.tar.zst!lib/libqdb_api.so"
+              - "*-c-api.tar.zst!lib/*.so"
       upload:
         files:
           - "nuget-pack-out/*.nupkg"
