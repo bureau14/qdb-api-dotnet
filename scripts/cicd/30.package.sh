@@ -25,8 +25,8 @@ DOCUMENTATION_ARCHIVE="${PROJECT_ROOT}/documentation-pack-out/qdb-api-dotnet-hel
 
 if [[ -f "${DOCUMENTATION_PROJECT}" ]]; then
     DOCUMENTATION_PROJECT_WIN=$(normalize_paths "${DOCUMENTATION_PROJECT}")
-    # "${MSBUILD_PATH}" "${DOCUMENTATION_PROJECT_WIN}" \
-    #     /p:Configuration="${BUILD_CONFIGURATION}"
+    "${MSBUILD_PATH}" "${DOCUMENTATION_PROJECT_WIN}" \
+        /p:Configuration="${BUILD_CONFIGURATION}"
 
     if [[ -d "${DOCUMENTATION_OUTPUT_DIR}" ]]; then
         
