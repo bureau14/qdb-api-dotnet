@@ -21,6 +21,7 @@ DOCUMENTATION_PROJECT="${PROJECT_ROOT}/Quasardb.Documentation/Quasardb.Documenta
 DOCUMENTATION_OUTPUT_DIR="${PROJECT_ROOT}/Quasardb.Documentation/Help"
 PACKAGING_OUTPUT_DIR="${PROJECT_ROOT}/packaging"
 DOCUMENTATION_ARCHIVE="${PACKAGING_OUTPUT_DIR}/qdb-api-dotnet-help.tar.gz"
+NUGET_OUTPUT_DIR=$(normalize_paths "${PACKAGING_OUTPUT_DIR}")
 
 rm -rf "${PACKAGING_OUTPUT_DIR}"
 mkdir -p "${PACKAGING_OUTPUT_DIR}"
@@ -41,8 +42,13 @@ fi
 
 "${NUGET}" pack Quasardb/Quasardb.nuspec \
     -BasePath Quasardb \
-    -OutputDirectory "${PACKAGING_OUTPUT_DIR}" \
+    -OutputDirectory "${NUGET_OUTPUT_DIR}" \
     -Properties "Configuration=${BUILD_CONFIGURATION}"
+
+if ! compgen -G "${PACKAGING_OUTPUT_DIR}/*.nupkg" >/dev/null; then
+    echo "NuGet package was not created in ${PACKAGING_OUTPUT_DIR}" >&2
+    exit 1
+fi
 
 popd
 
