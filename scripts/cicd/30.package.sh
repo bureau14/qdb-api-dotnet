@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+set -e -u -x
+
+SCRIPT_DIR="$(cd "$(dirname -- "${BASH_SOURCE[0]}")" >/dev/null && pwd)"
+source ${SCRIPT_DIR}/common.sh
+
+
+case "$(uname)" in
+    MINGW*|MSYS*|CYGWIN*)
+        ;;
+    *)
+        echo "Skipping documentation and packaging on $(uname)."
+        exit 0
+        ;;
+esac
+
+pushd "${PROJECT_ROOT}"
+
+MSBUILD_PATH="/c/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/MSBuild.exe"
+DOCUMENTATION_PROJECT="${PROJECT_ROOT}/Quasardb.Documentation/Quasardb.Documentation.shfbproj"
+DOCUMENTATION_OUTPUT_DIR="${PROJECT_ROOT}/Quasardb.Documentation/Help"
+PACKAGING_OUTPUT_DIR="${PROJECT_ROOT}/packaging"
+DOCUMENTATION_ARCHIVE="${PACKAGING_OUTPUT_DIR}/qdb-api-dotnet-help.tar.gz"
+NUGET_OUTPUT_DIR=$(normalize_paths "${PACKAGING_OUTPUT_DIR}")
+
+rm -rf "${PACKAGING_OUTPUT_DIR}"
+mkdir -p "${PACKAGING_OUTPUT_DIR}"
+
+if [[ -f "${DOCUMENTATION_PROJECT}" ]]; then
+    DOCUMENTATION_PROJECT_WIN=$(normalize_paths "${DOCUMENTATION_PROJECT}")
+    "${MSBUILD_PATH}" "${DOCUMENTATION_PROJECT_WIN}" \
+        /p:Configuration="${BUILD_CONFIGURATION}"
+
+    if [[ -d "${DOCUMENTATION_OUTPUT_DIR}" ]]; then
+        rm -f "${DOCUMENTATION_ARCHIVE}"
+
+        pushd "${DOCUMENTATION_OUTPUT_DIR}"
+        tar -czf "${DOCUMENTATION_ARCHIVE}" .
+        popd
+    fi
+fi
+
+"${NUGET}" pack Quasardb/Quasardb.nuspec \
+    -BasePath Quasardb \
+    -OutputDirectory "${NUGET_OUTPUT_DIR}" \
+    -Properties "Configuration=${BUILD_CONFIGURATION}"
+
+if ! compgen -G "${PACKAGING_OUTPUT_DIR}/*.nupkg" >/dev/null; then
+    echo "NuGet package was not created in ${PACKAGING_OUTPUT_DIR}" >&2
+    exit 1
+fi
+
+popd
+
+ls -l "${PACKAGING_OUTPUT_DIR}"
