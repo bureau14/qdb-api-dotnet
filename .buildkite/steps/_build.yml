@@ -1,0 +1,57 @@
+agents:
+  queue: "default-{queue}"
+
+
+label: "{name} ({slug})"
+key: "build-{slug}"
+
+timeout_in_minutes: 20
+
+commands:
+  - echo "+++ Build"
+  - bash scripts/cicd/10.build.sh
+  - echo "+++ Start Services"
+  - bash scripts/tests/setup/start-services.sh
+  - echo "+++ Test"
+  - bash scripts/cicd/20.test.sh
+  - echo "+++ Package"
+  - bash scripts/cicd/30.package.sh
+
+plugins:
+  - bureau14/qdb-artifacts#master:
+      download:
+        clean: true
+        projects:
+          - project_id: "quasardb-build"
+            output-dir: "qdb/bin"
+            extract: true
+            files:
+              - "*-server.tar.zst!bin/*"
+              - "*-utils.tar.zst!bin/*"
+          - project_id: "quasardb-build"
+            output-dir: "Quasardb/win64"
+            extract: true
+            variant: "windows-core2-release"
+            files:
+              - "*-c-api.tar.zst!bin/*.dll"
+          # NuGet packaging runs on Windows, but the package is cross-platform:
+          # Quasardb.nuspec includes both win64/qdb_api.dll and
+          # linux/libqdb_api.so from the Quasardb build output. Keep all
+          # C APIs dependency explicit here so the Windows package job has both
+          # native payloads before dotnet build copies them into bin/Release.
+          - project_id: "quasardb-build"
+            output-dir: "Quasardb/linux"
+            extract: true
+            variant: "linux-core2-release"
+            files:
+              - "*-c-api.tar.zst!lib/*.so"
+      upload:
+        files:
+          - "packaging/*"
+        base_dir: "packaging"
+      promote: {}
+  - bureau14/qdb-test-report#master:
+      title: "Test report {slug}"
+      job:
+        variant: {slug}
+        junit_input_path: "test-results/junit/*.xml"

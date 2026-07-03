@@ -6,6 +6,8 @@ obj/
 *.user
 *.suo
 *.DotSettings
+__pycache__/
+*.pyc
 /TestResults/
 /packages/
 /Backup/

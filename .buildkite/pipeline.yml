@@ -1,0 +1,11 @@
+steps:
+  - label: ":pipeline: Generate pipeline"
+    key: "pipeline"
+    agents:
+      queue: "default-debian-amd64"
+    env:
+      BUILDKITE_PIPELINE_VENV: "/tmp/qdb-api-dotnet-buildkite-venv-${BUILDKITE_BUILD_ID}-${BUILDKITE_JOB_ID}"
+    commands:
+      - 'python3 -m venv "$$BUILDKITE_PIPELINE_VENV"'
+      - '"$$BUILDKITE_PIPELINE_VENV/bin/python" -m pip install -r .buildkite/requirements.txt'
+      - '"$$BUILDKITE_PIPELINE_VENV/bin/python" .buildkite/pipeline.py | buildkite-agent pipeline upload'
