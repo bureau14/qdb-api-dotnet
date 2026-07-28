@@ -5,7 +5,6 @@ using System.Runtime.InteropServices;
 using Quasardb.Exceptions;
 using Quasardb.Native;
 using Quasardb.TimeSeries.Reader;
-using Quasardb.TimeSeries.Writer;
 
 namespace Quasardb.TimeSeries
 {
@@ -511,48 +510,5 @@ namespace Quasardb.TimeSeries
 
         #endregion
 
-        #region Writer
-
-        /// <summary>
-        /// Initialize a batch table for writing to this table.
-        /// </summary>
-        /// <returns>A <see cref="QdbTableWriter"/> for writing to this table</returns>
-        /// <seealso cref="QdbTableWriter"/>
-        public QdbTableWriter Writer()
-        {
-            return Writer(null);
-        }
-
-        /// <summary>
-        /// Initialize a batch table for writing to this table.
-        /// </summary>
-        /// <param name="columnDefinitions">The description of the columns</param>
-        /// <exception cref="QdbInvalidArgumentException">If columns list is empty.</exception>
-        /// <returns>A <see cref="QdbTableWriter"/> for writing to this table</returns>
-        /// <seealso cref="QdbTableWriter"/>
-        public QdbTableWriter Writer(IEnumerable<QdbColumnDefinition> columnDefinitions)
-        {
-            var count = Helpers.GetCountOrDefault(columnDefinitions);
-            var batchColumnDefinitions = new List<QdbBatchColumnDefinition>(count);
-
-            if (columnDefinitions == null)
-            {
-                foreach (var def in GetColumnDefinitions())
-                {
-                    batchColumnDefinitions.Add(new QdbBatchColumnDefinition(Alias, def.name));
-                }
-            }
-            else
-            {
-                foreach (var def in columnDefinitions)
-                {
-                    batchColumnDefinitions.Add(new QdbBatchColumnDefinition(Alias, def.Name));
-                }
-            }
-
-            return new QdbTableWriter(Handle, batchColumnDefinitions);
-        }
-
-        #endregion
     }
 }

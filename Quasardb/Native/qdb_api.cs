@@ -751,66 +751,6 @@ namespace Quasardb.Native
 
         #endregion
 
-        #region Functions specific to batch tables
-
-        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
-        internal static extern qdb_error qdb_ts_batch_table_init(
-            [In] qdb_handle handle,
-            [In] qdb_ts_batch_column_info[] columns,
-            [In] qdb_size_t column_count,
-            [Out] out pointer_t table);
-
-        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
-        internal static extern qdb_error qdb_ts_batch_start_row(
-            [In] pointer_t table,
-            [In] qdb_timespec* timestamp);
-
-        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
-        internal static extern qdb_error qdb_ts_batch_row_set_blob(
-            [In] pointer_t table,
-            [In] qdb_size_t index,
-            [In] byte[] content,
-            [In] qdb_size_t content_length);
-
-        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
-        internal static extern qdb_error qdb_ts_batch_row_set_double(
-            [In] pointer_t table,
-            [In] qdb_size_t index,
-            [In] double value);
-
-        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
-        internal static extern qdb_error qdb_ts_batch_row_set_int64(
-            [In] pointer_t table,
-            [In] qdb_size_t index,
-            [In] qdb_int_t value);
-
-        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
-        internal static extern qdb_error qdb_ts_batch_row_set_string(
-            [In] pointer_t table,
-            [In] qdb_size_t index,
-            [In] byte[] content,
-            [In] qdb_size_t content_length);
-
-        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
-        internal static extern qdb_error qdb_ts_batch_row_set_timestamp(
-            [In] pointer_t table,
-            [In] qdb_size_t index,
-            [In] qdb_timespec* value);
-
-        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
-        internal static extern qdb_error qdb_ts_batch_push(
-            [In] pointer_t table);
-
-        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
-        internal static extern qdb_error qdb_ts_batch_push_fast(
-            [In] pointer_t table);
-
-        [DllImport(LIB_NAME, CallingConvention = CALL_CONV)]
-        internal static extern qdb_error qdb_ts_batch_push_async(
-            [In] pointer_t table);
-
-        #endregion
-
         #endregion
 
         #region Functions specific to queries
