@@ -2,6 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Quasardb.Exceptions;
 using Quasardb.Query;
 using Quasardb.TimeSeries;
+using Quasardb.TimeSeries.ExpWriter;
 using System;
 using System.Linq;
 using System.Text;
@@ -26,19 +27,18 @@ namespace Quasardb.Tests.Query
             return ts;
         }
 
-        public static QdbBlobPointCollection InsertBlobPoints(QdbTable ts, DateTime time, int count)
+        public QdbBlobPointCollection InsertBlobPoints(QdbTable ts, DateTime time, int count)
         {
             if (ts == null) throw new ArgumentNullException(nameof(ts));
 
             var random = new Random();
             var r = new QdbBlobPointCollection(count);
-            var writer = ts.Writer(new QdbColumnDefinition[] { new QdbBlobColumnDefinition("the_blob") });
+            var writer = _cluster.ExpWriter(new string[] { ts.Alias }, new QdbTableExpWriterOptions().Transactional());
             for (var i = 0; i < count; ++i)
             {
                 var value = new byte[32];
                 random.NextBytes(value);
-                writer.StartRow(time);
-                writer.SetBlob("the_blob", value);
+                writer.Add(ts.Alias, time, new object[] { value, null, null, null, null });
                 r.Add(time, value);
                 time = time.AddSeconds(1);
             }
@@ -60,18 +60,17 @@ namespace Quasardb.Tests.Query
             return r;
         }
 
-        public static QdbDoublePointCollection InsertDoublePoints(QdbTable ts, DateTime time, int count)
+        public QdbDoublePointCollection InsertDoublePoints(QdbTable ts, DateTime time, int count)
         {
             if (ts == null) throw new ArgumentNullException(nameof(ts));
 
             var random = new Random();
             var r = new QdbDoublePointCollection(count);
-            var writer = ts.Writer(new QdbColumnDefinition[] { new QdbDoubleColumnDefinition("the_double") });
+            var writer = _cluster.ExpWriter(new string[] { ts.Alias }, new QdbTableExpWriterOptions().Transactional());
             for (var i = 0; i < count; ++i)
             {
                 var value = random.NextDouble();
-                writer.StartRow(time);
-                writer.SetDouble("the_double", value);
+                writer.Add(ts.Alias, time, new object[] { null, value, null, null, null });
                 r.Add(time, value);
                 time = time.AddSeconds(1);
             }
@@ -92,18 +91,17 @@ namespace Quasardb.Tests.Query
             return r;
         }
 
-        public static QdbInt64PointCollection InsertInt64Points(QdbTable ts, DateTime time, int count)
+        public QdbInt64PointCollection InsertInt64Points(QdbTable ts, DateTime time, int count)
         {
             if (ts == null) throw new ArgumentNullException(nameof(ts));
 
             var random = new Random();
             var r = new QdbInt64PointCollection(count);
-            var writer = ts.Writer(new QdbColumnDefinition[] { new QdbInt64ColumnDefinition("the_int64") });
+            var writer = _cluster.ExpWriter(new string[] { ts.Alias }, new QdbTableExpWriterOptions().Transactional());
             for (var i = 0; i < count; ++i)
             {
                 var value = random.Next();
-                writer.StartRow(time);
-                writer.SetInt64("the_int64", value);
+                writer.Add(ts.Alias, time, new object[] { null, null, value, null, null });
                 r.Add(time, value);
                 time = time.AddSeconds(1);
             }
@@ -134,18 +132,17 @@ namespace Quasardb.Tests.Query
             return randomString;
         }
 
-        public static QdbStringPointCollection InsertStringPoints(QdbTable ts, DateTime time, int count)
+        public QdbStringPointCollection InsertStringPoints(QdbTable ts, DateTime time, int count)
         {
             if (ts == null) throw new ArgumentNullException(nameof(ts));
 
             var r = new QdbStringPointCollection(count);
-            var writer = ts.Writer(new QdbColumnDefinition[] { new QdbStringColumnDefinition("the_string") });
+            var writer = _cluster.ExpWriter(new string[] { ts.Alias }, new QdbTableExpWriterOptions().Transactional());
             for (var i = 0; i < count; ++i)
             {
                 var value = GenerateRandomAlphanumericString(32);
 
-                writer.StartRow(time);
-                writer.SetString("the_string", value);
+                writer.Add(ts.Alias, time, new object[] { null, null, null, value, null });
                 r.Add(time, value);
                 time = time.AddSeconds(1);
             }
@@ -165,20 +162,19 @@ namespace Quasardb.Tests.Query
             return r;
         }
 
-        public static QdbStringPointCollection InsertInvalidStringPoints(QdbTable ts, DateTime time, int count)
+        public QdbStringPointCollection InsertInvalidStringPoints(QdbTable ts, DateTime time, int count)
         {
             if (ts == null) throw new ArgumentNullException(nameof(ts));
 
             var r = new QdbStringPointCollection(count);
-            var writer = ts.Writer(new QdbColumnDefinition[] { new QdbStringColumnDefinition("the_string") });
+            var writer = _cluster.ExpWriter(new string[] { ts.Alias }, new QdbTableExpWriterOptions().Transactional());
 
             byte[] bytes = { (byte)'\xfe', (byte)'\xfe', (byte)'\xff', (byte)'\xff' };
             var value = Encoding.UTF8.GetString(bytes);
 
             for (var i = 0; i < count; ++i)
             {
-                writer.StartRow(time);
-                writer.SetString("the_string", value);
+                writer.Add(ts.Alias, time, new object[] { null, null, null, value, null });
                 r.Add(time, value);
                 time = time.AddSeconds(1);
             }
@@ -186,18 +182,17 @@ namespace Quasardb.Tests.Query
             return r;
         }
 
-        public static QdbTimestampPointCollection InsertTimestampPoints(QdbTable ts, DateTime time, int count)
+        public QdbTimestampPointCollection InsertTimestampPoints(QdbTable ts, DateTime time, int count)
         {
             if (ts == null) throw new ArgumentNullException(nameof(ts));
 
             var random = new Random();
             var r = new QdbTimestampPointCollection(count);
-            var writer = ts.Writer(new QdbColumnDefinition[] { new QdbTimestampColumnDefinition("the_ts") });
+            var writer = _cluster.ExpWriter(new string[] { ts.Alias }, new QdbTableExpWriterOptions().Transactional());
             for (var i = 0; i < count; ++i)
             {
                 var value = DateTime.Today.AddSeconds(random.NextDouble());
-                writer.StartRow(time);
-                writer.SetTimestamp("the_ts", value);
+                writer.Add(ts.Alias, time, new object[] { null, null, null, null, value });
                 r.Add(time, value);
                 time = time.AddSeconds(1);
             }
@@ -218,7 +213,7 @@ namespace Quasardb.Tests.Query
             return r;
         }
 
-        private static void InsertRows(
+        private void InsertRows(
             QdbTable ts,
             QdbBlobPointCollection blobs,
             QdbDoublePointCollection doubles,
@@ -233,23 +228,18 @@ namespace Quasardb.Tests.Query
             if (strings == null) throw new ArgumentNullException(nameof(strings));
             if (timestamps == null) throw new ArgumentNullException(nameof(timestamps));
 
-            var writer = ts.Writer(new QdbColumnDefinition[]
-            {
-                new QdbBlobColumnDefinition("the_blob"),
-                new QdbDoubleColumnDefinition("the_double"),
-                new QdbInt64ColumnDefinition("the_int64"),
-                new QdbStringColumnDefinition("the_string"),
-                new QdbTimestampColumnDefinition("the_ts"),
-            });
+            var writer = _cluster.ExpWriter(new string[] { ts.Alias }, new QdbTableExpWriterOptions().Transactional());
 
             for (var i = 0; i < blobs.Count; ++i)
             {
-                writer.StartRow(blobs[i].Time);
-                writer.SetBlob("the_blob", blobs[i].Value);
-                writer.SetDouble("the_double", doubles[i].Value);
-                writer.SetInt64("the_int64", int64s[i].Value);
-                writer.SetString("the_string", strings[i].Value);
-                writer.SetTimestamp("the_ts", timestamps[i].Value);
+                writer.Add(ts.Alias, blobs[i].Time, new object[]
+                {
+                    blobs[i].Value,
+                    doubles[i].Value,
+                    int64s[i].Value,
+                    strings[i].Value,
+                    timestamps[i].Value
+                });
             }
 
             writer.Push();
