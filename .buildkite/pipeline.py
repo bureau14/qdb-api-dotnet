@@ -137,9 +137,9 @@ def generate_pipeline() -> Pipeline:
                 }
 
                 artifact_vars_per_step = {
-                    "download": {"variant": dependency_slug, "git-ref": git_ref},
-                    "upload": {"variant": slug, "git-ref": git_ref},
-                    "promote": {"variant": slug, "git-ref": git_ref},
+                    "download": {"variant": dependency_slug, "git_ref": git_ref},
+                    "upload": {"variant": slug, "git_ref": git_ref},
+                    "promote": {"variant": slug, "git_ref": git_ref},
                 }
 
                 step = load_template(STEPS_DIR / "_build.yml", **tvars)
