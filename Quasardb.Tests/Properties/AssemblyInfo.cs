@@ -5,5 +5,5 @@
 [assembly: AssemblyCompany("quasardb SAS")]
 [assembly: AssemblyProduct("quasardb")]
 [assembly: AssemblyCopyright("Copyright (c) 2009-2024, quasardb SAS. All rights reserved.")]
-[assembly: AssemblyVersion("3.14.3.1")]
-[assembly: AssemblyFileVersion("3.14.3.1")]
+[assembly: AssemblyVersion("3.14.3.0")]
+[assembly: AssemblyFileVersion("3.14.3.0")]
