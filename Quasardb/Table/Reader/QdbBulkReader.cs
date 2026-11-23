@@ -266,7 +266,7 @@ namespace Quasardb.TimeSeries.Reader
         /// </summary>
         internal static IntPtr ConvertCharArray(string str, ref List<GCHandle> pins)
         {
-            var content = System.Text.Encoding.UTF8.GetBytes(str);
+            var content = Helper.GetNullTerminatedUtf8Bytes(str);
             var pin = GCHandle.Alloc(content, GCHandleType.Pinned);
             pins.Add(pin);
             return pin.AddrOfPinnedObject();
