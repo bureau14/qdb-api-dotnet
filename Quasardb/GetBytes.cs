@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Quasardb
 {
@@ -8,6 +9,13 @@ namespace Quasardb
     /// </summary>
     public static class Helper
     {
+        internal static byte[] GetNullTerminatedUtf8Bytes(string value)
+        {
+            var bytes = new byte[Encoding.UTF8.GetByteCount(value) + 1];
+            Encoding.UTF8.GetBytes(value, 0, value.Length, bytes, 0);
+            return bytes;
+        }
+
         /// <summary>
         /// Safely Get Bytes
         /// </summary>
