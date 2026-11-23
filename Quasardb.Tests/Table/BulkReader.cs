@@ -82,6 +82,23 @@ namespace Quasardb.Tests.Table
         }
 
         [TestMethod]
+        public void Ok_BulkReaderFiltersWithinTimeRange()
+        {
+            var ts = TableTestHelper.CreateTableWithoutSymbol(_cluster);
+            const int count = 5;
+            var timestamps = TableTestHelper.MakeTimestamps(count);
+            TableTestHelper.InsertRowsWithoutSymbol(_cluster, ts, TableTestHelper.MakeBlobArray(count),
+                TableTestHelper.MakeDoubleArray(count), TableTestHelper.MakeInt64Array(count),
+                TableTestHelper.MakeStringArray(count), timestamps);
+
+            var range = new QdbTimeInterval(timestamps[1], timestamps[4]);
+            using var reader = _cluster.BulkReader(["the_int64"],
+                [new QdbBulkReaderTable(ts.Alias, [range], "WHERE the_int64 >= 2")]);
+
+            CollectionAssert.AreEqual(new long?[] { 2, 3 }, reader.Select(row => row[0].Int64Value).ToArray());
+        }
+
+        [TestMethod]
         public void Ok_BulkReaderMultiTable()
         {
             var ts1 = TableTestHelper.CreateTableWithoutSymbol(_cluster);

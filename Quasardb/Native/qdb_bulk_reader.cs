@@ -14,5 +14,6 @@ namespace Quasardb.Native
         internal qdb_char_ptr name;
         internal qdb_ts_range* ranges;
         internal qdb_size_t range_count;
+        internal qdb_char_ptr filter;
     }
 }

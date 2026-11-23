@@ -28,12 +28,30 @@ namespace Quasardb.TimeSeries.Reader
         public QdbTimeInterval[] Ranges { get; }
 
         /// <summary>
+        /// Gets the SQL WHERE clause applied within the requested time ranges.
+        /// A null or empty string reads all rows in those ranges.
+        /// </summary>
+        public string Filter { get; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="QdbBulkReaderTable"/> struct.
         /// </summary>
         /// <param name="name">Table name.</param>
         /// <param name="ranges">Time intervals to read from the table.</param>
         public QdbBulkReaderTable(string name, IEnumerable<QdbTimeInterval> ranges)
+            : this(name, ranges, null)
         {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QdbBulkReaderTable"/> struct.
+        /// </summary>
+        /// <param name="name">Table name.</param>
+        /// <param name="ranges">Time intervals to read from the table.</param>
+        /// <param name="filter">SQL WHERE clause including the keyword, e.g. <c>WHERE value &gt; 0</c>.</param>
+        public QdbBulkReaderTable(string name, IEnumerable<QdbTimeInterval> ranges, string filter)
+        {
+            Filter = filter;
             Name = name;
             Ranges = ranges?.ToArray() ?? Array.Empty<QdbTimeInterval>();
         }
@@ -129,6 +147,8 @@ namespace Quasardb.TimeSeries.Reader
                                 ranges[j] = tables[i].Ranges[j].ToNative();
                             nativeTables[i].ranges = (qdb_ts_range*)BulkReaderHelper.ConvertArray(ranges, ref pins);
                             nativeTables[i].range_count = (qdb_size_t)ranges.Length;
+                            if (!string.IsNullOrEmpty(tables[i].Filter))
+                                nativeTables[i].filter = BulkReaderHelper.ConvertCharArray(tables[i].Filter, ref pins);
                         }
                         tblPtr = (qdb_bulk_reader_table*)BulkReaderHelper.ConvertArray(nativeTables, ref pins);
                     }
