@@ -1,5 +1,4 @@
 ﻿using System.Runtime.InteropServices;
-using System.Text;
 using Quasardb.Native;
 
 namespace Quasardb
@@ -29,7 +28,7 @@ namespace Quasardb
         /// <returns>A future that will contain the result of the operation after the batch is run.</returns>
         public IQdbFuture<bool> HasTag(string tag)
         {
-            var tagBytes = Encoding.UTF8.GetBytes(tag);
+            var tagBytes = EncodeTag(tag);
             GCHandle pin = default;
             try
             {
@@ -58,6 +57,11 @@ namespace Quasardb
                 pin.Free();
                 throw;
             }
+        }
+
+        internal static byte[] EncodeTag(string tag)
+        {
+            return Helper.GetNullTerminatedUtf8Bytes(tag);
         }
 
         internal IQdbFuture AddOperation(MarshalFunc marshal, UnmarshalFunc unmarshal = null)

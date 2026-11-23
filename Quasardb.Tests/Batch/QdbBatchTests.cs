@@ -6,6 +6,14 @@ namespace Quasardb.Tests.Batch
     public class QdbBatchTests
     {
         [TestMethod]
+        public void HasTag_EncodesNullTerminatedUtf8()
+        {
+            var tagBytes = QdbBatchEntry.EncodeTag("café");
+
+            CollectionAssert.AreEqual(new byte[] { 0x63, 0x61, 0x66, 0xC3, 0xA9, 0x00 }, tagBytes);
+        }
+
+        [TestMethod]
         public void RunEmpty()
         {
             var batch = new QdbBatch();
