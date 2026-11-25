@@ -25,9 +25,9 @@ from qdb_pipeline import (  # noqa: E402
     get_git_ref,
     load_template,
     merge_env,
+    run,
     select_platforms,
     set_artifact_plugin_options,
-    validate_pipeline,
 )
 
 STEPS_DIR = Path(__file__).parent / "steps"
@@ -138,8 +138,8 @@ def generate_pipeline() -> Pipeline:
 
                 artifact_vars_per_step = {
                     "download": {"variant": dependency_slug, "git-ref": git_ref},
-                    "upload": {"variant": slug, "git-ref": git_ref},
-                    "promote": {"variant": slug, "git-ref": git_ref},
+                    "upload": {"variant": slug},
+                    "promote": {"variant": slug},
                 }
 
                 step = load_template(STEPS_DIR / "_build.yml", **tvars)
@@ -174,29 +174,5 @@ def generate_pipeline() -> Pipeline:
     return pipeline
 
 
-def main() -> None:
-    command = sys.argv[1] if len(sys.argv) > 1 else "generate"
-
-    try:
-        pipeline = generate_pipeline()
-    except Exception as e:
-        print(f"[FAIL] Pipeline generation failed: {e}", file=sys.stderr)
-        sys.exit(1)
-
-    if command == "generate":
-        print(pipeline.to_yaml())
-    elif command == "check":
-        errors = validate_pipeline(pipeline)
-        if errors:
-            for e in errors:
-                print(f"[FAIL] {e}", file=sys.stderr)
-            sys.exit(1)
-        print(f"[OK] Pipeline valid: {len(pipeline.steps)} steps")
-    else:
-        print(f"Unknown command: {command}", file=sys.stderr)
-        print("Usage: pipeline.py [generate|check]", file=sys.stderr)
-        sys.exit(1)
-
-
 if __name__ == "__main__":
-    main()
+    run(generate_pipeline)

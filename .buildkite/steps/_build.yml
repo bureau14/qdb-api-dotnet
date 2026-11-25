@@ -3,7 +3,7 @@ agents:
 
 
 label: "{name} ({slug})"
-key: "build-{slug}"
+step_id: build
 
 timeout_in_minutes: 20
 
@@ -23,12 +23,14 @@ plugins:
         clean: true
         projects:
           - project_id: "quasardb-build"
+            step: build
             output-dir: "qdb/bin"
             extract: true
             files:
               - "*-server.tar.zst!bin/*"
               - "*-utils.tar.zst!bin/*"
           - project_id: "quasardb-build"
+            step: build
             output-dir: "Quasardb/win64"
             extract: true
             variant: "windows-core2-release"
@@ -40,6 +42,7 @@ plugins:
           # C APIs dependency explicit here so the Windows package job has both
           # native payloads before dotnet build copies them into bin/Release.
           - project_id: "quasardb-build"
+            step: build
             output-dir: "Quasardb/linux"
             extract: true
             variant: "linux-core2-release"
